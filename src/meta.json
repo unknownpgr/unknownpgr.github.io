@@ -1,0 +1,22 @@
+{
+    "posts": {
+        "post1": {
+            "postName": "post1",
+            "postPath": "posts/post1",
+            "mdFileName": "test.md",
+            "mdFilePath": "posts/post1/test.md",
+            "title": "This is test title",
+            "category": "This is test category",
+            "date": "2020-07-12T16:26:29.045Z"
+        }
+    },
+    "errors": [],
+    "categories": {
+        "This is test category": {
+            "postCount": 1
+        }
+    },
+    "postOrder": [
+        "post1"
+    ]
+}
