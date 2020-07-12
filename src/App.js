@@ -1,4 +1,6 @@
 import React from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Test from './Test.js';
 
 function App() {
   return (
@@ -14,6 +16,7 @@ function App() {
           Go to github
         </a>
       </header>
+      <Test></Test>
     </div>
   );
 }
