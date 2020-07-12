@@ -1,68 +1,21 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Github Blog
 
-## Available Scripts
+- 원래는 지킬과 같은 플랫폼을 먼저 만든 후, 깃허브 블로그를 만드려고 했었다. 그러나 React나 Bootstrap등을 공부해본 바, 그러한 라이브러리를 이용하면서 플랫폼까지 만드는 것은 상당히 어렵고 귀찮다는 것을 알게 되었다.
+- 그래서 그냥 깃허브 블로그만을 만들려고 한다.
+- 그렇다면, 스킨 관련된 기능은 전부 제거하고, 포스트 관련 기능만 구현하면 된다.
 
-In the project directory, you can run:
+# Serverside 구성
+- 기본적으로 React app으로 하고, SPA로 만들어보자.
+- 개발을 위해서는, 그냥 기본으로 제공하는 start 스크립트를 사용한다.
+- Browser routing을 구현하기 위해 React-router-dom을 사용한다.
+- 디자인으로는 React-bootstrap을 사용한다. 추후 업데이트하던가 하자.
 
-### `yarn start`
-
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
-
-### `yarn test`
-
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `yarn build`
-
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `yarn build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+# 구현 방법
+- 여기서도 막히는 것이, 어떻게 게시글과 그 목록을 적절히 구현하는가 하는 것이다.
+    - 일단 이전에 작성해놓은 스크립트를 사용하면 게시글의 목록을 다 가져올 수 있기는 하다.
+    - Browser routing을 하면, 심지어 적절한 HTML파일을 가져올 수도 있다. 거의 다 왔는데...
+    - 그렇다면 라우터에서 posts라우터를 작성한다. 그리고 post/:postID 방식으로 포스트 파일 이름을 가져온다. 그리고 postID.js(혹은 jsx)파일을 require하여 렌더링한다.
+    - 물론, 이렇게 하면 아무 글을 읽을 때마다 모든 포스트를 로드하는 무서운 일이 벌어진다. 그러므로 React의 code splitting 기법을 사용하여 포스트를 로드하기로 한다.
+    - 이렇게 하면, 최소한의 low-level코드만을 사용하고, 나머지는 IDE에서 깔끔하게 처리할 수 있다.
+    - 게시글 목록 등은 json파일로 구현될 텐데, 이 json파일을 어떻게 로드하는가도 하나의 문제다.
+    - 검색해본 바, Create-react-app을 사용한 경운 json-loader가 포함되어있다고 한다. 그러므로 이를 사용해본다.
