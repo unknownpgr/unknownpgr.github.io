@@ -42,7 +42,8 @@ async function getPostData(postPath) {
         postName: path.basename(postPath),
         postPath: path.relative(__dirname, postPath),
         mdFileName: path.basename(mdFilePath),
-        mdFilePath: path.relative(__dirname, mdFilePath)
+        mdFilePath: path.relative(__dirname, mdFilePath),
+        jsxFilePath: path.relative(__dirname, path.join(postPath, path.parse(mdFilePath).name + '.jsx'))
     }
 
     // Parse YMAL formatter and get title and tags.
@@ -66,18 +67,20 @@ async function getPostData(postPath) {
 
 async function generateJsx(posts) {
     return asyncForEach(Object.keys(posts), async function (post) {
-        const { mdFilePath, postPath } = posts[post]
+        const { mdFilePath, jsxFilePath, postPath } = posts[post]
         const src = await readFile(path.join(__dirname, mdFilePath), 'utf-8')
         const markdown = src.substring(3 + getNthIndexOf(src, '---', 2))
         const html = converter.makeHtml(markdown)
-        const dstPath = path.join(__dirname, postPath, path.parse(mdFilePath).name + '.jsx')
         const jsx = `
+import React from 'react'
 export default function(props) {
     return (
+        <div className="blog-post">
         ${html}
+        </div>
     );
 };`
-        writeFile(dstPath, jsx)
+        writeFile(path.join(__dirname, jsxFilePath), jsx)
     })
 }
 

@@ -2,10 +2,10 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 // Import metatdata
-import meta from './meta.json'
+import { posts, postOrder, categories } from './meta.json'
 
 // Import libraries
-import React from 'react';
+import React, { useState } from 'react';
 import { Navbar, Nav } from 'react-bootstrap';
 import {
   BrowserRouter as Router,
@@ -24,8 +24,8 @@ function App() {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="mr-auto">
-            <Link to="/">Main</Link>
-            <Link to="/about">About</Link>
+            <Nav.Link><Link to="/"     > Main</Link></Nav.Link>
+            <Nav.Link><Link to="/about">About</Link></Nav.Link>
           </Nav>
         </Navbar.Collapse>
 
@@ -57,11 +57,12 @@ function Main() {
       TEST
       <ul>
         <h1>Post List</h1>
-        {meta.posts.map((post, i) =>
-          <li key={i}>
-            <Link to={post.postPath} >{post.title}</Link>
+        {postOrder.map(post => {
+          const { postPath, title } = posts[post]
+          return <li key={post}>
+            <Link to={postPath} >{title}</Link>
           </li>
-        )}
+        })}
       </ul>
       List Fin
     </div>
@@ -74,10 +75,34 @@ function About(props) {
 </div>
 }
 
-function Post(props) {
-  return (
-    <div>Selected post = {props.match.params.postName}</div>
-  )
+class Post extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      content: <p>Now lading...</p>
+    }
+  }
+
+  componentDidMount() {
+    const postName = this.props.match.params.postName
+    const { jsxFilePath } = posts[postName]
+    import('./' + jsxFilePath.replace('.jsx', '')).then(loaded => {
+      const Comp = loaded.default
+      this.setState({
+        content: <Comp></Comp>
+      })
+    })
+  }
+
+
+  render() {
+    return (
+      <div>
+        {this.state.content}
+      </div>
+    )
+
+  }
 }
 
 export default App;
