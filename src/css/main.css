@@ -4,6 +4,8 @@ body,
   height: 100%;
   margin: 0px;
   padding: 0px;
+  display: flex;
+  flex-direction: column;
 }
 
 body {
@@ -16,10 +18,31 @@ body {
 }
 
 .blog-container {
-  box-shadow: 0px 2px 10px black;
   padding-left: 0px;
   padding-right: 0px;
-  min-height: 60%;
+  height: 100%;
+}
+
+#blog-github {
+  top: 2%;
+  right: 2%;
+  width: 48px;
+}
+
+#blog-wrapper {
+  height: auto;
+  flex: 1;
+}
+
+#blog-wrapper {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+#blog-side-left,
+#blog-side-right {
+  flex: 1 1 0;
 }
 
 * {
