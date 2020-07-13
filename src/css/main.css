@@ -1,0 +1,27 @@
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0px;
+  padding: 0px;
+}
+
+body {
+  background-color: #303337;
+}
+
+.blog-title {
+  padding-top: 4em;
+  padding-bottom: 4em;
+}
+
+.blog-container {
+  box-shadow: 0px 2px 10px black;
+  padding-left: 0px;
+  padding-right: 0px;
+  min-height: 60%;
+}
+
+* {
+  color: #bbb;
+}
