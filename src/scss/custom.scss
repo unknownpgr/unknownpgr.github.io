@@ -1,0 +1,141 @@
+$color-base: 40;
+$color-term: -7;
+
+$lv-1: $color-base;
+$lv-2: $color-base + $color-term;
+$lv-3: $color-base + $color-term * 2;
+$lv-4: $color-base + $color-term * 3;
+
+$blog-color-1: rgb($lv-1, $lv-1, $lv-1);
+$blog-color-2: rgb($lv-2, $lv-2, $lv-2);
+$blog-color-3: rgb($lv-3, $lv-3, $lv-3);
+$blog-color-4: rgb($lv-4, $lv-4, $lv-4);
+
+$blog-font-color: #aaa;
+$blog-font-dim: #888;
+$blog-font-highlight: #fff;
+
+$body-bg: $blog-color-1;
+$navbar-color: $blog-color-2;
+$post-list-color: $blog-color-2;
+$card-bg: $blog-color-2;
+$card-border-width: 0px;
+$card-cap-bg: none;
+
+$navbar-light-brand-color: $blog-font-color;
+$body-color: $blog-font-color;
+$link-color: $blog-font-highlight;
+
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300&display=swap");
+@import "node_modules/bootstrap/scss/bootstrap";
+
+* {
+  font-family: "Noto Sans KR", sans-serif;
+}
+
+html,
+body,
+#root {
+  min-height: 100vh;
+  margin: 0px;
+  padding: 0px;
+  display: flex;
+  flex-direction: column;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+.blog-title {
+  padding-top: 4em;
+  padding-bottom: 4em;
+}
+
+#blog-github {
+  top: 2%;
+  right: 2%;
+  width: 48px;
+  transition-duration: 0.5s;
+}
+
+#blog-github:hover {
+  transform: rotate(-45deg);
+}
+
+#blog-wrapper {
+  height: auto;
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  flex: 1;
+}
+
+#blog-side-left,
+#blog-side-right {
+  width: 320px;
+}
+
+#blog-center {
+  width: 50%;
+}
+
+#navbar {
+  background-color: $navbar-color;
+  border-bottom: solid 2px $blog-color-3;
+}
+
+.blog-post-list {
+  background-color: $post-list-color;
+}
+
+.card-body {
+  padding-bottom: 0.25rem;
+}
+
+.card-subtitle {
+  padding-top: 0.5rem;
+  font-weight: 400;
+}
+
+.card-text {
+  padding-top: 0.5rem;
+}
+
+footer {
+  position: relative;
+  height: 160px;
+}
+
+#blog-footer-inner {
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
+}
+
+#bar {
+  position: fixed;
+  width: 100%;
+  bottom: 0px;
+  display: flex;
+}
+
+#bar-r,
+#bar-l {
+  color: white;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  font-size: 0.8em;
+  font-weight: 100;
+}
+
+#bar-l {
+  background-color: rgb(22, 130, 93);
+}
+
+#bar-r {
+  background-color: rgb(0, 122, 204);
+  flex: 1;
+}

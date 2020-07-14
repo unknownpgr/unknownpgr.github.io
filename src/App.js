@@ -1,6 +1,5 @@
 // Import stylesheets
-import "bootstrap/dist/css/bootstrap.min.css";
-import "./css/main.css";
+import "./scss/custom.scss";
 import img from "./img/github.png";
 
 // Import metatdata
@@ -23,7 +22,7 @@ function App() {
   return (
     <Router>
       <div className="blog-title">
-        <h1 className="display-4 py-4 text-center text-light">{blogTitle}</h1>
+        <h1 className="display-4 py-4 text-center">{blogTitle}</h1>
         <a href="https://github.com/unknownpgr">
           <img
             src={img}
@@ -36,7 +35,7 @@ function App() {
       <div id="blog-wrapper">
         <div id="blog-side-left">{/* Currently empty! */}</div>
         <div id="blog-center" className="shadow">
-          <Navbar bg="dark" variant="dark" expand="lg" className="rounded-top">
+          <Navbar id="navbar" expand="lg" className="rounded-top">
             <Navbar.Brand>UnknownPgr의 블로그.</Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
@@ -73,12 +72,19 @@ function App() {
           </ul>
         </div>
       </div>
-      <footer className="page-footer font-small">
+      <footer className="page-footer font-small mb-4">
         <div id="blog-footer-inner" className="text-center py-4">
           © 2020 Copyright :
           <a href="https://github.com/unknownpgr"> Unknownpgr</a>
         </div>
       </footer>
+      <div id="bar">
+        <span id="bar-l">SSH: web-dev.iptime.org</span>
+        <span id="bar-r">
+          Branch : master # # # # # I added this VSCode-like status bar just for
+          fun. lol
+        </span>
+      </div>
     </Router>
   );
 }
@@ -90,19 +96,12 @@ function NoMatchPage() {
 function PostListPage(props) {
   if (props.filter) console.log("filter : ", props.filter);
   return (
-    <CardDeck className="pt-4 justify-content-around">
+    <CardDeck className="blog-post-list pt-4 justify-content-around">
       {postOrder
         .map((post) => {
-          let { postPath, title, category } = posts[post];
+          let { category } = posts[post];
           if (props.filter && props.filter !== category) return null;
-          return (
-            <Post
-              href={postPath}
-              title={title}
-              category={category}
-              key={post}
-            ></Post>
-          );
+          return <Post {...posts[post]} key={post}></Post>;
         })
         .filter((x) => x)}
     </CardDeck>
@@ -115,26 +114,30 @@ function AboutPage(props) {
 
 function Post(props) {
   return (
-    <Card
-      className="text-white bg-dark mb-3 shadow-sm"
-      style={{ maxWidth: "24rem", minWidth: "16rem" }}
-    >
+    <Card className="mb-3" style={{ maxWidth: "24rem", minWidth: "16rem" }}>
       <Card.Body>
-        <Link to={props.href}>
-          <Card.Title>{props.title}</Card.Title>
-        </Link>
+        <div className="blog-card-title">
+          <Link to={props.postPath}>
+            <Card.Title>{props.title}</Card.Title>
+          </Link>
+          <Card.Subtitle>
+            {(props.date + "").substr(0, 16).replace("T", " / ")}
+          </Card.Subtitle>
+        </div>
         <Card.Text>
           This is a wider card with supporting text below as a natural lead-in
           to additional content. This content is a little bit longer.
         </Card.Text>
       </Card.Body>
-      <Card.Footer>
-        {props.category && (
-          <small className="text-muted">
-            {"#" + props.category.replace(/ /g, "_")}
-          </small>
-        )}
-      </Card.Footer>
+      <Link to={`/categories/${props.category}`}>
+        <Card.Footer>
+          {props.category && (
+            <small className="text-muted">
+              {"#" + props.category.replace(/ /g, "_")}
+            </small>
+          )}
+        </Card.Footer>
+      </Link>
     </Card>
   );
 }
