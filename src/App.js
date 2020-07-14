@@ -27,13 +27,14 @@ function App() {
         <a href="https://github.com/unknownpgr">
           <img
             src={img}
+            alt="GitHub"
             className="position-absolute rounded-circle"
             id="blog-github"
           ></img>
         </a>
       </div>
       <div id="blog-wrapper">
-        <div id="blog-side-left">LOL..</div>
+        <div id="blog-side-left">{/* Currently empty! */}</div>
         <div id="blog-center" className="shadow">
           <Navbar bg="dark" variant="dark" expand="lg" className="rounded-top">
             <Navbar.Brand>UnknownPgr의 블로그.</Navbar.Brand>
@@ -51,20 +52,24 @@ function App() {
           </Navbar>
           <div className="container">
             <Switch>
-              <Route exact path="/" component={PostList}></Route>
-              <Route path="/posts/:postName" component={PostPage}></Route>
-              <Route path="/about" component={AboutPage}></Route>
-              <Route component={NoMatchPage}></Route>
+              <Route exact path="/" component={PostListPage} />
+              <Route path="/posts/:postName" component={PostPage} />
+              <Route path="/categories/:category" component={CategoryPage} />
+              <Route path="/about" component={AboutPage} />
+              <Route component={NoMatchPage} />
             </Switch>
           </div>
         </div>
         <div id="blog-side-right">
           <ul>
-            {Object.keys(categories).map((category) => (
-              <li key={category}>
-                {`${category}(${categories[category].postCount})`}
-              </li>
-            ))}
+            {Object.keys(categories).map((category) => {
+              const str = `${category}(${categories[category].postCount})`;
+              return (
+                <li key={category}>
+                  <Link to={`/categories/${category}`}>{str}</Link>
+                </li>
+              );
+            })}
           </ul>
         </div>
       </div>
@@ -82,21 +87,24 @@ function NoMatchPage() {
   return <div>Path {useLocation().pathname} is unregistered route.</div>;
 }
 
-function PostList() {
+function PostListPage(props) {
+  if (props.filter) console.log("filter : ", props.filter);
   return (
     <CardDeck className="pt-4 justify-content-around">
-      {postOrder.map((post) => {
-        let { postPath, title, category } = posts[post];
-        console.log(posts[post]);
-        return (
-          <Post
-            href={postPath}
-            title={title}
-            category={category}
-            key={post}
-          ></Post>
-        );
-      })}
+      {postOrder
+        .map((post) => {
+          let { postPath, title, category } = posts[post];
+          if (props.filter && props.filter !== category) return null;
+          return (
+            <Post
+              href={postPath}
+              title={title}
+              category={category}
+              key={post}
+            ></Post>
+          );
+        })
+        .filter((x) => x)}
     </CardDeck>
   );
 }
@@ -151,6 +159,10 @@ class PostPage extends React.Component {
   render() {
     return <div>{this.Content}</div>;
   }
+}
+
+function CategoryPage(props) {
+  return <PostListPage filter={props.match.params.category}></PostListPage>;
 }
 
 export default App;

@@ -78,7 +78,7 @@ async function getPostData(postPath) {
 
 async function generateJsx(posts) {
   return asyncForEach(Object.keys(posts), async function (post) {
-    const { mdFilePath, jsxFilePath, postPath } = posts[post];
+    const { mdFilePath, jsxFilePath } = posts[post];
     const src = await readFile(path.join(__dirname, mdFilePath), "utf-8");
     const markdown = src.substring(3 + getNthIndexOf(src, "---", 2));
     const html = converter.makeHtml(markdown);
