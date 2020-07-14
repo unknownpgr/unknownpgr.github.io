@@ -34,43 +34,42 @@ function App() {
       </div>
       <div id="blog-wrapper">
         <div id="blog-side-left">LOL..</div>
-        <div id="blog-center">
-          <div className="container blog-container shadow">
-            <Navbar
-              bg="dark"
-              variant="dark"
-              expand="lg"
-              className="rounded-top"
-            >
-              UnknownPgr의 블로그.
-              <Navbar.Toggle aria-controls="basic-navbar-nav" />
-              <Navbar.Collapse id="basic-navbar-nav">
-                <Nav className="mr-auto">
-                  <Nav.Link>
-                    <Link to="/"> Main</Link>
-                  </Nav.Link>
-                  <Nav.Link>
-                    <Link to="/about">About</Link>
-                  </Nav.Link>
-                </Nav>
-              </Navbar.Collapse>
-            </Navbar>
-            <div className="container">
-              <Switch>
-                <Route exact path="/" component={MainPage}></Route>
-                <Route path="/posts/:postName" component={PostPage}></Route>
-                <Route path="/about" component={AboutPage}></Route>
-                <Route component={NoMatchPage}></Route>
-              </Switch>
-            </div>
+        <div id="blog-center" className="shadow">
+          <Navbar bg="dark" variant="dark" expand="lg" className="rounded-top">
+            <Navbar.Brand>UnknownPgr의 블로그.</Navbar.Brand>
+            <Navbar.Toggle aria-controls="basic-navbar-nav" />
+            <Navbar.Collapse id="basic-navbar-nav">
+              <Nav className="mr-auto">
+                <Link className="p-2" to="/">
+                  Main
+                </Link>
+                <Link className="p-2" to="/about">
+                  About
+                </Link>
+              </Nav>
+            </Navbar.Collapse>
+          </Navbar>
+          <div className="container">
+            <Switch>
+              <Route exact path="/" component={PostList}></Route>
+              <Route path="/posts/:postName" component={PostPage}></Route>
+              <Route path="/about" component={AboutPage}></Route>
+              <Route component={NoMatchPage}></Route>
+            </Switch>
           </div>
         </div>
         <div id="blog-side-right">
-          This is right side bar with a lot of texts!
+          <ul>
+            {Object.keys(categories).map((category) => (
+              <li key={category}>
+                {`${category}(${categories[category].postCount})`}
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
-      <footer class="page-footer font-small blue">
-        <div class="text-center py-4">
+      <footer className="page-footer font-small">
+        <div id="blog-footer-inner" className="text-center py-4">
           © 2020 Copyright :
           <a href="https://github.com/unknownpgr"> Unknownpgr</a>
         </div>
@@ -83,13 +82,20 @@ function NoMatchPage() {
   return <div>Path {useLocation().pathname} is unregistered route.</div>;
 }
 
-function MainPage() {
+function PostList() {
   return (
-    <CardDeck className="pt-3 justify-content-around">
+    <CardDeck className="pt-4 justify-content-around">
       {postOrder.map((post) => {
         let { postPath, title, category } = posts[post];
         console.log(posts[post]);
-        return <Post href={postPath} title={title} category={category}></Post>;
+        return (
+          <Post
+            href={postPath}
+            title={title}
+            category={category}
+            key={post}
+          ></Post>
+        );
       })}
     </CardDeck>
   );
@@ -103,7 +109,7 @@ function Post(props) {
   return (
     <Card
       className="text-white bg-dark mb-3 shadow-sm"
-      style={{ "max-width": "24rem", "min-width": "16rem" }}
+      style={{ maxWidth: "24rem", minWidth: "16rem" }}
     >
       <Card.Body>
         <Link to={props.href}>

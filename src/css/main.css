@@ -1,7 +1,7 @@
 html,
 body,
 #root {
-  height: 100%;
+  min-height: 100vh;
   margin: 0px;
   padding: 0px;
   display: flex;
@@ -10,6 +10,10 @@ body,
 
 body {
   background-color: #303337;
+}
+
+::-webkit-scrollbar {
+  display: none;
 }
 
 .blog-title {
@@ -31,18 +35,30 @@ body {
 
 #blog-wrapper {
   height: auto;
-  flex: 1;
-}
-
-#blog-wrapper {
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   width: 100%;
+  flex: 1;
 }
 
 #blog-side-left,
 #blog-side-right {
-  flex: 1 1 0;
+  width: 320px;
+}
+
+#blog-center {
+  width: 50%;
+}
+
+footer {
+  position: relative;
+  height: 160px;
+}
+
+#blog-footer-inner {
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
 }
 
 * {
