@@ -30,7 +30,7 @@ async function asyncForEach(array, func) {
 }
 
 // Get post data from post path
-async function getPostData(postPath) {
+async function getPostData(postPath, root) {
   // Convert postPath to full path
   postPath = path.resolve(postPath);
 
@@ -43,11 +43,11 @@ async function getPostData(postPath) {
   // Create data
   var ret = {
     postName: path.basename(postPath),
-    postPath: path.relative(__dirname, postPath),
+    postPath: path.relative(root, postPath),
     mdFileName: path.basename(mdFilePath),
-    mdFilePath: path.relative(__dirname, mdFilePath),
+    mdFilePath: path.relative(root, mdFilePath),
     jsxFilePath: path.relative(
-      __dirname,
+      root,
       path.join(postPath, path.parse(mdFilePath).name + ".jsx")
     ),
   };
@@ -76,14 +76,14 @@ async function getPostData(postPath) {
   return ret;
 }
 
-async function generateJsx(posts) {
+async function generateJsx(posts, root) {
   return asyncForEach(Object.keys(posts), async function (post) {
     const { mdFilePath, jsxFilePath } = posts[post];
-    const src = await readFile(path.join(__dirname, mdFilePath), "utf-8");
+    const src = await readFile(path.join(root, mdFilePath), "utf-8");
     const markdown = src.substring(3 + getNthIndexOf(src, "---", 2));
     const html = converter.makeHtml(markdown);
     const jsx = `
-import React from 'react'
+import React from 'react';
 export default function(props) {
     return (
         <div className="blog-post">
@@ -91,11 +91,11 @@ export default function(props) {
         </div>
     );
 };`;
-    writeFile(path.join(__dirname, jsxFilePath), jsx);
+    writeFile(path.join(root, jsxFilePath), jsx);
   });
 }
 
-async function getMetadata() {
+async function getMetadata(root) {
   // Get post directories
   var pathes = (await listDir("./posts")).filter((x) =>
     fs.statSync(x).isDirectory()
@@ -106,7 +106,7 @@ async function getMetadata() {
   const categories = {};
   await asyncForEach(pathes, async function (path) {
     try {
-      const postData = await getPostData(path);
+      const postData = await getPostData(path, root);
       const { postName, category } = postData;
       posts[postName] = postData;
       postOrder.push(postData);
@@ -130,10 +130,10 @@ async function getMetadata() {
   };
 }
 
-async function main() {
+async function main(root) {
   const meta = await getMetadata();
-  writeFile(path.join(__dirname, "meta.json"), JSON.stringify(meta));
-  generateJsx(meta.posts);
+  writeFile(path.join(root, "meta.json"), JSON.stringify(meta));
+  generateJsx(meta.posts, root);
 }
 
-main();
+main(path.join(__dirname, "src"));
