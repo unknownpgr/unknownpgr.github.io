@@ -124,10 +124,7 @@ function Post(props) {
             {(props.date + "").substr(0, 16).replace("T", " / ")}
           </Card.Subtitle>
         </div>
-        <Card.Text>
-          This is a wider card with supporting text below as a natural lead-in
-          to additional content. This content is a little bit longer.
-        </Card.Text>
+        <Card.Text>{props.text}</Card.Text>
       </Card.Body>
       <Link to={`/categories/${props.category}`}>
         <Card.Footer>

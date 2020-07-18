@@ -40,18 +40,6 @@ async function getPostData(postPath, root) {
   )[0];
   if (!mdFilePath) throw new Error("There are no content file");
 
-  // Create data
-  var ret = {
-    postName: path.basename(postPath),
-    postPath: path.relative(root, postPath),
-    mdFileName: path.basename(mdFilePath),
-    mdFilePath: path.relative(root, mdFilePath),
-    jsxFilePath: path.relative(
-      root,
-      path.join(postPath, path.parse(mdFilePath).name + ".jsx")
-    ),
-  };
-
   // Parse YMAL formatter and get title and tags.
   const fileText = await readFile(mdFilePath, "utf-8");
   const parsed = fileText.split("---");
@@ -63,6 +51,22 @@ async function getPostData(postPath, root) {
       "YAML formatter does not contain 'title' attribute. YAML header : ",
       header
     );
+
+  // Create data
+  var ret = {
+    postName: path.basename(postPath),
+    postPath: path.relative(root, postPath),
+    mdFileName: path.basename(mdFilePath),
+    mdFilePath: path.relative(root, mdFilePath),
+    jsxFilePath: path.relative(
+      root,
+      path.join(postPath, path.parse(mdFilePath).name + ".jsx")
+    ),
+    text: parsed[2]
+      .replace(/(#|\r|\n|-|\|\t| )+/g, " ")
+      .trim()
+      .substr(0, 100),
+  };
   ret["title"] = header["title"];
   ret["category"] = header["category"];
 
