@@ -1,13 +1,11 @@
 // Import stylesheets
 import "./scss/custom.scss";
-import img from "./img/github.png";
-import Post from "./Post";
 
 // Import metatdata
 import { posts, postOrder, categories } from "./meta.json";
 
 // Import libraries
-import React from "react";
+import React, { useState } from "react";
 import { Navbar, Nav, CardDeck } from "react-bootstrap";
 import {
   BrowserRouter as Router,
@@ -17,8 +15,15 @@ import {
   useLocation,
 } from "react-router-dom";
 
+// Import UIs
+import img from "./img/github.png";
+import Post from "./Post";
+import ViewPage from "./ViewPage";
+import Toc from "react-toc";
+
 function App() {
   const blogTitle = "{ UnknownPgr }";
+  const [toc, setToc] = useState(<div></div>);
 
   return (
     <Router>
@@ -34,7 +39,7 @@ function App() {
         </a>
       </div>
       <div id="blog-wrapper">
-        <div id="blog-side-left">{/* Currently empty! */}</div>
+        <div id="blog-side-left">{toc}</div>
         <div id="blog-center" className="shadow">
           <Navbar id="navbar" expand="lg" className="rounded-top">
             <Navbar.Brand>UnknownPgr의 블로그.</Navbar.Brand>
@@ -53,7 +58,12 @@ function App() {
           <div className="container">
             <Switch>
               <Route exact path="/" component={PostListPage} />
-              <Route path="/posts/:postName" component={PostPage} />
+              <Route
+                path="/posts/:postName"
+                render={(props) => (
+                  <ViewPage {...props} setToc={setToc}></ViewPage>
+                )}
+              />
               <Route path="/categories/:category" component={CategoryPage} />
               <Route path="/about" component={AboutPage} />
               <Route component={NoMatchPage} />
@@ -79,7 +89,7 @@ function App() {
           <a href="https://github.com/unknownpgr"> Unknownpgr</a>
         </div>
       </footer>
-      <div id="bar">
+      <div id="bar" hidden>
         <span id="bar-l">SSH: web-dev.iptime.org</span>
         <span id="bar-r">
           Branch : master # # # # # I added this VSCode-like status bar just for
@@ -111,28 +121,6 @@ function PostListPage(props) {
 
 function AboutPage(props) {
   return <div> This is my information! </div>;
-}
-
-class PostPage extends React.Component {
-  constructor(props) {
-    super(props);
-    // Content is html converted markdown file.
-    this.Content = <p>Now lading...</p>;
-  }
-
-  componentDidMount() {
-    const postName = this.props.match.params.postName;
-    const { jsxFilePath } = posts[postName];
-    import("./" + jsxFilePath.replace(".jsx", "")).then((loaded) => {
-      const Content = loaded.default;
-      this.Content = <Content></Content>;
-      this.forceUpdate();
-    });
-  }
-
-  render() {
-    return <div>{this.Content}</div>;
-  }
 }
 
 function CategoryPage(props) {

@@ -1,33 +1,24 @@
-import React, { Component } from "react";
+import React from "react";
 import { Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 function Post(props) {
+  const dateStr = (props.date + "").substr(0, 16).replace("T", " / ");
+  const categoryStr = "#" + props.category.replace(/ /g, "_");
+
   return (
-    <Card className="mb-3" style={{ maxWidth: "24rem", minWidth: "16rem" }}>
-      <Card.Img
-        variant="top"
-        src="/code.png"
-        // style={{ width: "80%" }}
-      ></Card.Img>
+    <Card className="m-4" style={{ maxWidth: "24rem", minWidth: "16rem" }}>
+      <Card.Img variant="top" src="/code.svg" className="card-img"></Card.Img>
       <Card.Body>
-        <div className="blog-card-title">
-          <Link to={props.postPath}>
-            <Card.Title>{props.title}</Card.Title>
-          </Link>
-          <Card.Subtitle>
-            {(props.date + "").substr(0, 16).replace("T", " / ")}
-          </Card.Subtitle>
-        </div>
+        <Link to={props.postPath}>
+          <Card.Title>{props.title}</Card.Title>
+        </Link>
+        <Card.Subtitle className="mb-2 text-muted">{dateStr}</Card.Subtitle>
         <Card.Text>{props.text}</Card.Text>
       </Card.Body>
       <Link to={`/categories/${props.category}`}>
         <Card.Footer>
-          {props.category && (
-            <small className="text-muted">
-              {"#" + props.category.replace(/ /g, "_")}
-            </small>
-          )}
+          <small className="text-muted">{categoryStr}</small>
         </Card.Footer>
       </Link>
     </Card>

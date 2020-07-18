@@ -5,6 +5,8 @@ const yaml = require("js-yaml");
 const converter = new (require("showdown").Converter)({
   tables: true,
 });
+const toc = require("react-toc");
+const React = require("react");
 
 // Promisified functions
 const readDir = util.promisify(fs.readdir);
@@ -62,6 +64,7 @@ async function getPostData(postPath, root) {
       root,
       path.join(postPath, path.parse(mdFilePath).name + ".jsx")
     ),
+    mdJsonFilePath: path.relative(root, path.join(postPath, "md.json")),
     text: parsed[2]
       .replace(/(#|\r|\n|-|\|\t| )+/g, " ")
       .trim()
@@ -82,7 +85,7 @@ async function getPostData(postPath, root) {
 
 async function generateJsx(posts, root) {
   return asyncForEach(Object.keys(posts), async function (post) {
-    const { mdFilePath, jsxFilePath } = posts[post];
+    const { mdFilePath, jsxFilePath, mdJsonFilePath } = posts[post];
     const src = await readFile(path.join(root, mdFilePath), "utf-8");
     const markdown = src.substring(3 + getNthIndexOf(src, "---", 2));
     const html = converter.makeHtml(markdown);
@@ -96,6 +99,8 @@ export default function(props) {
     );
 };`;
     writeFile(path.join(root, jsxFilePath), jsx);
+    const mdJson = `${JSON.stringify({ markdown })}`;
+    writeFile(path.join(root, mdJsonFilePath), mdJson);
   });
 }
 
