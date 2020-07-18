@@ -97,7 +97,7 @@ export default function(props) {
 
 async function getMetadata(root) {
   // Get post directories
-  var pathes = (await listDir("./posts")).filter((x) =>
+  var pathes = (await listDir(path.join(root, "posts"))).filter((x) =>
     fs.statSync(x).isDirectory()
   );
   const errors = [];
@@ -131,7 +131,7 @@ async function getMetadata(root) {
 }
 
 async function main(root) {
-  const meta = await getMetadata();
+  const meta = await getMetadata(root);
   writeFile(path.join(root, "meta.json"), JSON.stringify(meta));
   generateJsx(meta.posts, root);
 }

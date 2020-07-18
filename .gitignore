@@ -21,3 +21,7 @@ yarn-error.log*
 
 /build
 build/
+
+# blog posts
+src/posts/*
+src/meta.json
