@@ -144,8 +144,9 @@ async function updatePosts(setting) {
   // Sort post names in postOrder list by date and add order property.
   postOrder = postOrder
     .sort((a, b) => b.date - a.date)
-    .forEach((post, i) => {
+    .map((post, i) => {
       posts[post.name].order = i;
+      return post.name;
     });
 
   // Remove root from setting
@@ -163,15 +164,18 @@ async function updatePosts(setting) {
 async function runCommand(command, msg, cwd = __dirname) {
   console.log(msg);
   console.log("\tCommand : " + command);
+  const result = true;
   const start = Date.now();
   try {
     await execute(command, { cwd: cwd });
   } catch (e) {
     console.log("\t Error : " + e);
+    result = false;
   }
   const end = Date.now();
   const sec = (end - start) / 1000;
   console.log(`\tExecution time : ${sec}s\n`);
+  return result;
 }
 
 async function main(setting) {
@@ -184,7 +188,14 @@ async function main(setting) {
   // Automated blog build & commit
   //================================================
 
-  await runCommand("yarn react-scripts build", "Build blog");
+  const buildSuccess = await runCommand(
+    "yarn react-scripts build",
+    "Build blog"
+  );
+  if (!buildSuccess) {
+    console.log("Blog build failed. cancel all tasks.");
+    return;
+  }
 
   const src = path.join(__dirname, "build");
   const dst = path.join(__dirname, "../github-blog-build/");
@@ -199,12 +210,10 @@ async function main(setting) {
   await runCommand("git add .", "Git add all", dst);
   await runCommand(`git commit -m "Update at ${new Date()}"`, "Commit", dst);
   await runCommand("git push origin master", "Git push", dst);
-
-  console.log("Finished.");
 }
 
 main({
   root: path.join(__dirname, "src"),
   jsxFile: "view.jsx",
   tocFile: "toc.json",
-});
+}).then(() => console.log("All tasks finished."));
