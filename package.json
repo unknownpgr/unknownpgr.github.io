@@ -17,8 +17,7 @@
     "showdown": "^1.9.1"
   },
   "scripts": {
-    "update": "node blog.js",
-    "build": "yarn update;react-scripts build",
+    "build": "node blog.js",
     "start": "react-scripts start",
     "serve": "serve -s build -p 3000",
     "test": "react-scripts test",

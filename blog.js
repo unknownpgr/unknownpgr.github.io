@@ -7,6 +7,7 @@ const converter = new (require("showdown").Converter)({
   prefixHeaderId: "header", // It requires header prefiex because first full-korean header will be converted to empty string.
 });
 const getToc = require("./toc");
+const { exec } = require("child_process");
 
 /**
  * 스크립트가 너무 더럽다. 특히 메타데이터 가져오고 저장하는 부분이, 상대 디렉토리로 바꿨다가 다시 절대로 가는 등, 의미없는 부분이 너무 많다. 이 부분을 다시 고칠 필요가 있다.
@@ -36,6 +37,7 @@ const listDir = async (dirPath) =>
 const readFile = util.promisify(fs.readFile);
 const writeFile = util.promisify(fs.writeFile);
 const stat = util.promisify(fs.stat);
+const execute = util.promisify(exec);
 
 // Find n-th appearence of pattern in string.
 function getNthIndexOf(str, pattern, n) {
@@ -100,8 +102,10 @@ async function updateSinglePost(postPath, setting) {
   const html = converter.makeHtml(markdown);
   const jsx = `import React from 'react';export default function(props){return(<React.Fragment>${html}</React.Fragment>);};`;
   const toc = getToc(html);
-  writeFile(path.join(postPath, setting.jsxFile), jsx);
-  writeFile(path.join(postPath, setting.tocFile), JSON.stringify(toc));
+  await Promise.all([
+    writeFile(path.join(postPath, setting.jsxFile), jsx),
+    writeFile(path.join(postPath, setting.tocFile), JSON.stringify(toc)),
+  ]);
   return ret;
 }
 
@@ -156,8 +160,19 @@ async function updatePosts(setting) {
 
 async function main(setting) {
   const { root } = setting;
+  console.log("Updating posts...");
   const meta = await updatePosts(setting);
-  writeFile(path.join(root, "meta.json"), JSON.stringify(meta));
+  await writeFile(path.join(root, "meta.json"), JSON.stringify(meta));
+  console.log("Build blog...");
+  await execute("yarn react-scripts build");
+  console.log("Coping build path...");
+  const cmd = `yes | cp -rf ${path.join(__dirname, "build")}/* ${path.join(
+    __dirname,
+    "../github-blog-build/"
+  )}`;
+  console.log("\tCommand : " + cmd);
+  await execute(cmd);
+  console.log("Finished.");
 }
 
 main({

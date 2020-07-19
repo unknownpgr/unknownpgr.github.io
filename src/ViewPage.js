@@ -1,14 +1,15 @@
 import React from "react";
 import { posts, setting } from "./meta.json";
 
+// Build TOC from toc json
 function buildToc(toc) {
   return (
     <ol>
       {toc.map((x) => {
         const child = x.children ? buildToc(x.children) : undefined;
         return (
-          <React.Fragment>
-            <li key={x.id}>
+          <React.Fragment key={x.id + "i"}>
+            <li key={x.id + "j"}>
               <a href={"#" + x.id}>{x.text}</a>
             </li>
             {child}
@@ -22,15 +23,14 @@ function buildToc(toc) {
 class ViewPage extends React.Component {
   constructor(props) {
     super(props);
-
-    // Content is html converted markdown file.
-    this.Content = <p>Now lading...</p>;
+    this.Content = <p></p>;
   }
 
   componentDidMount() {
     const postName = this.props.match.params.postName;
     this.post = posts[postName];
 
+    // Load post, toc file
     const jsxFilePath = this.post.path + "/" + setting.jsxFile;
     const tocFilePath = this.post.path + "/" + setting.tocFile;
 
@@ -50,7 +50,9 @@ class ViewPage extends React.Component {
     const dateStr = (this.post?.date + "").substr(0, 16).replace("T", " / ");
     return (
       <div className="mx-4 mt-4">
+        {/* Title of post */}
         <h1>{this.post?.title}</h1>
+        {/* Subtitle of post */}
         <div>
           <strong>{dateStr}</strong>
           <span className="text-muted" style={{ marginLeft: "1rem" }}>
@@ -58,9 +60,15 @@ class ViewPage extends React.Component {
           </span>
           <hr style={{ marginTop: "2rem" }}></hr>
         </div>
+        {/* Content of post */}
         <div className="blog-post">{this.Content}</div>
       </div>
     );
+  }
+
+  componentWillUnmount() {
+    // Remove TOC when unmount
+    this.props.setToc(<p></p>);
   }
 }
 

@@ -57,12 +57,11 @@ function App() {
           <div className="container p-4">
             <Switch>
               <Route exact path="/" component={PostListPage} />
-              <Route
+              <ParamRouter
                 path="/posts/:postName"
-                render={(props) => (
-                  <ViewPage {...props} setToc={setToc}></ViewPage>
-                )}
-              />
+                setToc={setToc}
+                inner={ViewPage}
+              ></ParamRouter>
               <Route path="/categories/:category" component={CategoryPage} />
               <Route path="/about" component={AboutPage} />
               <Route component={NoMatchPage} />
@@ -96,6 +95,18 @@ function App() {
         </span>
       </div>
     </Router>
+  );
+}
+
+function ParamRouter(props) {
+  console.log(props);
+  return (
+    <Route
+      {...props}
+      render={(innerProps) => (
+        <props.inner {...innerProps} {...props}></props.inner>
+      )}
+    ></Route>
   );
 }
 
