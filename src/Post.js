@@ -10,7 +10,7 @@ function Post(props) {
     <Card className="m-4" style={{ maxWidth: "24rem", minWidth: "16rem" }}>
       <Card.Img variant="top" src="/code.svg" className="card-img"></Card.Img>
       <Card.Body>
-        <Link to={props.postPath}>
+        <Link to={"/" + props.postPath}>
           <Card.Title>{props.title}</Card.Title>
         </Link>
         <Card.Subtitle className="mb-2 text-muted">{dateStr}</Card.Subtitle>

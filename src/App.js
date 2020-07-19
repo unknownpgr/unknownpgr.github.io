@@ -19,7 +19,6 @@ import {
 import img from "./img/github.png";
 import Post from "./Post";
 import ViewPage from "./ViewPage";
-import Toc from "react-toc";
 
 function App() {
   const blogTitle = "{ UnknownPgr }";
@@ -55,7 +54,7 @@ function App() {
               </Nav>
             </Navbar.Collapse>
           </Navbar>
-          <div className="container">
+          <div className="container p-4">
             <Switch>
               <Route exact path="/" component={PostListPage} />
               <Route
@@ -107,7 +106,7 @@ function NoMatchPage() {
 function PostListPage(props) {
   if (props.filter) console.log("filter : ", props.filter);
   return (
-    <CardDeck className="blog-post-list pt-4 justify-content-around">
+    <CardDeck className="blog-post-list justify-content-around">
       {postOrder
         .map((post) => {
           let { category } = posts[post];

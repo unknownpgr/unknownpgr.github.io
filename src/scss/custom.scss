@@ -1,9 +1,34 @@
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300&display=swap");
 @import "node_modules/bootstrap/scss/bootstrap";
 
+// =====[ Markdown re-define ]=====
 * {
   font-family: "Noto Sans KR", sans-serif;
 }
+
+code {
+  background-color: #eee;
+  border-radius: 2px;
+  padding: 2px;
+  color: #004;
+  font-weight: 400;
+}
+
+blockquote {
+  background-color: #ccc8;
+  padding: 0.5rem;
+  padding-left: 1rem;
+  border-left: 4px solid #aaa;
+}
+
+th,
+td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+// ================================
 
 html,
 body,

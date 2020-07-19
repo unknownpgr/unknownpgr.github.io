@@ -11,20 +11,35 @@ class ViewPage extends React.Component {
 
   componentDidMount() {
     const postName = this.props.match.params.postName;
-    const jsxFilePath = posts[postName].jsxFilePath.replace(".jsx", "");
-    const mdJsonFilePath = posts[postName].mdJsonFilePath;
-    import("./" + jsxFilePath).then((loaded) => {
-      const Content = loaded.default;
-      this.Content = <Content></Content>;
-      this.forceUpdate();
-    });
-    import("./" + mdJsonFilePath).then((loaded) => {
-      const md = loaded.default.markdown;
-    });
+    this.post = posts[postName];
+
+    const jsxFilePath = this.post.jsxFilePath.replace(".jsx", "");
+    const mdJsonFilePath = this.post.mdJsonFilePath;
+    Promise.all([
+      import("./" + jsxFilePath).then((loaded) => {
+        const Content = loaded.default;
+        this.Content = <Content></Content>;
+      }),
+      import("./" + mdJsonFilePath).then((loaded) => {
+        const md = loaded.default.markdown;
+      }),
+    ]).then(() => this.forceUpdate());
   }
 
   render() {
-    return <div>{this.Content}</div>;
+    return (
+      <div className="mx-4 mt-4">
+        <h1>{this.post?.title}</h1>
+        <div>
+          <strong>{this.post?.date}</strong>
+          <span className="text-muted" style={{ marginLeft: "1rem" }}>
+            #{this.post?.category}
+          </span>
+          <hr></hr>
+        </div>
+        {this.Content}
+      </div>
+    );
   }
 }
 
