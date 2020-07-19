@@ -161,7 +161,11 @@ async function updatePosts(setting) {
 async function runCommand(command, msg, cwd = __dirname) {
   console.log(msg);
   console.log("\tCommand : " + command + "\n");
+  const start = Date.now();
   await execute(command, { cwd: cwd });
+  const end = Date.now();
+  const sec = (end - start) / 1000;
+  console.log(`\tExecution time : ${sec}s`);
 }
 
 async function main(setting) {
