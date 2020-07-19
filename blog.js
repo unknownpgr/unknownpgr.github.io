@@ -164,14 +164,23 @@ async function main(setting) {
   const meta = await updatePosts(setting);
   await writeFile(path.join(root, "meta.json"), JSON.stringify(meta));
   console.log("Build blog...");
-  await execute("yarn react-scripts build");
-  console.log("Coping build path...");
-  const cmd = `yes | cp -rf ${path.join(__dirname, "build")}/* ${path.join(
-    __dirname,
-    "../github-blog-build/"
-  )}`;
+  // await execute("yarn react-scripts build");
+
+  const src = path.join(__dirname, "build");
+  const dst = path.join(__dirname, "../github-blog-build/");
+
+  try {
+    console.log("Creating blog path");
+    const cmd = "mkdir " + dst;
+    console.log("\tCommand : " + cmd);
+    await execute(cmd);
+  } catch {}
+
+  console.log("Coping blog...");
+  const cmd = `yes | cp -rf ${src}/* ${dst}`;
   console.log("\tCommand : " + cmd);
   await execute(cmd);
+
   console.log("Finished.");
 }
 
