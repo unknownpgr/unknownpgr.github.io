@@ -1,7 +1,7 @@
 # Github Blog
 
 - 깃허브 블로그 링크 : https://unknownpgr.github.io/
-- 깃허브 블로그 리포지토리 링크 : https://github.com/unknownpgr/github-blog
+- 깃허브 블로그 리포지토리 링크 : https://github.com/unknownpgr/unknownpgr.github.io
 
 # 요약
 
