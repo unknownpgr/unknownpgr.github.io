@@ -1,5 +1,5 @@
 ---
-title: 최신 문서
+title: 포스트 업데이트하기
 category: test document
 ---
 
