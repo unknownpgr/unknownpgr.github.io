@@ -2,11 +2,11 @@
 import "./scss/custom.scss";
 
 // Import metatdata
-import { posts, postOrder, categories } from "./meta.json";
+import { categories } from "./meta.json";
 
 // Import libraries
 import React, { useState } from "react";
-import { Navbar, Nav, CardDeck } from "react-bootstrap";
+import { Navbar, Nav } from "react-bootstrap";
 import {
   BrowserRouter as Router,
   Route,
@@ -17,8 +17,8 @@ import {
 
 // Import UIs
 import img from "./img/github.png";
-import Post from "./Post";
 import ViewPage from "./ViewPage";
+import PostListPage from "./PostListPage";
 
 function App() {
   const blogTitle = "{ UnknownPgr }";
@@ -101,21 +101,6 @@ function App() {
 
 function NoMatchPage() {
   return <div>Path {useLocation().pathname} is unregistered route.</div>;
-}
-
-function PostListPage(props) {
-  if (props.filter) console.log("filter : ", props.filter);
-  return (
-    <CardDeck className="blog-post-list justify-content-around">
-      {postOrder
-        .map((post) => {
-          let { category } = posts[post];
-          if (props.filter && props.filter !== category) return null;
-          return <Post {...posts[post]} key={post}></Post>;
-        })
-        .filter((x) => x)}
-    </CardDeck>
-  );
 }
 
 function AboutPage(props) {
