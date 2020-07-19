@@ -141,10 +141,12 @@ async function updatePosts(setting) {
     }
   });
 
-  // Sort post names in postOrder list by date
+  // Sort post names in postOrder list by date and add order property.
   postOrder = postOrder
     .sort((a, b) => b.date - a.date)
-    .map((post) => post.name);
+    .forEach((post, i) => {
+      posts[post.name].order = i;
+    });
 
   // Remove root from setting
   delete setting.root;
@@ -153,19 +155,23 @@ async function updatePosts(setting) {
     posts,
     errors,
     categories,
-    postOrder,
     setting,
+    postOrder,
   };
 }
 
 async function runCommand(command, msg, cwd = __dirname) {
   console.log(msg);
-  console.log("\tCommand : " + command + "\n");
+  console.log("\tCommand : " + command);
   const start = Date.now();
-  await execute(command, { cwd: cwd });
+  try {
+    await execute(command, { cwd: cwd });
+  } catch (e) {
+    console.log("\t Error : " + e);
+  }
   const end = Date.now();
   const sec = (end - start) / 1000;
-  console.log(`\tExecution time : ${sec}s`);
+  console.log(`\tExecution time : ${sec}s\n`);
 }
 
 async function main(setting) {
@@ -178,31 +184,20 @@ async function main(setting) {
   // Automated blog build & commit
   //================================================
 
-  await runCommand("yarn react-scripts build", "Build blog...");
+  await runCommand("yarn react-scripts build", "Build blog");
 
   const src = path.join(__dirname, "build");
   const dst = path.join(__dirname, "../github-blog-build/");
 
-  try {
-    await runCommand("mkdir " + dst, "Creating blog path");
-  } catch {}
-
-  try {
-    await runCommand(
-      'rm -rf -v !(".git"|"README.md")',
-      "Remove existing files...",
-      dst
-    );
-  } catch {}
-
-  await runCommand(`yes | cp -rf ${src}/* ${dst}`, "Coping blog...");
-
-  await runCommand("git add .", "Git add all", dst);
+  await runCommand("mkdir " + dst, "Create blog path");
   await runCommand(
-    `git commit -m "Update at ${Date.now() + ""}"`,
-    "Commit",
+    'rm -rf -v !(".git"|"README.md")',
+    "Remove existing files",
     dst
   );
+  await runCommand(`yes | cp -rf ${src}/* ${dst}`, "Copy blog build");
+  await runCommand("git add .", "Git add all", dst);
+  await runCommand(`git commit -m "Update at ${new Date()}"`, "Commit", dst);
   await runCommand("git push origin master", "Git push", dst);
 
   console.log("Finished.");
