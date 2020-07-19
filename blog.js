@@ -164,7 +164,7 @@ async function updatePosts(setting) {
 async function runCommand(command, msg, cwd = __dirname) {
   console.log(msg);
   console.log("\tCommand : " + command);
-  const result = true;
+  let result = true;
   const start = Date.now();
   try {
     await execute(command, { cwd: cwd });
