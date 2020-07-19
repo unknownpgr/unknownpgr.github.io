@@ -1,2 +1,3 @@
 # Github blog of Unknowngpr
-Link : https://unknownpgr.github.io/
+Blog link : https://unknownpgr.github.io/
+Development repo link : https://github.com/unknownpgr/github-blog
