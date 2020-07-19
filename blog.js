@@ -158,28 +158,48 @@ async function updatePosts(setting) {
   };
 }
 
+async function runCommand(command, msg, cwd = __dirname) {
+  console.log(msg);
+  console.log("\tCommand : " + command + "\n");
+  await execute(command, { cwd: cwd });
+}
+
 async function main(setting) {
   const { root } = setting;
   console.log("Updating posts...");
   const meta = await updatePosts(setting);
   await writeFile(path.join(root, "meta.json"), JSON.stringify(meta));
-  console.log("Build blog...");
-  // await execute("yarn react-scripts build");
+
+  //================================================
+  // Automated blog build & commit
+  //================================================
+
+  await runCommand("yarn react-scripts build", "Build blog...");
 
   const src = path.join(__dirname, "build");
   const dst = path.join(__dirname, "../github-blog-build/");
 
   try {
-    console.log("Creating blog path");
-    const cmd = "mkdir " + dst;
-    console.log("\tCommand : " + cmd);
-    await execute(cmd);
+    await runCommand("mkdir " + dst, "Creating blog path");
   } catch {}
 
-  console.log("Coping blog...");
-  const cmd = `yes | cp -rf ${src}/* ${dst}`;
-  console.log("\tCommand : " + cmd);
-  await execute(cmd);
+  try {
+    await runCommand(
+      'rm -rf -v !(".git"|"README.md")',
+      "Remove existing files...",
+      dst
+    );
+  } catch {}
+
+  await runCommand(`yes | cp -rf ${src}/* ${dst}`, "Coping blog...");
+
+  await runCommand("git add .", "Git add all", dst);
+  await runCommand(
+    `git commit -m "Update at ${Date.now() + ""}"`,
+    "Commit",
+    dst
+  );
+  await runCommand("git push origin master", "Git push", dst);
 
   console.log("Finished.");
 }
