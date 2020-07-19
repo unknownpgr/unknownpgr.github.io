@@ -6,6 +6,7 @@ const converter = new (require("showdown").Converter)({
   tables: true,
   prefixHeaderId: "header", // It requires header prefiex because first full-korean header will be converted to empty string.
 });
+const getToc = require("./toc");
 
 /**
  * 스크립트가 너무 더럽다. 특히 메타데이터 가져오고 저장하는 부분이, 상대 디렉토리로 바꿨다가 다시 절대로 가는 등, 의미없는 부분이 너무 많다. 이 부분을 다시 고칠 필요가 있다.
@@ -98,39 +99,10 @@ async function updateSinglePost(postPath, root) {
   const markdown = src.substring(3 + getNthIndexOf(src, "---", 2)); // Split cannot be used here because --- is also used as horizontal line.
   const html = converter.makeHtml(markdown);
   const jsx = `import React from 'react';export default function(props){return(<div className="blog-post">${html}</div>);};`;
-
-  // Build toc
-  const headers = [...html.matchAll(/<h[0-9]+[^<>]*>[^<>]+<\/h[0-9]+[^<>]*>/g)];
-  let stack = [];
-  let current = [];
-  let currentDepth = 1;
-  headers.forEach((header) => {
-    const [h] = header;
-    const id = h.match(/id="[^"]+"/)[0].replace(/id=|"/g, "");
-    const body = h.replace(/<[^<>]+>/g, "");
-    const [depth] = h.match(/[0-9]+/);
-    while (depth > currentDepth) {
-      stack.push(current);
-      current = [];
-      currentDepth++;
-    }
-    while (depth < currentDepth) {
-      const temp = current;
-      current = stack.pop();
-      current[current.length - 1].children = temp;
-      currentDepth--;
-    }
-    current.push({ id, body });
-  });
-  while (currentDepth > 1) {
-    const temp = current;
-    current = stack.pop();
-    current[current.length - 1].children = temp;
-    currentDepth--;
-  }
-  console.log(current);
+  const toc = getToc(html);
+  console.log(toc);
   writeFile(path.join(root, ret.jsxFile + ".jsx"), jsx);
-  writeFile(path.join(root, ret.tocFile), JSON.stringify(current));
+  writeFile(path.join(root, ret.tocFile), JSON.stringify(toc));
   return ret;
 }
 
