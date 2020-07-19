@@ -1,2 +1,0 @@
-(this["webpackJsonpgithub-blog"]=this["webpackJsonpgithub-blog"]||[]).push([[9],{55:function(e){e.exports=JSON.parse('[{"id":"headerandthisisheader","text":"And this is header."}]')}}]);
-//# sourceMappingURL=9.b989a7b7.chunk.js.map
