@@ -1,9 +1,9 @@
-import React, { Component } from "react";
+import React from "react";
 import { posts, postOrder, categories } from "./meta.json";
-import { CardDeck } from "react-bootstrap";
+import CardDeck from "react-bootstrap/CardDeck";
 import Post from "./Post";
 
-class PostListPage extends Component {
+class PostListPage extends React.Component {
   render() {
     return (
       <CardDeck className="blog-post-list justify-content-around">

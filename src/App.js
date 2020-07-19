@@ -6,14 +6,13 @@ import { categories } from "./meta.json";
 
 // Import libraries
 import React, { useState } from "react";
-import { Navbar, Nav } from "react-bootstrap";
-import {
-  BrowserRouter as Router,
-  Route,
-  Link,
-  Switch,
-  useLocation,
-} from "react-router-dom";
+import Navbar from "react-bootstrap/Navbar";
+import Nav from "react-bootstrap/Nav";
+
+import BrowserRouter from "react-router-dom/BrowserRouter";
+import Route from "react-router-dom/Route";
+import Link from "react-router-dom/Link";
+import Switch from "react-router-dom/Switch";
 
 // Import UIs
 import img from "./img/github.png";
@@ -25,7 +24,7 @@ function App() {
   const [toc, setToc] = useState(<div></div>);
 
   return (
-    <Router>
+    <BrowserRouter>
       <div className="blog-title">
         <h1 className="display-4 py-4 text-center">{blogTitle}</h1>
         <a href="https://github.com/unknownpgr">
@@ -94,7 +93,7 @@ function App() {
           fun. lol
         </span>
       </div>
-    </Router>
+    </BrowserRouter>
   );
 }
 
@@ -111,7 +110,7 @@ function ParamRouter(props) {
 }
 
 function NoMatchPage() {
-  return <div>Path {useLocation().pathname} is unregistered route.</div>;
+  return <div>Path is unregistered route.</div>;
 }
 
 function AboutPage(props) {
