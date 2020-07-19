@@ -1,5 +1,5 @@
 import React from "react";
-import { posts, postOrder, categories } from "./meta.json";
+import { posts, postOrder } from "./meta.json";
 import CardDeck from "react-bootstrap/CardDeck";
 import Post from "./Post";
 

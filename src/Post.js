@@ -13,14 +13,14 @@ function Post(props) {
         <Link to={"/" + props.path}>
           <Card.Title>{props.title}</Card.Title>
         </Link>
-        <Card.Subtitle className="mb-2 text-muted">{dateStr}</Card.Subtitle>
+        <Card.Subtitle className="mb-2 text-muted">
+          <span style={{ marginRight: "1rem" }}>{dateStr}</span>
+          <Link to={`/categories/${props.category}`}>
+            <small className="text-muted">{categoryStr}</small>{" "}
+          </Link>
+        </Card.Subtitle>
         <Card.Text>{props.text}</Card.Text>
       </Card.Body>
-      <Link to={`/categories/${props.category}`}>
-        <Card.Footer>
-          <small className="text-muted">{categoryStr}</small>
-        </Card.Footer>
-      </Link>
     </Card>
   );
 }

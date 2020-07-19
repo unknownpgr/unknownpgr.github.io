@@ -188,6 +188,11 @@ async function main(setting) {
   // Automated blog build & commit
   //================================================
 
+  if (process.argv.indexOf("--skip-build") > 0) {
+    console.log("Skip build.");
+    return;
+  }
+
   const buildSuccess = await runCommand(
     "yarn react-scripts build",
     "Build blog"
