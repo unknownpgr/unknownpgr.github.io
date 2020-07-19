@@ -1,5 +1,23 @@
 import React from "react";
-import { posts } from "./meta.json";
+import { posts, setting } from "./meta.json";
+
+function buildToc(toc) {
+  return (
+    <ol>
+      {toc.map((x) => {
+        const child = x.children ? buildToc(x.children) : undefined;
+        return (
+          <React.Fragment>
+            <li key={x.id}>
+              <a href={"#" + x.id}>{x.text}</a>
+            </li>
+            {child}
+          </React.Fragment>
+        );
+      })}
+    </ol>
+  );
+}
 
 class ViewPage extends React.Component {
   constructor(props) {
@@ -13,31 +31,34 @@ class ViewPage extends React.Component {
     const postName = this.props.match.params.postName;
     this.post = posts[postName];
 
-    const jsxFilePath = this.post.jsxFilePath.replace(".jsx", "");
-    const mdJsonFilePath = this.post.mdJsonFilePath;
+    const jsxFilePath = this.post.path + "/" + setting.jsxFile;
+    const tocFilePath = this.post.path + "/" + setting.tocFile;
+
     Promise.all([
       import("./" + jsxFilePath).then((loaded) => {
         const Content = loaded.default;
         this.Content = <Content></Content>;
       }),
-      import("./" + mdJsonFilePath).then((loaded) => {
-        const md = loaded.default.markdown;
+      import("./" + tocFilePath).then((loaded) => {
+        const toc = loaded.default;
+        this.props.setToc(buildToc(toc));
       }),
     ]).then(() => this.forceUpdate());
   }
 
   render() {
+    const dateStr = (this.post?.date + "").substr(0, 16).replace("T", " / ");
     return (
       <div className="mx-4 mt-4">
         <h1>{this.post?.title}</h1>
         <div>
-          <strong>{this.post?.date}</strong>
+          <strong>{dateStr}</strong>
           <span className="text-muted" style={{ marginLeft: "1rem" }}>
             #{this.post?.category}
           </span>
-          <hr></hr>
+          <hr style={{ marginTop: "2rem" }}></hr>
         </div>
-        {this.Content}
+        <div className="blog-post">{this.Content}</div>
       </div>
     );
   }

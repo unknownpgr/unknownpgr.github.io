@@ -53,9 +53,7 @@ async function asyncForEach(array, func) {
 }
 
 // Get post data from post path
-async function updateSinglePost(postPath, root) {
-  console.log("Getting post path information of " + postPath);
-
+async function updateSinglePost(postPath, setting) {
   // Convert postPath to full path
   postPath = path.resolve(postPath);
 
@@ -82,12 +80,14 @@ async function updateSinglePost(postPath, root) {
     header["date"] = date;
   }
 
+  // Beautify category
+  if (header.category)
+    header.category = header.category.replace(/( |\t|_|-)+/g, "_");
+
   // Create data
   var ret = {
-    postName: path.basename(postPath),
-    postPath: path.relative(root, postPath),
-    jsxFile: path.relative(root, path.join(postPath, "view")),
-    tocFile: path.relative(root, path.join(postPath, "toc.json")),
+    name: path.basename(postPath),
+    path: path.relative(setting.root, postPath),
     text: parsed[2]
       .replace(/(#|\r|\n|-|\|\t| )+/g, " ")
       .trim()
@@ -98,17 +98,16 @@ async function updateSinglePost(postPath, root) {
   // jsx / toc file generation
   const markdown = src.substring(3 + getNthIndexOf(src, "---", 2)); // Split cannot be used here because --- is also used as horizontal line.
   const html = converter.makeHtml(markdown);
-  const jsx = `import React from 'react';export default function(props){return(<div className="blog-post">${html}</div>);};`;
+  const jsx = `import React from 'react';export default function(props){return(<React.Fragment>${html}</React.Fragment>);};`;
   const toc = getToc(html);
-  console.log(toc);
-  writeFile(path.join(root, ret.jsxFile + ".jsx"), jsx);
-  writeFile(path.join(root, ret.tocFile), JSON.stringify(toc));
+  writeFile(path.join(postPath, setting.jsxFile), jsx);
+  writeFile(path.join(postPath, setting.tocFile), JSON.stringify(toc));
   return ret;
 }
 
-async function updatePosts(root) {
+async function updatePosts(setting) {
   // Get post directories
-  var pathes = (await listDir(path.join(root, "posts"))).filter((x) =>
+  var pathes = (await listDir(path.join(setting.root, "posts"))).filter((x) =>
     fs.statSync(x).isDirectory()
   );
 
@@ -120,41 +119,49 @@ async function updatePosts(root) {
   await asyncForEach(pathes, async function (path) {
     try {
       // Update single post and get postData.
-      const postData = await updateSinglePost(path, root);
-      const { postName, category } = postData;
+      const postData = await updateSinglePost(path, setting);
+      const { name, category } = postData;
 
       // Build posts dictionary
-      posts[postName] = postData;
+      posts[name] = postData;
 
       // Build post order list
       postOrder.push(postData);
 
       // Build category dictionary
-      if (categories[category]) categories[category].postCount++;
-      else categories[category] = { postCount: 1 };
+      if (categories[category]) categories[category].count++;
+      else categories[category] = { count: 1 };
     } catch (e) {
       // Build error dictionary
-      errors.push({ postPath: path, error: e });
+      errors.push({ path: path, error: e });
     }
   });
 
   // Sort post names in postOrder list by date
   postOrder = postOrder
     .sort((a, b) => b.date - a.date)
-    .map((post) => post.postName);
+    .map((post) => post.name);
+
+  // Remove root from setting
+  delete setting.root;
 
   return {
     posts,
     errors,
     categories,
     postOrder,
+    setting,
   };
 }
 
-async function main(root) {
-  const meta = await updatePosts(root);
-  // console.log(meta);
+async function main(setting) {
+  const { root } = setting;
+  const meta = await updatePosts(setting);
   writeFile(path.join(root, "meta.json"), JSON.stringify(meta));
 }
 
-main(path.join(__dirname, "src"));
+main({
+  root: path.join(__dirname, "src"),
+  jsxFile: "view.jsx",
+  tocFile: "toc.json",
+});

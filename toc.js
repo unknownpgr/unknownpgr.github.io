@@ -26,7 +26,7 @@ function getToc(html) {
       if (current.length == 0) current.push({});
       current[current.length - 1].children = temp;
     }
-    current.push({ id, body: text });
+    current.push({ id, text });
   });
 
   // Don't forget to return to root after entire iteration.

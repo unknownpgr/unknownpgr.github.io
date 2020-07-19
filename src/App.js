@@ -72,7 +72,7 @@ function App() {
         <div id="blog-side-right">
           <ul>
             {Object.keys(categories).map((category) => {
-              const str = `${category}(${categories[category].postCount})`;
+              const str = `${category}(${categories[category].count})`;
               return (
                 <li key={category}>
                   <Link to={`/categories/${category}`}>{str}</Link>
