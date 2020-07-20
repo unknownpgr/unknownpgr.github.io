@@ -48,7 +48,6 @@ jobs:
           git config --global user.name $MY_NAME;
           git add .
           git commit -m "Update blog at $(date).";
-          git remote add origin https://github.com/unknownpgr/unknownpgr.github.io.git;
           git push origin master
 
         env:
