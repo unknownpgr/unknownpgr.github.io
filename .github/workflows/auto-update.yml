@@ -12,6 +12,11 @@ jobs:
       # Run checkout
       - uses: actions/checkout@v2
 
+      - name: Set ssh
+        run: |
+          mkdir ~/.ssh
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
+
       - name: Initialize
         run: yarn install
 
@@ -28,7 +33,7 @@ jobs:
         run: |
           cd ../blog-publish;
           git init;
-          git remote add origin https://github.com/unknownpgr/unknownpgr.github.io.git
+          git remote set-url origin git@github.com:unknownpgr/unknownpgr.github.io.git
           git pull origin master
 
       - name: Copy build
@@ -53,4 +58,3 @@ jobs:
         env:
           MY_NAME: unknownpgr
           MY_EMAIL: unknownpgr@gmail.com
-          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
