@@ -19,10 +19,10 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-build
+/build
+build/
 
 # blog posts
-posts/*/*.jsx
-posts/*/*.json
-src/posts/*
+posts/*
+posts/*
 meta.json
