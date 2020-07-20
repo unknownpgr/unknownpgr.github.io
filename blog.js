@@ -133,6 +133,11 @@ async function updateSinglePost(postPath, setting) {
 }
 
 async function updatePosts(setting) {
+  // Make destination post directory
+  try {
+    await mkdir(path.join(setting.dst, "posts"));
+  } catch {}
+
   // Get post directories
   var pathes = (await listDir(path.join(setting.root, "posts"))).filter((x) =>
     fs.statSync(x).isDirectory()

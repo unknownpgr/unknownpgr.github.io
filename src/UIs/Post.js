@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import dateFormat from "dateFormat";
 
 function Post(props) {
-  console.log(new Date(props.date));
   const categoryStr = "# " + props.category;
 
   return (
