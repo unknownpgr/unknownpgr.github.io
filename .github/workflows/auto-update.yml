@@ -27,10 +27,8 @@ jobs:
         run: |
           cd ../blog-publish;
           git init
-          remote_repo="https://${MY_NAME}:${{ secrets.ACCESS_TOKEN }}@github.com/unknownpgr.github.io.git"
-          git push "${remote_repo}" HEAD:master;
-        env:
-          MY_NAME: unknownpgr
+          git remote add origin git@github.com:unknownpgr/unknownpgr.github.io.git
+          git pull origin master
 
       - name: Delete existing build files
         run: |
@@ -71,7 +69,8 @@ jobs:
           git config --global user.name $MY_NAME;
           git add .
           git commit -m "Update blog at $(date).";
-          git push origin master
+          remote_repo="https://${MY_NAME}:${{ secrets.ACCESS_TOKEN }}@github.com/unknownpgr.github.io.git"
+          git push "${remote_repo}" HEAD:master;
 
         env:
           MY_NAME: unknownpgr
