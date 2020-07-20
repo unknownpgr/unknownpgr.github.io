@@ -27,9 +27,10 @@ jobs:
         run: |
           cd ../blog-publish;
           git init
-          git remote add origin git@github.com:unknownpgr/unknownpgr.github.io.git
-          git remote set-url origin git@github.com:unknownpgr/unknownpgr.github.io.git
-          git pull origin master
+          remote_repo="https://${MY_NAME}:${{ secrets.ACCESS_TOKEN }}@github.com/unknownpgr.github.io.git"
+          git push "${remote_repo}" HEAD:master;
+        env:
+          MY_NAME: unknownpgr
 
       - name: Delete existing build files
         run: |
