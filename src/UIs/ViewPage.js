@@ -46,14 +46,18 @@ class ViewPage extends React.Component {
      *    Relative path should be provided as string literal
      */
     Promise.all([
-      import("../posts/" + jsxFilePath).then((loaded) => {
+      import(
+        /* webpackChunkName: "post-body" */ "../posts/" + jsxFilePath
+      ).then((loaded) => {
         const Content = loaded.default;
         this.Content = <Content></Content>;
       }),
-      import("../posts/" + tocFilePath).then((loaded) => {
-        const toc = loaded.default;
-        this.toc = buildToc(toc);
-      }),
+      import(/* webpackChunkName: "post-toc" */ "../posts/" + tocFilePath).then(
+        (loaded) => {
+          const toc = loaded.default;
+          this.toc = buildToc(toc);
+        }
+      ),
     ]).then(() => this.forceUpdate());
 
     // Add comment section
