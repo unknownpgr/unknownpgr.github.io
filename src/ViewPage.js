@@ -44,6 +44,18 @@ class ViewPage extends React.Component {
         this.props.setToc(buildToc(toc));
       }),
     ]).then(() => this.forceUpdate());
+
+    // Add comment section
+    let script = document.createElement("script");
+    let anchor = document.getElementById("inject-comments-for-uterances");
+    script.setAttribute("src", "https://utteranc.es/client.js");
+    script.setAttribute("crossorigin", "anonymous");
+    script.setAttribute("async", true);
+    script.setAttribute("repo", "unknownpgr/unknownpgr.github.io");
+    script.setAttribute("issue-term", "pathname");
+    script.setAttribute("label", "Comment💬");
+    script.setAttribute("theme", "github-light");
+    anchor.appendChild(script);
   }
 
   render() {
@@ -62,6 +74,8 @@ class ViewPage extends React.Component {
         </div>
         {/* Content of post */}
         <div className="blog-post">{this.Content}</div>
+        {/* Comment section */}
+        <div id="inject-comments-for-uterances"></div>
       </div>
     );
   }
