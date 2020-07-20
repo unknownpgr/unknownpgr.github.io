@@ -7,7 +7,7 @@ const converter = new (require("showdown").Converter)({
   prefixHeaderId: "header", // It requires header prefiex because first full-korean header will be converted to empty string.
 });
 const getToc = require("./toc");
-const ncp = require("./ncp");
+const ncp = require("ncp");
 
 /**
  *
