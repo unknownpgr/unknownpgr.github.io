@@ -30,6 +30,10 @@ jobs:
           git remote add origin git@github.com:unknownpgr/unknownpgr.github.io.git
           git remote set-url origin git@github.com:unknownpgr/unknownpgr.github.io.git
           git pull origin master
+
+      - name: Delete existing build files
+        run: |
+          cd ../blog-publish;
           rm -rf -v !(".git"|"README.md")
 
       - name: Initialize
