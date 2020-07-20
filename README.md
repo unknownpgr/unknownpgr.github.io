@@ -191,3 +191,7 @@ category: this_is_category.
 - 포스트 작성을 하고 커밋하는 스크립트를 개선했고, Slack과 연동하여 푸시 알림을 만드는 것도 성공했다.
 - 이제 실패 시 푸시 알림이 오도록 하는 것과, 어제의 임의 URL접근만 해결하면 된다.
 - 마음이 편안하다.
+
+* 뒷통수를 한 번 더 세게 때린 게, 이모지였다. 이거, React에서 그냥 렌더링하려니 경고가 뜬다. 근데 문제는 GitHub Action에서는 경고가 나면 그냥 에러로 간주하고, 꺼버린다는 사실이다...
+* 여차저차하여, `<Emoji/>` UI를 새로 만들고, html까지 다 생성한 후 html에서 replace해버리기로 했다. 난감하더라.
+* 이 글 쓴 사람에게 박수를... 👉 https://medium.com/@seanmcp/%EF%B8%8F-how-to-use-emojis-in-react-d23bbf608bf7
