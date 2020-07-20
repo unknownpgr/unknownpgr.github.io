@@ -1,0 +1,47 @@
+name: Github blog auto update
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Run checkout
+      - uses: actions/checkout@v2
+
+      - name: Initialize
+        run: npm install
+
+      - name: Update post info
+        run: node blog.js --skip-build
+
+      - name: Build blog
+        run: npm build
+
+      - name: Make new directory
+        run: mkdir ../blog-publish
+
+      - name: Git init
+        run: |
+          cd ../blog-publish;
+          git init;
+          git remote add origin https://github.com/unknownpgr/unknownpgr.github.io.git
+          git pull origin master
+
+      - name: Copy build
+        run: yes | cp -rf build/* ../blog-publish
+
+      - name: Commit and push
+        run: |
+          cd ../blog-publish;
+          git commit -m "Update blog at $(date).";
+          git config --global user.email $MY_EMAIL;
+          git config --global user.name $MY_NAME;
+          git remote set-url origin https://$MY_NAME:${{ secrets.MY_PASSWORD }}@github.com/unknownpgr.github.io.git
+          git push origin master
+        env:
+          MY_NAME: unknownpgr
+          MY_EMAIL: unknownpgr@gmail.com
