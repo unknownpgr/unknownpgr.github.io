@@ -32,7 +32,12 @@ jobs:
           git pull origin master
 
       - name: Copy build
-        run: yes | cp -rf build/* ../blog-publish
+        run: |
+          echo "Current directory:";
+          ls -al;
+          echo "Build directory:";
+          ls build -al;
+          yes | cp -rf ./build/* ../blog-publish
 
       - name: Commit and push
         run: |
@@ -40,8 +45,9 @@ jobs:
           git commit -m "Update blog at $(date).";
           git config --global user.email $MY_EMAIL;
           git config --global user.name $MY_NAME;
-          git remote set-url origin https://$MY_NAME:${{ secrets.MY_PASSWORD }}@github.com/unknownpgr.github.io.git
+          git remote set-url origin https://$MY_NAME:${{ secrets.MY_PASSWORD }}@github.com/unknownpgr.github.io.git;
           git push origin master
+
         env:
           MY_NAME: unknownpgr
           MY_EMAIL: unknownpgr@gmail.com
