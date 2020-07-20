@@ -19,7 +19,7 @@ jobs:
         run: |
           cd ../blog-publish;
           git init
-          git remote add origin git@github.com:${MY_NAME}/${MY_NAME}.github.io.git
+          git remote add origin https://github.com/${MY_NAME}/${MY_NAME}.github.io.git
           git pull origin master
         env:
           MY_NAME: unknownpgr
