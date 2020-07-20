@@ -47,9 +47,10 @@ jobs:
           git commit -m "Update blog at $(date).";
           git config --global user.email $MY_EMAIL;
           git config --global user.name $MY_NAME;
-          git remote set-url origin https://$MY_NAME:${{ secrets.MY_PASSWORD }}@github.com/$MY_NAME/unknownpgr.github.io.git;
+          git remote add origin https://github.com/unknownpgr/unknownpgr.github.io.git
           git push origin master
 
         env:
           MY_NAME: unknownpgr
           MY_EMAIL: unknownpgr@gmail.com
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
