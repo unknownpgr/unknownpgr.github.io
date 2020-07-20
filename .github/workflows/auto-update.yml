@@ -12,14 +12,6 @@ jobs:
       # Run checkout
       - uses: actions/checkout@v2
 
-      - name: Set ssh
-        run: |
-          mkdir ~/.ssh;
-          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
-          echo "${{ secrets.SSH_PUB }}" > ~/.ssh/id_rsa.pub
-          chmod 600 ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa.pub
-
       - name: Make new directory
         run: mkdir ../blog-publish
 
@@ -27,8 +19,10 @@ jobs:
         run: |
           cd ../blog-publish;
           git init
-          git remote add origin git@github.com:unknownpgr/unknownpgr.github.io.git
+          git remote add origin git@github.com:${MY_NAME}/${MY_NAME}.github.io.git
           git pull origin master
+        env:
+          MY_NAME: unknownpgr
 
       - name: Delete existing build files
         run: |
@@ -54,13 +48,13 @@ jobs:
 
       - name: Copy build
         run: |
-          echo "Current directory:";
-          ls -al;
-          echo "Build directory:";
-          ls build -al;
+          # echo "Current directory:";
+          # ls -al;
+          # echo "Build directory:";
+          # ls build -al;
           yes | cp -rf ./build/* ../blog-publish
-          echo "Copied."
-          ls ../blog-publish -al
+          # echo "Copied."
+          # ls ../blog-publish -al
 
       - name: Commit
         run: |
@@ -69,7 +63,7 @@ jobs:
           git config --global user.name $MY_NAME;
           git add .
           git commit -m "Update blog at $(date).";
-          remote_repo="https://${MY_NAME}:${{ secrets.ACCESS_TOKEN }}@github.com/${MY_NAME}/unknownpgr.github.io.git"
+          remote_repo="https://${MY_NAME}:${{ secrets.ACCESS_TOKEN }}@github.com/${MY_NAME}/${MY_NAME}.github.io.git"
           git push "${remote_repo}" HEAD:master;
 
         env:
