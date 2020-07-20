@@ -44,6 +44,10 @@ class ViewPage extends React.Component {
      *    Webpack performs a static analyse at build time.
      *    Therefore, to import resources in non-child directory,
      *    Relative path should be provided as string literal
+     *
+     *    Additionally, if the directory containing the jsx file itself is deleted,
+     *    the real-time server cannot find it even if the directory is restored.
+     *    I don't know why.
      */
 
     Promise.all([

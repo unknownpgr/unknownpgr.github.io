@@ -195,3 +195,5 @@ category: this_is_category.
 * 뒷통수를 한 번 더 세게 때린 게, 이모지였다. 이거, React에서 그냥 렌더링하려니 경고가 뜬다. 근데 문제는 GitHub Action에서는 경고가 나면 그냥 에러로 간주하고, 꺼버린다는 사실이다...
 * 여차저차하여, `<Emoji/>` UI를 새로 만들고, html까지 다 생성한 후 html에서 replace해버리기로 했다. 난감하더라.
 * 이 글 쓴 사람에게 박수를... 👉 https://medium.com/@seanmcp/%EF%B8%8F-how-to-use-emojis-in-react-d23bbf608bf7
+
+- 아 맞다. 그리고 코드, 깃허브에서 제공하는 걸로 바꾸고.
