@@ -1,7 +1,7 @@
 import React from "react";
 import { posts, setting } from "meta.json";
 import { Link } from "react-router-dom";
-import "scss/post.scss";
+import "scss/view.scss";
 import dateFormat from "dateFormat";
 
 // Build TOC from toc json
@@ -36,6 +36,7 @@ class ViewPage extends React.Component {
     // Load post, toc file
     const jsxFilePath = postName + "/" + setting.jsxFile;
     const tocFilePath = postName + "/" + setting.tocFile;
+    console.log(jsxFilePath);
 
     /**
      *    Important!
