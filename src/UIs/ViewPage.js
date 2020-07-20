@@ -9,12 +9,15 @@ function buildToc(toc) {
   return (
     <React.Fragment>
       {toc.map((x) => {
+        const current = x.text ? (
+          <li>
+            <a href={"#" + x.id}>{x.text}</a>
+          </li>
+        ) : undefined;
         const child = x.children ? <ol>{buildToc(x.children)}</ol> : undefined;
         return (
           <React.Fragment key={x.id + "i"}>
-            <li>
-              <a href={"#" + x.id}>{x.text}</a>
-            </li>
+            {current}
             {child}
           </React.Fragment>
         );

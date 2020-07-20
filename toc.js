@@ -14,7 +14,8 @@ objects in children are h2-json between current h1 and next h1.
 */
 function getToc(html) {
   // Get header tags
-  const headers = [...html.matchAll(/<h[0-9]+[^<>]*>[^<>]+<\/h[0-9]+[^<>]*>/g)];
+  // This regex is not perfect. but, It works anyway.
+  const headers = [...html.matchAll(/<h[0-9]+[^<>]*>.+<\/h[0-9]+[^<>]*>/g)];
 
   // Make stack
   let stack = [];
@@ -24,7 +25,7 @@ function getToc(html) {
   headers.forEach((header) => {
     const [raw] = header;
     const id = raw.match(/id="[^"]+"/)[0].replace(/id=|"/g, "");
-    const text = raw.replace(/<[^<>]+>/g, "");
+    const text = raw.replace(/<\/?h[0-9]+[^<>]*>/g, ""); // Remove <hx> tag
     const [depth] = raw.match(/[0-9]+/);
 
     // If new item has higher depth than current depth

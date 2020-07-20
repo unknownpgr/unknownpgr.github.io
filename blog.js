@@ -54,23 +54,88 @@ async function asyncForEach(array, func) {
   return Promise.all(array.map(func));
 }
 
+// Replace emoji to <Emoji/> tag.
 function replaceEmoji(string) {
   var regex = /(?:[\u2700-\u27bf]|(?:\ud83c[\udde6-\uddff]){2}|[\ud800-\udbff][\udc00-\udfff]|[\u0023-\u0039]\ufe0f?\u20e3|\u3299|\u3297|\u303d|\u3030|\u24c2|\ud83c[\udd70-\udd71]|\ud83c[\udd7e-\udd7f]|\ud83c\udd8e|\ud83c[\udd91-\udd9a]|\ud83c[\udde6-\uddff]|\ud83c[\ude01-\ude02]|\ud83c\ude1a|\ud83c\ude2f|\ud83c[\ude32-\ude3a]|\ud83c[\ude50-\ude51]|\u203c|\u2049|[\u25aa-\u25ab]|\u25b6|\u25c0|[\u25fb-\u25fe]|\u00a9|\u00ae|\u2122|\u2139|\ud83c\udc04|[\u2600-\u26FF]|\u2b05|\u2b06|\u2b07|\u2b1b|\u2b1c|\u2b50|\u2b55|\u231a|\u231b|\u2328|\u23cf|[\u23e9-\u23f3]|[\u23f8-\u23fa]|\ud83c\udccf|\u2934|\u2935|[\u2190-\u21ff])/;
   let result = "";
   let left = string;
-  let emojiProcessed = false;
+  let emojiUsed = false;
   while (true) {
     let match = left.match(regex);
     if (!match) break;
     result += left.substring(0, match.index) + `<Emoji symbol="${match[0]}"/>`;
     left = left.substring(match.index + match[0].length);
-    emojiProcessed = true;
+    emojiUsed = true;
   }
   result += left;
   return {
-    emojiProcessed,
+    emojiUsed,
     result,
   };
+}
+
+// Split post into YAML formatter part and markdown part.
+function splitPost(src) {
+  const splitter = getNthIndexOf(src, "---", 2);
+  const formatter = src.slice(0, splitter);
+  let markdown = src.slice(splitter + 3);
+  return { formatter, markdown };
+}
+
+// Generate jsx from markdown
+function generateJsx(markdown) {
+  let html = converter.makeHtml(markdown);
+  const { result, emojiUsed } = replaceEmoji(html);
+  html = result;
+  return `import React from 'react';${
+    // Import only when using Emoji tag.
+    emojiUsed ? 'import Emoji from "UIs/Emoji";' : ""
+  }export default function(props){return(<React.Fragment>${html}</React.Fragment>);};`;
+}
+
+// Parse YAML formatter string and return json
+async function parseFormatter(formatterStr, defaultDate) {
+  let formatter = yaml.safeLoad(formatterStr);
+
+  // Check required properties
+  if (!formatter["title"])
+    throw new Error("YAML formatter does not contain 'title' attribute.");
+  if (!formatter["category"])
+    throw new Error("YAML formatter does not contain 'category' attribute.");
+
+  // Beautify date
+  const date = new Date(formatter.date);
+  if (isNaN(date)) {
+    formatter["date"] = new Date(defaultDate);
+  } else {
+    formatter["date"] = new Date(date);
+  }
+
+  // Beautify category
+  let { category } = formatter;
+  category = category.replace(/( |\t|_|-)+/g, " ").toLowerCase();
+  category = category.charAt(0).toUpperCase() + category.slice(1);
+  formatter.category = category;
+
+  return formatter;
+}
+
+/**
+ * Generate text snippet
+ */
+function generateSnippet(fullText) {
+  let text = "";
+  let split = fullText
+    .replace(/(#|\r|\n|-|\|\t|`|\|| )+/g, " ")
+    .trim()
+    .split(" ");
+  for (var i = 0; i < split.length && text.length < 100; i++) {
+    text += split[i] + " ";
+  }
+  text = text.substr(0, 100);
+  text += "...";
+
+  return text;
 }
 
 // Get post data from post path
@@ -79,70 +144,41 @@ async function updateSinglePost(postPath, setting) {
   postPath = path.resolve(postPath);
 
   // Get markdown file name
-  const mdFilePath = (await listDir(postPath)).filter((x) =>
+  const postFilePath = (await listDir(postPath)).filter((x) =>
     x.endsWith(".md")
   )[0];
-  if (!mdFilePath) throw new Error("There are no content file");
+  if (!postFilePath) throw new Error("There are no content file");
 
-  // Parse YMAL formatter and get title and tags
-  const src = await readFile(mdFilePath, "utf-8");
-  const splitter = getNthIndexOf(src, "---", 2);
-  const yamlPart = src.slice(0, splitter);
-  let markdown = src.slice(splitter + 3);
-  let header = yaml.safeLoad(yamlPart);
-  if (!header["title"])
-    throw new Error("YAML formatter does not contain 'title' attribute.");
+  // Split post into YAML formatter and markdown
+  const src = await readFile(postFilePath, "utf-8");
+  let { formatter, markdown } = splitPost(src);
 
-  // Get Date
-  const date = new Date(header.date);
-  if (isNaN(date)) {
-    header["date"] = (await stat(mdFilePath)).birthtime;
-    writeFile(
-      mdFilePath,
-      yamlPart + 'date: "' + header["date"] + '"\n---' + markdown
-    );
-  } else {
-    header["date"] = date;
-  }
+  // Parse
+  let formatter = parseFormatter(formatter, Date.now());
+  await writeFile(
+    postFilePath,
+    "---\n" + yaml.dump(formatter) + "\n---" + markdown
+  );
 
-  // Beautify category
-  if (header.category) {
-    let { category } = header;
-    category = category.replace(/( |\t|_|-)+/g, " ").toLowerCase();
-    category = category.charAt(0).toUpperCase() + category.slice(1);
-    header.category = category;
-  }
-
-  // Generate snippet text
-  let text = "";
-  let split = markdown
-    .replace(/(#|\r|\n|-|\|\t|`|\|| )+/g, " ")
-    .trim()
-    .split(".");
-  for (var i = 0; i < split.length && text.length < 100; i++) {
-    text += split[i] + ".";
-  }
-  if (text.length > 100) {
-    text = text.substr(0, 100);
-    text += "...";
-  }
+  let text = generateSnippet(markdown);
 
   // Create data
   var ret = {
     // name==path
     name: path.relative(path.join(setting.root, "posts"), postPath),
     text,
-    ...header,
+    ...formatter,
   };
 
   // jsx / toc file generation
-  let html = converter.makeHtml(markdown);
-  const { result, emojiProcessed } = replaceEmoji(html);
-  html = result;
-  const jsx = `import React from 'react';${
-    emojiProcessed ? 'import Emoji from "UIs/Emoji";' : ""
-  }export default function(props){return(<React.Fragment>${html}</React.Fragment>);};`;
-  const toc = JSON.stringify(getToc(html));
+  let jsx = generateJsx(markdown);
+  let toc = JSON.stringify(
+    // The html tag doesn't work properly when stored and loaded in json.
+    // Therefore, the <Emoji/> tag must be removed before saving it in html.
+    getToc(jsx.replace(/<Emoji[^"]+"/g, "").replace(/"[^">]*\/>/g, ""))
+  );
+
+  // Write files
   const srcPath = path.join(setting.root, "posts", ret.name);
   const dstPath = path.join(setting.dst, "posts", ret.name);
   try {
