@@ -83,8 +83,12 @@ async function updateSinglePost(postPath, setting) {
   }
 
   // Beautify category
-  if (header.category)
-    header.category = header.category.replace(/( |\t|_|-)+/g, "_");
+  if (header.category) {
+    let { category } = header;
+    category = category.replace(/( |\t|_|-)+/g, " ").toLowerCase();
+    category = category.charAt(0).toUpperCase() + category.slice(1);
+    header.category = category;
+  }
 
   // Generate snippet text
   let text = "";
@@ -103,7 +107,7 @@ async function updateSinglePost(postPath, setting) {
   // Create data
   var ret = {
     name: path.basename(postPath),
-    path: path.relative(setting.root, postPath),
+    path: path.relative(path.join(setting.root, "posts"), postPath),
     text,
     ...header,
   };

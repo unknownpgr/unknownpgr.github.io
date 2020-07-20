@@ -1,8 +1,8 @@
 import React from "react";
-import { posts, setting } from "./meta.json";
+import { posts, setting } from "meta.json";
 import { Link } from "react-router-dom";
-import "./scss/post.scss";
-import dateFormat from "./dateFormat";
+import "scss/post.scss";
+import dateFormat from "dateFormat";
 
 // Build TOC from toc json
 function buildToc(toc) {
@@ -32,17 +32,25 @@ class ViewPage extends React.Component {
   componentDidMount() {
     const postName = this.props.match.params.postName;
     this.post = posts[postName];
+    const { path } = this.post;
 
     // Load post, toc file
-    const jsxFilePath = this.post.path + "/" + setting.jsxFile;
-    const tocFilePath = this.post.path + "/" + setting.tocFile;
+    const jsxFilePath = path + "/" + setting.jsxFile;
+    const tocFilePath = path + "/" + setting.tocFile;
 
+    /**
+     *    Important!
+     *
+     *    Webpack performs a static analyse at build time.
+     *    Therefore, to import resources in non-child directory,
+     *    Relative path should be provided as string literal
+     */
     Promise.all([
-      import("./" + jsxFilePath).then((loaded) => {
+      import("../posts/" + jsxFilePath).then((loaded) => {
         const Content = loaded.default;
         this.Content = <Content></Content>;
       }),
-      import("./" + tocFilePath).then((loaded) => {
+      import("../posts/" + tocFilePath).then((loaded) => {
         const toc = loaded.default;
         this.toc = buildToc(toc);
       }),
@@ -70,7 +78,7 @@ class ViewPage extends React.Component {
         <div className="container">
           <h1 className="post-title">{this.post?.title}</h1>
           <div>
-            <strong>{dateFormat(new Date(this.post?.date))}</strong>
+            <strong>{dateFormat(new Date(this.post?.date), true)}</strong>
             <Link to={`/categories/${this.post?.category}`}>
               <span className="text-muted" style={{ marginLeft: "1rem" }}>
                 #{this.post?.category}

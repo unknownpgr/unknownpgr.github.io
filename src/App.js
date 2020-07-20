@@ -1,5 +1,5 @@
 // Import stylesheets
-import "./scss/custom.scss";
+import "scss/custom.scss";
 
 // Import metatdata
 import { categories, postOrder } from "./meta.json";
@@ -8,16 +8,15 @@ import { categories, postOrder } from "./meta.json";
 import React from "react";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
-
 import BrowserRouter from "react-router-dom/BrowserRouter";
 import Route from "react-router-dom/Route";
 import Link from "react-router-dom/Link";
 import Switch from "react-router-dom/Switch";
 
-// Import UIs
-import img from "./img/github.png";
-import ViewPage from "./ViewPage";
-import PostListPage from "./PostListPage";
+// Import custom UIs
+import img from "img/github.png";
+import ViewPage from "UIs/ViewPage";
+import PostListPage from "UIs/PostListPage";
 
 function App() {
   const blogTitle = "{ UnknownPgr }";
@@ -40,7 +39,7 @@ function App() {
           </div>
           <div className="container">
             <Navbar id="navbar" expand="lg" className="rounded-top">
-              <Navbar.Brand>UnknownPgr의 블로그.</Navbar.Brand>
+              {/* <Navbar.Brand>UnknownPgr의 블로그.</Navbar.Brand> */}
               <Navbar.Toggle aria-controls="basic-navbar-nav" />
               <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="mr-auto" id="collapse">
@@ -50,9 +49,12 @@ function App() {
                   <Link className="p-2" to="/about">
                     About
                   </Link>
+                  <Link className="p-2" to="/lab">
+                    Lab
+                  </Link>
                   <div id="blog-side-right">
                     <Link className="p-2" to="/">
-                      all({postOrder.length})
+                      All({postOrder.length})
                     </Link>
                     {Object.keys(categories).map((category) => {
                       const str = `${category}(${categories[category].count})`;
@@ -73,6 +75,7 @@ function App() {
             <hr></hr>
             <Route exact path="/" component={PostListPage} />
             <Route path="/categories/:category" component={CategoryPage} />
+            <Route path="/lab"></Route>
           </div>
         </Route>
         <Route component={NoMatchPage} />
