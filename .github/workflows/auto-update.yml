@@ -41,13 +41,13 @@ jobs:
           echo "Copied."
           ls ../blog-publish -al
 
-      - name: Commit and push
+      - name: Commit
         run: |
           cd ../blog-publish;
-          git commit -m "Update blog at $(date).";
           git config --global user.email $MY_EMAIL;
           git config --global user.name $MY_NAME;
-          git remote add origin https://github.com/unknownpgr/unknownpgr.github.io.git
+          git commit -m "Update blog at $(date).";
+          git remote add origin https://github.com/unknownpgr/unknownpgr.github.io.git;
           git push origin master
 
         env:
