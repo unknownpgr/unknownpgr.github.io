@@ -24,7 +24,8 @@ const getToc = require("./toc");
  * - 카테고리
  * - 포스트가 작성된 날짜
  *
- * 큰 이슈가 발생했다. GitHub action으로 빌드하니까, 날짜 정보가 다 날아가네...
+ * 현재 블로그 포스트가 가지는 메타정보는 아래와 같다/
+ * - 포스트 고유한 이름(=디렉토리 이름)
  */
 
 // Promisified functions
@@ -106,8 +107,8 @@ async function updateSinglePost(postPath, setting) {
 
   // Create data
   var ret = {
-    name: path.basename(postPath),
-    path: path.relative(path.join(setting.root, "posts"), postPath),
+    // name==path
+    name: path.relative(path.join(setting.root, "posts"), postPath),
     text,
     ...header,
   };

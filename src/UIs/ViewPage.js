@@ -32,11 +32,10 @@ class ViewPage extends React.Component {
   componentDidMount() {
     const postName = this.props.match.params.postName;
     this.post = posts[postName];
-    const { path } = this.post;
 
     // Load post, toc file
-    const jsxFilePath = path + "/" + setting.jsxFile;
-    const tocFilePath = path + "/" + setting.tocFile;
+    const jsxFilePath = postName + "/" + setting.jsxFile;
+    const tocFilePath = postName + "/" + setting.tocFile;
 
     /**
      *    Important!
@@ -45,6 +44,7 @@ class ViewPage extends React.Component {
      *    Therefore, to import resources in non-child directory,
      *    Relative path should be provided as string literal
      */
+
     Promise.all([
       import("../posts/" + jsxFilePath).then((loaded) => {
         const Content = loaded.default;

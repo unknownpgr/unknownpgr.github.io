@@ -11,7 +11,7 @@ function Post(props) {
     <Card className="m-4" style={{ maxWidth: "24rem", minWidth: "16rem" }}>
       <Card.Img variant="top" src="/code.svg" className="card-img"></Card.Img>
       <Card.Body>
-        <Link to={"/" + props.path}>
+        <Link to={"/posts/" + props.name}>
           <Card.Title>
             <strong>{props.title}</strong>
           </Card.Title>
