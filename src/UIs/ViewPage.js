@@ -46,11 +46,11 @@ class ViewPage extends React.Component {
      */
 
     Promise.all([
-      import("../posts/" + jsxFilePath).then((loaded) => {
+      import(`../posts/${jsxFilePath}`).then((loaded) => {
         const Content = loaded.default;
         this.Content = <Content></Content>;
       }),
-      import("../posts/" + tocFilePath).then((loaded) => {
+      import(`../posts/${tocFilePath}`).then((loaded) => {
         const toc = loaded.default;
         this.toc = buildToc(toc);
       }),

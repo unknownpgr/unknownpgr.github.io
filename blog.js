@@ -7,7 +7,7 @@ const converter = new (require("showdown").Converter)({
   prefixHeaderId: "header", // It requires header prefiex because first full-korean header will be converted to empty string.
 });
 const getToc = require("./toc");
-const ncp = require("ncp");
+const ncp = require("./ncp");
 
 /**
  *
@@ -36,6 +36,7 @@ const listDir = async (dirPath) =>
 const readFile = util.promisify(fs.readFile);
 const writeFile = util.promisify(fs.writeFile);
 const stat = util.promisify(fs.stat);
+const mkdir = util.promisify(fs.mkdir);
 
 // Find n-th appearence of pattern in string. index starts from 1.
 function getNthIndexOf(str, pattern, n) {
@@ -117,10 +118,16 @@ async function updateSinglePost(postPath, setting) {
   // jsx / toc file generation
   const html = converter.makeHtml(markdown);
   const jsx = `import React from 'react';export default function(props){return(<React.Fragment>${html}</React.Fragment>);};`;
-  const toc = getToc(html);
+  const toc = JSON.stringify(getToc(html));
+  const srcPath = path.join(setting.root, "posts", ret.name);
+  const dstPath = path.join(setting.dst, "posts", ret.name);
+  try {
+    await mkdir(path.join(setting.dst, "posts", ret.name));
+  } catch {}
   await Promise.all([
-    writeFile(path.join(postPath, setting.jsxFile), jsx),
-    writeFile(path.join(postPath, setting.tocFile), JSON.stringify(toc)),
+    writeFile(path.join(dstPath, setting.jsxFile), jsx),
+    writeFile(path.join(dstPath, setting.tocFile), toc),
+    ncp(srcPath, dstPath),
   ]);
   return ret;
 }
@@ -171,11 +178,10 @@ async function updatePosts(setting) {
 }
 
 async function main(setting) {
-  const { root, dst } = setting;
+  const { dst } = setting;
   console.log("Updating posts...");
   const meta = await updatePosts(setting);
   await writeFile(path.join(dst, "meta.json"), JSON.stringify(meta));
-  await ncp(path.join(root, "posts"), path.join(dst, "posts"));
 }
 
 main({
