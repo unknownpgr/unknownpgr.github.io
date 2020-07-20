@@ -11,6 +11,4 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Send message
-        run: |
-          chmod 777 ./slack.sh
-          ./slack.sh
+        run: "curl -X POST -H \'Content-type: application/json\' --data \'{\"text\":\"Github blog updated!\"}\' \"${{secrets.SLACK_KEY}}\""
