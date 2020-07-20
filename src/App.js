@@ -85,18 +85,6 @@ function App() {
   );
 }
 
-function ParamRouter(props) {
-  console.log(props);
-  return (
-    <Route
-      {...props}
-      render={(innerProps) => (
-        <props.inner {...innerProps} {...props}></props.inner>
-      )}
-    ></Route>
-  );
-}
-
 function NoMatchPage() {
   return <div>Path is unregistered route.</div>;
 }
