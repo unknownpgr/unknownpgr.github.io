@@ -5,3 +5,4 @@
 ## Alerts
 
 - Do not create files or directories in this repository manually. They will be deleted when new post is updated.
+- Use Slack GitHub for nofitifation.
