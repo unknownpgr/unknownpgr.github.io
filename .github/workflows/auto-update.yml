@@ -69,7 +69,7 @@ jobs:
           git config --global user.name $MY_NAME;
           git add .
           git commit -m "Update blog at $(date).";
-          remote_repo="https://${MY_NAME}:${{ secrets.ACCESS_TOKEN }}@github.com/unknownpgr.github.io.git"
+          remote_repo="https://${MY_NAME}:${{ secrets.ACCESS_TOKEN }}@github.com/${MY_NAME}/unknownpgr.github.io.git"
           git push "${remote_repo}" HEAD:master;
 
         env:
