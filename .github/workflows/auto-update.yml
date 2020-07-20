@@ -36,15 +36,7 @@ jobs:
       - name: Delete existing build files
         run: |
           cd ../blog-publish;
-
-          # Backup important files
-          mv README.md ../t2
-
-          # Delete all
           rm -rf *
-
-          # Restore important files
-          mv ../t2 README.md
 
       - name: Initialize
         run: yarn install
@@ -57,13 +49,10 @@ jobs:
 
       - name: Copy build
         run: |
-          # echo "Current directory:";
-          # ls -al;
-          # echo "Build directory:";
-          # ls build -al;
           yes | cp -rf ./build/* ../blog-publish
-          # echo "Copied."
-          # ls ../blog-publish -al
+          yes | cp -rf ./root/* ../blog-publish
+          echo "Copied."
+          ls ../blog-publish -al
 
       - name: Commit
         run: |

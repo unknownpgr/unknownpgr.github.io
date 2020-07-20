@@ -1,0 +1,14 @@
+name: Github blog update slack nofify
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Send message
+        run: ./slack.sh
