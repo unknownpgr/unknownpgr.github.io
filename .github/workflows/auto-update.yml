@@ -32,9 +32,12 @@ jobs:
 
       - name: Commit updated posts
         run: |
-          git config --local user.email "unknownpgr@github.com"
-          git config --local user.name "unknownpgr"
-          git commit -m "Auto fix posts at $(date)" -a
+          CHANGED=$(git diff-index --name-only HEAD --)
+          if [ -n "$CHANGED" ]; then
+            git config --local user.email "unknownpgr@github.com"
+            git config --local user.name "unknownpgr"
+            git commit -m "Auto fix posts at $(date)" -a
+          fi
 
       - name: Push update
         uses: ad-m/github-push-action@master
