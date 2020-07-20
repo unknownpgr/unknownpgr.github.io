@@ -50,7 +50,7 @@ jobs:
       - name: Copy build
         run: |
           yes | cp -rf ./build/* ../blog-publish
-          yes | cp -rf ./root/* ../blog-publish
+          yes | cp -rf ./root/. ../blog-publish
           echo "Copied."
           ls ../blog-publish -al
 
