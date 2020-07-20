@@ -1,9 +1,10 @@
 import React from "react";
 import { Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import dateFormat from "./dateFormat";
 
 function Post(props) {
-  const dateStr = (props.date + "").substr(0, 16).replace("T", " / ");
+  console.log(new Date(props.date));
   const categoryStr = "# " + props.category;
 
   return (
@@ -14,9 +15,11 @@ function Post(props) {
           <Card.Title>{props.title}</Card.Title>
         </Link>
         <Card.Subtitle className="mb-2 text-muted">
-          <span style={{ marginRight: "1rem" }}>{dateStr}</span>
+          <span style={{ marginRight: "1rem" }}>
+            {dateFormat(new Date(props.date))}
+          </span>
           <Link to={`/categories/${props.category}`}>
-            <small className="text-muted">{categoryStr}</small>{" "}
+            <small className="text-muted">{categoryStr}</small>
           </Link>
         </Card.Subtitle>
         <Card.Text>{props.text}</Card.Text>

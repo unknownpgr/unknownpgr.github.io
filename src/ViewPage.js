@@ -1,7 +1,8 @@
 import React from "react";
 import { posts, setting } from "./meta.json";
-import "./scss/post.scss";
 import { Link } from "react-router-dom";
+import "./scss/post.scss";
+import dateFormat from "./dateFormat";
 
 // Build TOC from toc json
 function buildToc(toc) {
@@ -13,7 +14,7 @@ function buildToc(toc) {
           <React.Fragment key={x.id + "i"}>
             <li>
               <a href={"#" + x.id}>{x.text}</a>
-            </li>{" "}
+            </li>
             {child}
           </React.Fragment>
         );
@@ -61,7 +62,6 @@ class ViewPage extends React.Component {
   }
 
   render() {
-    const dateStr = (this.post?.date + "").substr(0, 16).replace("T", " / ");
     return (
       <React.Fragment>
         <div className="title">
@@ -70,17 +70,19 @@ class ViewPage extends React.Component {
         <div className="container">
           <h1 className="post-title">{this.post?.title}</h1>
           <div>
-            <strong>{dateStr}</strong>
-            <span className="text-muted" style={{ marginLeft: "1rem" }}>
-              #{this.post?.category}
-            </span>
+            <strong>{dateFormat(new Date(this.post?.date))}</strong>
+            <Link to={`/categories/${this.post?.category}`}>
+              <span className="text-muted" style={{ marginLeft: "1rem" }}>
+                #{this.post?.category}
+              </span>
+            </Link>
           </div>
         </div>
         <div>
           <hr style={{ marginTop: "2rem" }}></hr>
         </div>
-        <ol id="toc">{this.toc}</ol>
         <div className="container">
+          <ol id="toc">{this.toc}</ol>
           {/* Content of post */}
           <div className="blog-post">{this.Content}</div>
           {/* Comment section */}

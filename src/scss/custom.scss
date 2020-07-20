@@ -41,20 +41,27 @@ html {
   transform: rotate(180deg);
 }
 
-#blog-wrapper {
-  height: auto;
-  display: flex;
-  justify-content: space-around;
-  width: 100%;
-  flex: 1;
-}
-
 #blog-side-right {
   position: fixed;
   left: 48px;
   top: 30%;
-  width: 320px;
   padding-top: 5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (max-width: 1500px) {
+  #collapse {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+  }
+
+  #blog-side-right {
+    position: static;
+    padding-top: 0;
+  }
 }
 
 #blog-center {

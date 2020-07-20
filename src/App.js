@@ -43,34 +43,36 @@ function App() {
               <Navbar.Brand>UnknownPgr의 블로그.</Navbar.Brand>
               <Navbar.Toggle aria-controls="basic-navbar-nav" />
               <Navbar.Collapse id="basic-navbar-nav">
-                <Nav className="mr-auto">
+                <Nav className="mr-auto" id="collapse">
                   <Link className="p-2" to="/">
                     Main
                   </Link>
                   <Link className="p-2" to="/about">
                     About
                   </Link>
+                  <div id="blog-side-right">
+                    <Link className="p-2" to="/">
+                      all({postOrder.length})
+                    </Link>
+                    {Object.keys(categories).map((category) => {
+                      const str = `${category}(${categories[category].count})`;
+                      return (
+                        <Link
+                          className="p-2"
+                          key={category}
+                          to={`/categories/${category}`}
+                        >
+                          {str}
+                        </Link>
+                      );
+                    })}
+                  </div>
                 </Nav>
               </Navbar.Collapse>
             </Navbar>
             <hr></hr>
             <Route exact path="/" component={PostListPage} />
             <Route path="/categories/:category" component={CategoryPage} />
-          </div>
-          <div id="blog-side-right">
-            <ul>
-              <li>
-                <Link to="/">all({postOrder.length})</Link>
-              </li>
-              {Object.keys(categories).map((category) => {
-                const str = `${category}(${categories[category].count})`;
-                return (
-                  <li key={category}>
-                    <Link to={`/categories/${category}`}>{str}</Link>
-                  </li>
-                );
-              })}
-            </ul>
           </div>
         </Route>
         <Route component={NoMatchPage} />

@@ -13,16 +13,17 @@
 }
 
 #toc {
-  position: sticky;
+  position: fixed;
   top: 50%;
   margin-left: 64px;
   left: 0;
-  height: 0;
 }
 
 @media (max-width: 1500px) {
   #toc {
-    display: none;
+    position: static;
+    margin-top: 2rem;
+    margin-bottom: 3rem;
   }
 }
 
