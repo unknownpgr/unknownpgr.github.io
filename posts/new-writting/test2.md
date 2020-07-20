@@ -1,7 +1,8 @@
 ---
 title: 제대로 된 글을 한 번 써 봅시다.
-category: blog-dev
-date: "Mon Jul 20 2020 15:36:34 GMT+0900 (Korean Standard Time)"
+category: Blog dev
+date: 2020-07-20T06:36:34.000Z
+
 ---
 
 # 글 써보기.

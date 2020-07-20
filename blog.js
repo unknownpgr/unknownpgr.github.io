@@ -94,7 +94,7 @@ function generateJsx(markdown) {
 }
 
 // Parse YAML formatter string and return json
-async function parseFormatter(formatterStr, defaultDate) {
+function parseFormatter(formatterStr, defaultDate) {
   let formatter = yaml.safeLoad(formatterStr);
 
   // Check required properties
@@ -154,7 +154,7 @@ async function updateSinglePost(postPath, setting) {
   let { formatter, markdown } = splitPost(src);
 
   // Parse
-  let formatter = parseFormatter(formatter, Date.now());
+  formatter = parseFormatter(formatter, Date.now());
   await writeFile(
     postFilePath,
     "---\n" + yaml.dump(formatter) + "\n---" + markdown

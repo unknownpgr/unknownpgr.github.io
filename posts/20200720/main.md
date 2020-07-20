@@ -1,7 +1,8 @@
 ---
 title: 시간 생성 체크
-category: blog-dev
-date: "Mon Jul 20 2020 16:39:46 GMT+0900 (Korean Standard Time)"
+category: Blog dev
+date: 2020-07-20T07:39:46.000Z
+
 ---
 
 This is test file

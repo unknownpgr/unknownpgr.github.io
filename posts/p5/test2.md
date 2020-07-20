@@ -1,7 +1,8 @@
 ---
 title: This is my New test title!
 category: This is test category 2
-date: "Mon Jul 20 2020 15:36:34 GMT+0900 (Korean Standard Time)"
+date: 2020-07-20T06:36:34.000Z
+
 ---
 
 This is test file
