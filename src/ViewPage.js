@@ -1,22 +1,24 @@
 import React from "react";
 import { posts, setting } from "./meta.json";
+import "./scss/post.scss";
+import { Link } from "react-router-dom";
 
 // Build TOC from toc json
 function buildToc(toc) {
   return (
-    <ol>
+    <React.Fragment>
       {toc.map((x) => {
-        const child = x.children ? buildToc(x.children) : undefined;
+        const child = x.children ? <ol>{buildToc(x.children)}</ol> : undefined;
         return (
           <React.Fragment key={x.id + "i"}>
-            <li key={x.id + "j"}>
+            <li>
               <a href={"#" + x.id}>{x.text}</a>
-            </li>
+            </li>{" "}
             {child}
           </React.Fragment>
         );
       })}
-    </ol>
+    </React.Fragment>
   );
 }
 
@@ -41,7 +43,7 @@ class ViewPage extends React.Component {
       }),
       import("./" + tocFilePath).then((loaded) => {
         const toc = loaded.default;
-        this.props.setToc(buildToc(toc));
+        this.toc = buildToc(toc);
       }),
     ]).then(() => this.forceUpdate());
 
@@ -61,28 +63,31 @@ class ViewPage extends React.Component {
   render() {
     const dateStr = (this.post?.date + "").substr(0, 16).replace("T", " / ");
     return (
-      <div className="mx-4 mt-4">
-        {/* Title of post */}
-        <h1>{this.post?.title}</h1>
-        {/* Subtitle of post */}
+      <React.Fragment>
+        <div className="title">
+          <Link to="/">{"{ Unknown }"}</Link>
+        </div>
+        <div className="container">
+          <h1 className="post-title">{this.post?.title}</h1>
+          <div>
+            <strong>{dateStr}</strong>
+            <span className="text-muted" style={{ marginLeft: "1rem" }}>
+              #{this.post?.category}
+            </span>
+          </div>
+        </div>
         <div>
-          <strong>{dateStr}</strong>
-          <span className="text-muted" style={{ marginLeft: "1rem" }}>
-            #{this.post?.category}
-          </span>
           <hr style={{ marginTop: "2rem" }}></hr>
         </div>
-        {/* Content of post */}
-        <div className="blog-post">{this.Content}</div>
-        {/* Comment section */}
-        <div id="inject-comments-for-uterances"></div>
-      </div>
+        <ol id="toc">{this.toc}</ol>
+        <div className="container">
+          {/* Content of post */}
+          <div className="blog-post">{this.Content}</div>
+          {/* Comment section */}
+          <div id="inject-comments-for-uterances"></div>
+        </div>
+      </React.Fragment>
     );
-  }
-
-  componentWillUnmount() {
-    // Remove TOC when unmount
-    this.props.setToc(<p></p>);
   }
 }
 

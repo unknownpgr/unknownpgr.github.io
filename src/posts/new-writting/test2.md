@@ -1,6 +1,7 @@
 ---
 title: 제대로 된 글을 한 번 써 봅시다.
 category: etc
+date:Mon Jul 20 2020 15:36:34 GMT+0900 (Korean Standard Time)
 ---
 
 # 글 써보기.

@@ -1,6 +1,7 @@
 ---
 title: 포스트 업데이트하기
 category: test document
+date:Mon Jul 20 2020 15:36:34 GMT+0900 (Korean Standard Time)
 ---
 
 This is test file

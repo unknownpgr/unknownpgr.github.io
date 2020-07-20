@@ -1,6 +1,7 @@
 ---
 title: This is test title3
 category: This is test category
+date:Mon Jul 20 2020 15:36:34 GMT+0900 (Korean Standard Time)
 ---
 
 This is test file
