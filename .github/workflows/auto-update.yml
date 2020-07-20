@@ -32,8 +32,7 @@ jobs:
 
       - name: Commit updated posts
         run: |
-          CHANGED=$(git diff-index --name-only HEAD --)
-          if [ -n "$CHANGED" ]; then
+          if ! git diff-index --quiet HEAD --; then
             git config --local user.email "unknownpgr@github.com"
             git config --local user.name "unknownpgr"
             git commit -m "Auto fix posts at $(date)" -a
