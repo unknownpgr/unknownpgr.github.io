@@ -76,7 +76,7 @@ async function updateSinglePost(postPath, setting) {
     header["date"] = (await stat(mdFilePath)).birthtime;
     writeFile(
       mdFilePath,
-      yamlPart + "date:" + header["date"] + "\n---" + markdown
+      yamlPart + 'date: "' + header["date"] + '"\n---' + markdown
     );
   } else {
     header["date"] = date;
@@ -127,28 +127,22 @@ async function updatePosts(setting) {
 
   // Collect post metadata
   const posts = {};
-  const errors = [];
   const categories = {};
   let postOrder = [];
   await asyncForEach(pathes, async function (path) {
-    try {
-      // Update single post and get postData.
-      const postData = await updateSinglePost(path, setting);
-      const { name, category } = postData;
+    // Update single post and get postData.
+    const postData = await updateSinglePost(path, setting);
+    const { name, category } = postData;
 
-      // Build posts dictionary
-      posts[name] = postData;
+    // Build posts dictionary
+    posts[name] = postData;
 
-      // Build post order list
-      postOrder.push(postData);
+    // Build post order list
+    postOrder.push(postData);
 
-      // Build category dictionary
-      if (categories[category]) categories[category].count++;
-      else categories[category] = { count: 1 };
-    } catch (e) {
-      // Build error dictionary
-      errors.push({ path: path, error: e });
-    }
+    // Build category dictionary
+    if (categories[category]) categories[category].count++;
+    else categories[category] = { count: 1 };
   });
 
   // Sort post names in postOrder list by date and add order property.
@@ -164,7 +158,6 @@ async function updatePosts(setting) {
 
   return {
     posts,
-    errors,
     categories,
     setting,
     postOrder,
