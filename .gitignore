@@ -23,6 +23,6 @@ yarn-error.log*
 build/
 
 # blog posts
-posts/*
-posts/*
-meta.json
+src/posts/*/*.json
+src/posts/*/*.jsx
+src/meta.json

@@ -4,6 +4,9 @@ import { Link } from "react-router-dom";
 import dateFormat from "dateFormat";
 
 function Post(props) {
+  console.log(new Date(props.date));
+  const categoryStr = "# " + props.category;
+
   return (
     <Card className="m-4" style={{ maxWidth: "24rem", minWidth: "16rem" }}>
       <Card.Img variant="top" src="/code.svg" className="card-img"></Card.Img>
@@ -18,7 +21,7 @@ function Post(props) {
             <small> {dateFormat(new Date(props.date))}</small>
           </span>
           <Link to={`/categories/${props.category}`}>
-            <small className="text-muted">{"# " + props.category}</small>
+            <small className="text-muted">{categoryStr}</small>
           </Link>
         </Card.Subtitle>
         <Card.Text>{props.text}</Card.Text>
