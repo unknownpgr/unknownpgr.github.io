@@ -6,8 +6,9 @@
 ## Alerts
 
 - Do not create files or directories in this repository manually. They will be deleted when new post is updated.
-- Use Slack GitHub for nofitifation.
+- Use Slack GitHub for notification.
 
 ## Root files
 
 - Files in `/root` of develop repository will be automatically copied to here.
+
