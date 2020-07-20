@@ -11,4 +11,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Send message
-        run: ./slack.sh
+        run: |
+          chmod 777 ./slack.sh
+          ./slack.sh
