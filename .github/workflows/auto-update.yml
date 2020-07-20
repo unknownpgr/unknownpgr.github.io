@@ -36,16 +36,12 @@ jobs:
           cd ../blog-publish;
 
           # Backup important files
-          mkdir ../t1
-          mv .git/* ../t1
           mv README.md ../t2
 
           # Delete all
           rm -rf *
 
           # Restore important files
-          mkdir .git
-          mv ../t1* .git/
           mv ../t2 README.md
 
       - name: Initialize
