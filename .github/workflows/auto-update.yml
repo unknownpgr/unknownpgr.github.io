@@ -14,7 +14,7 @@ jobs:
 
       - name: Set ssh
         run: |
-          mkdir ~/.ssh
+          mkdir ~/.ssh;
           echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
 
       - name: Initialize
@@ -33,6 +33,7 @@ jobs:
         run: |
           cd ../blog-publish;
           git init;
+          git remote add origin git@github.com:unknownpgr/unknownpgr.github.io.git
           git remote set-url origin git@github.com:unknownpgr/unknownpgr.github.io.git
           git pull origin master
 
