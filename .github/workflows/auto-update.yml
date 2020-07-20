@@ -20,6 +20,18 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa.pub
 
+      - name: Make new directory
+        run: mkdir ../blog-publish
+
+      - name: Git init
+        run: |
+          cd ../blog-publish;
+          git init;
+          git remote add origin git@github.com:unknownpgr/unknownpgr.github.io.git;
+          git remote set-url origin git@github.com:unknownpgr/unknownpgr.github.io.git;
+          git pull origin master;
+          rm -rf -v !(".git"|"README.md"),
+
       - name: Initialize
         run: yarn install
 
@@ -28,17 +40,6 @@ jobs:
 
       - name: Build blog
         run: yarn build
-
-      - name: Make new directory
-        run: mkdir ../blog-publish
-
-      - name: Git init
-        run: |
-          cd ../blog-publish;
-          git init;
-          git remote add origin git@github.com:unknownpgr/unknownpgr.github.io.git
-          git remote set-url origin git@github.com:unknownpgr/unknownpgr.github.io.git
-          git pull origin master
 
       - name: Copy build
         run: |
