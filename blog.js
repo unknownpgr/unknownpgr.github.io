@@ -7,6 +7,7 @@ const converter = new (require("showdown").Converter)({
   prefixHeaderId: "header", // It requires header prefiex because first full-korean header will be converted to empty string.
 });
 const getToc = require("./toc");
+const ncp = require("ncp");
 
 /**
  *
@@ -169,14 +170,16 @@ async function updatePosts(setting) {
 }
 
 async function main(setting) {
-  const { root } = setting;
+  const { root, dst } = setting;
   console.log("Updating posts...");
   const meta = await updatePosts(setting);
-  await writeFile(path.join(root, "meta.json"), JSON.stringify(meta));
+  await writeFile(path.join(dst, "meta.json"), JSON.stringify(meta));
+  ncp(path.join(root, "posts"), path.join(dst, "posts"));
 }
 
 main({
-  root: path.join(__dirname, "src"),
+  root: path.join(__dirname),
+  dst: path.join(__dirname, "src"),
   jsxFile: "view.jsx",
   tocFile: "toc.json",
 }).then(() => console.log("All tasks finished."));
