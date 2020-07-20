@@ -11,6 +11,7 @@
    - 추후 파일 하나에 전부 포함하게 하는 것 고려 중.
 2. Secret 설정 : 깃허브 토큰 발행 받아서 secret으로 설정
    - SSH 안 쓰고 Token만으로 push 가능하게 하는 것, 힘들었다...엄청...
+3. `username.github.io` 리포지토리에서 Slack webhook 주소를 SLAKC_KEY로 주면, 자동으로 슬랙 봇에게 메시지를 보낸다.
 
 ## 새 포스트 작성하기
 
@@ -31,6 +32,7 @@ category: this_is_category.
 로컬에서 작성한 포스트를 발행하려면, 이 리포지토리를 `master`에 push하면 된다. 그러면 GitHub action의 workflow가 자동으로 `blog.js`를 실행하여 포스트를 컴파일하고, 깃헙 블로그 `unknownpgr.github.io`에 푸시한다.
 
 정리하자면, 포스트를 쓰고 발행하려면, 포스트를 작성한 후 커밋하고 마스터 브랜치에 푸시하면 된다.
+귀찮다면, 윈도우에서는 `publish.bat`, 리눅스에서는 `publish.sh`를 실행하면 된다. 물론, 리눅스에서 실행할 때에는 chmod를 통하여 실행 권한을 부여받아야 한다.
 
 # 프로젝트 요약
 
