@@ -24,7 +24,7 @@ jobs:
         run: yarn install
 
       - name: Update post info
-        run: node blog.js --skip-build
+        run: node blog.js
 
       - name: Build blog
         run: yarn build

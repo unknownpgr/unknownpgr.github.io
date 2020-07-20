@@ -19,6 +19,8 @@
   "scripts": {
     "build": "react-scripts build",
     "start": "react-scripts start",
+    "update": "node blog.js",
+    "publish": "git push origin master",
     "serve": "serve -s build -p 3000",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

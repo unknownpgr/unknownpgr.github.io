@@ -1,3 +1,17 @@
+/*
+
+Build a table-of-content json from given HTML.
+The top level object of json is an array containing json objects that represent h1 tag.
+Each h1-json objects in the top level array are like:
+  {
+    "id": "id-of-header",
+    "text": "text-of-header",
+    "children": [
+      ...
+    ]
+  }
+objects in children are h2-json between current h1 and next h1.
+*/
 function getToc(html) {
   // Get header tags
   const headers = [...html.matchAll(/<h[0-9]+[^<>]*>[^<>]+<\/h[0-9]+[^<>]*>/g)];

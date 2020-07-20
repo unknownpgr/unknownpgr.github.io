@@ -161,60 +161,11 @@ async function updatePosts(setting) {
   };
 }
 
-async function runCommand(command, msg, cwd = __dirname) {
-  console.log(msg);
-  console.log("\tCommand : " + command);
-  let result = true;
-  const start = Date.now();
-  try {
-    await execute(command, { cwd: cwd });
-  } catch (e) {
-    console.log("\t Error : " + e);
-    result = false;
-  }
-  const end = Date.now();
-  const sec = (end - start) / 1000;
-  console.log(`\tExecution time : ${sec}s\n`);
-  return result;
-}
-
 async function main(setting) {
   const { root } = setting;
   console.log("Updating posts...");
   const meta = await updatePosts(setting);
   await writeFile(path.join(root, "meta.json"), JSON.stringify(meta));
-
-  //================================================
-  // Automated blog build & commit
-  //================================================
-
-  if (process.argv.indexOf("--skip-build") > 0) {
-    console.log("Skip build.");
-    return;
-  }
-
-  const buildSuccess = await runCommand(
-    "yarn react-scripts build",
-    "Build blog"
-  );
-  if (!buildSuccess) {
-    console.log("Blog build failed. cancel all tasks.");
-    return;
-  }
-
-  const src = path.join(__dirname, "build");
-  const dst = path.join(__dirname, "../github-blog-build/");
-
-  await runCommand("mkdir " + dst, "Create blog path");
-  await runCommand(
-    'rm -rf -v !(".git"|"README.md")',
-    "Remove existing files",
-    dst
-  );
-  await runCommand(`yes | cp -rf ${src}/* ${dst}`, "Copy blog build");
-  await runCommand("git add .", "Git add all", dst);
-  await runCommand(`git commit -m "Update at ${new Date()}"`, "Commit", dst);
-  await runCommand("git push origin master", "Git push", dst);
 }
 
 main({
