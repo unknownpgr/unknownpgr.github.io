@@ -197,3 +197,6 @@ category: this_is_category.
 * 이 글 쓴 사람에게 박수를... 👉 https://medium.com/@seanmcp/%EF%B8%8F-how-to-use-emojis-in-react-d23bbf608bf7
 
 - 아 맞다. 그리고 코드, 깃허브에서 제공하는 걸로 바꾸고.
+
+- 깃허브에서 날짜를 빼먹으면 자동으로 현재 날짜로 채우도록 만들었다.
+- 추가로, 커밋 메시지에 skip-ci가 들어가면 workflow를 돌리지 않는다.
