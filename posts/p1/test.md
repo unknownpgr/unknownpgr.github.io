@@ -1,11 +1,11 @@
 ---
 title: This is test title
 category: This is test category
-date: 2020-07-20T06:36:34.000Z
-
 ---
 
 This is test file
+I accidently removed date for this post.
+But, It my blog system will generate date automatically.
 
 # And this is header.
 
