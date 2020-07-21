@@ -32,7 +32,7 @@ jobs:
 
       - name: Commit updated posts
         run: |
-          if ! git diff-index --quiet HEAD --; then
+          if [[ `git status --porcelain` ]]; then
             git config --local user.email "unknownpgr@github.com"
             git config --local user.name "unknownpgr"
             git commit -m "Auto fix posts at $(date)" -a
