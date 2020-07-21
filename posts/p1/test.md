@@ -1,6 +1,8 @@
 ---
 title: This is test title
 category: This is test category
+date: 2020-07-21T00:05:54.518Z
+
 ---
 
 This is test file
