@@ -1,0 +1,2 @@
+(this["webpackJsonpgithub-blog"]=this["webpackJsonpgithub-blog"]||[]).push([[4],{57:function(e,t,a){"use strict";a.r(t);var l=a(0),n=a.n(l);t.default=function(e){return n.a.createElement(n.a.Fragment,null,n.a.createElement("p",null,"This is test file I accidently removed date for this post. But, It my blog system will generate date automatically."),n.a.createElement("h1",{id:"headerandthisisheader"},"And this is header."),n.a.createElement("p",null,"We can use ",n.a.createElement("code",null,"some code")," like this."))}}}]);
+//# sourceMappingURL=4.9366d2b6.chunk.js.map
