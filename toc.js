@@ -25,7 +25,7 @@ function getToc(html) {
   headers.forEach((header) => {
     const [raw] = header;
     const id = raw.match(/id="[^"]+"/)[0].replace(/id=|"/g, "");
-    const text = raw.replace(/<\/?h[0-9]+[^<>]*>/g, ""); // Remove <hx> tag
+    const text = raw.replace(/<\/?[^<>]*>/g, ""); // Remove html tag
     const [depth] = raw.match(/[0-9]+/);
 
     // If new item has higher depth than current depth
