@@ -1,6 +1,7 @@
 git add .
-git commit -m "[post-update]Auto commit at %date%%time%."
-git pull origin master
+git commit -m "Update post at %date% %time%."
+git pull origin master --no-commit
+git commit -m "[post-update]Update post at %date% %time%."
 git push origin master
 echo Publish finished.
 pause
