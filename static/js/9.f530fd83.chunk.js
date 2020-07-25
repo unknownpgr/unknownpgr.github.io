@@ -1,2 +1,0 @@
-(this["webpackJsonpgithub-blog"]=this["webpackJsonpgithub-blog"]||[]).push([[9],{68:function(e,t,a){"use strict";a.r(t);var n=a(0),l=a.n(n);t.default=function(e){return l.a.createElement(l.a.Fragment,null,l.a.createElement("div",null,l.a.createElement("p",null,"This is test file"),l.a.createElement("h1",{id:"headerandthisisheader"},"And this is header."),l.a.createElement("p",null,"We can use ",l.a.createElement("code",null,"some code")," like this..")))}}}]);
-//# sourceMappingURL=9.f530fd83.chunk.js.map
