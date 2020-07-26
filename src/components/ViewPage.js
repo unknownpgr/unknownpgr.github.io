@@ -84,9 +84,16 @@ class ViewPage extends React.Component {
           <Link to="/">{"{ Unknown }"}</Link>
         </div>
         <div className="container">
-          <h1 className="post-title">{this.post?.title}</h1>
+          <h1 className="post-title">
+            {this.post ? this.post.title : "Loading post..."}
+          </h1>
           <div>
-            <strong>{dateFormat(new Date(this.post?.date), true)}</strong>
+            <strong>
+              {dateFormat(
+                this.post ? new Date(this.post.date) : new Date(),
+                true
+              )}
+            </strong>
             <Link to={`/categories/${this.post?.category}`}>
               <span className="text-muted" style={{ marginLeft: "1rem" }}>
                 #{this.post?.category}
