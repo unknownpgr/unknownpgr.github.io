@@ -88,3 +88,8 @@ blockquote {
     text-decoration: underline;
   }
 }
+
+#adjPosts {
+  display: flex;
+  justify-content: space-between;
+}
