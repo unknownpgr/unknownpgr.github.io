@@ -1,7 +1,7 @@
 import React from "react";
 import { posts, postOrder } from "meta.json";
 import CardDeck from "react-bootstrap/CardDeck";
-import Post from "UIs/Post";
+import Post from "components/Post";
 
 class PostListPage extends React.Component {
   render() {
