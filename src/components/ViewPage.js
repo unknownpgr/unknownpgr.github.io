@@ -70,7 +70,6 @@ class ViewPage extends React.Component {
       .split("/")
       .slice(-1)
       .pop();
-
     if (!postName) return;
     console.log(postName);
     this.post = posts[postName];
