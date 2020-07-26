@@ -47,39 +47,44 @@ blockquote {
   border-left: 4px solid #aaa;
 }
 
-.blog-post h1 {
-  margin-top: 3rem;
-}
+.blog-post {
+  h1 {
+    margin-top: 3rem;
+  }
 
-.blog-post h2 {
-  margin-top: 2rem;
-}
+  h2 {
+    margin-top: 2rem;
+  }
 
-.blog-post h3 {
-  margin-top: 1rem;
-}
+  h3 {
+    margin-top: 1rem;
+  }
+  p {
+    line-height: 1.8;
+    word-break: keep-all;
+  }
 
-.blog-post p {
-  line-height: 1.8;
-  word-break: keep-all;
-}
+  li {
+    line-height: 2;
+  }
 
-.blog-post li {
-  line-height: 2;
-}
+  table {
+    width: 90%;
+  }
 
-.blog-post table {
-  width: 90%;
-}
+  th,
+  td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+  }
 
-.blog-post th,
-.blog-post td {
-  padding: 12px;
-  text-align: center;
-  border-bottom: 1px solid #ddd;
-}
+  img {
+    width: 80%;
+    margin-left: 10%;
+  }
 
-img {
-  width: 80%;
-  margin-left: 10%;
+  a {
+    text-decoration: underline;
+  }
 }

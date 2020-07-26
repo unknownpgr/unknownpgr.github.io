@@ -53,18 +53,21 @@ class ViewPage extends React.Component {
      *    I don't know why.
      */
 
-    Promise.all([
-      import(`../posts/${jsxFilePath}`).then((loaded) => {
+    import(`../posts/${jsxFilePath}`)
+      .then((loaded) => {
         const Content = loaded.default;
         this.Content = <Content></Content>;
-      }),
-      import(`../posts/${tocFilePath}`).then((loaded) => {
+      })
+      .then(() => this.forceUpdate());
+
+    import(`../posts/${tocFilePath}`)
+      .then((loaded) => {
         const toc = loaded.default;
         this.toc = buildToc(toc);
-      }),
-    ]).then(() => this.forceUpdate());
+      })
+      .then(() => this.forceUpdate());
 
-    // Add comment section
+    // Add Uterances comment
     let script = document.createElement("script");
     let anchor = document.getElementById("inject-comments-for-uterances");
     script.setAttribute("src", "https://utteranc.es/client.js");
