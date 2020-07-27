@@ -31,6 +31,18 @@ function replaceEmoji(str) {
   );
 }
 
+// Add {/*eslint-disable-next-line*/} to remove 'Comments inside children section of tag should be placed inside braces' errors;
+function escapeComment(str) {
+  let processed = "";
+  str.split("\n").forEach((line) => {
+    if (line.indexOf("//") >= 0) {
+      processed += "{/*eslint-disable-next-line*/}\n";
+    }
+    processed += line + "\n";
+  });
+  return processed;
+}
+
 // Replace image source from src="src.jpg" to src={require("./src.jpg")}
 function replaceImgSrc(str) {
   let regex = /<[^>]+src="[^'"]+"/;
@@ -56,7 +68,7 @@ function md2jsx(md, className = "Markdown") {
   html = replaceEmoji(html);
   let jsx = html2jsx.convert(html);
   jsx = replaceImgSrc(jsx);
-
+  jsx = escapeComment(jsx);
   return `import React from 'react';export default function(props){return(<React.Fragment>${jsx}</React.Fragment>);};`;
 }
 

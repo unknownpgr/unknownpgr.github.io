@@ -37,8 +37,8 @@ function getAdjacentPost(currentPostName) {
     );
     let postIndex = categoryPost.indexOf(currentPostName);
     if (postIndex < 0) postIndex = -2;
-    previous = posts[categoryPost[postIndex - 1]];
-    next = posts[categoryPost[postIndex + 1]];
+    previous = posts[categoryPost[postIndex + 1]];
+    next = posts[categoryPost[postIndex - 1]];
   }
 
   if (!previous)
