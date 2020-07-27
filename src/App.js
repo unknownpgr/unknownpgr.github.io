@@ -15,10 +15,10 @@ import Switch from "react-router-dom/Switch";
 
 // Import custom UIs
 import img from "img/github.png";
-import ViewPage from "UIs/ViewPage";
-import PostListPage from "UIs/PostListPage";
-import LabPage from "UIs/LabPage";
-import AboutPage from "UIs/AboutPage";
+import ViewPage from "components/ViewPage";
+import PostListPage from "components/PostListPage";
+import LabPage from "components/LabPage";
+import AboutPage from "components/AboutPage";
 
 function App() {
   const blogTitle = "{ UnknownPgr }";
