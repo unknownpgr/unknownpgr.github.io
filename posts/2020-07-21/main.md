@@ -39,5 +39,3 @@ myFunction()
 > 인용 속에서 이모지는? 💬
 
 설마 할 거 다 해놓고, 이미지가 안들어간다거나 하는 대참사가 벌어지지는 않겠지?
-
-![codecode](img/main/codecode.jpg)

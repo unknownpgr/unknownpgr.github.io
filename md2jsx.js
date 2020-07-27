@@ -33,11 +33,14 @@ function replaceEmoji(str) {
 
 // Replace image source from src="src.jpg" to src={require("./src.jpg")}
 function replaceImgSrc(str) {
-  let regex = /src="[^'"]+"/;
+  let regex = /<[^>]+src="[^'"]+"/;
   function func(str) {
-    let src = str.replace(/(src\=)?"/g, "");
-    console.log(src);
-    return `src={require("${src.startsWith(".") ? "" : "./" + src}")}`;
+    let src = str.replace(/<[^>]+src="/g, "").replace(/"/g, "");
+    let replace = str.replace(
+      /src="[^'"]+"/,
+      `src={require("${(src.startsWith(".") ? "" : "./") + src}")}`
+    );
+    return replace;
   }
   return replaceMap(str, regex, func);
 }
