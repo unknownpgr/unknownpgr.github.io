@@ -1,2 +1,0 @@
-(this["webpackJsonpgithub-blog"]=this["webpackJsonpgithub-blog"]||[]).push([[10],{55:function(t){t.exports=JSON.parse('[{"children":[{"id":"headerbootstrap","text":"Bootstrap \uc2dc\uc791\ud558\uae30"},{"id":"headerreact","text":"React \uc2dc\uc791\ud558\uae30"}]},{"id":"header","text":"\uc598\ub124\ub97c \uc5b4\ub514\uc5d0 \uc368\ubcf8\ub2e4\uc9c0\u2026?\ud83e\udd14"}]')}}]);
-//# sourceMappingURL=10.71037e46.chunk.js.map
