@@ -8,10 +8,7 @@ import { categories, postOrder } from "./meta.json";
 import React from "react";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
-import BrowserRouter from "react-router-dom/BrowserRouter";
-import Route from "react-router-dom/Route";
-import Link from "react-router-dom/Link";
-import Switch from "react-router-dom/Switch";
+import { BrowserRouter, Route, Link, Switch, Redirect } from "react-router-dom";
 
 // Import custom UIs
 import img from "img/github.png";
@@ -20,10 +17,24 @@ import PostListPage from "components/PostListPage";
 import LabPage from "components/LabPage";
 import AboutPage from "components/AboutPage";
 
+console.log("Powered by : React " + React.version);
+
 function App() {
+  // process 404
+  let param = window.location.search.substr(1);
+  let redirect = undefined;
+  if (param.indexOf("page=") >= 0) {
+    let dest = decodeURIComponent(param.replace("page=", ""));
+    console.log("Redirect to " + dest);
+    if (dest.indexOf("/404.html") >= 0) {
+      console.log("Ignore redirect to 404 page.");
+    } else redirect = <Redirect to={dest} />;
+  }
+
   const blogTitle = "{ UnknownPgr }";
   return (
     <BrowserRouter>
+      {redirect}
       <a href="https://github.com/unknownpgr">
         <img
           src={img}
