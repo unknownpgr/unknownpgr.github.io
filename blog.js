@@ -5,6 +5,7 @@ const yaml = require("js-yaml");
 const getToc = require("./toc");
 const ncp = require("ncp");
 const md2jsx = require("./md2jsx");
+const { getSitemap, getUrlsFromMeta } = require("./sitemap");
 
 /**
  *
@@ -204,15 +205,22 @@ async function updatePosts(setting) {
 }
 
 async function main(setting) {
-  const { dst } = setting;
+  const { dst, public } = setting;
+
   console.log("Updating posts...");
   const meta = await updatePosts(setting);
   await writeFile(path.join(dst, "meta.json"), JSON.stringify(meta));
+
+  console.log("Generating sitemap...");
+  let urls = getUrlsFromMeta("https://unknownpgr.github.io", meta);
+  let sitemap = getSitemap(urls);
+  await writeFile(path.join(public, "sitemap.xml"), sitemap);
 }
 
 main({
   root: path.join(__dirname),
   dst: path.join(__dirname, "src"),
+  public: path.join(__dirname, "public"),
   jsxFile: "view.jsx",
   tocFile: "toc.json",
 }).then(() => console.log("All tasks finished."));
