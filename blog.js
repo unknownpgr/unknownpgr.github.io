@@ -51,6 +51,12 @@ async function asyncForEach(array, func) {
   return Promise.all(array.map(func));
 }
 
+async function failable(func) {
+  try {
+    await func();
+  } catch {}
+}
+
 // Split post into YAML formatter part and markdown part.
 function splitPost(src) {
   const splitter = getNthIndexOf(src, "---", 2);
@@ -204,12 +210,39 @@ async function updatePosts(setting) {
   };
 }
 
+// Generate pages for redirection.
+async function generateRedirection(setting, meta) {
+  const { public } = setting;
+  await failable(() => mkdir(path.join(public, "posts")));
+
+  const task = async (key) => {
+    const name = meta.posts[key].name;
+    const pathname = path.join(public, "posts", name, "index.html");
+    const url = `/?page=${encodeURIComponent("/posts/" + name)}`;
+    await failable(() => mkdir(path.join(public, "posts", name)));
+    await writeFile(
+      pathname,
+      `<script>window.location.replace('${url}');</script>`
+    );
+  };
+
+  let tasks = [];
+  for (let key in meta.posts) {
+    tasks.push(task(key));
+  }
+
+  return Promise.all(tasks);
+}
+
 async function main(setting) {
   const { dst, public } = setting;
 
   console.log("Updating posts...");
   const meta = await updatePosts(setting);
   await writeFile(path.join(dst, "meta.json"), JSON.stringify(meta));
+
+  console.log("Generating redirection pages...");
+  generateRedirection(setting, meta);
 
   console.log("Generating sitemap...");
   let urls = getUrlsFromMeta("https://unknownpgr.github.io", meta);

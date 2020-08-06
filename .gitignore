@@ -27,6 +27,7 @@ posts/*/*.json
 posts/*/*.jsx
 src/posts/*
 src/meta.json
+public/posts
 
 # Sitemap
 public/sitemap.xml
