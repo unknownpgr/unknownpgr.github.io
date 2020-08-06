@@ -227,3 +227,4 @@ category: this_is_category.
 
 - Sitemap구성 중, Github에서 SPA를 지원하지 않아 404로 redirect하는 과정에서 검색엔진이 제대로 검색하지 못함을 발견함.
 - 새로 구성 시작.
+- `refactoring` 브랜치 새로 생성
