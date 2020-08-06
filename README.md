@@ -229,3 +229,4 @@ category: this_is_category.
 - 새로 구성 시작.
 - `refactoring` 브랜치 새로 생성
 - 일단 가장 간단하게, post에 해당하는 html을 전부 생성하는 방향으로 가 본다.
+- 생성 완료.
