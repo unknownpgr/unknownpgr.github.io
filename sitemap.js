@@ -17,6 +17,8 @@ function getSitemap(urls) {
 
 // Get the list of urls from metadata(blog-specified)
 function getUrlsFromMeta(host, meta) {
+  if (host.endsWith("/")) host = host.substr(0, host.length - 1);
+
   let urls = [
     {
       loc: host,
@@ -27,7 +29,7 @@ function getUrlsFromMeta(host, meta) {
   for (let key in meta.posts) {
     let data = meta.posts[key];
     urls.push({
-      loc: path.join(host, "posts", data.name),
+      loc: host + "/posts/" + data.name,
       lastmod: data.date,
       changefreq: "monthly",
     });

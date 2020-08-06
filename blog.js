@@ -245,7 +245,7 @@ async function main(setting) {
   generateRedirection(setting, meta);
 
   console.log("Generating sitemap...");
-  let urls = getUrlsFromMeta("https://unknownpgr.github.io", meta);
+  let urls = getUrlsFromMeta("https://unknownpgr.github.io/", meta);
   let sitemap = getSitemap(urls);
   await writeFile(path.join(public, "sitemap.xml"), sitemap);
 }
