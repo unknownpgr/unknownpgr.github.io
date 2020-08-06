@@ -30,7 +30,7 @@ function getUrlsFromMeta(host, meta) {
     let data = meta.posts[key];
     urls.push({
       loc: host + "/posts/" + data.name,
-      lastmod: data.date,
+      lastmod: data.date.toISOString(),
       changefreq: "monthly",
     });
   }
