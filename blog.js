@@ -217,6 +217,7 @@ async function main(setting) {
   await writeFile(path.join(public, "sitemap.xml"), sitemap);
 }
 
+// Call main function with parameters
 main({
   root: path.join(__dirname),
   dst: path.join(__dirname, "src"),

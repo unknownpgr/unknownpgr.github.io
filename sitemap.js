@@ -1,5 +1,6 @@
 const path = require("path");
 
+// Generate sitemap xml (return type string) from urls.
 function getSitemap(urls) {
   let sitemap = '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
   urls.forEach((url) => {
@@ -14,6 +15,7 @@ function getSitemap(urls) {
   return sitemap;
 }
 
+// Get the list of urls from metadata(blog-specified)
 function getUrlsFromMeta(host, meta) {
   let urls = [
     {
