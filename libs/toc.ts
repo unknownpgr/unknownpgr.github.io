@@ -12,21 +12,46 @@ Each h1-json objects in the top level array are like:
   }
 objects in children are h2-json between current h1 and next h1.
 */
-function getToc(html) {
+
+type toc = {
+  id?: String;
+  text?: String;
+  children?: toc[];
+};
+
+export function getToc(html: string): toc[] {
   // Get header tags
   // This regex is not perfect. but, It works anyway.
-  const headers = [...html.matchAll(/<h[0-9]+[^<>]*>.+<\/h[0-9]+[^<>]*>/g)];
+  const headers = [];
+  for (let match in html.matchAll(/<h[0-9]+[^<>]*>.+<\/h[0-9]+[^<>]*>/g)) {
+    headers.push(match);
+  }
 
   // Make stack
-  let stack = [];
-  let current = [];
+  let stack: toc[][] = [];
+  let current: toc[] = [];
+
+  function add(condition: boolean) {
+    while (condition) {
+      const temp: toc[] = current;
+      const top: undefined | toc[] = stack.pop();
+
+      // Null check top for typescript
+      if (!top) continue;
+      current = top;
+      if (current.length == 0) current.push({});
+      current[current.length - 1].children = temp;
+    }
+  }
 
   // Make header tree with inverse DFS
   headers.forEach((header) => {
-    const [raw] = header;
-    const id = raw.match(/id="[^"]+"/)[0].replace(/id=|"/g, "");
+    const raw = header[0];
+    let id: any = raw.match(/id="[^"]+"/);
+    id = id[0].replace(/id=|"/g, "");
+
     const text = raw.replace(/<\/?[^<>]*>/g, ""); // Remove html tag
-    const [depth] = raw.match(/[0-9]+/);
+    const depth: any = raw.match(/[0-9]+/); // For example, depth of <h4> tag is 4.
 
     // If new item has higher depth than current depth
     while (depth > stack.length + 1) {
@@ -35,24 +60,12 @@ function getToc(html) {
     }
 
     // If new item has lower depth than current depth
-    while (depth < stack.length + 1) {
-      const temp = current;
-      current = stack.pop();
-      if (current.length == 0) current.push({});
-      current[current.length - 1].children = temp;
-    }
+    add(depth < stack.length + 1);
     current.push({ id, text });
   });
 
   // Don't forget to return to root after entire iteration.
-  while (stack.length) {
-    const temp = current;
-    current = stack.pop();
-    if (current.length == 0) current.push({});
-    current[current.length - 1].children = temp;
-  }
+  add(stack.length > 0);
 
   return current;
 }
-
-module.exports = getToc;
