@@ -33,7 +33,6 @@ const listDir = async (dirPath) =>
   (await readDir(dirPath)).map((x) => path.join(dirPath, x));
 const readFile = util.promisify(fs.readFile);
 const writeFile = util.promisify(fs.writeFile);
-const stat = util.promisify(fs.stat);
 const mkdir = util.promisify(fs.mkdir);
 
 // Find n-th appearence of pattern in string. index starts from 1.
@@ -143,8 +142,8 @@ async function updateSinglePost(postPath, setting) {
   };
 
   // jsx / toc file generation
-  let jsx = md2jsx(markdown);
-  let toc = JSON.stringify(getToc(jsx));
+  let { result, imgs } = md2jsx(markdown);
+  let toc = JSON.stringify(getToc(result));
 
   // Write files
   const srcPath = path.join(setting.root, "posts", ret.name);
@@ -153,7 +152,7 @@ async function updateSinglePost(postPath, setting) {
     await mkdir(path.join(setting.dst, "posts", ret.name));
   } catch {}
   await Promise.all([
-    writeFile(path.join(dstPath, setting.jsxFile), jsx),
+    writeFile(path.join(dstPath, setting.jsxFile), result),
     writeFile(path.join(dstPath, setting.tocFile), toc),
     ncp(srcPath, dstPath),
   ]);
