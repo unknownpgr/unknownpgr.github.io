@@ -2,10 +2,10 @@ const fs = require("fs");
 const util = require("util");
 const path = require("path");
 const yaml = require("js-yaml");
-const getToc = require("./toc");
 const ncp = require("ncp");
-const md2jsx = require("./md2jsx");
-const { getSitemap, getUrlsFromMeta } = require("./sitemap");
+const getToc = require("./libs/toc");
+const md2jsx = require("./libs/md2jsx");
+const { getSitemap, getUrlsFromMeta } = require("./libs/sitemap");
 
 /**
  *
