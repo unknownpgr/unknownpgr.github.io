@@ -14,7 +14,13 @@ function buildToc(toc) {
             <a href={"#" + x.id}>{x.text}</a>
           </li>
         ) : undefined;
-        const child = x.children ? <ol>{buildToc(x.children)}</ol> : undefined;
+        let child = undefined;
+        let inner = undefined;
+        if (x.children) {
+          inner = buildToc(x.children);
+          if (x.text) child = <ol>{inner}</ol>;
+          else child = <ol style={{ paddingLeft: "0px" }}>{inner}</ol>;
+        }
         return (
           <React.Fragment key={x.id + "i"}>
             {current}
