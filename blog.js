@@ -8,23 +8,19 @@ const md2jsx = require("./libs/md2jsx");
 const { getSitemap, getUrlsFromMeta } = require("./libs/sitemap");
 
 /**
+ * There is a difference between data for updating metadata in a blog and data for displaying a blog.
+ * To update metadata, the following information is required.
  *
- * 구현해본 바, 블로그에서 메타데이터 업데이트를 위한 데이터와 블로그 표시를 위한 데이터가 차이가 있다.
- * 메타데이터 업데이트를 위해서는 다음과 같은 정보가 필요하다.
+ * - The post's unique name (=directory name)
+ * - The name of the markdown file
  *
- * - 포스트의 고유한 이름(=디렉토리 이름)
- * - 마크다운 파일의 이름
+ * In order to use it in a blog, the following information is required.
  *
- * 블로그에서 사용하기 위해서는 다음과 같은 정보가 필요하다.
- *
- * - 포스트의 고유한 이름(=디렉토리 이름=URL)
- * - 생성된 jsx파일의 경로(확장자 없이)
- * - 생성된 toc파일의 경로(확장자 없이)
- * - 카테고리
- * - 포스트가 작성된 날짜
- *
- * 현재 블로그 포스트가 가지는 메타정보는 아래와 같다/
- * - 포스트 고유한 이름(=디렉토리 이름)
+ * - The post's unique name (=directory=URL)
+ * - Path of generated jsx file (without extension)
+ * - Path of the created toc file (without extension)
+ * - Category
+ * - The date the post was created
  */
 
 // Promisified functions
@@ -144,6 +140,7 @@ async function updateSinglePost(postPath, setting) {
   // jsx / toc file generation
   let { result, imgs } = md2jsx(markdown);
   let toc = JSON.stringify(getToc(result));
+  ret.thumbnail = imgs[0];
 
   // Write files
   const srcPath = path.join(setting.root, "posts", ret.name);
