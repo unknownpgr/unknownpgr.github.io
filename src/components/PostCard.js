@@ -3,12 +3,16 @@ import { Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import dateFormat from "dateFormat";
 
-function Post(props) {
+function PostCard(props) {
   const categoryStr = "# " + props.category;
 
   return (
     <Card className="m-4" style={{ maxWidth: "24rem", minWidth: "16rem" }}>
-      <Card.Img variant="top" src="/code.svg" className="card-img"></Card.Img>
+      <Card.Img
+        variant="top"
+        src={props.thumbnail ? "/thumbnails/" + props.thumbnail : "/code.svg"}
+        className="card-img"
+      ></Card.Img>
       <Card.Body>
         <Link to={"/posts/" + props.name}>
           <Card.Title>
@@ -29,4 +33,4 @@ function Post(props) {
   );
 }
 
-export default Post;
+export default PostCard;

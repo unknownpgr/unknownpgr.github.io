@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import "scss/view.scss";
 import dateFormat from "dateFormat";
 
-// Build TOC from toc json
+// Build table of content (TOC) from toc json
 function buildToc(toc) {
   return (
     <React.Fragment>
@@ -48,8 +48,8 @@ function getAdjacentPost(currentPostName) {
   }
 
   if (!previous)
-    previous = { title: "이전 글 없음", name: currentPostName + "#" };
-  if (!next) next = { title: "다음 글 없음", name: currentPostName + "#" };
+    previous = { title: "No previouse post", name: currentPostName + "#" };
+  if (!next) next = { title: "No next post", name: currentPostName + "#" };
 
   return { previous, next };
 }
@@ -89,11 +89,11 @@ class ViewPage extends React.Component {
      *
      *    Webpack performs a static analyse at build time.
      *    Therefore, to import resources in non-child directory,
-     *    Relative path should be provided as string literal
+     *    Relative path should be provided as string literal.
      *
-     *    Additionally, if the directory containing the jsx file is deleted,
-     *    the real-time server cannot find it even if the directory is restored.
-     *    I don't know why.
+     *    Additionally, if the directory containing the jsx files are deleted,
+     *    the real-time server will not be able to find them even if the directory is restored.
+     *    (I don't know why.)
      */
 
     this.adjacentPost = getAdjacentPost(postName);

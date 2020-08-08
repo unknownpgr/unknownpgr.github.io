@@ -28,6 +28,7 @@ posts/*/*.jsx
 src/posts/*
 src/meta.json
 public/posts
+public/thumbnails
 
 # Sitemap
 public/sitemap.xml

@@ -1,7 +1,7 @@
 import React from "react";
 import { posts, postOrder } from "meta.json";
 import CardDeck from "react-bootstrap/CardDeck";
-import Post from "components/Post";
+import PostCard from "components/PostCard";
 
 class PostListPage extends React.Component {
   render() {
@@ -12,7 +12,7 @@ class PostListPage extends React.Component {
             let { category } = posts[post];
             if (this.props.filter && this.props.filter !== category)
               return null;
-            return <Post {...posts[post]} key={post}></Post>;
+            return <PostCard {...posts[post]} key={post}></PostCard>;
           })
           .filter((x) => x)}
       </CardDeck>

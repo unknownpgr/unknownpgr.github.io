@@ -5,6 +5,7 @@ const yaml = require("js-yaml");
 const ncp = require("ncp");
 const getToc = require("./libs/toc");
 const md2jsx = require("./libs/md2jsx");
+const createThumbnail = require("./libs/thumbnail");
 const { getSitemap, getUrlsFromMeta } = require("./libs/sitemap");
 
 /**
@@ -90,7 +91,7 @@ function parseFormatter(formatterStr, defaultDate) {
 /**
  * Generate text snippet
  */
-function generateSnippet(fullText) {
+function createSnippet(fullText) {
   let text = "";
   let split = fullText
     .replace(/(#|\r|\n|-|\|\t|`|\|| )+/g, " ")
@@ -127,7 +128,7 @@ async function updateSinglePost(postPath, setting) {
     "---\n" + yaml.dump(formatter) + "\n---" + markdown
   );
 
-  let text = generateSnippet(markdown);
+  let text = createSnippet(markdown);
 
   // Create data
   var ret = {
@@ -140,7 +141,8 @@ async function updateSinglePost(postPath, setting) {
   // jsx / toc file generation
   let { result, imgs } = md2jsx(markdown);
   let toc = JSON.stringify(getToc(result));
-  ret.thumbnail = imgs[0];
+  if (imgs.length > 0)
+    ret.thumbnail = await createThumbnail(setting, ret, imgs[0]);
 
   // Write files
   const srcPath = path.join(setting.root, "posts", ret.name);
@@ -207,7 +209,7 @@ async function updatePosts(setting) {
 }
 
 // Generate pages for redirection.
-async function generateRedirection(setting, meta) {
+async function createRedirection(setting, meta) {
   const { public } = setting;
   await failable(() => mkdir(path.join(public, "posts")));
 
@@ -238,7 +240,7 @@ async function main(setting) {
   await writeFile(path.join(dst, "meta.json"), JSON.stringify(meta));
 
   console.log("Generating redirection pages...");
-  generateRedirection(setting, meta);
+  createRedirection(setting, meta);
 
   console.log("Generating sitemap...");
   let urls = getUrlsFromMeta("https://unknownpgr.github.io/", meta);

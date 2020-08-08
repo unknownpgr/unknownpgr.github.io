@@ -65,6 +65,7 @@ blockquote {
   h3 {
     margin-top: 1rem;
   }
+
   p {
     line-height: 1.8;
     word-break: keep-all;
@@ -86,8 +87,11 @@ blockquote {
   }
 
   img {
-    width: 80%;
-    margin-left: 10%;
+    max-width: 80%;
+    min-width: 25%;
+    // Algin image center
+    display: block;
+    margin: auto;
   }
 
   a {
