@@ -93,6 +93,21 @@ blockquote {
   a {
     text-decoration: underline;
   }
+
+  u {
+    position: relative;
+    text-decoration: none;
+  }
+
+  u::after {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0rem;
+    height: 0.75rem;
+    background-color: #8888ff38;
+    content: "";
+  }
 }
 
 #adjPosts {
