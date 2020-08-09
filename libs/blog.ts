@@ -7,6 +7,7 @@ import { getToc } from "./toc";
 import { md2jsx } from "./md2jsx";
 import { createThumbnail } from "./thumbnail";
 import { getSitemap, getUrlsFromMeta } from "./sitemap";
+import { Setting, PostDict, PostMeta, BlogMeta, Categories } from "./config";
 
 /**
  * There is a difference between data for updating metadata in a blog and data for displaying a blog.
@@ -165,7 +166,7 @@ async function updateSinglePost(
   return ret;
 }
 
-async function updatePosts(setting: Setting) {
+async function updatePosts(setting: Setting): Promise<BlogMeta> {
   // Make destination post directory
   try {
     await mkdir(path.join(setting.dst, "posts"));

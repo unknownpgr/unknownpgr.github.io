@@ -2,6 +2,7 @@ import fs from "fs";
 import util from "util";
 import sharp from "sharp";
 import path from "path";
+import { Setting } from "./config";
 
 const mkdir = util.promisify(fs.mkdir);
 

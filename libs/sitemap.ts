@@ -1,5 +1,5 @@
 import path from "path";
-import "./config";
+import { BlogMeta } from "./config";
 
 type url = {
   loc: string;

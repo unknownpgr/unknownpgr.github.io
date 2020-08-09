@@ -1,4 +1,4 @@
-type Setting = {
+export type Setting = {
   root: string;
   dst: string;
   publicDir: string;
@@ -6,15 +6,18 @@ type Setting = {
   tocFile: string;
 };
 
-type PostDict = { [key: string]: PostMeta };
+export type PostDict = { [key: string]: PostMeta };
 
-type Categories = { [key: string]: { count: number } };
+export type Categories = { [key: string]: { count: number } };
 
-type BlogMeta = {
+export type BlogMeta = {
   posts: PostDict;
+  categories: Categories;
+  setting: Setting;
+  postOrder: string[];
 };
 
-type PostMeta = {
+export type PostMeta = {
   name: string;
   date: Date;
   category: string;
