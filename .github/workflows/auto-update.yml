@@ -30,7 +30,7 @@ jobs:
         run: yarn install
 
       - name: Update post info
-        run: node libs/blog.js
+        run: ./blog_update.sh
 
       - name: Commit updated posts
         run: |
