@@ -18,7 +18,7 @@ function _replaceMap(str: string, regex: RegExp, func: Function) {
   while (true) {
     let match = left.match(regex);
     if (!match) break;
-    if (!match.index) break;
+    if (match.index === undefined) break;
     processed += left.substring(0, match.index) + func(match[0]);
     left = left.substring(match.index + match[0].length);
   }
@@ -28,10 +28,9 @@ function _replaceMap(str: string, regex: RegExp, func: Function) {
 
 // Wrap emoji with span tag.
 function _wrapEmoji(str: string) {
-  let regex = REGEX_EMOJI;
   return _replaceMap(
     str,
-    regex,
+    REGEX_EMOJI,
     (emoji: string) =>
       `<span class="emoji" role="img" aria-label="emoji" aria-hidden="true">${emoji}</span>`
   );
