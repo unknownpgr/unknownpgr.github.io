@@ -1,11 +1,19 @@
-const path = require("path");
+import path from "path";
+import { BlogMeta } from "./config";
+
+type url = {
+  loc: string;
+  lastmod?: string;
+  changefreq?: string;
+  priority?: number;
+};
 
 // Generate sitemap xml (return type string) from urls.
-function getSitemap(urls) {
+// Use any[] for key-iteration
+function getSitemap(urls: any[]) {
   let sitemap = '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
   urls.forEach((url) => {
     sitemap += "<url>";
-    if (!url.loc) throw new Error("No location in url data.");
     for (let key in url) {
       sitemap += `<${key}>${url[key]}</${key}>`;
     }
@@ -16,14 +24,14 @@ function getSitemap(urls) {
 }
 
 // Get the list of urls from metadata(blog-specified)
-function getUrlsFromMeta(host, meta) {
+function getUrlsFromMeta(host: string, meta: BlogMeta) {
   if (host.endsWith("/")) host = host.substr(0, host.length - 1);
 
-  let urls = [
+  let urls: url[] = [
     {
       loc: host,
       changefreq: "always",
-      priority: "1.0",
+      priority: 1.0,
     },
   ];
   for (let key in meta.posts) {

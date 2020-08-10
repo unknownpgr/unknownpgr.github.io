@@ -2,7 +2,7 @@ const fs = require("fs");
 const util = require("util");
 const sharp = require("sharp");
 const path = require("path");
-const mkdir = util.promisify(fs.mkdir);
+import { Setting } from "./config";
 
 /**
  * @param {*} meta Post metadata
@@ -11,17 +11,17 @@ const mkdir = util.promisify(fs.mkdir);
  * @param {Number} dstHeight Desired height of thumbnail image
  */
 async function createThumbnail(
-  setting,
-  meta,
-  img,
-  dstWidth = undefined,
-  dstHeight = 300
+  setting: Setting,
+  meta: any,
+  img: string,
+  dstWidth?: number,
+  dstHeight: number = 300
 ) {
-  let dir = path.join(setting.public, "thumbnails");
+  let dir = path.join(setting.publicDir, "thumbnails");
   let src = path.join(setting.root, "posts", meta.name, img);
   let dst = path.join(dir, `thm_${meta.name}.png`);
   try {
-    await mkdir(dir);
+    await fs.mkdir(dir);
   } catch {}
   await sharp(src).resize(dstWidth, dstHeight).toFile(dst);
   return path.relative(dir, dst);

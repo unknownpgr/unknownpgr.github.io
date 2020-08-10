@@ -1,12 +1,13 @@
-const fs = require("fs");
+const fs = require("fs").promises;
 const util = require("util");
 const path = require("path");
 const yaml = require("js-yaml");
 const ncp = require("ncp");
-const getToc = require("./libs/toc");
-const md2jsx = require("./libs/md2jsx");
-const createThumbnail = require("./libs/thumbnail");
-const { getSitemap, getUrlsFromMeta } = require("./libs/sitemap");
+const getToc = require("./toc");
+const md2jsx = require("./md2jsx");
+const createThumbnail = require("./thumbnail");
+const { getSitemap, getUrlsFromMeta } = require("./sitemap");
+import { Setting, PostDict, PostMeta, BlogMeta, Categories } from "./config";
 
 /**
  * There is a difference between data for updating metadata in a blog and data for displaying a blog.
@@ -25,15 +26,12 @@ const { getSitemap, getUrlsFromMeta } = require("./libs/sitemap");
  */
 
 // Promisified functions
-const readDir = util.promisify(fs.readdir);
-const listDir = async (dirPath) =>
-  (await readDir(dirPath)).map((x) => path.join(dirPath, x));
-const readFile = util.promisify(fs.readFile);
-const writeFile = util.promisify(fs.writeFile);
-const mkdir = util.promisify(fs.mkdir);
+const listDir = async (dirPath: string) =>
+  (await fs.readdir(dirPath)).map((x: string) => path.join(dirPath, x));
+const asyncNcp = util.promisify(ncp);
 
 // Find n-th appearence of pattern in string. index starts from 1.
-function getNthIndexOf(str, pattern, n) {
+function getNthIndexOf(str: string, pattern: string, n: number) {
   var l = str.length,
     i = -1;
   while (n-- && i++ < l) {
@@ -43,18 +41,21 @@ function getNthIndexOf(str, pattern, n) {
   return i;
 }
 
-async function asyncForEach(array, func) {
+async function asyncForEach(
+  array: any[],
+  func: (value: any, index: number, array: any[]) => unknown
+) {
   return Promise.all(array.map(func));
 }
 
-async function failable(func) {
+async function failable(func: Function) {
   try {
     await func();
   } catch {}
 }
 
 // Split post into YAML formatter part and markdown part.
-function splitPost(src) {
+function splitPost(src: string) {
   const splitter = getNthIndexOf(src, "---", 2);
   const formatter = src.slice(0, splitter);
   let markdown = src.slice(splitter + 3);
@@ -62,8 +63,8 @@ function splitPost(src) {
 }
 
 // Parse YAML formatter string and return json
-function parseFormatter(formatterStr, defaultDate) {
-  let formatter = yaml.safeLoad(formatterStr);
+function parseFormatter(formatterStr: string, defaultDate: Date) {
+  let formatter: any = yaml.safeLoad(formatterStr);
 
   // Check required properties
   if (!formatter["title"])
@@ -72,7 +73,7 @@ function parseFormatter(formatterStr, defaultDate) {
     throw new Error("YAML formatter does not contain 'category' attribute.");
 
   // Beautify date
-  const date = new Date(formatter.date);
+  const date: any = new Date(formatter.date);
   if (isNaN(date)) {
     formatter["date"] = new Date(defaultDate);
   } else {
@@ -91,7 +92,7 @@ function parseFormatter(formatterStr, defaultDate) {
 /**
  * Generate text snippet
  */
-function createSnippet(fullText) {
+function createSnippet(fullText: string) {
   let text = "";
   let split = fullText
     .replace(/(#|\r|\n|-|\|\t|`|\|| )+/g, " ")
@@ -107,23 +108,26 @@ function createSnippet(fullText) {
 }
 
 // Get post data from post path
-async function updateSinglePost(postPath, setting) {
+async function updateSinglePost(
+  postPath: string,
+  setting: Setting
+): Promise<PostMeta> {
   // Convert postPath to full path
   postPath = path.resolve(postPath);
 
   // Get markdown file name
-  const postFilePath = (await listDir(postPath)).filter((x) =>
+  const postFilePath = (await listDir(postPath)).filter((x: string) =>
     x.endsWith(".md")
   )[0];
   if (!postFilePath) throw new Error("There are no content file");
 
   // Split post into YAML formatter and markdown
-  const src = await readFile(postFilePath, "utf-8");
-  let { formatter, markdown } = splitPost(src);
+  const src = await fs.readFile(postFilePath, "utf-8");
+  let { formatter: formatterString, markdown } = splitPost(src);
 
   // Parse
-  formatter = parseFormatter(formatter, Date.now());
-  await writeFile(
+  let formatter = parseFormatter(formatterString, new Date());
+  await fs.writeFile(
     postFilePath,
     "---\n" + yaml.dump(formatter) + "\n---" + markdown
   );
@@ -148,41 +152,45 @@ async function updateSinglePost(postPath, setting) {
   const srcPath = path.join(setting.root, "posts", ret.name);
   const dstPath = path.join(setting.dst, "posts", ret.name);
   try {
-    await mkdir(path.join(setting.dst, "posts", ret.name));
+    await fs.mkdir(path.join(setting.dst, "posts", ret.name));
   } catch {}
   await Promise.all([
-    writeFile(path.join(dstPath, setting.jsxFile), result),
-    writeFile(path.join(dstPath, setting.tocFile), toc),
-    ncp(srcPath, dstPath),
+    fs.writeFile(path.join(dstPath, setting.jsxFile), result),
+    fs.writeFile(path.join(dstPath, setting.tocFile), toc),
+    asyncNcp(srcPath, dstPath),
   ]);
   return ret;
 }
 
-async function updatePosts(setting) {
+async function updatePosts(setting: Setting): Promise<BlogMeta> {
   // Make destination post directory
   try {
-    await mkdir(path.join(setting.dst, "posts"));
+    await fs.mkdir(path.join(setting.dst, "posts"));
   } catch {}
 
   // Get post directories
-  var pathes = (await listDir(path.join(setting.root, "posts"))).filter((x) =>
-    fs.statSync(x).isDirectory()
+  var pathes: string[] = [];
+  await asyncForEach(
+    await listDir(path.join(setting.root, "posts")),
+    async (x: string) => {
+      if ((await fs.stat(x)).isDirectory()) pathes.push(x);
+    }
   );
 
   // Collect post metadata
-  const posts = {};
-  const categories = {};
-  let postOrder = [];
-  await asyncForEach(pathes, async function (path) {
+  const posts: PostDict = {};
+  const categories: Categories = {};
+  let postOrder: string[] = [];
+  await asyncForEach(pathes, async function (path: string) {
     // Update single post and get postData.
-    const postData = await updateSinglePost(path, setting);
+    const postData: PostMeta = await updateSinglePost(path, setting);
     const { name, category } = postData;
 
     // Build posts dictionary
     posts[name] = postData;
 
     // Build post order list
-    postOrder.push(postData);
+    postOrder.push(postData.name);
 
     // Build category dictionary
     if (categories[category]) categories[category].count++;
@@ -190,15 +198,15 @@ async function updatePosts(setting) {
   });
 
   // Sort post names in postOrder list by date and add order property.
-  postOrder = postOrder
-    .sort((a, b) => b.date - a.date)
-    .map((post, i) => {
-      posts[post.name].order = i;
-      return post.name;
-    });
+  postOrder = postOrder.sort(
+    (a, b) => posts[b].date.getTime() - posts[a].date.getTime()
+  );
+  postOrder.forEach((post, i) => {
+    posts[post].order = i;
+  });
 
   // Remove root from setting
-  delete setting.root;
+  setting.root = "";
 
   return {
     posts,
@@ -209,16 +217,17 @@ async function updatePosts(setting) {
 }
 
 // Generate pages for redirection.
-async function createRedirection(setting, meta) {
-  const { public } = setting;
-  await failable(() => mkdir(path.join(public, "posts")));
+async function createRedirection(setting: Setting, meta: BlogMeta) {
+  const { publicDir } = setting;
+  const { posts }: { posts: any } = meta;
+  await failable(() => fs.mkdir(path.join(publicDir, "posts")));
 
-  const task = async (key) => {
-    const name = meta.posts[key].name;
-    const pathname = path.join(public, "posts", name, "index.html");
+  const task = async (key: string) => {
+    const name = posts[key].name;
+    const pathname = path.join(publicDir, "posts", name, "index.html");
     const url = `/?page=${encodeURIComponent("/posts/" + name)}`;
-    await failable(() => mkdir(path.join(public, "posts", name)));
-    await writeFile(
+    await failable(() => fs.mkdir(path.join(publicDir, "posts", name)));
+    await fs.writeFile(
       pathname,
       `<script>window.location.replace('${url}');</script>`
     );
@@ -232,12 +241,12 @@ async function createRedirection(setting, meta) {
   return Promise.all(tasks);
 }
 
-async function main(setting) {
-  const { dst, public } = setting;
+async function main(setting: Setting) {
+  const { dst, publicDir } = setting;
 
   console.log("Updating posts...");
   const meta = await updatePosts(setting);
-  await writeFile(path.join(dst, "meta.json"), JSON.stringify(meta));
+  await fs.writeFile(path.join(dst, "meta.json"), JSON.stringify(meta));
 
   console.log("Generating redirection pages...");
   createRedirection(setting, meta);
@@ -245,14 +254,14 @@ async function main(setting) {
   console.log("Generating sitemap...");
   let urls = getUrlsFromMeta("https://unknownpgr.github.io/", meta);
   let sitemap = getSitemap(urls);
-  await writeFile(path.join(public, "sitemap.xml"), sitemap);
+  await fs.writeFile(path.join(publicDir, "sitemap.xml"), sitemap);
 }
 
-// Call main function with parameters
+// // Call main function with parameters
 main({
-  root: path.join(__dirname),
-  dst: path.join(__dirname, "src"),
-  public: path.join(__dirname, "public"),
+  root: path.join(__dirname, ".."),
+  dst: path.join(__dirname, "..", "src"),
+  publicDir: path.join(__dirname, "..", "public"),
   jsxFile: "view.jsx",
   tocFile: "toc.json",
 }).then(() => console.log("All tasks finished."));
