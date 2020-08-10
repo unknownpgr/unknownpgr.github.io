@@ -1,0 +1,1 @@
+yarn run tsc -p ./libs/tsconfig.json

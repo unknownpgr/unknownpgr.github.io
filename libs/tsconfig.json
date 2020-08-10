@@ -3,20 +3,17 @@
     "target": "es5",
     "module": "esnext",
     "lib": ["ES2020.String"],
-    "outDir": "dist",
+    "outDir": "./",
     "rootDir": "./",
     "strict": true,
     "esModuleInterop": true,
     "baseUrl": "src",
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "react"
+    "resolveJsonModule": true
   },
-  "include": ["src"]
+  "include": ["./"],
+  "exclude": []
 }

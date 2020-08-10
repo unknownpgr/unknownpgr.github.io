@@ -1,12 +1,12 @@
-import fs from "fs";
-import util from "util";
-import path from "path";
-import yaml from "js-yaml";
-import ncp from "ncp";
-import { getToc } from "./toc";
-import { md2jsx } from "./md2jsx";
-import { createThumbnail } from "./thumbnail";
-import { getSitemap, getUrlsFromMeta } from "./sitemap";
+const fs = require("fs").promises;
+const util = require("util");
+const path = require("path");
+const yaml = require("js-yaml");
+const ncp = require("ncp");
+const getToc = require("./toc");
+const md2jsx = require("./md2jsx");
+const createThumbnail = require("./thumbnail");
+const { getSitemap, getUrlsFromMeta } = require("./sitemap");
 import { Setting, PostDict, PostMeta, BlogMeta, Categories } from "./config";
 
 /**
@@ -26,12 +26,8 @@ import { Setting, PostDict, PostMeta, BlogMeta, Categories } from "./config";
  */
 
 // Promisified functions
-const readDir = util.promisify(fs.readdir);
 const listDir = async (dirPath: string) =>
-  (await readDir(dirPath)).map((x: string) => path.join(dirPath, x));
-const readFile = util.promisify(fs.readFile);
-const writeFile = util.promisify(fs.writeFile);
-const mkdir = util.promisify(fs.mkdir);
+  (await fs.readdir(dirPath)).map((x: string) => path.join(dirPath, x));
 const asyncNcp = util.promisify(ncp);
 
 // Find n-th appearence of pattern in string. index starts from 1.
@@ -120,18 +116,18 @@ async function updateSinglePost(
   postPath = path.resolve(postPath);
 
   // Get markdown file name
-  const postFilePath = (await listDir(postPath)).filter((x) =>
+  const postFilePath = (await listDir(postPath)).filter((x: string) =>
     x.endsWith(".md")
   )[0];
   if (!postFilePath) throw new Error("There are no content file");
 
   // Split post into YAML formatter and markdown
-  const src = await readFile(postFilePath, "utf-8");
+  const src = await fs.readFile(postFilePath, "utf-8");
   let { formatter: formatterString, markdown } = splitPost(src);
 
   // Parse
   let formatter = parseFormatter(formatterString, new Date());
-  await writeFile(
+  await fs.writeFile(
     postFilePath,
     "---\n" + yaml.dump(formatter) + "\n---" + markdown
   );
@@ -156,11 +152,11 @@ async function updateSinglePost(
   const srcPath = path.join(setting.root, "posts", ret.name);
   const dstPath = path.join(setting.dst, "posts", ret.name);
   try {
-    await mkdir(path.join(setting.dst, "posts", ret.name));
+    await fs.mkdir(path.join(setting.dst, "posts", ret.name));
   } catch {}
   await Promise.all([
-    writeFile(path.join(dstPath, setting.jsxFile), result),
-    writeFile(path.join(dstPath, setting.tocFile), toc),
+    fs.writeFile(path.join(dstPath, setting.jsxFile), result),
+    fs.writeFile(path.join(dstPath, setting.tocFile), toc),
     asyncNcp(srcPath, dstPath),
   ]);
   return ret;
@@ -169,13 +165,17 @@ async function updateSinglePost(
 async function updatePosts(setting: Setting): Promise<BlogMeta> {
   // Make destination post directory
   try {
-    await mkdir(path.join(setting.dst, "posts"));
+    await fs.mkdir(path.join(setting.dst, "posts"));
   } catch {}
 
   // Get post directories
-  var pathes = (
-    await listDir(path.join(setting.root, "posts"))
-  ).filter((x: string) => fs.statSync(x).isDirectory());
+  var pathes: string[] = [];
+  await asyncForEach(
+    await listDir(path.join(setting.root, "posts")),
+    async (x: string) => {
+      if ((await fs.stat(x)).isDirectory()) pathes.push(x);
+    }
+  );
 
   // Collect post metadata
   const posts: PostDict = {};
@@ -220,14 +220,14 @@ async function updatePosts(setting: Setting): Promise<BlogMeta> {
 async function createRedirection(setting: Setting, meta: BlogMeta) {
   const { publicDir } = setting;
   const { posts }: { posts: any } = meta;
-  await failable(() => mkdir(path.join(publicDir, "posts")));
+  await failable(() => fs.mkdir(path.join(publicDir, "posts")));
 
   const task = async (key: string) => {
     const name = posts[key].name;
     const pathname = path.join(publicDir, "posts", name, "index.html");
     const url = `/?page=${encodeURIComponent("/posts/" + name)}`;
-    await failable(() => mkdir(path.join(publicDir, "posts", name)));
-    await writeFile(
+    await failable(() => fs.mkdir(path.join(publicDir, "posts", name)));
+    await fs.writeFile(
       pathname,
       `<script>window.location.replace('${url}');</script>`
     );
@@ -246,7 +246,7 @@ async function main(setting: Setting) {
 
   console.log("Updating posts...");
   const meta = await updatePosts(setting);
-  await writeFile(path.join(dst, "meta.json"), JSON.stringify(meta));
+  await fs.writeFile(path.join(dst, "meta.json"), JSON.stringify(meta));
 
   console.log("Generating redirection pages...");
   createRedirection(setting, meta);
@@ -254,7 +254,7 @@ async function main(setting: Setting) {
   console.log("Generating sitemap...");
   let urls = getUrlsFromMeta("https://unknownpgr.github.io/", meta);
   let sitemap = getSitemap(urls);
-  await writeFile(path.join(publicDir, "sitemap.xml"), sitemap);
+  await fs.writeFile(path.join(publicDir, "sitemap.xml"), sitemap);
 }
 
 // // Call main function with parameters

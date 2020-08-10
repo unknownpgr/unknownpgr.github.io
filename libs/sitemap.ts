@@ -10,7 +10,7 @@ type url = {
 
 // Generate sitemap xml (return type string) from urls.
 // Use any[] for key-iteration
-export function getSitemap(urls: any[]) {
+function getSitemap(urls: any[]) {
   let sitemap = '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
   urls.forEach((url) => {
     sitemap += "<url>";
@@ -24,7 +24,7 @@ export function getSitemap(urls: any[]) {
 }
 
 // Get the list of urls from metadata(blog-specified)
-export function getUrlsFromMeta(host: string, meta: BlogMeta) {
+function getUrlsFromMeta(host: string, meta: BlogMeta) {
   if (host.endsWith("/")) host = host.substr(0, host.length - 1);
 
   let urls: url[] = [
@@ -44,3 +44,5 @@ export function getUrlsFromMeta(host: string, meta: BlogMeta) {
   }
   return urls;
 }
+
+module.exports = { getSitemap, getUrlsFromMeta };

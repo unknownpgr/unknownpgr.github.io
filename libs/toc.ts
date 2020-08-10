@@ -19,7 +19,7 @@ type toc = {
   children?: toc[];
 };
 
-export function getToc(html: string): toc[] {
+function getToc(html: string): toc[] {
   // Get header tags
   // This regex is not perfect. but, It works anyway.
   const headers = [];
@@ -69,3 +69,5 @@ export function getToc(html: string): toc[] {
 
   return current;
 }
+
+module.exports = getToc;

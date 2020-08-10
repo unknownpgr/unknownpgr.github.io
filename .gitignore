@@ -32,3 +32,6 @@ public/thumbnails
 
 # Sitemap
 public/sitemap.xml
+
+# Typescript
+libs/*.js

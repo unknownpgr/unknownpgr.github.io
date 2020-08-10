@@ -3,7 +3,7 @@ const md2html = new (require("showdown").Converter)({
   prefixHeaderId: "header", // It requires some prefiex because the id of first non english header tag will be empty string.
   ghCodeBlocks: true,
 });
-import HTMLtoJSX from "htmltojsx";
+const HTMLtoJSX = require("htmltojsx");
 let html2jsx = new HTMLtoJSX({
   createClass: false,
 });
@@ -77,7 +77,7 @@ function _replaceImgSrc(jsx: string) {
  * @param {String} md
  * @returns A dictionary of {result,imgs}. result is converted string and imgs is an array of image sources.
  */
-export function md2jsx(md: string) {
+function md2jsx(md: string) {
   let html = md2html.makeHtml(md);
   html = _wrapEmoji(html);
   let jsx = html2jsx.convert(html);
@@ -86,3 +86,5 @@ export function md2jsx(md: string) {
   result = `import React from 'react';export default function(props){return(<React.Fragment>${result}</React.Fragment>);};`;
   return { result, imgs };
 }
+
+module.exports = md2jsx;
