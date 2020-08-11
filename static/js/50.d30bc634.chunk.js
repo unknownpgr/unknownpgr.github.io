@@ -1,0 +1,2 @@
+(this["webpackJsonpgithub-blog"]=this["webpackJsonpgithub-blog"]||[]).push([[50],{93:function(s,t,p){s.exports=p.p+"static/media/screenshot.b1e13875.png"}}]);
+//# sourceMappingURL=50.d30bc634.chunk.js.map
