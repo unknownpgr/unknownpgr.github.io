@@ -40,7 +40,7 @@ function AdjacentPost(props) {
     return <Link to={previousLink}>{adj.title}</Link>;
   } else {
     return (
-      <a href="#" onClick={() => alert("없어용")}>
+      <a href="./#" onClick={() => alert("없어용")}>
         No {next ? "next" : "previous"} post
       </a>
     );
