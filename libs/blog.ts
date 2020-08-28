@@ -257,10 +257,13 @@ async function main(setting: Setting) {
   await fs.writeFile(path.join(publicDir, "sitemap.xml"), sitemap);
 }
 
-// // Call main function with parameters
+// Call main function with parameters
 main({
+  // Root directory of this project
   root: path.join(__dirname, ".."),
+  // Directory where generated files are saved.
   dst: path.join(__dirname, "..", "src"),
+  // Directory where static files are saved.
   publicDir: path.join(__dirname, "..", "public"),
   jsxFile: "view.jsx",
   tocFile: "toc.json",

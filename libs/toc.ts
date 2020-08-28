@@ -14,59 +14,77 @@ objects in children are h2-json between current h1 and next h1.
 */
 
 type toc = {
-  id?: String;
-  text?: String;
+  id?: string;
+  text?: string;
   children?: toc[];
 };
 
+/**
+ * Return matched part of given string.
+ * For example, when str='asssssdf' and regex=/s+/, it returns 'sssss'.
+ * When there are no match, it returns empty string.
+ * This function is not designed for global regex(/.../g).
+ * Therefore, do not use it.
+ */
+function getMatch(str: string, regex: RegExp): string {
+  let match = str.match(regex);
+  if (match == null) return "";
+  return match[0];
+}
+
+/**
+ * Return table of content object of given html.
+ * @param html HTML string to build TOC(Table of Content).
+ */
 function getToc(html: string): toc[] {
   // Get header tags
-  // This regex is not perfect. but, It works anyway.
-  const headers = [];
-  for (let match in html.matchAll(/<h[0-9]+[^<>]*>.+<\/h[0-9]+[^<>]*>/g)) {
-    headers.push(match);
-  }
+  // This regex may not be perfect. but, It works anyway. IDK why.
+  let headers = html.match(/<h[0-9]+[^<>]*>.+<\/h[0-9]+[^<>]*>/g);
+  if (headers == null) return [];
 
   // Make stack
   let stack: toc[][] = [];
   let current: toc[] = [];
 
-  function add(condition: boolean) {
-    while (condition) {
+  // Ascend to upper node of given depth
+  function ascend(depth: number) {
+    // Stack is deeper than given depth
+    while (depth - 1 < stack.length) {
       const temp: toc[] = current;
       const top: undefined | toc[] = stack.pop();
 
       // Null check top for typescript
-      if (!top) continue;
+      if (top == null) throw new Error("TOC stack is empty.");
+
+      // Update 'current' variable
       current = top;
+
+      // Add child of current
       if (current.length == 0) current.push({});
       current[current.length - 1].children = temp;
     }
   }
 
-  // Make header tree with inverse DFS
+  // Make header tree with inverse DFS(list -> tree)
   headers.forEach((header) => {
-    const raw = header[0];
-    let id: any = raw.match(/id="[^"]+"/);
-    id = id[0].replace(/id=|"/g, "");
+    let id: string = getMatch(header, /id="[^"]+"/).replace(/id=|"/g, "");
 
-    const text = raw.replace(/<\/?[^<>]*>/g, ""); // Remove html tag
-    const depth: any = raw.match(/[0-9]+/); // For example, depth of <h4> tag is 4.
+    let text = header.replace(/<\/?[^<>]*>/g, ""); // Remove html tag
+    let depth: number = +getMatch(header, /[0-9]+/); // For example, depth of <h4> tag is 4.
 
-    // If new item has higher depth than current depth
-    while (depth > stack.length + 1) {
+    // If new item has higher(deeper) depth than current depth, descend.
+    while (depth - 1 > stack.length) {
       stack.push(current);
       current = [];
     }
 
     // If new item has lower depth than current depth
-    add(depth < stack.length + 1);
+    ascend(depth);
     current.push({ id, text });
   });
 
-  // Don't forget to return to root after entire iteration.
-  add(stack.length > 0);
-
+  // Return to root after entire iteration.
+  ascend(1);
   return current;
 }
 
