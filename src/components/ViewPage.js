@@ -32,6 +32,21 @@ function buildToc(toc) {
   );
 }
 
+function AdjacentPost(props) {
+  let adj = props.adj;
+  let next = props.next;
+  if (adj) {
+    let previousLink = "/posts/" + adj.name;
+    return <Link to={previousLink}>{adj.title}</Link>;
+  } else {
+    return (
+      <a href="#" onClick={() => alert("없어용")}>
+        No {next ? "next" : "previous"} post
+      </a>
+    );
+  }
+}
+
 function getAdjacentPost(currentPostName) {
   let previous;
   let next;
@@ -47,10 +62,6 @@ function getAdjacentPost(currentPostName) {
     next = posts[categoryPost[postIndex - 1]];
   }
 
-  if (!previous)
-    previous = { title: "No previouse post", name: currentPostName + "#" };
-  if (!next) next = { title: "No next post", name: currentPostName + "#" };
-
   return { previous, next };
 }
 
@@ -62,7 +73,7 @@ class ViewPage extends React.Component {
     this.update = this.update.bind(this);
   }
 
-  componentDidMount() {
+  componentDidMount(prevProps) {
     this.update();
     this.unlisten = this.props.history.listen(() => this.update());
   }
@@ -124,11 +135,19 @@ class ViewPage extends React.Component {
     script.setAttribute("label", "Comment💬");
     script.setAttribute("theme", "github-light");
     anchor.appendChild(script);
+
+    // Go to top of the page
+    window.scrollTo(0, 0);
   }
 
   render() {
-    let previousLink = "/posts/" + this.adjacentPost?.previous?.name;
-    let nextLink = "/posts/" + this.adjacentPost?.next?.name;
+    let adj, previousPost, nextPost;
+    if ((adj = this.adjacentPost)) {
+      previousPost = (
+        <AdjacentPost adj={adj.previous} next={false}></AdjacentPost>
+      );
+      nextPost = <AdjacentPost adj={adj.next} next={true}></AdjacentPost>;
+    }
 
     return (
       <React.Fragment>
@@ -163,12 +182,10 @@ class ViewPage extends React.Component {
           <div id="adjPosts">
             <div>
               {"← "}
-              <Link to={previousLink}>
-                {this.adjacentPost?.previous?.title}
-              </Link>
+              {previousPost}
             </div>
             <div>
-              <Link to={nextLink}>{this.adjacentPost?.next?.title}</Link>
+              {nextPost}
               {" →"}
             </div>
           </div>
