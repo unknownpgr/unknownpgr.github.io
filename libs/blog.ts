@@ -137,7 +137,7 @@ async function updateSinglePost(
   // Create data
   var ret = {
     // name==path
-    name: path.relative(path.join(setting.root, "posts"), postPath),
+    name: path.relative(setting.post, postPath),
     text,
     ...formatter,
   };
@@ -149,7 +149,7 @@ async function updateSinglePost(
     ret.thumbnail = await createThumbnail(setting, ret, imgs[0]);
 
   // Write files
-  const srcPath = path.join(setting.root, "posts", ret.name);
+  const srcPath = path.join(setting.post, ret.name);
   const dstPath = path.join(setting.dst, "posts", ret.name);
   try {
     await fs.mkdir(path.join(setting.dst, "posts", ret.name));
@@ -170,12 +170,9 @@ async function updatePosts(setting: Setting): Promise<BlogMeta> {
 
   // Get post directories
   var pathes: string[] = [];
-  await asyncForEach(
-    await listDir(path.join(setting.root, "posts")),
-    async (x: string) => {
-      if ((await fs.stat(x)).isDirectory()) pathes.push(x);
-    }
-  );
+  await asyncForEach(await listDir(setting.post), async (x: string) => {
+    if ((await fs.stat(x)).isDirectory()) pathes.push(x);
+  });
 
   // Collect post metadata
   const posts: PostDict = {};
@@ -205,14 +202,11 @@ async function updatePosts(setting: Setting): Promise<BlogMeta> {
     posts[post].order = i;
   });
 
-  // Remove root from setting
-  setting.root = "";
-
   return {
     posts,
-    categories,
     setting,
     postOrder,
+    categories,
   };
 }
 
@@ -246,7 +240,6 @@ async function main(setting: Setting) {
 
   console.log("Updating posts...");
   const meta = await updatePosts(setting);
-  await fs.writeFile(path.join(dst, "meta.json"), JSON.stringify(meta));
 
   console.log("Generating redirection pages...");
   createRedirection(setting, meta);
@@ -255,12 +248,20 @@ async function main(setting: Setting) {
   let urls = getUrlsFromMeta("https://unknownpgr.github.io/", meta);
   let sitemap = getSitemap(urls);
   await fs.writeFile(path.join(publicDir, "sitemap.xml"), sitemap);
+
+  // Remove private value from setting
+  setting.dst = "";
+  setting.post = "";
+  setting.publicDir = "";
+
+  // Write
+  await fs.writeFile(path.join(dst, "meta.json"), JSON.stringify(meta));
 }
 
 // Call main function with parameters
 main({
   // Root directory of this project
-  root: path.join(__dirname, ".."),
+  post: path.join(__dirname, "..", "posts"),
   // Directory where generated files are saved.
   dst: path.join(__dirname, "..", "src"),
   // Directory where static files are saved.

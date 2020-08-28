@@ -18,7 +18,7 @@ async function createThumbnail(
   dstHeight: number = 300
 ) {
   let dir = path.join(setting.publicDir, "thumbnails");
-  let src = path.join(setting.root, "posts", meta.name, img);
+  let src = path.join(setting.post, meta.name, img);
   let dst = path.join(dir, `thm_${meta.name}.png`);
   try {
     await fs.mkdir(dir);

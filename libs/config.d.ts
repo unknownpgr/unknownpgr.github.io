@@ -1,5 +1,5 @@
 export type Setting = {
-  root: string;
+  post: string;
   dst: string;
   publicDir: string;
   jsxFile: string;
