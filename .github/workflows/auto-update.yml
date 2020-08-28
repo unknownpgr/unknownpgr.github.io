@@ -8,7 +8,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     # Stop if commit message contains ci-skip.
-    if: "contains(github.event.head_commit.message, 'post-update')"
+    if: "contains(github.event.head_commit.message, 'update')"
 
     steps:
       # Run checkout
