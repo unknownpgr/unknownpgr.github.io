@@ -78,19 +78,19 @@ function parseMarkdown(postName, mdString, snippetLength) {
     let snippet = ''
     let toc = []
 
-    function recursiveSearch(tokens) {
+    function recursiveUpdate(tokens) {
         for (let i = 0; i < tokens.length; i++) {
             if (tokens[i].type == 'image') {
                 tokens[i].attrs[0][1] = path.join('post', postName, tokens[i].attrs[0][1])
                 if (!thumbnail) thumbnail = tokens[i].attrs[0][1];
-                console.log(tokens[i].attrs[0][1])
             }
             if ((snippet.length < snippetLength) && tokens[i].type == 'text') snippet += ((snippet.length == 0) ? '' : ' ') + tokens[i].content.trim();
-            if (tokens[i].type == 'inline') recursiveSearch(tokens[i].children)
+            if (tokens[i].type == 'inline') recursiveUpdate(tokens[i].children)
         }
     }
 
     let tokens = md.parse(mdString)
+    recursiveUpdate(tokens)
     let html = md.renderer.render(tokens, md.options)
     for (let i = 0; i < tokens.length; i++) {
         if (tokens[i].type == 'heading_open') {
@@ -100,7 +100,6 @@ function parseMarkdown(postName, mdString, snippetLength) {
             })
         }
     }
-    recursiveSearch(tokens)
     return { html, snippet, thumbnail, toc };
 }
 
@@ -114,19 +113,21 @@ function parsePost(postName, rawString, snippetLength = 100, defaultDate = new D
 
 async function processPost(postDir) {
     if (!(await fs.stat(postDir)).isDirectory()) return;
-    let postName = path.basename(postDir);
+    let name = path.basename(postDir);
     let mdFile = (await listDir(postDir)).filter(x => x.endsWith('.md'))
     if (mdFile.length == 0) {
-        throw new Error("There are no markdown file for post " + postName);
+        throw new Error("There are no markdown file for post " + name);
     } else if (mdFile.length > 1) {
-        throw new Error("There are more than one markdown file for post " + postName);
+        throw new Error("There are more than one markdown file for post " + name);
     } else {
         mdFile = mdFile[0]
     }
     let rawString = await fs.readFile(mdFile, { encoding: "utf-8" })
     fs.unlink(mdFile)
-    let { formatter, html, snippet, thumbnail, toc } = parsePost(postName, rawString);
+    let { formatter, html, snippet, thumbnail, toc } = parsePost(name, rawString);
     fs.writeFile(path.join(postDir, 'post.html'), html, 'utf-8');
+    fs.writeFile(path.join(postDir, 'toc.json'), JSON.stringify(toc), 'utf-8')
+    return { ...formatter, name, thumbnail, snippet }
 }
 
 async function main() {
@@ -140,7 +141,10 @@ async function main() {
         await fs.rmdir(dst, { recursive: true })
     } catch (__) { }
     ncp(src, dst, async () => {
-        await Promise.all((await listDir(dst)).map(processPost))
+        let postData = await Promise.all((await listDir(dst)).map(processPost))
+        let meta = {}
+        postData.forEach(data => meta[data.name] = data)
+        fs.writeFile('src/meta.json', JSON.stringify(meta), 'utf-8')
         console.log('Post update finished!')
     });
 }
