@@ -19,6 +19,8 @@ const md = require('markdown-it')({
         return ''; // use external default escaping
     }
 });
+const getSitemap = require('./sitemap')
+
 md.use(ketex);
 
 const listDir = async (dirPath) => (await fs.readdir(dirPath)).map(x => path.join(dirPath, x));
@@ -153,6 +155,8 @@ async function main() {
         postData.forEach(data => meta[data.name] = data)
         fs.writeFile('src/meta.json', JSON.stringify(meta), 'utf-8')
         console.log('Post update finished!')
+        let sitemap = getSitemap('https://unknownpgr.github.io/', meta)
+        fs.writeFile(path.join(__dirname, 'public', 'sitemap.xml'), sitemap)
     });
 }
 
