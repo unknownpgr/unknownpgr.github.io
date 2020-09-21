@@ -1,0 +1,122 @@
+.title {
+  text-align: center;
+  font-size: 1.1rem;
+  margin-top: 2rem;
+}
+
+.post-title {
+  margin-top: 10rem;
+}
+
+.container {
+  max-width: 800px;
+}
+
+#toc {
+  position: fixed;
+  top: 50%;
+  margin-left: 64px;
+  left: 0;
+}
+
+@media (max-width: 1500px) {
+  #toc {
+    position: static;
+    margin-top: 2rem;
+    margin-bottom: 3rem;
+  }
+}
+
+// =====[ Markdown re-define ]=====
+* {
+  font-family: "Noto Sans KR", sans-serif;
+}
+
+code {
+  background-color: #eee;
+  border-radius: 2px;
+  padding: 2px;
+  color: #004;
+  font-weight: 400;
+}
+
+pre > code {
+  display: block;
+  overflow-x: auto;
+  padding: 0.5rem;
+}
+
+blockquote {
+  background-color: #ccc8;
+  padding: 0.5rem;
+  padding-left: 1rem;
+  border-left: 4px solid #aaa;
+}
+
+.blog-post {
+  h1 {
+    margin-top: 3rem;
+  }
+
+  h2 {
+    margin-top: 2rem;
+  }
+
+  h3 {
+    margin-top: 1rem;
+  }
+
+  p {
+    line-height: 1.8;
+    word-break: keep-all;
+  }
+
+  li {
+    line-height: 2;
+  }
+
+  table {
+    width: 90%;
+  }
+
+  th,
+  td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+  }
+
+  img {
+    max-width: 80%;
+    min-width: 25%;
+    // Algin image center
+    display: block;
+    margin: auto;
+  }
+
+  a {
+    text-decoration: underline;
+  }
+
+  u {
+    position: relative;
+    text-decoration: none;
+  }
+
+  u::after {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0rem;
+    height: 0.75rem;
+    background-color: #8888ff38;
+    content: "";
+  }
+}
+
+#adjPosts {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 4rem;
+  margin-bottom: 2rem;
+}
