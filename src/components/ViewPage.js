@@ -4,34 +4,6 @@ import { Link } from "react-router-dom";
 import "scss/view.scss";
 import dateFormat from "dateFormat";
 
-// Build table of content (TOC) from toc json
-function buildToc(toc) {
-  return (
-    <React.Fragment>
-      {toc.map((x) => {
-        const current = x.text ? (
-          <li>
-            <a href={"#" + x.id}>{x.text}</a>
-          </li>
-        ) : undefined;
-        let child = undefined;
-        let inner = undefined;
-        if (x.children) {
-          inner = buildToc(x.children);
-          if (x.text) child = <ol>{inner}</ol>;
-          else child = <ol style={{ paddingLeft: "0px" }}>{inner}</ol>;
-        }
-        return (
-          <React.Fragment key={x.id + "i"}>
-            {current}
-            {child}
-          </React.Fragment>
-        );
-      })}
-    </React.Fragment>
-  );
-}
-
 function AdjacentPost(props) {
   let adj = props.adj;
   let next = props.next;
@@ -40,7 +12,7 @@ function AdjacentPost(props) {
     return <Link to={previousLink}>{adj.title}</Link>;
   } else {
     return (
-      <a href="./#" onClick={() => alert("없어용")}>
+      <a href="./" onClick={() => alert("없어용")}>
         No {next ? "next" : "previous"} post
       </a>
     );
@@ -79,6 +51,7 @@ class ViewPage extends React.Component {
   }
 
   componentWillUnmount() {
+    console.log('unmount')
     this.unlisten();
   }
 
@@ -90,10 +63,10 @@ class ViewPage extends React.Component {
     if (!postName) return;
     console.log(postName);
     this.post = posts[postName];
+    console.log(posts[postName])
 
     // Load post, toc file
-    const jsxFilePath = postName + "/" + setting.jsxFile;
-    const tocFilePath = postName + "/" + setting.tocFile;
+    const jsxFilePath = postName + "/1.md";
 
     /**
      *    Important!
@@ -109,19 +82,15 @@ class ViewPage extends React.Component {
 
     this.adjacentPost = getAdjacentPost(postName);
 
-    import(`../posts/${jsxFilePath}`)
-      .then((loaded) => {
-        const Content = loaded.default;
-        this.Content = <Content></Content>;
+    fetch('/posts/' + postName + '/post.html')
+      .then(data => data.text())
+      .then(html => {
+        console.log(html)
+        this.Content = <div className="blog-post" dangerouslySetInnerHTML={{ __html: html }}></div>
+        console.log('bef')
+        this.forceUpdate()
+        console.log('aft', this.Content)
       })
-      .then(() => this.forceUpdate());
-
-    import(`../posts/${tocFilePath}`)
-      .then((loaded) => {
-        const toc = loaded.default;
-        this.toc = buildToc(toc);
-      })
-      .then(() => this.forceUpdate());
 
     // Add Uterances comment
     let script = document.createElement("script");
@@ -141,6 +110,8 @@ class ViewPage extends React.Component {
   }
 
   render() {
+    console.log('render')
+
     let adj, previousPost, nextPost;
     if ((adj = this.adjacentPost)) {
       previousPost = (
@@ -178,7 +149,7 @@ class ViewPage extends React.Component {
         <div className="container">
           <ol id="toc">{this.toc}</ol>
           {/* Content of post */}
-          <div className="blog-post">{this.Content}</div>
+          {this.Content}
           <div id="adjPosts">
             <div>
               {"← "}
