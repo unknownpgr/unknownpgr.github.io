@@ -2,7 +2,7 @@
 import "scss/custom.scss";
 
 // Import metatdata
-import { categories, postOrder } from "./meta.json";
+import meta from "./meta.json";
 
 // Import libraries
 import React from "react";
@@ -18,6 +18,15 @@ import LabPage from "components/LabPage";
 import AboutPage from "components/AboutPage";
 
 console.log("Powered by : React " + React.version);
+
+let list = []
+let categories = {}
+for (let key in meta) {
+  let cur = meta[key]
+  list.push(cur)
+  if (categories[cur.category] === undefined) categories[cur.category] = 1
+  else categories[cur.category]++
+}
 
 function App() {
   // process 404
@@ -87,10 +96,10 @@ function BlogNav(props) {
           </Link>
           <div id="blog-side-right">
             <Link className="p-2" to="/">
-              All({postOrder.length})
+              All({Object.keys(meta).length})
             </Link>
             {Object.keys(categories).map((category) => {
-              const str = `${category}(${categories[category].count})`;
+              const str = `${category}(${categories[category]})`;
               return (
                 <Link
                   className="p-2"

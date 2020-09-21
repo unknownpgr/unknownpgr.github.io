@@ -7,10 +7,10 @@ function PostCard(props) {
   const categoryStr = "# " + props.category;
 
   return (
-    <Card className="m-4" style={{ maxWidth: "24rem", minWidth: "16rem" }}>
+    <Card className="postCard m-4" style={{ maxWidth: "24rem", minWidth: "16rem" }}>
       <Card.Img
         variant="top"
-        src={props.thumbnail ? "/thumbnails/" + props.thumbnail : "/code.svg"}
+        src={props.thumbnail ? props.thumbnail : "/code.svg"}
         className="card-img"
       ></Card.Img>
       <Card.Body>
@@ -27,7 +27,7 @@ function PostCard(props) {
             <small className="text-muted">{categoryStr}</small>
           </Link>
         </Card.Subtitle>
-        <Card.Text>{props.text}</Card.Text>
+        <Card.Text>{props.snippet}</Card.Text>
       </Card.Body>
     </Card>
   );

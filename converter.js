@@ -6,7 +6,7 @@ const hljs = require('highlight.js');
 const ketex = require('markdown-it-katex');
 const { dirname } = require("path");
 const md = require('markdown-it')({
-    html: false,
+    html: true,
     langPrefix: 'language-',
     linkify: false,
     typographer: false,
@@ -81,10 +81,15 @@ function parseMarkdown(postName, mdString, snippetLength) {
     function recursiveUpdate(tokens) {
         for (let i = 0; i < tokens.length; i++) {
             if (tokens[i].type == 'image') {
-                tokens[i].attrs[0][1] = path.join('post', postName, tokens[i].attrs[0][1])
+                tokens[i].attrs[0][1] = path.join('/posts', postName, tokens[i].attrs[0][1])
                 if (!thumbnail) thumbnail = tokens[i].attrs[0][1];
             }
-            if ((snippet.length < snippetLength) && tokens[i].type == 'text') snippet += ((snippet.length == 0) ? '' : ' ') + tokens[i].content.trim();
+            if (tokens[i].type == 'text') {
+                let list = tokens[i].content.split(' ')
+                for (let i = 0; (i < list.length) && (snippet.length < snippetLength); i++) {
+                    if (list[i].length > 0) snippet += list[i] + ' '
+                }
+            }
             if (tokens[i].type == 'inline') recursiveUpdate(tokens[i].children)
         }
     }
@@ -100,6 +105,7 @@ function parseMarkdown(postName, mdString, snippetLength) {
             })
         }
     }
+    snippet = snippet.trim() + '...'
     return { html, snippet, thumbnail, toc };
 }
 
@@ -143,6 +149,7 @@ async function main() {
     ncp(src, dst, async () => {
         let postData = await Promise.all((await listDir(dst)).map(processPost))
         let meta = {}
+        postData = postData.sort((a, b) => b.date - a.date)
         postData.forEach(data => meta[data.name] = data)
         fs.writeFile('src/meta.json', JSON.stringify(meta), 'utf-8')
         console.log('Post update finished!')

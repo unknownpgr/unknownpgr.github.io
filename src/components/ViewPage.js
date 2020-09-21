@@ -1,5 +1,5 @@
 import React from "react";
-import { posts, setting, postOrder } from "meta.json";
+import meta from "meta.json";
 import { Link } from "react-router-dom";
 import "scss/view.scss";
 import dateFormat from "dateFormat";
@@ -24,14 +24,14 @@ function getAdjacentPost(currentPostName) {
   let next;
 
   if (currentPostName) {
-    let category = posts[currentPostName].category;
-    let categoryPost = postOrder.filter(
-      (post) => posts[post].category === category
+    let category = meta[currentPostName].category;
+    let categoryPost = Object.keys(meta).filter(
+      (post) => meta[post].category === category
     );
     let postIndex = categoryPost.indexOf(currentPostName);
     if (postIndex < 0) postIndex = -2;
-    previous = posts[categoryPost[postIndex + 1]];
-    next = posts[categoryPost[postIndex - 1]];
+    previous = meta[categoryPost[postIndex + 1]];
+    next = meta[categoryPost[postIndex - 1]];
   }
 
   return { previous, next };
@@ -51,19 +51,16 @@ class ViewPage extends React.Component {
   }
 
   componentWillUnmount() {
-    console.log('unmount')
     this.unlisten();
   }
 
   update() {
-    const postName = this.props.history.location.pathname
-      .split("/")
-      .slice(-1)
-      .pop();
+    let postName;
+    let list = this.props.history.location.pathname.split("/")
+    postName = list.pop()
+    if (!postName) postName = list.pop()
     if (!postName) return;
-    console.log(postName);
-    this.post = posts[postName];
-    console.log(posts[postName])
+    this.post = meta[postName];
 
     // Load post, toc file
     const jsxFilePath = postName + "/1.md";
@@ -85,11 +82,8 @@ class ViewPage extends React.Component {
     fetch('/posts/' + postName + '/post.html')
       .then(data => data.text())
       .then(html => {
-        console.log(html)
         this.Content = <div className="blog-post" dangerouslySetInnerHTML={{ __html: html }}></div>
-        console.log('bef')
         this.forceUpdate()
-        console.log('aft', this.Content)
       })
 
     // Add Uterances comment
@@ -110,8 +104,6 @@ class ViewPage extends React.Component {
   }
 
   render() {
-    console.log('render')
-
     let adj, previousPost, nextPost;
     if ((adj = this.adjacentPost)) {
       previousPost = (
