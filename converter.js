@@ -8,7 +8,7 @@ const { dirname } = require("path");
 const md = require('markdown-it')({
     html: true,
     langPrefix: 'language-',
-    linkify: false,
+    linkify: true,
     typographer: false,
     highlight: function (str, lang) {
         if (lang && hljs.getLanguage(lang)) {
