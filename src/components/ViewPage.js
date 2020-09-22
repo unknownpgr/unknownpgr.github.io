@@ -4,6 +4,41 @@ import { Link } from "react-router-dom";
 import "scss/view.scss";
 import dateFormat from "dateFormat";
 
+// Build table of content (TOC) from toc json
+function buildToc(toc) {
+  const lv = (t) => +(t.type.substr(1))
+
+  let stack = []
+  let current = []
+  let level = 1;
+  let key = 0
+  toc.forEach((t, i) => {
+    while (level < lv(t)) {
+      stack.push(current)
+      current = []
+      level++
+    }
+    while (level > lv(t)) {
+      let temp = <ul key={key} children={current}></ul>
+      current = stack.pop()
+      current.push(temp)
+      level--
+      key++
+    }
+    current.push(<li key={key}><a href={'#' + t.id}>{t.content}</a></li>)
+    key++
+  })
+  while (level > 1) {
+    let temp = <ul key={key} children={current}></ul>
+    current = stack.pop()
+    current.push(temp)
+    level--
+    key++
+  }
+  return <ul children={current}></ul>
+}
+
+
 function AdjacentPost(props) {
   let adj = props.adj;
   let next = props.next;
@@ -12,9 +47,9 @@ function AdjacentPost(props) {
     return <Link to={previousLink}>{adj.title}</Link>;
   } else {
     return (
-      <a href="./" onClick={() => alert("없어용")}>
+      <button className="link-button" onClick={() => alert("없어용")}>
         No {next ? "next" : "previous"} post
-      </a>
+      </button>
     );
   }
 }
@@ -41,6 +76,7 @@ class ViewPage extends React.Component {
   constructor(props) {
     super(props);
     this.Content = <p></p>;
+    this.toc = <li></li>
     this.adjacentPost = { previous: "", next: "" };
     this.update = this.update.bind(this);
   }
@@ -61,28 +97,19 @@ class ViewPage extends React.Component {
     if (!postName) postName = list.pop()
     if (!postName) return;
     this.post = meta[postName];
-
-    // Load post, toc file
-    const jsxFilePath = postName + "/1.md";
-
-    /**
-     *    Important!
-     *
-     *    Webpack performs a static analyse at build time.
-     *    Therefore, to import resources in non-child directory,
-     *    Relative path should be provided as string literal.
-     *
-     *    Additionally, if the directory containing the jsx files are deleted,
-     *    the real-time server will not be able to find them even if the directory is restored.
-     *    (I don't know why.)
-     */
-
     this.adjacentPost = getAdjacentPost(postName);
 
     fetch('/posts/' + postName + '/post.html')
       .then(data => data.text())
       .then(html => {
         this.Content = <div className="blog-post" dangerouslySetInnerHTML={{ __html: html }}></div>
+        this.forceUpdate()
+      })
+    fetch('/posts/' + postName + '/toc.json')
+      .then(data => data.json())
+      .then(buildToc)
+      .then(toc => {
+        this.toc = toc
         this.forceUpdate()
       })
 
@@ -139,7 +166,7 @@ class ViewPage extends React.Component {
           <hr style={{ marginTop: "2rem" }}></hr>
         </div>
         <div className="container">
-          <ol id="toc">{this.toc}</ol>
+          <div id="toc">{this.toc}</div>
           {/* Content of post */}
           {this.Content}
           <div id="adjPosts">

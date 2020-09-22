@@ -79,6 +79,7 @@ function parseMarkdown(postName, mdString, snippetLength) {
     let thumbnail = ''
     let snippet = ''
     let toc = []
+    let headerCount = 1;
 
     function recursiveUpdate(tokens) {
         for (let i = 0; i < tokens.length; i++) {
@@ -98,15 +99,20 @@ function parseMarkdown(postName, mdString, snippetLength) {
 
     let tokens = md.parse(mdString)
     recursiveUpdate(tokens)
-    let html = md.renderer.render(tokens, md.options)
     for (let i = 0; i < tokens.length; i++) {
         if (tokens[i].type == 'heading_open') {
+            let id = 'header-' + headerCount;
+            headerCount++;
+            if (!tokens[i].attrs) tokens[i].attrs = []
+            tokens[i].attrs.push(['id', id]);
             toc.push({
                 type: tokens[i].tag,
-                content: md.renderInline(tokens[i + 1].content)
+                content: md.renderInline(tokens[i + 1].content),
+                id: id
             })
         }
     }
+    let html = md.renderer.render(tokens, md.options)
     snippet = snippet.trim() + '...'
     return { html, snippet, thumbnail, toc };
 }

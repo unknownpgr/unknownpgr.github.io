@@ -116,6 +116,12 @@ blockquote {
   }
 }
 
+.link-button {
+  border: none;
+  text-decoration: none;
+  background-color: inherit;
+}
+
 #adjPosts {
   display: flex;
   justify-content: space-between;
