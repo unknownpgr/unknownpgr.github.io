@@ -10,29 +10,31 @@ function buildToc(toc) {
 
   let stack = []
   let current = []
-  let level = 1;
   let key = 0
   toc.forEach((t, i) => {
-    while (level < lv(t)) {
+    while (stack.length + 1 < lv(t)) {
       stack.push(current)
       current = []
-      level++
     }
-    while (level > lv(t)) {
-      let temp = <ul key={key} children={current}></ul>
+    while (stack.length + 1 > lv(t)) {
+      let temp = current
       current = stack.pop()
-      current.push(temp)
-      level--
+      if (current.length == 0) current = temp;
+      else {
+        current.push(<ul key={key} children={temp}></ul>)
+      }
       key++
     }
-    current.push(<li key={key}><a href={'#' + t.id}>{t.content}</a></li>)
+    current.push(<li key={key}><a href={'#' + t.id} dangerouslySetInnerHTML={{ __html: t.content }}></a></li >)
     key++
   })
-  while (level > 1) {
-    let temp = <ul key={key} children={current}></ul>
+  while (stack.length > 0) {
+    let temp = current
     current = stack.pop()
-    current.push(temp)
-    level--
+    if (current.length == 0) current = temp;
+    else {
+      current.push(<ul key={key} children={temp}></ul>)
+    }
     key++
   }
   return <ul children={current}></ul>
