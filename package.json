@@ -6,12 +6,8 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
-    "@types/htmltojsx": "^0.0.29",
-    "@types/js-yaml": "^3.12.5",
-    "@types/ncp": "^2.0.4",
     "bootstrap": "^4.5.0",
     "highlight.js": "^10.2.0",
-    "htmltojsx": "^0.3.0",
     "js-yaml": "^3.14.0",
     "markdown-it": "^11.0.1",
     "markdown-it-katex": "^2.0.3",
@@ -29,7 +25,6 @@
     "build": "react-scripts build",
     "start": "react-scripts start",
     "update": "./blog_clean.sh;node blog.js",
-    "serve": "serve -s build -p 3000",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -48,7 +43,5 @@
       "last 1 safari version"
     ]
   },
-  "devDependencies": {
-    "@types/react-router-dom": "^5.1.5"
-  }
+  "devDependencies": {}
 }

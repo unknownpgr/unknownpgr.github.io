@@ -1,5 +1,3 @@
-const path = require('path')
-
 // Generate sitemap xml (return type string) from urls.
 // Use any[] for key-iteration
 function getSitemapFromURL(urls) {
@@ -38,7 +36,7 @@ function getURLsFromMeta(host, meta) {
 }
 
 function getSiteMap(host, meta) {
-  return getSitemapFromURL(getURLsFromMeta(host, meta))
+  return getSitemapFromURL(getURLsFromMeta(host, meta));
 }
 
-module.exports = getSiteMap
+module.exports = getSiteMap;

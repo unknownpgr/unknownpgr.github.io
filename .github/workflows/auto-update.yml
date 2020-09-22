@@ -30,7 +30,7 @@ jobs:
         run: yarn install
 
       - name: Update post info
-        run: ./blog_update.sh
+        run: yarn update
 
       - name: Commit updated posts
         run: |
@@ -45,7 +45,7 @@ jobs:
         with:
           github_token: ${{ secrets.ACCESS_TOKEN }}
 
-      - name: Make new directory
+      - name: Make a new directory
         run: mkdir ../blog-publish
 
       - name: Git init

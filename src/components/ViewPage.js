@@ -6,38 +6,34 @@ import dateFormat from "dateFormat";
 
 // Build table of content (TOC) from toc json
 function buildToc(toc) {
-  const lv = (t) => +(t.type.substr(1))
+  const lv = (t) => +(t.type.substr(1));
 
-  let stack = []
-  let current = []
-  let key = 0
+  let stack = [];
+  let current = [];
+  let key = 0;
   toc.forEach((t, i) => {
     while (stack.length + 1 < lv(t)) {
-      stack.push(current)
-      current = []
+      stack.push(current);
+      current = [];
     }
     while (stack.length + 1 > lv(t)) {
-      let temp = current
-      current = stack.pop()
-      if (current.length == 0) current = temp;
-      else {
-        current.push(<ul key={key} children={temp}></ul>)
-      }
-      key++
+      let temp = current;
+      current = stack.pop();
+      if (current.length === 0) current = temp;
+      else current.push(<ul key={key} children={temp}></ul>);
+      key++;
     }
-    current.push(<li key={key}><a href={'#' + t.id} dangerouslySetInnerHTML={{ __html: t.content }}></a></li >)
-    key++
-  })
+    current.push(<li key={key}><a href={'#' + t.id} dangerouslySetInnerHTML={{ __html: t.content }}></a></li >);
+    key++;
+  });
   while (stack.length > 0) {
-    let temp = current
-    current = stack.pop()
-    if (current.length == 0) current = temp;
-    else {
-      current.push(<ul key={key} children={temp}></ul>)
-    }
-    key++
+    let temp = current;
+    current = stack.pop();
+    if (current.length === 0) current = temp;
+    else current.push(<ul key={key} children={temp}></ul>);
+    key++;
   }
-  return <ul children={current}></ul>
+  return <ul children={current}></ul>;
 }
 
 
@@ -78,7 +74,7 @@ class ViewPage extends React.Component {
   constructor(props) {
     super(props);
     this.Content = <p></p>;
-    this.toc = <li></li>
+    this.toc = <li></li>;
     this.adjacentPost = { previous: "", next: "" };
     this.update = this.update.bind(this);
   }
@@ -94,9 +90,9 @@ class ViewPage extends React.Component {
 
   update() {
     let postName;
-    let list = this.props.history.location.pathname.split("/")
-    postName = list.pop()
-    if (!postName) postName = list.pop()
+    let list = this.props.history.location.pathname.split("/");
+    postName = list.pop();
+    if (!postName) postName = list.pop();
     if (!postName) return;
     this.post = meta[postName];
     this.adjacentPost = getAdjacentPost(postName);
@@ -104,16 +100,16 @@ class ViewPage extends React.Component {
     fetch('/posts/' + postName + '/post.html')
       .then(data => data.text())
       .then(html => {
-        this.Content = <div className="blog-post" dangerouslySetInnerHTML={{ __html: html }}></div>
-        this.forceUpdate()
-      })
+        this.Content = <div className="blog-post" dangerouslySetInnerHTML={{ __html: html }}></div>;
+        this.forceUpdate();
+      });
     fetch('/posts/' + postName + '/toc.json')
       .then(data => data.json())
       .then(buildToc)
       .then(toc => {
-        this.toc = toc
-        this.forceUpdate()
-      })
+        this.toc = toc;
+        this.forceUpdate();
+      });
 
     // Add Uterances comment
     let script = document.createElement("script");
