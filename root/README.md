@@ -10,4 +10,4 @@
 
 ## Root files
 
-- Files in `/root` of develop repository will be automatically copied to here.
+- Files in `/root` of the develop repository will be automatically copied to here.
