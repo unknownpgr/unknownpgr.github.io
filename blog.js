@@ -3,7 +3,7 @@ const ncp = require("ncp");
 const path = require("path");
 const yaml = require("js-yaml");
 const hljs = require('highlight.js');
-const ketex = require('markdown-it-katex');
+const ketex = require('./md-latex');
 const md = require('markdown-it')({
     html: true,
     langPrefix: 'language-',
