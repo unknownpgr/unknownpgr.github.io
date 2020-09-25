@@ -28,6 +28,13 @@ jobs:
       - name: Initialize
         run: yarn install
 
+      - name: Build blog
+        run: yarn build
+
+      - name: Build fail
+        run: 'curl -X POST -H ''Content-type: application/json'' --data ''{"text":"Github blog build failed."}'' "${{secrets.SLACK_KEY}}"'
+        if: failure()
+
       - name: Update post info
         run: yarn update
 
@@ -36,7 +43,7 @@ jobs:
           if [[ `git status --porcelain` ]]; then
             git config --local user.email "unknownpgr@github.com"
             git config --local user.name "unknownpgr"
-            git commit -m "Auto fix posts at $(date) ci-skip" -a
+            git commit -m "Auto update blog at $(date) ci-skip" -a
           fi
 
       - name: Push update
@@ -63,13 +70,6 @@ jobs:
 
       - name: Update fail
         run: 'curl -X POST -H ''Content-type: application/json'' --data ''{"text":"Github blog update failed."}'' "${{secrets.SLACK_KEY}}"'
-        if: failure()
-
-      - name: Build blog
-        run: yarn build
-
-      - name: Build fail
-        run: 'curl -X POST -H ''Content-type: application/json'' --data ''{"text":"Github blog build failed."}'' "${{secrets.SLACK_KEY}}"'
         if: failure()
 
       - name: Copy build
