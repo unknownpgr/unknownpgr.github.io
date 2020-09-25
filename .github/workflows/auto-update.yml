@@ -140,7 +140,7 @@ jobs:
 
       - name: Git init
         run: |
-          cd ../blog-publish;
+          cd ../blog-publish/*;
           git init
           git remote add origin https://github.com/${MY_NAME}/${MY_NAME}.github.io.git
           git pull origin master
