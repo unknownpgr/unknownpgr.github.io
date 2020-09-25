@@ -40,6 +40,7 @@ jobs:
 
       - name: Commit updated posts
         run: |
+          git add .
           if [[ `git status --porcelain` ]]; then
             git config --local user.email "unknownpgr@github.com"
             git config --local user.name "unknownpgr"
