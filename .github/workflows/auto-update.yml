@@ -45,7 +45,7 @@ jobs:
             git config --local user.email "unknownpgr@github.com"
             git config --local user.name "unknownpgr"
             git add .
-            git commit -m "Auto update blog at $(date)"
+            git commit -m "Auto blog update at $(date)"
           fi
 
       - name: Push update
@@ -127,7 +127,7 @@ jobs:
             git config --local user.email "unknownpgr@github.com"
             git config --local user.name "unknownpgr"
             git add .
-            git commit -m "Auto fix posts at $(date)"
+            git commit -m "Auto blog update at $(date)"
           fi
 
       - name: Push update
