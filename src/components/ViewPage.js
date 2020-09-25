@@ -36,7 +36,6 @@ function buildToc(toc) {
   return <ul children={current}></ul>;
 }
 
-
 function AdjacentPost(props) {
   let adj = props.adj;
   let next = props.next;
@@ -142,7 +141,7 @@ class ViewPage extends React.Component {
         <div className="title">
           <Link to="/">{"{ Unknown }"}</Link>
         </div>
-        <div className="container">
+        <div className="container post-header">
           <h1 className="post-title">
             {this.post ? this.post.title : "Loading post..."}
           </h1>

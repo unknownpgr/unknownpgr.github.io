@@ -17,6 +17,10 @@
   top: 50%;
   margin-left: 64px;
   left: 0;
+
+  ul {
+    padding-inline-start: 24px;
+  }
 }
 
 @media (max-width: 1500px) {
@@ -52,6 +56,20 @@ blockquote {
   p {
     margin-top: 0px;
     margin-bottom: 0px;
+  }
+}
+
+.post-header {
+  margin: 50px auto 40px auto;
+  text-align: center;
+
+  h1 {
+    position: relative;
+    letter-spacing: -1px;
+    font-size: 40px;
+    font-weight: 100;
+    margin: 0px 0 50px 0;
+    text-shadow: 0 1px 0 #fff;
   }
 }
 
