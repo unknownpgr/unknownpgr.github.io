@@ -27,6 +27,9 @@ src/meta.json
 public/posts
 public/thumbnails
 
+# Build
+/build
+
 # Sitemap
 public/sitemap.xml
 
