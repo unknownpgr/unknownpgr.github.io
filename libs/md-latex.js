@@ -160,6 +160,7 @@ module.exports = function math_plugin(md, options) {
   // Default options
 
   options = options || {};
+  options.minRuleThickness = 0.05;
 
   // set KaTeX as the renderer for markdown-it-simplemath
   var katexInline = function (latex) {

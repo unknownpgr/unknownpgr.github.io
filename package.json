@@ -24,7 +24,7 @@
   "scripts": {
     "build": "react-scripts build",
     "start": "react-scripts start",
-    "update": "./blog_clean.sh;node blog.js",
+    "update": "./blog-clean.sh;node blog.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
