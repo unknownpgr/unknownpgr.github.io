@@ -3,7 +3,7 @@ const ncp = require("ncp");
 const path = require("path");
 const yaml = require("js-yaml");
 const hljs = require('highlight.js');
-const ketex = require('./md-latex');
+const ketex = require('./libs/md-latex');
 const md = require('markdown-it')({
     html: true,
     langPrefix: 'language-',
@@ -18,7 +18,7 @@ const md = require('markdown-it')({
         return ''; // use external default escaping
     }
 });
-const getSitemap = require('./sitemap');
+const getSitemap = require('./libs/sitemap');
 
 md.use(ketex);
 
