@@ -122,7 +122,7 @@ function parsePost(postName, rawString, snippetLength = 100, defaultDate = new D
     let [yaml, md] = parseRawString(rawString);
     let formatter = parseFormatter(yaml, defaultDate);
     let parsedPost = parseMarkdown(postName, md, snippetLength);
-    return { formatter, ...parsedPost };
+    return { formatter, md, ...parsedPost };
 }
 
 // Parse an .md file, remove it, generate post.html and toc.json, then return metadata of post.
@@ -143,9 +143,11 @@ async function processPost(postDir) {
 
     // Parse markdown file
     let rawString = await fs.readFile(mdFile, { encoding: "utf-8" });
-    let { formatter, html, snippet, thumbnail, toc } = parsePost(name, rawString);
+    let { formatter, md, html, snippet, thumbnail, toc } = parsePost(name, rawString);
 
     // Write data
+    fs.writeFile(path.join(__dirname, 'posts', name, path.basename(mdFile)),
+        '---\n' + yaml.dump(formatter) + '\n---' + md);
     fs.writeFile(path.join(postDir, 'post.html'), html, 'utf-8');
     fs.writeFile(path.join(postDir, 'toc.json'), JSON.stringify(toc), 'utf-8');
 
