@@ -132,6 +132,9 @@ async function processPost(postDir) {
     let name = path.basename(postDir);
     let mdFile = (await listDir(postDir)).filter(x => x.endsWith('.md'));
 
+    // Check if given post is hidden post
+    if (name.startsWith('.')) return;
+
     // Check if there are exactly one markdown file
     if (mdFile.length === 0) {
         throw new Error("There are no markdown file for post " + name);
@@ -170,6 +173,7 @@ async function main() {
     } catch (__) { }
     ncp(src, dst, async () => {
         let postData = await Promise.all((await listDir(dst)).map(processPost));
+        postData = postData.filter(x => x)
 
         // Sort the metadata by the date and convert it to a dictionary.
         let meta = {};
