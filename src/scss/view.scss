@@ -9,17 +9,22 @@
 }
 
 .container {
+  margin-top: 2rem;
   max-width: 800px;
+  position: relative;
 }
 
 #toc {
-  position: fixed;
-  top: 50%;
-  margin-left: 64px;
-  left: 0;
-
+  position: absolute;
+  left: -20rem;
+  height: 100%;
   ul {
     padding-inline-start: 24px;
+  }
+
+  ul:first-child {
+    position: sticky;
+    top: 10rem;
   }
 }
 
@@ -33,11 +38,13 @@
 
 // =====[ Markdown re-define ]=====
 code {
-  background-color: #eee;
-  border-radius: 2px;
-  padding: 2px;
-  color: #004;
-  font-weight: 400;
+  padding: 0.1em 0.1em;
+  margin: 0;
+  font-size: 85%;
+  background-color: rgba(27, 31, 35, 0.05);
+  border-radius: 3px;
+  border: #eee 1.5px solid;
+  color: #000;
 }
 
 pre > code {
