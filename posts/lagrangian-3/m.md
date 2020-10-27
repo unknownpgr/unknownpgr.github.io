@@ -1,6 +1,8 @@
 ---
-title: 라그랑주 역학[3] - 라그랑지언과 액션
-category: math-science
+title: '라그랑주 역학[3] - 라그랑지언과 액션'
+category: Math science
+date: 2020-10-27T17:35:09.173Z
+
 ---
 
 # 라그랑지언과 액션
