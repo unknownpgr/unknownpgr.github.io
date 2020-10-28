@@ -220,7 +220,9 @@ $$
 $$
 그러면 마지막으로 이를 수치해석을 사용해서 렌더링하는 HTML+ES6스크립트를 작성하여 진짜로 그럴듯한 운동이 나오는지 확인해보겠습니다. [아래](https://unknownpgr.github.io/lagrange-mechanics/sim.html)는 제가 간단히 만들어 본 시뮬레이션입니다.
 
-<iframe src="https://unknownpgr.github.io/lagrange-mechanics/sim.html" height="600px" width="100%" style="border:none;"></iframe>
+<iframe src="https://unknownpgr.github.io/lagrange-mechanics/sim.html" height="800px" width="100%" style="border:none;"></iframe>
+
+> 이 포스트를 작성한 후 시뮬레이션 코드를 업데이트했습니다. 포스트에서는 진자의 줄 전체가 스프링인 경우를 다루었지만, 위에서 보이는 시뮬레이션은 줄의 일부는 강체이고 일부는 스프링인 경우를 다룹니다.
 
 실행 결과 예상과는 좀 다르게 카오스적인 결과보다는 너무나 규칙적이고 깔끔한 결과가 나와서 좀 놀랐습니다. 물론 실제로 고무줄에다가 공을 달아놓으면 저렇게 운동할 것 같기는 합니다. 혹시 라그랑지안 계산을 실수했나 싶어 다른 레퍼런스들을 찾아 봤으나 제대로 한 게 맞는 것 같습니다. 자연이란 신기하네요. 저렇게 복잡하고 예측불가능해 보이는 수식에서 이렇게 깔끔한 결과가 나오다니.
 
