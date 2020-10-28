@@ -220,7 +220,7 @@ $$
 $$
 그러면 마지막으로 이를 수치해석을 사용해서 렌더링하는 HTML+ES6스크립트를 작성하여 진짜로 그럴듯한 운동이 나오는지 확인해보겠습니다. [아래](https://unknownpgr.github.io/lagrange-mechanics/sim.html)는 제가 간단히 만들어 본 시뮬레이션입니다.
 
-<iframe src="https://unknownpgr.github.io/lagrange-mechanics/sim.html" height="800px" width="100%" style="border:none;"></iframe>
+<iframe src="https://unknownpgr.github.io/lagrangian-mechanics/sim.html" height="800px" width="100%" style="border:none;"></iframe>
 
 > 이 포스트를 작성한 후 시뮬레이션 코드를 업데이트했습니다. 포스트에서는 진자의 줄 전체가 스프링인 경우를 다루었지만, 위에서 보이는 시뮬레이션은 줄의 일부는 강체이고 일부는 스프링인 경우를 다룹니다.
 
