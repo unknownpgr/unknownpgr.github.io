@@ -1,7 +1,6 @@
 ---
 title: '라그랑주 역학[4] - 특수한 시스템'
 category: Math science
-date:
 ---
 
 # 특수한 시스템
