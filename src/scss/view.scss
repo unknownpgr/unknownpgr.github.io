@@ -139,6 +139,12 @@ blockquote {
     background-color: #8888ff38;
     content: "";
   }
+
+  iframe {
+    height: 800px;
+    widows: 100%;
+    border: none;
+  }
 }
 
 .link-button {
