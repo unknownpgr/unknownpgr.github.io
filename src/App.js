@@ -15,17 +15,17 @@ import img from "img/github.png";
 import ViewPage from "components/ViewPage";
 import PostListPage from "components/PostListPage";
 import LabPage from "components/LabPage";
-import AboutPage from "components/AboutPage";
+import AboutPage from "components/AboutPage/AboutPage.js";
 
 console.log("Powered by : React " + React.version);
 
-let list = []
-let categories = {}
+let list = [];
+let categories = {};
 for (let key in meta) {
-  let cur = meta[key]
-  list.push(cur)
-  if (categories[cur.category] === undefined) categories[cur.category] = 1
-  else categories[cur.category]++
+  let cur = meta[key];
+  list.push(cur);
+  if (categories[cur.category] === undefined) categories[cur.category] = 1;
+  else categories[cur.category]++;
 }
 
 function App() {
