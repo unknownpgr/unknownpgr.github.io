@@ -1,5 +1,5 @@
-@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300&display=swap");
-@import "node_modules/bootstrap/scss/bootstrap";
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300&display=swap');
+@import 'node_modules/bootstrap/scss/bootstrap';
 
 a {
   color: #000;
@@ -19,7 +19,7 @@ body,
   padding: 0px;
   display: flex;
   flex-direction: column;
-  font-family: "Noto Sans KR", sans-serif;
+  font-family: 'Noto Sans KR', sans-serif;
 }
 
 html {
@@ -88,4 +88,8 @@ footer {
   position: absolute;
   bottom: 0px;
   width: 100%;
+}
+
+.container-main {
+  max-width: 800px;
 }
