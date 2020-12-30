@@ -1,6 +1,6 @@
 ---
 title: '이미지 삽입이 안 되는데, 어떻게 고칠지가 고민.'
-category: Blog dev
+category: blog dev
 date: 2020-07-23T05:16:26.064Z
 
 ---

@@ -1,6 +1,6 @@
 ---
 title: '라그랑주 역학[1] - 변분법'
-category: Math science
+category: math science
 date: 2020-10-22T22:30:26.341Z
 
 ---

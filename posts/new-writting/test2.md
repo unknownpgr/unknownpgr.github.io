@@ -1,6 +1,6 @@
 ---
 title: 제대로 된 글을 한 번 써 봅시다.
-category: Blog dev
+category: blog dev
 date: 2020-07-20T06:36:34.000Z
 
 ---

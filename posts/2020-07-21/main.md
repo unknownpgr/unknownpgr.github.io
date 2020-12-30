@@ -1,6 +1,6 @@
 ---
 title: "윈도우에서 글을 쓸 수 있을까? \U0001F914"
-category: Blog dev
+category: blog dev
 date: 2020-07-20T20:43:00.000Z
 
 ---

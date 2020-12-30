@@ -1,6 +1,6 @@
 ---
 title: '라그랑주 역학[4] - 특수한 시스템'
-category: Math science
+category: math science
 date: 2020-11-02T04:44:48.256Z
 
 ---

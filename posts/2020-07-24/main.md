@@ -1,6 +1,6 @@
 ---
 title: YAML 까먹었다...난 바보야...
-category: Blog dev
+category: blog dev
 date: 2020-07-24T08:24:03.039Z
 
 ---

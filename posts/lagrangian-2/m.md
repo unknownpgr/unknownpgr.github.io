@@ -1,6 +1,6 @@
 ---
 title: '라그랑주 역학[2] - 일반화 좌표계'
-category: Math science
+category: math science
 date: 2020-10-27T17:35:09.159Z
 
 ---
