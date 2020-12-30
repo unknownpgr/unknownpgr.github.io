@@ -4,7 +4,7 @@ const path = require("path");
 const yaml = require("js-yaml");
 const hljs = require('highlight.js');
 const ketex = require('./libs/md-latex');
-const md = require('markdown-it')({
+const markdown = require('markdown-it')({
     html: true,
     langPrefix: 'language-',
     linkify: true,
@@ -20,7 +20,7 @@ const md = require('markdown-it')({
 });
 const getSitemap = require('./libs/sitemap');
 
-md.use(ketex);
+markdown.use(ketex);
 
 const listDir = async (dirPath) => (await fs.readdir(dirPath)).map(x => path.join(dirPath, x));
 
@@ -40,12 +40,12 @@ function getNthIndexOf(str, pattern, n) {
 function parseRawString(src) {
     const splitter = getNthIndexOf(src, "---", 2);
     const formatter = src.slice(0, splitter);
-    let markdown = src.slice(splitter + 3);
-    return [formatter, markdown];
+    let md = src.slice(splitter + 3);
+    return [formatter, md];
 }
 
 // Parse YAML formatter string and return json.
-// Pure function(with defaultDate provided)
+// Pure function(only if defaultDate was provided)
 function parseFormatter(formatterStr, defaultDate) {
     let formatter = yaml.safeLoad(formatterStr);
 
@@ -66,7 +66,6 @@ function parseFormatter(formatterStr, defaultDate) {
     // Beautify category
     let { category } = formatter;
     category = category.replace(/( |\t|_|-)+/g, " ").toLowerCase();
-    category = category.charAt(0).toUpperCase() + category.slice(1);
     formatter.category = category;
 
     return formatter;
@@ -78,40 +77,45 @@ function parseMarkdown(postName, mdString, snippetLength) {
     let thumbnail = '';
     let snippet = '';
     let toc = [];
-    let headerCount = 1;
+    let headerIndex = 1;
 
     function recursiveUpdate(tokens) {
         for (let i = 0; i < tokens.length; i++) {
             if (tokens[i].type === 'image') {
+                // Update the image path to absolute path
                 tokens[i].attrs[0][1] = path.join('/posts', postName, tokens[i].attrs[0][1]);
+                // Get the first image as thumbnail
                 if (!thumbnail) thumbnail = tokens[i].attrs[0][1];
             }
             if (tokens[i].type === 'text') {
+                // Generate snippet text
                 let list = tokens[i].content.split(' ');
-                for (let i = 0; (i < list.length) && (snippet.length < snippetLength); i++) {
-                    if (list[i].length > 0) snippet += list[i] + ' ';
+                for (let j = 0; (j < list.length) && (snippet.length < snippetLength); j++) {
+                    if (list[j].length > 0) snippet += list[j] + ' ';
                 }
             }
             if (tokens[i].type === 'inline') recursiveUpdate(tokens[i].children);
         }
     }
 
-    let tokens = md.parse(mdString);
+    let tokens = markdown.parse(mdString);
     recursiveUpdate(tokens);
+
+    // Assign an id to header and build table of content
     for (let i = 0; i < tokens.length; i++) {
         if (tokens[i].type === 'heading_open') {
-            let id = 'header-' + headerCount;
-            headerCount++;
+            let id = 'header-' + headerIndex;
+            headerIndex++;
             if (!tokens[i].attrs) tokens[i].attrs = [];
             tokens[i].attrs.push(['id', id]);
             toc.push({
                 type: tokens[i].tag,
-                content: md.renderInline(tokens[i + 1].content),
+                content: markdown.renderInline(tokens[i + 1].content),
                 id: id
             });
         }
     }
-    let html = md.renderer.render(tokens, md.options);
+    let html = markdown.renderer.render(tokens, markdown.options);
     snippet = snippet.trim() + '...';
     return { html, snippet, thumbnail, toc };
 }
@@ -119,8 +123,8 @@ function parseMarkdown(postName, mdString, snippetLength) {
 // Parse raw string and return formatter, html, text snippet.
 // Pure function
 function parsePost(postName, rawString, snippetLength = 100, defaultDate = new Date()) {
-    let [yaml, md] = parseRawString(rawString);
-    let formatter = parseFormatter(yaml, defaultDate);
+    let [yamlStr, md] = parseRawString(rawString);
+    let formatter = parseFormatter(yamlStr, defaultDate);
     let parsedPost = parseMarkdown(postName, md, snippetLength);
     return { formatter, md, ...parsedPost };
 }
@@ -164,23 +168,30 @@ async function processPost(postDir) {
 async function main() {
     let src = path.join(__dirname, 'posts');
     let dst = path.join(__dirname, 'public', 'posts');
+
+    // Delete existing data
     try {
         if (+(process.version.substr(1, 2)) < 12) {
             console.error("Could not run rmdir because of node version is too low.");
         }
         // `rmdir` commmand with recursive option equires node version > 12
         await fs.rmdir(dst, { recursive: true });
-    } catch (__) { }
+    } catch (_) { return; }
+
+    // First, copy raw post data to dst directory
     ncp(src, dst, async () => {
+        // Second, compile them.
         let postData = await Promise.all((await listDir(dst)).map(processPost));
-        postData = postData.filter(x => x)
+
+        // Filter empty posts
+        postData = postData.filter(x => x);
 
         // Sort the metadata by the date and convert it to a dictionary.
         let meta = {};
         postData = postData.sort((a, b) => b.date - a.date);
         postData.forEach(data => meta[data.name] = data);
 
-        // Write it to file
+        // Write the metadata to file
         fs.writeFile('src/meta.json', JSON.stringify(meta), 'utf-8');
 
         // Generate sitemap
