@@ -2,12 +2,13 @@ import React from "react";
 import { Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import dateFormat from "dateFormat";
+import "./postcard.scss";
 
 function PostCard(props) {
   const categoryStr = "# " + props.category;
 
   return (
-    <Card className="postCard m-4" style={{ maxWidth: "24rem", minWidth: "16rem" }}>
+    <Card className="post-card m-4">
       <Card.Img
         variant="top"
         src={props.thumbnail ? props.thumbnail : "/code.svg"}
@@ -16,18 +17,15 @@ function PostCard(props) {
       <Card.Body>
         <Link to={"/posts/" + props.name}>
           <Card.Title>
-            <strong>{props.title}</strong>
+            {props.title}
           </Card.Title>
         </Link>
         <Card.Subtitle className="mb-2 text-muted">
-          <span style={{ marginRight: "1rem" }}>
-            <small> {dateFormat(new Date(props.date))}</small>
-          </span>
+          <small> {dateFormat(new Date(props.date))}</small>
           <Link to={`/categories/${props.category}`}>
-            <small className="text-muted">{categoryStr}</small>
+            <small className="text-muted">{" " + categoryStr}</small>
           </Link>
         </Card.Subtitle>
-        <Card.Text>{props.snippet}</Card.Text>
       </Card.Body>
     </Card>
   );

@@ -71,11 +71,10 @@ function parseFormatter(formatterStr, defaultDate) {
     return formatter;
 }
 
-// Parse markdown and return html and text snippet of given length.
+// Parse markdown and return html, thumbnail path, toc of given length.
 // Pure function
-function parseMarkdown(postName, mdString, snippetLength) {
+function parseMarkdown(postName, mdString) {
     let thumbnail = '';
-    let snippet = '';
     let toc = [];
     let headerIndex = 1;
 
@@ -86,13 +85,6 @@ function parseMarkdown(postName, mdString, snippetLength) {
                 tokens[i].attrs[0][1] = path.join('/posts', postName, tokens[i].attrs[0][1]);
                 // Get the first image as thumbnail
                 if (!thumbnail) thumbnail = tokens[i].attrs[0][1];
-            }
-            if (tokens[i].type === 'text') {
-                // Generate snippet text
-                let list = tokens[i].content.split(' ');
-                for (let j = 0; (j < list.length) && (snippet.length < snippetLength); j++) {
-                    if (list[j].length > 0) snippet += list[j] + ' ';
-                }
             }
             if (tokens[i].type === 'inline') recursiveUpdate(tokens[i].children);
         }
@@ -116,16 +108,15 @@ function parseMarkdown(postName, mdString, snippetLength) {
         }
     }
     let html = markdown.renderer.render(tokens, markdown.options);
-    snippet = snippet.trim() + '...';
-    return { html, snippet, thumbnail, toc };
+    return { html, thumbnail, toc };
 }
 
-// Parse raw string and return formatter, html, text snippet.
+// Parse raw string and return formatter, html.
 // Pure function
-function parsePost(postName, rawString, snippetLength = 100, defaultDate = new Date()) {
+function parsePost(postName, rawString, defaultDate = new Date()) {
     let [yamlStr, md] = parseRawString(rawString);
     let formatter = parseFormatter(yamlStr, defaultDate);
-    let parsedPost = parseMarkdown(postName, md, snippetLength);
+    let parsedPost = parseMarkdown(postName, md);
     return { formatter, md, ...parsedPost };
 }
 
@@ -150,7 +141,7 @@ async function processPost(postDir) {
 
     // Parse markdown file
     let rawString = await fs.readFile(mdFile, { encoding: "utf-8" });
-    let { formatter, md, html, snippet, thumbnail, toc } = parsePost(name, rawString);
+    let { formatter, md, html, thumbnail, toc } = parsePost(name, rawString);
 
     // Write data
     fs.writeFile(path.join(__dirname, 'posts', name, path.basename(mdFile)),
@@ -162,7 +153,7 @@ async function processPost(postDir) {
     fs.unlink(mdFile);
 
     // Return metadata
-    return { ...formatter, name, thumbnail, snippet };
+    return { ...formatter, name, thumbnail };
 }
 
 async function main() {

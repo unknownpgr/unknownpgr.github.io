@@ -1,0 +1,10 @@
+.post-card {
+  .card-img {
+    height: 10rem;
+    object-fit: contain;
+  }
+
+  border: none;
+  max-width: 24rem;
+  min-width: 16rem;
+}

@@ -1,7 +1,7 @@
 import React from "react";
 import meta from "meta.json";
 import CardDeck from "react-bootstrap/CardDeck";
-import PostCard from "components/PostCard";
+import PostCard from "components/PostCard/PostCard";
 import "./postlistpage.scss";
 
 class PostListPage extends React.Component {
