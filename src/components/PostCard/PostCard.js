@@ -11,7 +11,7 @@ function PostCard(props) {
     <Card className="post-card m-4">
       <Card.Img
         variant="top"
-        src={props.thumbnail ? props.thumbnail : "/code.svg"}
+        src={props.thumbnail ? props.thumbnail : "/code.png"}
         className="card-img"
       ></Card.Img>
       <Card.Body>
