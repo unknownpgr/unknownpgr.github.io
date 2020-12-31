@@ -8,8 +8,10 @@ import "./viewpage.scss";
 
 function ViewPage({ post, html, toc, adj }) {
 
-  // Go to the top of the page
-  window.scrollTo(0, 0);
+  // When the page is refreshed, go to the top of the page
+  if (!html) {
+    window.scrollTo(0, 0);
+  }
 
   return (
     <div className="view-page">
@@ -40,7 +42,7 @@ function ViewPage({ post, html, toc, adj }) {
       <div className="container">
         <div id="toc"><TOC toc={toc}></TOC></div>
         {/* Content of post */}
-        <div className="blog-post" dangerouslySetInnerHTML={{ __html: html }}></div>
+        <div className={"blog-post " + (html ? '' : 'blog-post-loading')} dangerouslySetInnerHTML={{ __html: html }}></div>
         <div id="adjPosts">
           <div>
             {"← "}

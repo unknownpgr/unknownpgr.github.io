@@ -30,7 +30,7 @@ class PostContainer extends Component {
     this.state = {
       post: null,
       adj: [null, null],
-      content: '',
+      html: null,
       toc: []
     };
   }
@@ -54,11 +54,12 @@ class PostContainer extends Component {
       if (!postName) postName = list.pop();
       if (!postName) return;
       if (!meta[postName]) return;
+      if (this.state.post && this.state.post.name === postName) return;
     }
 
     let post = meta[postName];
     let adj = getAdjacentPost(postName);
-    this.setState({ post, adj, html: '', toc: [] });
+    this.setState({ post, adj, html: null, toc: [] });
 
     let [html, toc] = await Promise.all([
       fetch('/posts/' + postName + '/post.html')
