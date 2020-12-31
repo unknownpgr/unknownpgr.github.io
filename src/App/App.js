@@ -6,7 +6,6 @@ import React from "react";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 
 // Import custom UIs
-import img from "img/github.png";
 import PostContainer from "containers/PostContainer/PostContainer";
 import PostListPage from "components/PostListPage/PostListPage";
 import LabPage from "components/LabPage";
@@ -35,7 +34,7 @@ function App() {
     <>
       <a href="https://github.com/unknownpgr">
         <img
-          src={img}
+          src="/github.png"
           alt="GitHub"
           className="position-absolute rounded-circle"
           id="blog-github"
