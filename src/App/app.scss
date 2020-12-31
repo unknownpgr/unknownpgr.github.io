@@ -42,29 +42,6 @@ html {
   transform: rotate(180deg);
 }
 
-#blog-side-right {
-  position: fixed;
-  left: 48px;
-  top: 30%;
-  padding-top: 5rem;
-  display: flex;
-  flex-direction: column;
-}
-
-@media (max-width: 1500px) {
-  #collapse {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-  }
-
-  #blog-side-right {
-    position: static;
-    padding-top: 0;
-  }
-}
-
 #blog-center {
   width: 50%;
   background-color: #fff;

@@ -1,5 +1,5 @@
 import React from "react";
-import dateFormat from "dateFormat";
+import dateFormat from "libs/dateFormat";
 import { Link } from "react-router-dom";
 import TOC from "./TOC";
 import AdjacentPost from "./AdjacentPost";
@@ -16,7 +16,7 @@ function ViewPage({ post, html, toc, adj }) {
       <div className="title">
         <Link to="/">{"{ Unknown }"}</Link>
       </div>
-      <div className="container post-header">
+      <div className=" post-header">
         <h1 className="post-title">
           {post ? post.title : "Loading post..."}
         </h1>

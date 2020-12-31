@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import meta from "meta.json";
 import ViewPage from "components/ViewPage/ViewPage";
+import { withRouter } from "react-router-dom";
 
 function getAdjacentPost(currentPostName) {
   let previous = null;
@@ -46,8 +47,14 @@ class PostContainer extends Component {
   // Update will be called whenever post changes.
   update = async () => {
     // Get post name
-    let postName = this.props.match.params.postName;
-    if (!postName) return;
+    let postName = null;
+    {
+      let list = this.props.history.location.pathname.split('/');
+      postName = list.pop();
+      if (!postName) postName = list.pop();
+      if (!postName) return;
+      if (!meta[postName]) return;
+    }
 
     let post = meta[postName];
     let adj = getAdjacentPost(postName);
@@ -68,4 +75,4 @@ class PostContainer extends Component {
   }
 }
 
-export default PostContainer;
+export default withRouter(PostContainer);

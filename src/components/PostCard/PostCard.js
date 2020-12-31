@@ -1,7 +1,7 @@
 import React from "react";
 import { Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import dateFormat from "dateFormat";
+import dateFormat from "libs/dateFormat";
 import "./postcard.scss";
 
 function PostCard(props) {

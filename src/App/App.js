@@ -1,14 +1,9 @@
 // Import stylesheets
 import "./app.scss";
 
-// Import metatdata
-import meta from "meta.json";
-
 // Import libraries
 import React from "react";
-import Navbar from "react-bootstrap/Navbar";
-import Nav from "react-bootstrap/Nav";
-import { BrowserRouter, Route, Link, Switch, Redirect, withRouter } from "react-router-dom";
+import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 
 // Import custom UIs
 import img from "img/github.png";
@@ -16,15 +11,9 @@ import PostContainer from "containers/PostContainer/PostContainer";
 import PostListPage from "components/PostListPage/PostListPage";
 import LabPage from "components/LabPage";
 import AboutPage from "components/AboutPage/AboutPage.js";
+import Nav from "components/Nav/Nav";
 
 console.log("Powered by : React " + React.version);
-
-let categories = {};
-for (let key in meta) {
-  let cur = meta[key];
-  if (categories[cur.category] === undefined) categories[cur.category] = 1;
-  else categories[cur.category]++;
-}
 
 function App() {
   // process 404
@@ -61,7 +50,7 @@ function App() {
               <h1 className="display-4 py-4 text-center">{blogTitle}</h1>
             </div>
             <div className="container container-main">
-              <BNWR />
+              <Nav />
               <hr></hr>
               <Route exact path="/" component={PostListPage} />
               <Route path="/categories/:category" component={CategoryPage} />
@@ -80,62 +69,6 @@ function App() {
     </>
   );
 }
-
-function BlogNav(props) {
-  let cat = null;
-  let params = props.location.pathname.split('/');
-  cat = params.pop();
-  if (!cat) cat = params.pop();
-  return (
-    <Navbar id="navbar" expand="lg" className="rounded-top">
-      <Navbar.Toggle aria-controls="basic-navbar-nav" />
-      <Navbar.Collapse id="basic-navbar-nav">
-        <Nav className="mr-auto" id="collapse">
-          <Link className="p-2" to="/">
-            Main
-          </Link>
-          <Link className="p-2" to="/about">
-            About
-          </Link>
-          <Link className="p-2" to="/lab">
-            Lab
-          </Link>
-          <div id="blog-side-right">
-            <Link className="p-2" to="/">
-              All({Object.keys(meta).length})
-            </Link>
-            {Object.keys(categories).map((category) => {
-              const str = `${category}(${categories[category]})`;
-              if (category === cat) {
-                return (
-                  <Link
-                    className="p-2"
-                    key={category}
-                    to={`/categories/${category}`}
-                  >
-                    <strong>{str}</strong>
-                  </Link>
-                );
-              } else {
-                return (
-                  <Link
-                    className="p-2"
-                    key={category}
-                    to={`/categories/${category}`}
-                  >
-                    {str}
-                  </Link>
-                );
-              }
-            })}
-          </div>
-        </Nav>
-      </Navbar.Collapse>
-    </Navbar>
-  );
-}
-
-const BNWR = withRouter(BlogNav);
 
 function NoMatchPage() {
   return <div>Path is unregistered route.</div>;

@@ -5,10 +5,6 @@
     margin-top: 2rem;
   }
 
-  .post-title {
-    margin-top: 10rem;
-  }
-
   .container {
     margin-top: 2rem;
     max-width: 800px;
@@ -26,6 +22,20 @@
     ul:first-child {
       position: sticky;
       top: 10rem;
+    }
+  }
+
+  .post-header {
+    margin: 50px auto 40px auto;
+    text-align: center;
+
+    h1 {
+      position: relative;
+      letter-spacing: -1px;
+      font-size: 50px;
+      font-weight: 100;
+      margin: 100px 0 100px 0;
+      text-shadow: 0 1px 0 #fff;
     }
   }
 
@@ -55,29 +65,14 @@
   }
 
   blockquote {
-    background-color: #ccc8;
+    background-color: #ccc3;
     padding: 0.5rem;
     padding-left: 1rem;
     border-left: 4px solid #aaa;
     margin: 1rem;
-
     p {
       margin-top: 0px;
       margin-bottom: 0px;
-    }
-  }
-
-  .post-header {
-    margin: 50px auto 40px auto;
-    text-align: center;
-
-    h1 {
-      position: relative;
-      letter-spacing: -1px;
-      font-size: 50px;
-      font-weight: 100;
-      margin: 50px 0 50px 0;
-      text-shadow: 0 1px 0 #fff;
     }
   }
 
