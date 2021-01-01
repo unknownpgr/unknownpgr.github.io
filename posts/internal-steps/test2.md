@@ -1,8 +1,7 @@
 ---
 title: 웹브라우저에서 검색할 때 어떤 일이 벌어지나?
-category: computer structure
-date: 2020-12-30T22:50:12.715Z
-
+category: Computer structure
+date: 2020-12-25T04:30:59.671Z
 ---
 
 # 웹브라우저에서 일어나는 일들
