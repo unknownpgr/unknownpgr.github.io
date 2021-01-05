@@ -7,3 +7,5 @@ yarn-error.log*
 public/posts
 public/meta.json
 public/sitemap.xml
+
+build
