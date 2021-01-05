@@ -271,3 +271,8 @@ category: this_is_category.
 ## 2020 / 12 / 31
 
 - UI 구조 전면 개편 - container-component 디자인 패턴 사용.
+
+## 2021 / 01 / 05
+
+- static backend와 frontend 분리 시작
+- 포스트를 처리하는 부분이 문제다.

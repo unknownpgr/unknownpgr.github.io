@@ -122,7 +122,9 @@ function parsePost(postName, rawString, defaultDate = new Date()) {
 
 // Parse an .md file, remove it, generate post.html and toc.json, then return metadata of post.
 // Not a pure function.
-async function processPost(postDir) {
+async function processPost(srcDir, dstDir, postName) {
+    let postDir = path.join(dstDir, postName);
+
     if (!(await fs.stat(postDir)).isDirectory()) return;
     let name = path.basename(postDir);
     let mdFile = (await listDir(postDir)).filter(x => x.endsWith('.md'));
@@ -144,7 +146,7 @@ async function processPost(postDir) {
     let { formatter, md, html, thumbnail, toc } = parsePost(name, rawString);
 
     // Write data
-    fs.writeFile(path.join(__dirname, 'posts', name, path.basename(mdFile)),
+    fs.writeFile(path.join(srcDir, postName, path.basename(mdFile)),
         '---\n' + yaml.dump(formatter) + '\n---' + md);
     fs.writeFile(path.join(postDir, 'post.html'), html, 'utf-8');
     fs.writeFile(path.join(postDir, 'toc.json'), JSON.stringify(toc), 'utf-8');
@@ -157,8 +159,8 @@ async function processPost(postDir) {
 }
 
 async function main() {
-    let src = path.join(__dirname, 'posts');
-    let dst = path.join(__dirname, 'public', 'posts');
+    let src = path.join(__dirname, '../posts');
+    let dst = path.join(__dirname, '../frontend/public', 'posts');
 
     // Delete existing data
     try {
@@ -169,10 +171,10 @@ async function main() {
         await fs.rmdir(dst, { recursive: true });
     } catch (_) { return; }
 
-    // First, copy raw post data to dst directory
+    // Copy raw post data to dst directory
     ncp(src, dst, async () => {
-        // Second, compile them.
-        let postData = await Promise.all((await listDir(dst)).map(processPost));
+        // Compile them and save compiled results
+        let postData = await Promise.all((await fs.readdir(dst)).map(postName => processPost(src, dst, postName)));
 
         // Filter empty posts
         postData = postData.filter(x => x);
