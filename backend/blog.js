@@ -160,7 +160,7 @@ async function processPost(srcDir, dstDir, postName) {
 
 async function main() {
     let src = path.join(__dirname, '../posts');
-    let dst = path.join(__dirname, '../frontend/public', 'posts');
+    let dst = path.join(__dirname, 'posts');
 
     // Delete existing data
     try {
@@ -185,11 +185,11 @@ async function main() {
         postData.forEach(data => meta[data.name] = data);
 
         // Write the metadata to file
-        fs.writeFile(path.join(__dirname, '../frontend/public/meta.json'), JSON.stringify(meta), 'utf-8');
+        fs.writeFile(path.join(__dirname, 'meta.json'), JSON.stringify(meta), 'utf-8');
 
         // Generate sitemap
         let sitemap = getSitemap('https://unknownpgr.github.io/', meta);
-        fs.writeFile(path.join(__dirname, '../frontend/public', 'sitemap.xml'), sitemap);
+        fs.writeFile(path.join(__dirname, 'sitemap.xml'), sitemap);
         console.log('Post update finished!');
     });
 }
