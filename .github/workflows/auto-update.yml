@@ -67,7 +67,7 @@ jobs:
           git config --global user.email ${{env.MY_EMAIL}};
           git config --global user.name ${{env.MY_NAME}};
           git add .
-          git commit -m "Update blog at $(date).";
+          git diff-index --quiet HEAD || git commit -m "Update frontend at $(date).";
           remote_repo="https://${MY_NAME}:${{ secrets.ACCESS_TOKEN }}@github.com/${{env.MY_NAME}}/${{env.MY_NAME}}.github.io.git"
           git push "${remote_repo}" HEAD:master;
 
@@ -130,6 +130,6 @@ jobs:
           git config --global user.email ${{env.MY_EMAIL}};
           git config --global user.name ${{env.MY_NAME}};
           git add .
-          git commit -m "Update blog at $(date).";
+          git diff-index --quiet HEAD || git commit -m "Update blog at $(date).";
           remote_repo="https://${MY_NAME}:${{ secrets.ACCESS_TOKEN }}@github.com/${{env.MY_NAME}}/${{env.MY_NAME}}.github.io.git"
           git push "${remote_repo}" HEAD:master;
