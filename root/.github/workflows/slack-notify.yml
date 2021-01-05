@@ -7,8 +7,11 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      MY_NAME: unknownpgr
+      MY_EMAIL: unknownpgr@gmail.com
 
     steps:
       - uses: actions/checkout@v2
       - name: Send message
-        run: "curl -X POST -H \'Content-type: application/json\' --data \'{\"text\":\"Github blog updated!\"}\' \"${{secrets.SLACK_KEY}}\""
+        run: "curl -X POST -H \'Content-type: application/json\' --data \'{\"text\":\"Github blog updated! : https://${{env.MY_NAME}}.github.io\"}\' \"${{secrets.SLACK_KEY}}\""
