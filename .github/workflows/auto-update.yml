@@ -23,7 +23,7 @@ jobs:
         uses: actions/cache@v1
         with:
           path: frontend/node_modules
-          key: ${{ runner.OS }}-build-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.OS }}-build-${{ hashFiles('frontend/yarn.lock') }}
           restore-keys: |
             ${{ runner.OS }}-build-
             ${{ runner.OS }}-
@@ -73,7 +73,7 @@ jobs:
 
   update:
     runs-on: ubuntu-latest
-    if: "contains(github.event.head_commit.message, 'frontend')||contains(github.event.head_commit.message, 'workflow')"
+    if: "contains(github.event.head_commit.message, 'workflow')||contains(github.event.head_commit.message, 'post')"
     env:
       MY_NAME: unknownpgr
       MY_EMAIL: unknownpgr@gmail.com
@@ -89,7 +89,7 @@ jobs:
         uses: actions/cache@v1
         with:
           path: backend/node_modules
-          key: ${{ runner.OS }}-build-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.OS }}-build-${{ hashFiles('backend/yarn.lock') }}
           restore-keys: |
             ${{ runner.OS }}-build-
             ${{ runner.OS }}-
@@ -118,8 +118,9 @@ jobs:
 
       - name: Copy build
         run: |
-          yes | cp -rf ./build/* ../blog-publish
-          yes | cp -rf ./root/. ../blog-publish
+          yes | cp -rf backend/posts ../blog-publish
+          yes | cp -rf backend/sitemap.xml ../blog-publish
+          yes | cp -rf backend/meta.json ../blog-publish
           echo "Copied."
           ls ../blog-publish -al
 
