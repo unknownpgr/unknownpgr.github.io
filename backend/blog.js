@@ -185,11 +185,11 @@ async function main() {
         postData.forEach(data => meta[data.name] = data);
 
         // Write the metadata to file
-        fs.writeFile('src/meta.json', JSON.stringify(meta), 'utf-8');
+        fs.writeFile(path.join(__dirname, '../frontend/public/meta.json'), JSON.stringify(meta), 'utf-8');
 
         // Generate sitemap
         let sitemap = getSitemap('https://unknownpgr.github.io/', meta);
-        fs.writeFile(path.join(__dirname, 'public', 'sitemap.xml'), sitemap);
+        fs.writeFile(path.join(__dirname, '../frontend/public', 'sitemap.xml'), sitemap);
         console.log('Post update finished!');
     });
 }
