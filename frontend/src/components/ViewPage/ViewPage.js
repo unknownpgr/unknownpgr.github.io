@@ -5,6 +5,7 @@ import TOC from "./TOC";
 import AdjacentPost from "./AdjacentPost";
 import UtterancesContainer from "containers/UtterancesContainer";
 import "./viewpage.scss";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
 function ViewPage({ post, html, toc, adj }) {
 
@@ -23,12 +24,13 @@ function ViewPage({ post, html, toc, adj }) {
           {post ? post.title : "Loading post..."}
         </h1>
         <div>
-          <strong>
-            {dateFormat(
-              post ? new Date(post.date) : new Date(),
-              true
-            )}
-          </strong>
+          <OverlayTrigger
+            placement="top"
+            overlay={post ? <Tooltip id="button-tooltip">{new Date(post.date) + ''}</Tooltip> : null}>
+            <strong>
+              {dateFormat(post ? new Date(post.date) : new Date(), true)}
+            </strong>
+          </OverlayTrigger>
           <Link to={`/categories/${post?.category}`}>
             <span className="text-muted" style={{ marginLeft: "1rem" }}>
               #{post?.category}
@@ -41,7 +43,6 @@ function ViewPage({ post, html, toc, adj }) {
       </div>
       <div className="container">
         <div id="toc"><TOC toc={toc}></TOC></div>
-        {/* Content of post */}
         <div className={"blog-post " + (html ? '' : 'blog-post-loading')} dangerouslySetInnerHTML={{ __html: html }}></div>
         <div id="adjPosts">
           <div>

@@ -1,5 +1,5 @@
 import React from "react";
-import { Card } from "react-bootstrap";
+import { Card, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import dateFormat from "libs/dateFormat";
 import "./postcard.scss";
@@ -21,7 +21,11 @@ function PostCard(props) {
           </Card.Title>
         </Link>
         <Card.Subtitle className="mb-2 text-muted">
-          <small> {dateFormat(new Date(props.date))}</small>
+          <OverlayTrigger
+            placement="bottom"
+            overlay={<Tooltip id="button-tooltip" {...props}>{new Date(props.date) + ''}</Tooltip>}>
+            <small> {dateFormat(new Date(props.date))}</small>
+          </OverlayTrigger>
           <Link to={`/categories/${props.category}`}>
             <small className="text-muted">{" " + categoryStr}</small>
           </Link>
