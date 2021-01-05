@@ -7,7 +7,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    if: "contains(github.event.head_commit.message, 'post')"
+    if: "contains(github.event.head_commit.message, 'frontend')||contains(github.event.head_commit.message, 'workflow')"
+    env:
+      MY_NAME: unknownpgr
+      MY_EMAIL: unknownpgr@gmail.com
 
     steps:
       # Run checkout
@@ -19,56 +22,33 @@ jobs:
       - name: Cache node modules
         uses: actions/cache@v1
         with:
-          path: node_modules
+          path: frontend/node_modules
           key: ${{ runner.OS }}-build-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.OS }}-build-
             ${{ runner.OS }}-
 
       - name: Initialize
+        working-directory: frontend
         run: yarn install
 
-      - name: Update post info
-        run: yarn update
-
       - name: Build blog
+        working-directory: frontend
         run: yarn build
 
       - name: Build fail
         run: 'curl -X POST -H ''Content-type: application/json'' --data ''{"text":"Github blog build failed."}'' "${{secrets.SLACK_KEY}}"'
         if: failure()
 
-      - name: Commit updated posts
-        run: |
-          git add .
-          if [[ `git status --porcelain` ]]; then
-            git config --local user.email "unknownpgr@github.com"
-            git config --local user.name "unknownpgr"
-            git add .
-            git commit -m "Auto blog update at $(date)"
-          fi
-
-      - name: Push update
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.ACCESS_TOKEN }}
-
       - name: Make a new directory
         run: mkdir ../blog-publish
 
       - name: Git init
+        working-directory: ../frontend
         run: |
-          cd ../blog-publish;
           git init
-          git remote add origin https://github.com/${MY_NAME}/${MY_NAME}.github.io.git
+          git remote add origin https://github.com/${{env.MY_NAME}}/${{env.MY_NAME}}.github.io.git
           git pull origin master
-        env:
-          MY_NAME: unknownpgr
-
-      - name: Delete existing build files
-        run: |
-          cd ../blog-publish;
-          rm -rf *
 
       - name: Update fail
         run: 'curl -X POST -H ''Content-type: application/json'' --data ''{"text":"Github blog update failed."}'' "${{secrets.SLACK_KEY}}"'
@@ -84,13 +64,9 @@ jobs:
       - name: Commit
         run: |
           cd ../blog-publish;
-          git config --global user.email $MY_EMAIL;
-          git config --global user.name $MY_NAME;
+          git config --global user.email ${{env.MY_EMAIL}};
+          git config --global user.name ${{env.MY_NAME}};
           git add .
           git commit -m "Update blog at $(date).";
-          remote_repo="https://${MY_NAME}:${{ secrets.ACCESS_TOKEN }}@github.com/${MY_NAME}/${MY_NAME}.github.io.git"
+          remote_repo="https://${MY_NAME}:${{ secrets.ACCESS_TOKEN }}@github.com/${{env.MY_NAME}}/${{env.MY_NAME}}.github.io.git"
           git push "${remote_repo}" HEAD:master;
-
-        env:
-          MY_NAME: unknownpgr
-          MY_EMAIL: unknownpgr@gmail.com
