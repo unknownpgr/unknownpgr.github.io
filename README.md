@@ -275,4 +275,5 @@ category: this_is_category.
 ## 2021 / 01 / 05
 
 - static backend와 frontend 분리 시작
-- 포스트를 처리하는 부분이 문제다.
+- 메타데이터가 기존에는 컴파일 시에 불러와졌다면, 지금은 런타임에 불러온다.
+- 메타데이터를 props에 추가해주는 higher order component를 만들어서 해결했다.

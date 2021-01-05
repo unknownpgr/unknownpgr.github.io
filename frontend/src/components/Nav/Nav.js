@@ -1,24 +1,24 @@
 import React, { useState } from 'react';
 import { withRouter, Link } from "react-router-dom";
 import "./nav.scss";
-import meta from "meta.json";
 import mapDict from "libs/mapDict";
+import withMetadata from "hocs/withMetadata";
 
-let categories = {};
-{
-  let totalCount = 0;
-  for (let key in meta) {
-    let { category: cat } = meta[key];
-    if (categories[cat] === undefined) categories[cat] = { link: `/categories/${cat}`, count: 1 };
-    else categories[cat].count++;
-    totalCount++;
-  }
-  categories = { all: { link: '/', count: totalCount }, ...categories };
-}
-
-function Nav({ location }) {
+function Nav({ location, meta }) {
 
   let [open, setOpen] = useState(false);
+
+  let categories = {};
+  {
+    let totalCount = 0;
+    for (let key in meta) {
+      let { category: cat_ } = meta[key];
+      if (categories[cat_] === undefined) categories[cat_] = { link: `/categories/${cat_}`, count: 1 };
+      else categories[cat_].count++;
+      totalCount++;
+    }
+    categories = { all: { link: '/', count: totalCount }, ...categories };
+  }
 
   let cat = null;
   {
@@ -55,4 +55,4 @@ function Nav({ location }) {
   </nav>;
 }
 
-export default withRouter(Nav);
+export default withRouter(withMetadata(Nav));

@@ -1,4 +1,3 @@
-# dependencies
 node_modules
 
 npm-debug.log*
@@ -8,11 +7,3 @@ yarn-error.log*
 public/posts
 public/meta.json
 public/sitemap.xml
-
-# Build
-/build
-
-# Sitemap
-
-# Typescript
-libs/*.js

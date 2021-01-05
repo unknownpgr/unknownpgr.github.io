@@ -3,7 +3,7 @@ import dateFormat from "libs/dateFormat";
 import { Link } from "react-router-dom";
 import TOC from "./TOC";
 import AdjacentPost from "./AdjacentPost";
-import UtterancesContainer from "containers/UtterancesContainer/UtterancesContainer";
+import UtterancesContainer from "containers/UtterancesContainer";
 import "./viewpage.scss";
 
 function ViewPage({ post, html, toc, adj }) {

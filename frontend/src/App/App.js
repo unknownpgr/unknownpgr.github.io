@@ -6,7 +6,7 @@ import React from "react";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 
 // Import custom UIs
-import PostContainer from "containers/PostContainer/PostContainer";
+import PostContainer from "containers/PostContainer";
 import PostListPage from "components/PostListPage/PostListPage";
 import LabPage from "components/LabPage";
 import AboutPage from "components/AboutPage/AboutPage.js";

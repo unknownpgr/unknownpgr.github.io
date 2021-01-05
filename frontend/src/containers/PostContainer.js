@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-import meta from "meta.json";
 import ViewPage from "components/ViewPage/ViewPage";
 import { withRouter } from "react-router-dom";
+import withMetadata from "hocs/withMetadata";
 
-function getAdjacentPost(currentPostName) {
+function getAdjacentPost(meta, currentPostName) {
   let previous = null;
   let next = null;
 
@@ -53,12 +53,12 @@ class PostContainer extends Component {
       postName = list.pop();
       if (!postName) postName = list.pop();
       if (!postName) return;
-      if (!meta[postName]) return;
+      if (!this.props.meta[postName]) return;
       if (this.state.post && this.state.post.name === postName) return;
     }
 
-    let post = meta[postName];
-    let adj = getAdjacentPost(postName);
+    let post = this.props.meta[postName];
+    let adj = getAdjacentPost(this.props.meta, postName);
     this.setState({ post, adj, html: null, toc: [] });
 
     let [html, toc] = await Promise.all([
@@ -76,4 +76,4 @@ class PostContainer extends Component {
   }
 }
 
-export default withRouter(PostContainer);
+export default withRouter(withMetadata(PostContainer));
