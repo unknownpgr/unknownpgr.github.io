@@ -16,6 +16,7 @@ console.log("Powered by : React " + React.version);
 
 function App() {
   // process 404
+  let redirect = null;
   {
     let param = window.location.search.substr(1);
     if (param.indexOf("page=") >= 0) {
@@ -24,7 +25,7 @@ function App() {
         console.log("Ignore redirect to 404 page.");
       } else {
         console.log("Redirect to " + dest);
-        return <Redirect to={dest} />;
+        redirect = <Redirect to={dest} />;
       }
     }
   }
@@ -41,6 +42,7 @@ function App() {
         ></img>
       </a>
       <BrowserRouter>
+        {redirect}
         <Switch>
           <Route path="/posts/:postName" component={PostContainer} />
           <Route exact path="/about" component={AboutPage} />
