@@ -36,6 +36,10 @@ jobs:
         working-directory: frontend
         run: yarn build
 
+      - name: Update
+        working-directory: backend
+        run: node blog.js
+
       - name: Build fail
         run: 'curl -X POST -H ''Content-type: application/json'' --data ''{"text":"Github blog build failed."}'' "${{secrets.SLACK_KEY}}"'
         if: failure()
@@ -56,8 +60,12 @@ jobs:
 
       - name: Copy build
         run: |
+          rm -rf ../blog-publish/*
           yes | cp -rf frontend/build/* ../blog-publish
           yes | cp -rf root/. ../blog-publish
+          yes | cp -rf backend/posts ../blog-publish
+          yes | cp -rf backend/sitemap.xml ../blog-publish
+          yes | cp -rf backend/meta.json ../blog-publish
           echo "Copied."
           ls ../blog-publish -al
 
@@ -113,8 +121,9 @@ jobs:
         run: 'curl -X POST -H ''Content-type: application/json'' --data ''{"text":"Github blog update failed."}'' "${{secrets.SLACK_KEY}}"'
         if: failure()
 
-      - name: Copy build
+      - name: Copy posts
         run: |
+          rm -rf ../blog-publish/posts
           yes | cp -rf backend/posts ../blog-publish
           yes | cp -rf backend/sitemap.xml ../blog-publish
           yes | cp -rf backend/meta.json ../blog-publish

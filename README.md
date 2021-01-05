@@ -277,3 +277,4 @@ category: this_is_category.
 - static backend와 frontend 분리 시작
 - 메타데이터가 기존에는 컴파일 시에 불러와졌다면, 지금은 런타임에 불러온다.
 - 메타데이터를 props에 추가해주는 higher order component를 만들어서 해결했다.
+- 여태 캐시를 잘못 쓰고 있었다는 걸 깨달았다. Frontend와 static backend를 분리한 후 빌드하니 속도가 배 이상으로 빨라졌다.
