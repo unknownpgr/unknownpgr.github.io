@@ -44,6 +44,10 @@ class PostContainer extends Component {
     this.unlisten();
   }
 
+  componentDidUpdate(preProps, preState) {
+    if (this.props.meta !== preProps.meta) this.update();
+  }
+
   // Update will be called whenever post changes.
   update = async () => {
     // Get post name
