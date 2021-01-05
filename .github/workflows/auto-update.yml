@@ -89,10 +89,7 @@ jobs:
         uses: actions/cache@v1
         with:
           path: backend/node_modules
-          key: ${{ runner.OS }}-build-${{ hashFiles('backend/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.OS }}-build-
-            ${{ runner.OS }}-
+          key: ${{ runner.OS }}-update-${{ hashFiles('backend/yarn.lock') }}
 
       - name: Initialize
         working-directory: backend
