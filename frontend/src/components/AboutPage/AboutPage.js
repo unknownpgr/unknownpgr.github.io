@@ -60,7 +60,7 @@ function AboutPage(props) {
           '임베디드시스템에서의 영상처리, 실시간 제어를 위한 최적화 등을 수행해볼 수 있는 기회였습니다.',
         ]} />
       <ProjectItem
-        link='htps://github.com/unknownpgr/trashcan'
+        link='https://github.com/unknownpgr/trashcan'
         title='자율주행 쓰레기통(?)'
         descriptions={[
           '라즈베리파이를 이용하여 바닥에 그려진 경로를 따라 주행하고, 자동으로 최단거리탐색을 수행하는 쓰레기통을 만들었습니다.',
