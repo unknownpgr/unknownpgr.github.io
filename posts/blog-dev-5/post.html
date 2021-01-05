@@ -58,7 +58,7 @@
 <p>이후, 메인 페이지에서는 <code>page</code> 파라매터를 검사, 만약 파라매터가 존재하면 Browser Router를 사용하여 해당 페이지로 리다이렉트시켜줍니다.</p>
 <pre><code class="language-jsx"><span class="hljs-comment">// App.js</span>
 ...
-let param = <span class="hljs-built_in">window</span>.location.search.substr(<span class="hljs-number">1</span>);
+<span class="hljs-keyword">let</span> param = <span class="hljs-built_in">window</span>.location.search.substr(<span class="hljs-number">1</span>);
 <span class="hljs-keyword">let</span> redirect = <span class="hljs-literal">undefined</span>;
 <span class="hljs-keyword">if</span> (param.indexOf(<span class="hljs-string">&quot;page=&quot;</span>) &gt;= <span class="hljs-number">0</span>) {
         <span class="hljs-keyword">let</span> dest = <span class="hljs-built_in">decodeURIComponent</span>(param.replace(<span class="hljs-string">&quot;page=&quot;</span>, <span class="hljs-string">&quot;&quot;</span>));
