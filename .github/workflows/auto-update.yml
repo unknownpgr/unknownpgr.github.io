@@ -19,26 +19,33 @@ jobs:
           persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
           fetch-depth: 0 # otherwise, you will be failed to push refs to dest repo
 
-      - name: Cache node modules
+      - name: Cache frontend node node_modules
         uses: actions/cache@v1
         with:
           path: frontend/node_modules
           key: ${{ runner.OS }}-build-${{ hashFiles('frontend/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.OS }}-build-
-            ${{ runner.OS }}-
 
-      - name: Initialize
+      - name: Cache backend node_modules
+        uses: actions/cache@v1
+        with:
+          path: backend/node_modules
+          key: ${{ runner.OS }}-update-${{ hashFiles('backend/yarn.lock') }}
+
+      - name: Initialize frontend
         working-directory: frontend
         run: yarn install
 
-      - name: Build blog
-        working-directory: frontend
-        run: yarn build
+      - name: Initialize backend
+        working-directory: backend
+        run: yarn install
 
       - name: Update
         working-directory: backend
         run: node blog.js
+
+      - name: Build blog
+        working-directory: frontend
+        run: yarn build
 
       - name: Build fail
         run: 'curl -X POST -H ''Content-type: application/json'' --data ''{"text":"Github blog build failed."}'' "${{secrets.SLACK_KEY}}"'
@@ -81,7 +88,7 @@ jobs:
 
   update:
     runs-on: ubuntu-latest
-    if: "contains(github.event.head_commit.message, 'workflow')||contains(github.event.head_commit.message, 'post')"
+    if: "contains(github.event.head_commit.message, 'post')"
     env:
       MY_NAME: unknownpgr
       MY_EMAIL: unknownpgr@gmail.com
