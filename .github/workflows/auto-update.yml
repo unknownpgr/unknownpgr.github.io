@@ -55,12 +55,11 @@ jobs:
         if: failure()
 
       - name: Copy build
-        working-directory: frontend
         run: |
-          yes | cp -rf build/* ../../blog-publish
-          yes | cp -rf root/. ../../blog-publish
+          yes | cp -rf frontend/build/* ../blog-publish
+          yes | cp -rf root/. ../blog-publish
           echo "Copied."
-          ls ../../blog-publish -al
+          ls ../blog-publish -al
 
       - name: Commit
         working-directory: ../blog-publish
