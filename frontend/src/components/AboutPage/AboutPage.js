@@ -42,7 +42,7 @@ function AboutPage(props) {
         title='깃허브 블로그'
         descriptions={[
           'Jekyll, Hexo 등 기존에 있는 프레임워크를 사용하지 않고 바닥에서부터 블로그를 만들어봤습니다.',
-          'React / SCSS 등 UI 프레임워크, GitHub Action을 사용한 CI/CD 등 웹 개발을 위한 기초 기술들을 많이 사용해봤습니다.'
+          'React / SCSS 등 UI 프레임워크, GitHub Action을 사용한 간단한 CI/CD 등 웹 개발을 위한 기초 기술들을 많이 사용해봤습니다.'
         ]} />
       <ProjectItem
         link='https://github.com/unknownpgr/uos-urban'
