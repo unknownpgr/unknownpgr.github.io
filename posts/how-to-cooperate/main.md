@@ -1,6 +1,8 @@
 ---
 title: 협업 잘하는 법
 category: development
+date: 2021-01-09T13:39:34.560Z
+
 ---
 
 # 협업을 하기 위한 기본
