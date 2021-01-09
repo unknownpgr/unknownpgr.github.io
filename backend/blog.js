@@ -28,7 +28,7 @@ const listDir = async (dirPath) => (await fs.readdir(dirPath)).map(x => path.joi
 
 
 // Promisify ncp
-const pncp = (src, dst) => new Promise((res, rej) => ncp(src, dst, (err) => { err ? rej() : res(); }));
+const pncp = (src, dst) => new Promise((res, rej) => ncp(src, dst, (err) => { err ? rej(err) : res(); }));
 
 // Split post into YAML formatter part and markdown part.
 // Pure function
@@ -146,38 +146,44 @@ function parsePost(postName, rawStr) {
 // Parse an .md file, remove it, generate post.html and toc.json, then return metadata of post.
 // Not a pure function.
 async function processPost(srcDir, dstDir, name) {
-    let postDir = join(dstDir, name);
+    try {
+        let postDir = join(dstDir, name);
 
-    // Check if given post is a hidden post
-    if (name.startsWith('.')) return;
-    // Check if given path is a valid directory
-    if (!(await fs.stat(postDir)).isDirectory()) return;
-    let mdFile = (await listDir(postDir)).filter(x => x.endsWith('.md'));
+        // Check if given post is a hidden post
+        if (name.startsWith('.')) return;
+        // Check if given path is a valid directory
+        if (!(await fs.stat(postDir)).isDirectory()) return;
+        let mdFile = (await listDir(postDir)).filter(x => x.endsWith('.md'));
 
-    // Check if there are exactly one markdown file
-    if (mdFile.length === 0) {
-        throw new Error("There are no markdown file for post " + name);
-    } else if (mdFile.length > 1) {
-        throw new Error("There are more than one markdown file for post " + name);
-    } else {
-        mdFile = mdFile[0];
+        // Check if there are exactly one markdown file
+        if (mdFile.length === 0) {
+            throw new Error("There are no markdown file for post " + name);
+        } else if (mdFile.length > 1) {
+            throw new Error("There are more than one markdown file for post " + name);
+        } else {
+            mdFile = mdFile[0];
+        }
+
+        // Parse markdown file
+        let rawPostStr = await fs.readFile(mdFile, { encoding: "utf-8" });
+        let { formatter, markdownStr, html, thumbnail, toc } = parsePost(name, rawPostStr);
+
+        // Update post file
+        write(join(srcDir, name, path.basename(mdFile)), '---\n' + yaml.dump(formatter) + '\n---' + markdownStr);
+        // Write generated html, table of contents
+        write(join(postDir, 'post.html'), html, 'utf-8');
+        write(join(postDir, 'toc.json'), JSON.stringify(toc), 'utf-8');
+
+        // Remove markdown file
+        fs.unlink(mdFile);
+
+        // Return metadata
+        return { ...formatter, name, thumbnail };
+    } catch (e) {
+        console.log("Error occrred while processing post", name);
+        console.log(e);
+        return null;
     }
-
-    // Parse markdown file
-    let rawPostStr = await fs.readFile(mdFile, { encoding: "utf-8" });
-    let { formatter, markdownStr, html, thumbnail, toc } = parsePost(name, rawPostStr);
-
-    // Update post file
-    write(join(srcDir, name, path.basename(mdFile)), '---\n' + yaml.dump(formatter) + '\n---' + markdownStr);
-    // Write generated html, table of contents
-    write(join(postDir, 'post.html'), html, 'utf-8');
-    write(join(postDir, 'toc.json'), JSON.stringify(toc), 'utf-8');
-
-    // Remove markdown file
-    fs.unlink(mdFile);
-
-    // Return metadata
-    return { ...formatter, name, thumbnail };
 }
 
 async function main() {
@@ -198,12 +204,24 @@ async function main() {
             fs.unlink(sitemapPath)
         ]);
     } catch (e) {
-        console.log("There was some error while removing data.");
+        console.log("There was some minor error while removing data.");
+        console.log("The error occurred is as follows.");
         console.log(e);
     }
 
+    console.log("All existing files were removed.");
+
     // Copy raw post data to dst directory
-    await pncp(src, dst);
+    try {
+        await pncp(src, dst);
+        console.log("Raw post data was copied to destination directory.");
+    } catch (e) {
+        console.log("Error occurred while coping data to destination directory.");
+        console.log("Therefore, could not build blog.");
+        console.log("The error occurred is as follows.");
+        console.log(e);
+        return -1;
+    }
 
     // Compile them and save compiled results
     let postData = (await Promise.all((await fs.readdir(dst)).map(name => processPost(src, dst, name))))
