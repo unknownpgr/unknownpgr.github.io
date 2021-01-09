@@ -1,5 +1,5 @@
 ---
-title: '협업 잘하는 법'
+title: 협업 잘하는 법
 category: development
 ---
 
@@ -81,10 +81,10 @@ Warning이 발생하는데 무시해도 되는 경우는 딱 한 가지 경우�
 - ESLint등 적절한 analyzer를 사용하여 code quality를 유지할 것. 이것 역시 모두가 공유해야 함.
 - 한 커밋에 여러 수정을 하지 말 것. 만약 커밋하는 것을 잊었다면 stage기능을 적극적으로 사용하여 분리하여 커밋할 것.
 - 커밋 메시지는 명령문으로, 동사 원형을 사용하여, 첫 글자는 대문자로.
-  - This commit will [Commit message]라 생각하고 커밋 메시지를 작성하면 됨. (맨 처음 init 커밋은 예외)
-    - This commit will [Add data sort function] (O)
-    - This commit will [Added data sort function] (X)
-    - This commit will [Function name refactor] (X)
+  - This commit will "Commit message"라 생각하고 커밋 메시지를 작성하면 됨. (맨 처음 init 커밋은 예외)
+    - This commit will "Add data sort function" (O)
+    - This commit will "Added data sort function" (X)
+    - This commit will "Function name refactor" (X)
 - 함수의 파라매터 개수는 가능하면 4개 이하로 할 것. 항상 제공해야 하는 파라매터가 아니라면 default value를 제공할 것.
   - 반대로 항상 제공해야 하는 파라매터라면 default value를 제공하지 않을 것.
 - 함수는 가능하면 pure function으로 작성할 것.
