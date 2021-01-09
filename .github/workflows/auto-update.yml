@@ -154,10 +154,6 @@ jobs:
           git remote add origin https://github.com/${{env.MY_NAME}}/${{env.MY_NAME}}.github.io.git
           git pull origin master
 
-      - name: Update fail
-        run: 'curl -X POST -H ''Content-type: application/json'' --data ''{"text":"Github blog update failed."}'' "${{secrets.SLACK_KEY}}"'
-        if: failure()
-
       - name: Copy posts
         run: |
           rm -rf ../blog-publish/posts
@@ -176,3 +172,7 @@ jobs:
           git diff-index --quiet HEAD || git commit -m "Update blog at $(date).";
           remote_repo="https://${MY_NAME}:${{ secrets.ACCESS_TOKEN }}@github.com/${{env.MY_NAME}}/${{env.MY_NAME}}.github.io.git"
           git push "${remote_repo}" HEAD:master;
+
+      - name: Update fail
+        run: 'curl -X POST -H ''Content-type: application/json'' --data ''{"text":"Github blog update failed."}'' "${{secrets.SLACK_KEY}}"'
+        if: failure()
