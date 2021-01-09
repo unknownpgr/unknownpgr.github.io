@@ -14,14 +14,14 @@ function withMetadata(Child) {
     }
 
     async componentDidMount() {
-      if (!__isInit) {
-        this.setState({
-          meta: __metadata
-        });
-        return;
-      }
-      __isInit = false;
+      /**
+       * __isInit must be below fetch.
+       * It looks like componentDidMount function is called more than twice.
+       * I don't know why and can't understand why it works asynchronously.
+       */
+      if (!__isInit) return;
       let meta = await (await fetch('/meta.json?hash=' + Date.now())).json();
+      __isInit = false;
       __metadata = meta;
       this.setState({ meta });
     }
