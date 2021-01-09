@@ -15,8 +15,8 @@ function withMetadata(Child) {
 
     async componentDidMount() {
       if (!__isInit) return;
-      let meta = await (await fetch('/meta.json?hash=' + Date.now())).json();
       __isInit = false;
+      let meta = await (await fetch('/meta.json?hash=' + Date.now())).json();
       __metadata = meta;
       this.setState({ meta });
     }
