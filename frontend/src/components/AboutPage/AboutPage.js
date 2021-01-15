@@ -132,6 +132,13 @@ function AboutPage(props) {
           '주어진 truth-table을 만족시키는 가장 짧은 단일 boolean expression을 찾는 C++ 프로그램입니다.'
         ]} />
       <ProjectItem
+        link='https://github.com/unknownpgr/fractal-js'
+        title='Mandelbrot Set'
+        descriptions={[
+          '프랙탈의 한 종류인 Mandelbrot Set을 순수 js와 WebGL을 사용하여 그려봤습니다.'
+        ]}
+      />
+      <ProjectItem
         link='https://github.com/unknownpgr/dragon-curve'
         title='Dragon Curve'
         descriptions={[
