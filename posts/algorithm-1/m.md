@@ -1,5 +1,5 @@
 ---
-title:알고리즘:N-queens problem
+title: 알고리즘:N-queens problem
 category: algorithm
 ---
 
