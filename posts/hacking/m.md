@@ -1,6 +1,6 @@
 ---
 title: SMS 피싱 리버싱해보기
-category: hacking/security
+category: security
 date: 2021-01-19T10:08:38.481Z
 
 ---
