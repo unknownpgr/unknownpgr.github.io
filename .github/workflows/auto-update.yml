@@ -88,7 +88,6 @@ jobs:
           yes | cp -rf backend/posts ../blog-publish
           yes | cp -rf backend/sitemap.xml ../blog-publish
           yes | cp -rf backend/meta.json ../blog-publish
-          yes | cp -rf backend/redirection ../blog-publish/posts
           echo "Copied."
           ls ../blog-publish -al
 
@@ -161,7 +160,6 @@ jobs:
           yes | cp -rf backend/posts ../blog-publish
           yes | cp -rf backend/sitemap.xml ../blog-publish
           yes | cp -rf backend/meta.json ../blog-publish
-          yes | cp -rf backend/redirection ../blog-publish/posts
           echo "Copied."
           ls ../blog-publish -al
 

@@ -187,14 +187,13 @@ async function processPost(srcDir, dstDir, name) {
 }
 
 async function generateRedirection(redirectionPath, meta) {
-    await fs.mkdir(redirectionPath);
     await Promise.all(Object.keys(meta).map(post => {
         const HTML = `
 <script>
 window.location.replace("/?page=${encodeURIComponent(post)}");
 </script>
-    `;
-        const PATH_HTML = join(redirectionPath, post);
+    `.replace(/(\r|\n)/g, '');
+        const PATH_HTML = join(redirectionPath, post, 'index.html');
         return write(PATH_HTML, HTML, 'utf-8');
     }));
 }
@@ -204,7 +203,6 @@ async function main() {
     const POSTS_DST = join(__dirname, 'posts');
     const PATH_SITEMAP = join(__dirname, 'sitemap.xml');
     const PATH_META = join(__dirname, 'meta.json');
-    const PATH_REDIRECTION = join(__dirname, 'redirection');
 
     // Delete existing data
     try {
@@ -214,7 +212,6 @@ async function main() {
         }
         await Promise.all([
             fs.rmdir(POSTS_DST, { recursive: true }),
-            fs.rmdir(PATH_REDIRECTION, { recursive: true }),
             fs.unlink(PATH_META),
             fs.unlink(PATH_SITEMAP)
         ]);
@@ -258,7 +255,7 @@ async function main() {
     console.log('Post update finished!');
 
     // generate redirection page, because github page cannot handle spa.
-    generateRedirection(PATH_REDIRECTION, meta);
+    generateRedirection(POSTS_DST, meta);
 }
 
 main();
