@@ -22,7 +22,7 @@ markdown.use(ketex);
 const getSitemap = require('./libs/sitemap');
 
 // Alias frequently used functions
-const join = path.join;
+const { join } = path;
 const write = fs.writeFile;
 const listDir = async (dirPath) => (await fs.readdir(dirPath)).map(x => path.join(dirPath, x));
 
@@ -186,11 +186,25 @@ async function processPost(srcDir, dstDir, name) {
     }
 }
 
+async function generateRedirection(redirectionPath, meta) {
+    await fs.mkdir(redirectionPath);
+    await Promise.all(Object.keys(meta).map(post => {
+        const HTML = `
+<script>
+window.location.replace("/?page=${encodeURIComponent(post)}");
+</script>
+    `;
+        const PATH_HTML = join(redirectionPath, post);
+        return write(PATH_HTML, HTML, 'utf-8');
+    }));
+}
+
 async function main() {
-    const src = join(__dirname, '../posts');
-    const dst = join(__dirname, 'posts');
-    const sitemapPath = join(__dirname, 'sitemap.xml');
-    const metaPath = join(__dirname, 'meta.json');
+    const POSTS_SRC = join(__dirname, '../posts');
+    const POSTS_DST = join(__dirname, 'posts');
+    const PATH_SITEMAP = join(__dirname, 'sitemap.xml');
+    const PATH_META = join(__dirname, 'meta.json');
+    const PATH_REDIRECTION = join(__dirname, 'redirection');
 
     // Delete existing data
     try {
@@ -199,9 +213,10 @@ async function main() {
             console.error("Could not run rmdir because of node version is too low.");
         }
         await Promise.all([
-            fs.rmdir(dst, { recursive: true }),
-            fs.unlink(metaPath),
-            fs.unlink(sitemapPath)
+            fs.rmdir(POSTS_DST, { recursive: true }),
+            fs.rmdir(PATH_REDIRECTION, { recursive: true }),
+            fs.unlink(PATH_META),
+            fs.unlink(PATH_SITEMAP)
         ]);
     } catch (e) {
         console.log("There was some minor error while removing data.");
@@ -213,7 +228,7 @@ async function main() {
 
     // Copy raw post data to dst directory
     try {
-        await pncp(src, dst);
+        await pncp(POSTS_SRC, POSTS_DST);
         console.log("Raw post data was copied to destination directory.");
     } catch (e) {
         console.log("Error occurred while coping data to destination directory.");
@@ -224,7 +239,7 @@ async function main() {
     }
 
     // Compile them and save compiled results
-    let postData = (await Promise.all((await fs.readdir(dst)).map(name => processPost(src, dst, name))))
+    let postData = (await Promise.all((await fs.readdir(POSTS_DST)).map(name => processPost(POSTS_SRC, POSTS_DST, name))))
         .filter(x => x);
 
     // Sort the metadata by the date and convert it to a dictionary.
@@ -235,12 +250,15 @@ async function main() {
     postData.forEach(data => meta[data.name] = data);
 
     // Write the metadata to file
-    write(metaPath, JSON.stringify(meta), 'utf-8');
+    write(PATH_META, JSON.stringify(meta), 'utf-8');
 
     // Generate sitemap from metadata
     let sitemap = getSitemap('https://unknownpgr.github.io/', meta);
-    write(sitemapPath, sitemap);
+    write(PATH_SITEMAP, sitemap);
     console.log('Post update finished!');
+
+    // generate redirection page, because github page cannot handle spa.
+    generateRedirection(PATH_REDIRECTION, meta);
 }
 
 main();
