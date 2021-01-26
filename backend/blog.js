@@ -190,7 +190,7 @@ async function generateRedirection(redirectionPath, meta) {
     await Promise.all(Object.keys(meta).map(post => {
         const HTML = `
 <script>
-window.location.replace("/?page=${encodeURIComponent(post)}");
+window.location.replace("/?page=/posts/${encodeURIComponent(post)}");
 </script>
     `.replace(/(\r|\n)/g, '');
         const PATH_HTML = join(redirectionPath, post, 'index.html');
