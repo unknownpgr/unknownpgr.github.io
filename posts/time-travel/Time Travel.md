@@ -1,6 +1,8 @@
 ---
 title: 미래 예측에 관한 논증
 category: math science
+date: 2021-02-18T15:00:27.250Z
+
 ---
 
 
