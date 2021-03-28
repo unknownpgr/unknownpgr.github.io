@@ -67,3 +67,22 @@
 <p>이제 유저는 전송 과정의 정 반대 과정을 거쳐 html파일을 받습니다. 이제 브라우저에서는 이 데이터를 파싱한 후 유저에게 렌더링해줍니다. 파싱 과정에서 다른 리소스를 요구하는 태그가 발견될 경우, 다시 이 모든 과정을 거쳐서 리소스를 로드한 후 DOM을 변경하고, 새로 렌더링합니다. 수행할 자바스크립트가 있으면 수행합니다. 이 과정은 물론 약간의 blocking이 있기는 하나, JavaScript에서 single thread로 동작합니다. 이를 위하여 event loop가 사용됩니다. (실제로는 file system이나 network등에서는 multithread 방식으로 동작하지만, 단일 스레드로 동작한다고 생각해도 됩니다.) Event loop는 간단하게는 call stack과 callback queue로 이루어지는데, 만약 DOM or Ajax등 비동기 작업이 필요할 경우 callback queue에 해당 작업을 push한 후 그냥 넘어갑니다. 이후 call stack이 모두 빌 경우 callback queue에서 하나를 꺼내어 수행합니다.</p>
 <h2 id="header-9">결과</h2>
 <p>이러한 과정을 거쳐서, 유저가 엔터 키를 누르면 브라우저에 구글 메인 화면이 표시됩니다.</p>
+<h1 id="header-10">참고문헌</h1>
+<ul>
+<li><a href="https://www.keil.com/pack/doc/CMSIS/Core/html/group__NVIC__gr.html">https://www.keil.com/pack/doc/CMSIS/Core/html/group__NVIC__gr.html</a></li>
+<li><a href="https://www.motioncontroltips.com/what-is-nested-vector-interrupt-control-nvic/">https://www.motioncontroltips.com/what-is-nested-vector-interrupt-control-nvic/</a></li>
+<li><a href="https://wiki.kldp.org/Translations/html/The_Linux_Kernel-KLDP/tlk7.html">https://wiki.kldp.org/Translations/html/The_Linux_Kernel-KLDP/tlk7.html</a></li>
+<li><a href="http://books.gigatux.nl/mirror/kerneldevelopment/0672327201/ch07lev1sec1.html#:~:text=%22Bottom%20half%22%20is%20a%20generic,currently%20has%20this%20meaning%2C%20too">http://books.gigatux.nl/mirror/kerneldevelopment/0672327201/ch07lev1sec1.html#:~:text=&quot;Bottom half&quot; is a generic,currently has this meaning%2C too</a>.</li>
+<li><a href="https://www.gabrielececchetti.it/Teaching/CalcolatoriElettronici/Docs/i8086_instruction_set.pdf">https://www.gabrielececchetti.it/Teaching/CalcolatoriElettronici/Docs/i8086_instruction_set.pdf</a></li>
+<li><a href="https://docs.google.com/document/d/1VtcZkqtvVFxYowI0PG8O0PUDhvZm8wO_BiUmV7tGdwI/edit">https://docs.google.com/document/d/1VtcZkqtvVFxYowI0PG8O0PUDhvZm8wO_BiUmV7tGdwI/edit</a></li>
+<li><a href="http://www.qnx.com/developers/docs/qnxcar2/index.jsp?topic=%2Fcom.qnx.doc.neutrino.prog%2Ftopic%2Ffreedom_IO_space_vs_memory_mapped.html">http://www.qnx.com/developers/docs/qnxcar2/index.jsp?topic=%2Fcom.qnx.doc.neutrino.prog%2Ftopic%2Ffreedom_IO_space_vs_memory_mapped.html</a></li>
+<li><a href="https://datasheetspdf.com/pdf/45361/IntelCorporation/8259A/1">https://datasheetspdf.com/pdf/45361/IntelCorporation/8259A/1</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Advanced_Microcontroller_Bus_Architecture">https://en.wikipedia.org/wiki/Advanced_Microcontroller_Bus_Architecture</a></li>
+<li><a href="https://www.cnx-software.com/wp-content/uploads/2014/09/STM32F7_Block_Diagram.png">https://www.cnx-software.com/wp-content/uploads/2014/09/STM32F7_Block_Diagram.png</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Northbridge_(computing)">https://en.wikipedia.org/wiki/Northbridge_(computing)</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Southbridge_(computing)">https://en.wikipedia.org/wiki/Southbridge_(computing)</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Intel_8259">https://en.wikipedia.org/wiki/Intel_8259</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Programmable_interrupt_controller">https://en.wikipedia.org/wiki/Programmable_interrupt_controller</a></li>
+<li><a href="https://www.embien.com/blog/arm-interrupt-controllers/">https://www.embien.com/blog/arm-interrupt-controllers/</a></li>
+<li><a href="https://stackoverflow.com/questions/1723481/relation-between-usb-and-pci#:~:text=The%20USB%20controller%20communicates%20both,across%20the%20PCI%20bus%20first.&amp;text=...%20as%20you%20see%2C%20PCI%20is%20rather%20incidental">https://stackoverflow.com/questions/1723481/relation-between-usb-and-pci#:~:text=The USB controller communicates both,across the PCI bus first.&amp;text=... as you see%2C PCI is rather incidental</a>.</li>
+</ul>
