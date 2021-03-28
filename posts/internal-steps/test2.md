@@ -102,3 +102,23 @@ date: 2020-12-25T04:30:59.671Z
 ## 결과
 
 이러한 과정을 거쳐서, 유저가 엔터 키를 누르면 브라우저에 구글 메인 화면이 표시됩니다.
+
+# 참고문헌
+
+- https://www.keil.com/pack/doc/CMSIS/Core/html/group__NVIC__gr.html
+- https://www.motioncontroltips.com/what-is-nested-vector-interrupt-control-nvic/
+- https://wiki.kldp.org/Translations/html/The_Linux_Kernel-KLDP/tlk7.html
+- http://books.gigatux.nl/mirror/kerneldevelopment/0672327201/ch07lev1sec1.html#:~:text=%22Bottom%20half%22%20is%20a%20generic,currently%20has%20this%20meaning%2C%20too.
+- https://www.gabrielececchetti.it/Teaching/CalcolatoriElettronici/Docs/i8086_instruction_set.pdf
+- https://docs.google.com/document/d/1VtcZkqtvVFxYowI0PG8O0PUDhvZm8wO_BiUmV7tGdwI/edit
+- http://www.qnx.com/developers/docs/qnxcar2/index.jsp?topic=%2Fcom.qnx.doc.neutrino.prog%2Ftopic%2Ffreedom_IO_space_vs_memory_mapped.html
+- https://datasheetspdf.com/pdf/45361/IntelCorporation/8259A/1
+- https://en.wikipedia.org/wiki/Advanced_Microcontroller_Bus_Architecture
+- https://www.cnx-software.com/wp-content/uploads/2014/09/STM32F7_Block_Diagram.png
+- https://en.wikipedia.org/wiki/Northbridge_(computing)
+- https://en.wikipedia.org/wiki/Southbridge_(computing)
+- https://en.wikipedia.org/wiki/Intel_8259
+- https://en.wikipedia.org/wiki/Programmable_interrupt_controller
+- https://www.embien.com/blog/arm-interrupt-controllers/
+- https://stackoverflow.com/questions/1723481/relation-between-usb-and-pci#:~:text=The%20USB%20controller%20communicates%20both,across%20the%20PCI%20bus%20first.&text=...%20as%20you%20see%2C%20PCI%20is%20rather%20incidental.
+
