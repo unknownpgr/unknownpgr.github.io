@@ -45,7 +45,16 @@ function App() {
         {redirect}
         <Switch>
           <Route path="/posts/:postName" component={PostContainer} />
-          <Route exact path="/about" component={AboutPage} />
+          <Route exact path="/about" >
+            <div className="blog-title">
+              <h1 className="display-4 py-4 text-center">{blogTitle}</h1>
+            </div>
+            <div className="container container-main">
+              <Nav showLeft={false} />
+            </div>
+            <hr className="hr-full"></hr>
+            <AboutPage />
+          </Route>
           <Route>
             <div className="blog-title">
               <h1 className="display-4 py-4 text-center">{blogTitle}</h1>

@@ -2,64 +2,68 @@
 @import 'node_modules/bootstrap/scss/bootstrap';
 
 a {
-  color: #000;
-  border-bottom: solid 0px;
-  transition-duration: 0.5s;
+	color: #000;
+	border-bottom: solid 0px;
+	transition-duration: 0.5s;
 }
 
 a:hover {
-  color: #888;
-  text-decoration: none;
+	color: #888;
+	text-decoration: none;
 }
 
 html,
 body,
 #root {
-  min-height: 100vh;
-  margin: 0px;
-  padding: 0px;
-  display: flex;
-  flex-direction: column;
-  font-family: 'Noto Sans KR', sans-serif;
+	min-height: 100vh;
+	margin: 0px;
+	padding: 0px;
+	display: flex;
+	flex-direction: column;
+	font-family: 'Noto Sans KR', sans-serif;
 }
 
 html {
-  overflow-y: scroll;
-  scroll-behavior: smooth;
+	overflow-y: scroll;
+	scroll-behavior: smooth;
 }
 
 .blog-title {
-  padding-top: 4em;
-  padding-bottom: 4em;
+	padding-top: 4em;
+	padding-bottom: 4em;
 }
 
 #blog-github {
-  top: 2%;
-  right: 2%;
-  width: 48px;
-  transition-duration: 0.5s;
+	top: 2%;
+	right: 2%;
+	width: 48px;
+	transition-duration: 0.5s;
 }
 
 #blog-github:hover {
-  transform: rotate(180deg);
+	transform: rotate(180deg);
 }
 
 #blog-center {
-  width: 50%;
-  background-color: #fff;
+	width: 50%;
+	background-color: #fff;
 }
 
 footer {
-  position: relative;
-  height: 160px;
+	position: relative;
+	height: 160px;
 }
 
 #blog-footer-inner {
-  position: absolute;
-  bottom: 0px;
-  width: 100%;
+	position: absolute;
+	bottom: 0px;
+	width: 100%;
 }
 
 .container-main {
-  max-width: 800px;
+	max-width: 800px;
+}
+
+.hr-full {
+	width: 100%;
 }

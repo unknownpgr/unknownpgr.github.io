@@ -4,7 +4,7 @@ import "./nav.scss";
 import mapDict from "libs/mapDict";
 import withMetadata from "hocs/withMetadata";
 
-function Nav({ location, meta }) {
+function Nav({ location, meta, showLeft = true }) {
 
   let [open, setOpen] = useState(false);
 
@@ -38,7 +38,7 @@ function Nav({ location, meta }) {
       <Link className="p-2" to="/about"> About </Link>
       <Link className="p-2" to="/lab"> Lab </Link>
       <hr></hr>
-      <div id="blog-side-right">
+      {showLeft && <div id="blog-side-left">
         {mapDict(categories, (category, { link, count }) => {
           const boldClass = (cat === category) || (link === '/' && !cat) ? 'bold' : '';
           return (
@@ -50,7 +50,7 @@ function Nav({ location, meta }) {
             </Link>
           );
         })}
-      </div>
+      </div>}
     </div>
   </nav>;
 }
