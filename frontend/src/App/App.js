@@ -9,7 +9,7 @@ import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import PostContainer from "containers/PostContainer";
 import PostListPage from "components/PostListPage/PostListPage";
 import LabPage from "components/LabPage";
-import AboutPage from "components/AboutPage/AboutPage.js";
+import AboutPage from "components/AboutPage/AboutPage";
 import Nav from "components/Nav/Nav";
 
 console.log("Powered by : React " + React.version);

@@ -1,5 +1,5 @@
 import React from "react";
-import "./AboutPage.scss";
+import "./aboutPage.scss";
 
 function Emoji(props) {
   return <span role="img" aria-label="emoji">{props.emoji}</span>;
