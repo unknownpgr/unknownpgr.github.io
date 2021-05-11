@@ -1,3 +1,5 @@
+@echo off
+setlocal
 set /p msg=Enter commit message : 
 git add .
 git commit -m "[frontend]%msg% at %date% %time%."
