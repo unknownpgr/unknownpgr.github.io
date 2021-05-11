@@ -1,5 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300&display=swap');
 @import 'node_modules/bootstrap/scss/bootstrap';
+@import '../../scss/fontsize';
+@import '../../scss/mixin';
 
 a {
 	color: #000;
@@ -66,4 +68,15 @@ footer {
 
 .hr-full {
 	width: 100%;
+}
+
+@include mobile {
+	.blog-title {
+		h1 {
+			font-size: 2rem;
+		}
+
+		padding-top: 1rem;
+		padding-bottom: 1rem;
+	}
 }

@@ -164,6 +164,9 @@ function AboutPage(props) {
     <h2>Honors / Awards <Emoji emoji='🏅' /></h2>
     <ul>
       <li>
+        <p>2020년 2학기 학업우수상</p>
+      </li>
+      <li>
         <p>서울시립대학교 2020년 X-TWICE 실전문제연구단 장려상</p>
         <ul>
           <li>딥러닝 기반 연관논문 추천시스템 개발 및 평가</li>

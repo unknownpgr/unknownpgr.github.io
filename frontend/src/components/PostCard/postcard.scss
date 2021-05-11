@@ -1,10 +1,14 @@
 .post-card {
-  .card-img {
-    height: 10rem;
-    object-fit: contain;
-  }
+	.card-img {
+		height: 10rem;
+		object-fit: contain;
+	}
 
-  border: none;
-  max-width: 24rem;
-  min-width: 16rem;
+	.card-title {
+		white-space: normal;
+		word-break: keep-all;
+	}
+
+	border: none;
+	min-width: 16rem;
 }
