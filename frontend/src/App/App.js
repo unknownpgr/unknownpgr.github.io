@@ -11,6 +11,7 @@ import PostListPage from "components/PostListPage/PostListPage";
 import LabPage from "components/LabPage";
 import AboutPage from "components/AboutPage/AboutPage";
 import Nav from "components/Nav/Nav";
+import GoogleAds from "components/GoogleAds/GoogleAds";
 
 console.log("Powered by : React " + React.version);
 
@@ -70,6 +71,16 @@ function App() {
           <Route component={NoMatchPage} />
         </Switch>
       </BrowserRouter>
+      <div>
+        <GoogleAds>
+          <ins class="adsbygoogle"
+            style={{ display: 'block' }}
+            data-ad-client="ca-pub-5695206410217978"
+            data-ad-slot="3086325939"
+            data-ad-format="auto"
+            data-full-width-responsive="true"></ins>
+        </GoogleAds>
+      </div>
       <footer className="page-footer font-small mb-4">
         <div id="blog-footer-inner" className="text-center py-4">
           © 2020 Copyright :
