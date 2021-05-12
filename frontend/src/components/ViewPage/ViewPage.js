@@ -41,7 +41,7 @@ function ViewPage({ post, html, toc, adj, posts }) {
         <hr style={{ marginTop: "2rem" }}></hr>
       </div>
       <div className="container">
-        <div id="toc"><TOC toc={toc}></TOC></div>
+        <div className="toc"><TOC toc={toc}></TOC></div>
         <div className={"blog-post " + (html ? '' : 'blog-post-loading')} dangerouslySetInnerHTML={{ __html: html }}></div>
         <div className="adj-posts">
           <div className="adj-post">

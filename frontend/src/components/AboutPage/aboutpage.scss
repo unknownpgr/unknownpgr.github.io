@@ -28,9 +28,9 @@
 		position: absolute;
 		left: 0px;
 		right: 0px;
-		bottom: 0rem;
+		bottom: 0.05rem;
 		content: '';
-		background-color: #88888830;
+		background-color: $color-background-default;
 		height: 10px;
 		height: 0.4rem;
 	}
@@ -61,7 +61,7 @@
 			position: absolute;
 			display: inline;
 			font-size: 0.8rem;
-			color: #888;
+			color: $color-text-light;
 			transform: translateX(-100%) translateX(-3rem) translateY(1.5rem);
 		}
 	}
@@ -90,7 +90,7 @@
 
 		.project-group {
 			margin-top: 2rem;
-			border-bottom: solid 1px #ddd;
+			border-bottom: solid $border-thin $color-border-default;
 
 			.group-title {
 				position: static;
@@ -99,7 +99,6 @@
 
 			.group-label {
 				position: static;
-				color: #888;
 			}
 		}
 	}

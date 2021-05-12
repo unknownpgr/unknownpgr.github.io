@@ -11,15 +11,6 @@
 	}
 }
 
-#blog-github:hover {
-	transform: rotate(180deg);
-}
-
-#blog-center {
-	width: 50%;
-	background-color: #fff;
-}
-
 .container-main {
 	max-width: 800px;
 }
@@ -28,9 +19,9 @@
 	width: 100%;
 	padding: 0;
 
-	height: 0.1px;
+	height: $border-thin;
 	border: none;
-	background-color: #eee;
+	background-color: $color-border-light;
 }
 
 @include mobile {
@@ -46,10 +37,10 @@
 
 footer {
 	text-align: center;
-	color: #ccc;
+	color: $color-text-lighter;
 
 	a {
-		color: #ccc;
+		color: $color-text-lighter;
 	}
 
 	.footer-inner {
@@ -58,6 +49,10 @@ footer {
 			.logo {
 				width: 48px;
 				transition-duration: 0.5s;
+			}
+
+			.logo:hover {
+				transform: rotate(180deg);
 			}
 		}
 

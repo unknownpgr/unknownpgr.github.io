@@ -1,13 +1,15 @@
+@import 'variables';
+
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400&display=swap');
 
 a {
-	color: #313131;
+	color: $color-text-dark;
 	border-bottom: solid 0px;
 	transition-duration: 0.5s;
 }
 
 a:hover {
-	color: #888;
+	color: $color-text-light;
 	text-decoration: none;
 }
 
@@ -28,7 +30,7 @@ html {
 }
 
 body {
-	color: #515151;
+	color: $color-text-default;
 }
 
 h1,
@@ -38,7 +40,7 @@ h4,
 h5,
 h6 {
 	font-weight: bold;
-	color: #313131;
+	color: $color-text-dark;
 	text-rendering: optimizeLegibility;
 }
 
@@ -63,6 +65,11 @@ h6 {
 
 p {
 	font-size: 1rem;
+}
+
+code {
+	font-family: SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
+		'Courier New', monospace, 'Noto Sans KR', sans-serif;
 }
 
 @media (max-width: 480px) {
