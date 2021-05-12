@@ -25,7 +25,7 @@ function getCategoryPosts(meta, currentPostName) {
   let { category } = meta[currentPostName];
   let center = 0;
   let posts = Object.keys(meta)
-    .filter(key => meta[key].category == category)
+    .filter(key => meta[key].category === category)
     .map((key, i) => {
       if (key === currentPostName) center = i;
       return meta[key];
