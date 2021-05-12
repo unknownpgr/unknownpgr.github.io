@@ -8,7 +8,7 @@ import "./viewpage.scss";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import Constants from "constants/constants";
 
-function ViewPage({ post, html, toc, adj }) {
+function ViewPage({ post, html, toc, adj, posts }) {
 
   // When the page is refreshed, go to the top of the page
   if (!html) {
@@ -50,6 +50,19 @@ function ViewPage({ post, html, toc, adj }) {
           <div className="adj-post">
             <AdjacentPost adj={adj[1]} next />
           </div>
+        </div>
+        <div className="category-list">
+          <div className="label">
+            Other posts in <Link to={"/categories/" + post?.category}>{post?.category}</Link> category
+          </div>
+          <ul>
+            {
+              posts.map(p => {
+                let bold = post?.name === p.name;
+                return <li className={bold ? "bold" : ""}><Link to={"/posts/" + p.name}>{p.title}</Link></li>;
+              })
+            }
+          </ul>
         </div>
         {/* Comment section */}
         <UtterancesContainer />

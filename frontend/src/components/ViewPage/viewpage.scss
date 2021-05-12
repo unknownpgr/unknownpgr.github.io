@@ -16,8 +16,10 @@
 
 	#toc {
 		position: absolute;
-		left: -20rem;
+		left: 100%;
+		width: fit-content;
 		height: 100%;
+		padding-left: 2rem;
 		ul {
 			padding-inline-start: 24px;
 		}
@@ -25,6 +27,10 @@
 		ul:first-child {
 			position: sticky;
 			top: 10rem;
+		}
+
+		li {
+			line-height: 1.8rem;
 		}
 	}
 
@@ -126,7 +132,6 @@
 
 		a {
 			color: #007bff;
-			text-decoration: none;
 		}
 
 		u {
@@ -166,6 +171,42 @@
 
 		.adj-post {
 			margin-top: 1rem;
+		}
+	}
+
+	.category-list {
+		border-top: solid 0.1px #ddd;
+		// border-bottom: solid 0.1px #ddd;
+
+		padding: 2rem;
+		padding-left: 0;
+
+		.label {
+			font-weight: bold;
+			margin-bottom: 1.5rem;
+
+			a {
+				color: #007bff;
+			}
+		}
+
+		ul {
+			padding-left: 0rem;
+			list-style: none;
+
+			li {
+				margin-top: 0.5rem;
+				position: relative;
+				a {
+					color: #888;
+				}
+			}
+
+			.bold {
+				a {
+					color: #313131;
+				}
+			}
 		}
 	}
 }
