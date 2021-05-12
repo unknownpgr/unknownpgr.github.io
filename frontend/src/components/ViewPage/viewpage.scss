@@ -1,3 +1,5 @@
+@import '../../scss/style.scss';
+
 .view-page {
 	.title {
 		text-align: center;
@@ -6,6 +8,8 @@
 
 	.container {
 		margin-top: 2rem;
+		padding-left: 2rem;
+		padding-right: 2rem;
 		max-width: 800px;
 		position: relative;
 	}
@@ -121,28 +125,26 @@
 		}
 
 		a {
-			text-decoration: underline;
-		}
-
-		u {
-			position: relative;
+			color: #007bff;
 			text-decoration: none;
 		}
 
-		u::after {
-			position: absolute;
-			left: 0;
-			right: 0;
-			bottom: 0rem;
-			height: 0.75rem;
-			background-color: #8888ff38;
-			content: '';
+		u {
+			text-decoration: none;
+			font-weight: bold;
 		}
 
 		iframe {
 			height: 800px;
 			width: 100%;
 			border: none;
+		}
+
+		// Math expressions
+		.katex {
+			.newline {
+				height: 1rem;
+			}
 		}
 	}
 
@@ -156,10 +158,14 @@
 		background-color: inherit;
 	}
 
-	#adjPosts {
+	.adj-posts {
 		display: flex;
 		justify-content: space-between;
 		margin-top: 4rem;
 		margin-bottom: 2rem;
+
+		.adj-post {
+			margin-top: 1rem;
+		}
 	}
 }

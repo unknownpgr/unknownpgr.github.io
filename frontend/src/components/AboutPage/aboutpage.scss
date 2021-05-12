@@ -1,8 +1,10 @@
-@import '../../scss/mixin';
+@import '../../scss/style.scss';
 
 .aboutpage {
 	max-width: 1024px;
 	padding-left: 6rem;
+	white-space: normal;
+	word-break: keep-all;
 
 	h1 {
 		margin-top: 4rem;
@@ -65,8 +67,6 @@
 	}
 
 	@mixin vertical {
-		padding: 2rem;
-
 		h1 {
 			margin-top: 0rem;
 			margin-bottom: 2rem;
@@ -105,10 +105,12 @@
 	}
 
 	@include tablet {
+		padding: 3rem;
 		@include vertical();
 	}
 
 	@include mobile {
+		padding: 2rem;
 		@include vertical();
 	}
 }

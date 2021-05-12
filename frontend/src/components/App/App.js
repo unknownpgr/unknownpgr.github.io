@@ -3,7 +3,7 @@ import "./app.scss";
 
 // Import libraries
 import React from "react";
-import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
+import { BrowserRouter, Route, Switch, Redirect, Link } from "react-router-dom";
 
 // Import custom UIs
 import PostContainer from "containers/PostContainer";
@@ -12,6 +12,10 @@ import LabPage from "components/LabPage";
 import AboutPage from "components/AboutPage/AboutPage";
 import Nav from "components/Nav/Nav";
 import GoogleAds from "components/GoogleAds/GoogleAds";
+import Categories from "components/Categories/Categories";
+
+// Import constants
+import Constants from "constants/constants";
 
 console.log("Powered by : React " + React.version);
 
@@ -31,42 +35,33 @@ function App() {
     }
   }
 
-  const blogTitle = "{ UnknownPgr }";
   return (
     <>
-      <a href="https://github.com/unknownpgr">
-        <img
-          src="/github.png"
-          alt="GitHub"
-          className="position-absolute rounded-circle"
-          id="blog-github"
-        ></img>
-      </a>
       <BrowserRouter>
         {redirect}
         <Switch>
           <Route path="/posts/:postName" component={PostContainer} />
-          <Route exact path="/about" >
-            <div className="blog-title">
-              <h1 className="display-4 py-4 text-center">{blogTitle}</h1>
-            </div>
-            <div className="container container-main">
-              <Nav showLeft={false} />
-            </div>
-            <hr className="hr-full"></hr>
-            <AboutPage />
-          </Route>
           <Route>
             <div className="blog-title">
-              <h1 className="display-4 py-4 text-center">{blogTitle}</h1>
+              <h1 ><Link to="/">{Constants.BLOG_TITLE}</Link></h1>
             </div>
             <div className="container container-main">
               <Nav />
-              <hr></hr>
-              <Route exact path="/" component={PostListPage} />
-              <Route path="/categories/:category" component={CategoryPage} />
-              <Route path="/lab" component={LabPage} />
             </div>
+            <hr className="hr-full"></hr>
+            <Route exact path="/about" >
+              <AboutPage />
+            </Route>
+            <Route>
+              <div className="container container-main">
+                <Switch>
+                  <Route exact path="/" component={PostListPage} />
+                  <Route path="/categories/:category" component={CategoryPage} />
+                  <Route exect path="/categories" component={Categories} />
+                  <Route path="/lab" component={LabPage} />
+                </Switch>
+              </div>
+            </Route>
           </Route>
           <Route component={NoMatchPage} />
         </Switch>
@@ -81,10 +76,21 @@ function App() {
             data-full-width-responsive="true"></ins>
         </GoogleAds>
       </div>
-      <footer className="page-footer font-small mb-4">
-        <div id="blog-footer-inner" className="text-center py-4">
-          © 2020 Copyright :
+      <footer className="page-footer">
+        <div className="footer-inner">
+          <div className="logos">
+            <a href="https://github.com/unknownpgr">
+              <img
+                src="/github.png"
+                alt="GitHub"
+                className="logo rounded-circle"
+              ></img>
+            </a>
+          </div>
+          <div className="blog-footer">
+            © 2020 Copyright :
           <a href="https://github.com/unknownpgr"> Unknownpgr</a>
+          </div>
         </div>
       </footer>
     </>

@@ -7,15 +7,22 @@ import withMetadata from "hocs/withMetadata";
 
 function PostListPage({ filter, meta }) {
   return (
-    <CardDeck className="blog-post-list justify-content-around">
+    <div className="blog-post-list">
       {
-        mapDict(meta, (postName, post) => {
-          if (filter && filter !== post.category)
-            return null;
-          return <PostCard {...post} key={postName}></PostCard>;
-        }).filter((x) => x)
+        filter && <div className={"category"}>
+          <h1>{filter}</h1>
+        </div>
       }
-    </CardDeck>
+      <CardDeck className="justify-content-around">
+        {
+          mapDict(meta, (postName, post) => {
+            if (filter && filter !== post.category)
+              return null;
+            return <PostCard {...post} key={postName}></PostCard>;
+          }).filter((x) => x)
+        }
+      </CardDeck>
+    </div>
   );
 }
 

@@ -1,45 +1,14 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300&display=swap');
 @import 'node_modules/bootstrap/scss/bootstrap';
-@import '../../scss/fontsize';
-@import '../../scss/mixin';
-
-a {
-	color: #000;
-	border-bottom: solid 0px;
-	transition-duration: 0.5s;
-}
-
-a:hover {
-	color: #888;
-	text-decoration: none;
-}
-
-html,
-body,
-#root {
-	min-height: 100vh;
-	margin: 0px;
-	padding: 0px;
-	display: flex;
-	flex-direction: column;
-	font-family: 'Noto Sans KR', sans-serif;
-}
-
-html {
-	overflow-y: scroll;
-	scroll-behavior: smooth;
-}
+@import '../../scss/style.scss';
 
 .blog-title {
 	padding-top: 4em;
 	padding-bottom: 4em;
-}
 
-#blog-github {
-	top: 2%;
-	right: 2%;
-	width: 48px;
-	transition-duration: 0.5s;
+	h1 {
+		text-align: center;
+		font-weight: 100;
+	}
 }
 
 #blog-github:hover {
@@ -51,23 +20,17 @@ html {
 	background-color: #fff;
 }
 
-footer {
-	position: relative;
-	height: 160px;
-}
-
-#blog-footer-inner {
-	position: absolute;
-	bottom: 0px;
-	width: 100%;
-}
-
 .container-main {
 	max-width: 800px;
 }
 
 .hr-full {
 	width: 100%;
+	padding: 0;
+
+	height: 0.1px;
+	border: none;
+	background-color: #eee;
 }
 
 @include mobile {
@@ -76,7 +39,27 @@ footer {
 			font-size: 2rem;
 		}
 
-		padding-top: 1rem;
-		padding-bottom: 1rem;
+		padding-top: 3rem;
+		padding-bottom: 3rem;
+	}
+}
+
+footer {
+	text-align: center;
+
+	.footer-inner {
+		.logos {
+			margin-top: 1rem;
+			.logo {
+				width: 48px;
+				transition-duration: 0.5s;
+			}
+		}
+
+		.blog-footer {
+			margin-top: 1.5rem;
+			margin-bottom: 3rem;
+			width: 100%;
+		}
 	}
 }

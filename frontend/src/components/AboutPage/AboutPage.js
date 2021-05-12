@@ -110,7 +110,7 @@ function AboutPage(props) {
           '주어진 곡선을 이산 푸리에 변환(DFT)을 이용하여 연속적인 곡선으로 변환해주는 C# 프로그램입니다.',
           '지금 보기에는 조악한 구현이지만, 고등학생 때 구현했다는 것에 의의를 두겠습니다.',
         ]} />
-      <ProjectGroup>AI</ProjectGroup>
+      <ProjectGroup label="와! 인공지능!" >AI</ProjectGroup>
       <ProjectItem
         link='https://github.com/unknownpgr/face_recognize'
         title='Face Tracking'
@@ -148,10 +148,20 @@ function AboutPage(props) {
     <h2>Work Experiences <Emoji emoji='👨‍💻' /></h2>
     <ul>
       <li>
+        <p>Software Maestro 12기</p>
+      </li>
+      <li>
         <p>Undergraduate Research Intern, University of Seoul</p>
         <ul>
-          <li>Human-Centered Artificial Intelligence Lab(HCAIL) Supervisor: Prof. Hyunggu Jung
-              </li>
+          <li>Human-Centered Artificial Intelligence Lab(HCAIL)</li>
+          <li>Supervisor: Prof. Hyunggu Jung</li>
+        </ul>
+      </li>
+      <li>
+        <p>Undergraduate Research Intern, University of Seoul</p>
+        <ul>
+          <li>International School of Urban Sciences</li>
+          <li>Supervisor: Prof. Chun Ho Yeom</li>
         </ul>
       </li>
       <li>

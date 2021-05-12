@@ -1,5 +1,12 @@
 .blog-post-list {
-  .container {
-    max-width: 800px;
-  }
+	.category {
+		text-align: center;
+		margin-top: 2rem;
+		margin-bottom: 2rem;
+		text-transform: uppercase;
+	}
+
+	.container {
+		max-width: 800px;
+	}
 }
