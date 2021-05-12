@@ -30,7 +30,7 @@
 		right: 0px;
 		bottom: 0.05rem;
 		content: '';
-		background-color: $color-background-default;
+		background-color: $color-background-dark;
 		height: 10px;
 		height: 0.4rem;
 	}
@@ -90,6 +90,8 @@
 
 		.project-group {
 			margin-top: 2rem;
+			padding-bottom: 0.5rem;
+			margin-bottom: 0.5rem;
 			border-bottom: solid $border-thin $color-border-default;
 
 			.group-title {

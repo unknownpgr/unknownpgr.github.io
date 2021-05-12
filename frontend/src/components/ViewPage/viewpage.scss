@@ -58,17 +58,18 @@
 
 	// =====[ Markdown re-define ]=====
 	code {
-		padding: 0.1em 0.1em;
-		margin: 0 0.1rem 0 0;
+		padding: 0.1rem 0.2rem 0.075rem 0.2rem;
+		margin: 0 0.15rem 0 0;
 		background-color: $color-background-light;
 		border-radius: 3px;
 		border: $color-border-light $border-thin solid;
+		vertical-align: auto;
 	}
 
 	pre > code {
 		display: block;
 		overflow-x: auto;
-		padding: 0.5rem 0.5rem 0.5rem 1rem;
+		padding: 0.5rem 0.775rem 0.5rem 0.775rem;
 	}
 
 	blockquote {
