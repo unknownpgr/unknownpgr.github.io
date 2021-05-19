@@ -1,7 +1,7 @@
 ---
 title: 'C언어 선언과 정의, 매크로에 대한 정리'
 category: programming language
-date: 
+date: 2021-05-19T17:11:29.249Z
 
 ---
 
