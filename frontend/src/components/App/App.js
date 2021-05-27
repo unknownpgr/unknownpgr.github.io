@@ -8,7 +8,7 @@ import { BrowserRouter, Route, Switch, Redirect, Link } from "react-router-dom";
 // Import custom UIs
 import PostContainer from "containers/PostContainer";
 import PostListPage from "components/PostListPage/PostListPage";
-import LabPage from "components/LabPage";
+import LabPage from "components/LabPage/LabPage";
 import AboutPage from "components/AboutPage/AboutPage";
 import Nav from "components/Nav/Nav";
 import GoogleAds from "components/GoogleAds/GoogleAds";
