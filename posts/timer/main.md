@@ -1,6 +1,8 @@
 ---
 title: ARM 타이머 이해하기
 category: computer structure
+date: 2021-05-27T16:41:32.103Z
+
 ---
 
 # 타이머란?
