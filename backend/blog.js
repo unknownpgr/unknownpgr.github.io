@@ -21,13 +21,11 @@ const markdown = require('markdown-it')({
 markdown.use(ketex);
 const getSitemap = require('./libs/sitemap');
 
-// Alias frequently used functions
+// Alias for frequently used functions
 const { join } = path;
 const write = fs.writeFile;
-const listDir = async (dirPath) => (await fs.readdir(dirPath)).map(x => path.join(dirPath, x));
 
-
-// Promisify ncp
+// Promisified ncp
 const pncp = (src, dst) => new Promise((res, rej) => ncp(src, dst, (err) => { err ? rej(err) : res(); }));
 
 // Split post into YAML formatter part and markdown part.
@@ -82,55 +80,53 @@ function parseFormatter(formatterStr) {
 // Parse markdown and return html, thumbnail path, toc.
 // Pure function
 function parseMarkdown(postName, markdownStr) {
+
     let thumbnail = '';
     let toc = [];
-
     let tokens = markdown.parse(markdownStr);
 
     /**
      * This section does
      * - Change the image path(which is a relative path) to an absolute path.
      * - Get the first image as a thumbnal.
+     * 
+     * token.attrs[0][1] : the soruce path of the image tag
+     * Update the image path to an absolute path
      */
-    {
-        function recursiveUpdate(_tokens) {
-            for (let i = 0; i < _tokens.length; i++) {
-                if (_tokens[i].type === 'image') {
-                    // token.attrs[0][1] : the soruce path of the image tag
-                    // Update the image path to an absolute path
-                    _tokens[i].attrs[0][1] = join('/posts', postName, _tokens[i].attrs[0][1]);
-                    // Get the first image as thumbnail
-                    if (!thumbnail) thumbnail = _tokens[i].attrs[0][1];
-                }
-                if (_tokens[i].type === 'inline') recursiveUpdate(_tokens[i].children);
+    (function recursiveUpdate(_tokens) {
+        for (let token of _tokens) {
+            if (token.type === 'image') {
+                token.attrs[0][1] = join('/posts', postName, token.attrs[0][1]);
+                if (!thumbnail) thumbnail = token.attrs[0][1];
             }
+            if (token.type === 'inline') recursiveUpdate(token.children);
         }
-        recursiveUpdate(tokens);
-    }
+    })(tokens);
 
     /**
      * This section does
      * - Assign an id to every header 
      * - Build table of content
      */
-    {    // Assign an id to header and build table of content
-        let headerIndex = 1;
-        for (let i = 0; i < tokens.length; i++) {
-            if (tokens[i].type === 'heading_open') {
-                let id = 'header-' + headerIndex;
-                headerIndex++;
-                if (!tokens[i].attrs) tokens[i].attrs = [];
-                tokens[i].attrs.push(['id', id]);
-                toc.push({
-                    type: tokens[i].tag,
-                    content: markdown.renderInline(tokens[i + 1].content),
-                    id: id
-                });
-            }
+    let headerIndex = 1;
+    for (let i = 0; i < tokens.length; i++) {
+        let cur = tokens[i];
+        let nxt = tokens[i + 1];
+
+        if (cur.type === 'heading_open') {
+            const id = `header-${headerIndex}`;
+            const type = tokens[i].tag;
+            const content = markdown.renderInline(nxt.content);
+
+            if (!cur.attrs) cur.attrs = [];
+            cur.attrs.push(['id', id]);
+
+            toc.push({ type, content, id });
+            headerIndex++;
         }
     }
 
-    let html = markdown.renderer.render(tokens, markdown.options);
+    const html = markdown.renderer.render(tokens, markdown.options);
     return { html, thumbnail, toc };
 }
 
@@ -153,7 +149,9 @@ async function processPost(srcDir, dstDir, name) {
         if (name.startsWith('.')) return;
         // Check if given path is a valid directory
         if (!(await fs.stat(postDir)).isDirectory()) return;
-        let mdFile = (await listDir(postDir)).filter(x => x.endsWith('.md'));
+        let mdFile = (await fs.readdir(postDir))
+            .map(x => path.join(postDir, x))
+            .filter(x => x.endsWith('.md'));
 
         // Check if there are exactly one markdown file
         if (mdFile.length === 0) {
@@ -189,10 +187,12 @@ async function processPost(srcDir, dstDir, name) {
 async function generateRedirection(redirectionPath, meta) {
     await Promise.all(Object.keys(meta).map(post => {
         const HTML = `
-<script>
-window.location.replace("/?page=/posts/${encodeURIComponent(post)}");
-</script>
-    `.replace(/(\r|\n)/g, '');
+            <script>
+            window.location.replace("/?page=/posts/${encodeURIComponent(post)}");
+            </script>
+            `
+            .replace(/(\r|\n|\t)/g, '')
+            .replace(/ +/g, ' ');
         const PATH_HTML = join(redirectionPath, post, 'index.html');
         return write(PATH_HTML, HTML, 'utf-8');
     }));
