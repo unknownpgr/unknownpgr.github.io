@@ -12,7 +12,7 @@
 
 
 <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">self_print</span>(<span class="hljs-params">x</span>):</span>
-    print(<span class="hljs-string">f&#x27;&#x27;&#x27;<span class="hljs-subst">{x}</span>
+    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;&#x27;&#x27;<span class="hljs-subst">{x}</span>
 
 self_print(
     &quot;<span class="hljs-subst">{decode(x)}</span>&quot;)&#x27;&#x27;&#x27;</span>)
@@ -49,7 +49,7 @@ sef_print(<span class="hljs-string">&quot;아무 문자열&quot;</span>)
 <p>따라서 <code>self_print</code> 함수 외부에 그런 문자열이 있어야 하며, 그것을 <code>self_print </code>내부로 전달해야 합니다. 그러기 위해서 자명히 <code>self_print</code>함수의 파라매터를 사용할 수 있습니다.</p>
 <p>그러면 이제 이 함수에 대한 정의를 함수 안에서 알 수 있게 됩니다. 이것을 출력에 포함시키기만 하면 완성입니다. 즉, 다음과 같이 하면 됩니다.</p>
 <pre><code class="language-python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">self_print</span>(<span class="hljs-params">x</span>):</span>
-    print(<span class="hljs-string">f&#x27;&#x27;&#x27;<span class="hljs-subst">{x}</span>
+    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;&#x27;&#x27;<span class="hljs-subst">{x}</span>
 
 self_print(
     &quot;<span class="hljs-subst">{x}</span>&quot;)&#x27;&#x27;&#x27;</span>)

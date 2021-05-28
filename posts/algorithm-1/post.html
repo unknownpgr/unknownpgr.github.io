@@ -60,14 +60,14 @@
         <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(n):
             row = [<span class="hljs-string">&#x27;□&#x27;</span>]*n
             row[case[i]] = <span class="hljs-string">&#x27;Q&#x27;</span>
-            print(<span class="hljs-string">&#x27; &#x27;</span>.join(row))
-        print()
+            <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27; &#x27;</span>.join(row))
+        <span class="hljs-built_in">print</span>()
 
     <span class="hljs-keyword">return</span> r
 
 
-print(<span class="hljs-string">&#x27;START!&#x27;</span>)
-print(<span class="hljs-built_in">len</span>(main1(<span class="hljs-number">8</span>)))
+<span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;START!&#x27;</span>)
+<span class="hljs-built_in">print</span>(<span class="hljs-built_in">len</span>(main1(<span class="hljs-number">8</span>)))
 
 </code></pre>
 <p>이 구현도 사실 최적인 건 아닙니다. <code>back_tracking_check</code>함수의 <code>adds</code>, <code>subs</code> dictionary는 사실 중복되는 부분이 많아 매번 계산하지 않고 저장된 값을 불러다 사용할 수 있지만, 숫자가 충분히 작기 때문에 그냥 매번 새로 계산하도록 구현했습니다. 만약 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal">n</span></span></span></span>이 커진다면 저 dictionary를 저장하는 경우와 저장하지 않는 경우의 차이가 매우매우 커집니다.</p>

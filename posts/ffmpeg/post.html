@@ -1,6 +1,6 @@
 <p>이번에 어떤 프로젝트에 참여하면서 라이브 스트리밍을 구현해야 할 일이 생겼습니다. 어떤 카메라로부터 영상을 받아서 그것을 웹브라우저에서 확인할 수 있게 해야 하는 건데요. 구글링을 하면서 찾아보니, 이걸 깔끔하게 구현해주는 마땅한 솔루션이 없었습니다. 그래서 이걸 직접 구현해보기로 했습니다.</p>
 <ul>
-<li>깃허브 리포 : <a href="https://github.com/unknownpgr/node-webcam-streaming">https://github.com/unknownpgr/node-webcam-streaming</a></li>
+<li><a href="https://github.com/unknownpgr/node-webcam-streaming">깃허브 리포</a></li>
 </ul>
 <p>영상, 특히 라이브 스트리밍을 할 때 생기는 가장 큰 문제점은 도대체 어떻게 영상을 받을지, 그리고 어떻게 스트리밍할지입니다. 다행스럽게도 저는 이전에 비슷한 경험을 몇 번 해 보아서 두 가지 솔루션을 알고 있었습니다.</p>
 <ol>
@@ -50,7 +50,7 @@
 <h1 id="header-3">참고문헌</h1>
 <ul>
 <li>
-<p>FFmpeg RTMP HLS변환 방법 <a href="https://superuser.com/questions/714974/convert-rtmp-streaming-to-hls-streaming-using-ffmpeg">https://superuser.com/questions/714974/convert-rtmp-streaming-to-hls-streaming-using-ffmpeg</a></p>
+<p><a href="https://superuser.com/questions/714974/convert-rtmp-streaming-to-hls-streaming-using-ffmpeg">FFmpeg RTMP HLS변환 방법</a></p>
 <ul>
 <li>
 <p>첫 번째 답변이 도움이 많이 되었습니다. 단, 아래 옵션 중 <code>-hls_wrap</code>은 deprecated되었습니다. 대신 제가 사용한 것처럼 <code>-hls_delete_threshold 1 -hls_flags delete_segments</code>를 사용하시면 됩니다.</p>
@@ -62,12 +62,12 @@
 </ul>
 </li>
 <li>
-<p>CRF 설명 <a href="https://superuser.com/questions/677576/what-is-crf-used-for-in-ffmpeg">https://superuser.com/questions/677576/what-is-crf-used-for-in-ffmpeg</a></p>
+<p><a href="https://superuser.com/questions/677576/what-is-crf-used-for-in-ffmpeg">CRF 설명</a></p>
 </li>
 <li>
-<p>FFmpeg에서 웹캠 입력받는 방법 <a href="https://trac.ffmpeg.org/wiki/Capture/Webcam">https://trac.ffmpeg.org/wiki/Capture/Webcam</a></p>
+<p><a href="https://trac.ffmpeg.org/wiki/Capture/Webcam">FFmpeg에서 웹캠 입력받는 방법</a></p>
 </li>
 <li>
-<p>CentOS에서 FFmpeg 설치 방법 <a href="https://linuxize.com/post/how-to-install-ffmpeg-on-centos-8/">https://linuxize.com/post/how-to-install-ffmpeg-on-centos-8/</a></p>
+<p><a href="https://linuxize.com/post/how-to-install-ffmpeg-on-centos-8/">CentOS에서 FFmpeg 설치 방법</a></p>
 </li>
 </ul>
