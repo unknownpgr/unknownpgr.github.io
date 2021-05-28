@@ -2,7 +2,6 @@
 title: 웹브라우저에서 검색할 때 어떤 일이 벌어지나?
 category: computer structure
 date: 2020-12-25T04:30:59.671Z
-
 ---
 
 - 2021년 3월 28일 일부 업데이트합니다.
@@ -28,37 +27,37 @@ date: 2020-12-25T04:30:59.671Z
 
 그러면 컴퓨터에서는 USB신호를 받습니다. 이 신호는 컴퓨터의 USB 컨트롤러를 통해 수신되는데, USB 컨트롤러는 USB 송수신 처리를 위한 전용 하드웨어입니다. 이 모듈은 수신한 신호를 적절히 디코딩하여 CPU와 통신하게 됩니다.
 
- USB 컨트롤러는 다양한 방법으로 CPU와 통신하는데, 대표적으로 Direct Memory Access (DMA)가 있습니다. USB 데이터를 받은 후에 CPU가 이것을 직접 읽어 오려고 하면 많은 클럭이 소모됩니다. 그러므로 USB 컨트롤러가 RAM에 직접 접근하여 미리 지정된 특정 부분에 데이터를 쓰면, 그 동안 CPU는 다른 일을 하고 있다가 쓰기가 끝나면 RAM에서 바로 데이터를 읽을 수 있습니다. 이렇게 직접 메모리에 데이터를 쓴다고 하여 이 방법을 DMA라 부르는 것입니다.
+USB 컨트롤러는 다양한 방법으로 CPU와 통신하는데, 대표적으로 Direct Memory Access (DMA)가 있습니다. USB 데이터를 받은 후에 CPU가 이것을 직접 읽어 오려고 하면 많은 클럭이 소모됩니다. 그러므로 USB 컨트롤러가 RAM에 직접 접근하여 미리 지정된 특정 부분에 데이터를 쓰면, 그 동안 CPU는 다른 일을 하고 있다가 쓰기가 끝나면 RAM에서 바로 데이터를 읽을 수 있습니다. 이렇게 직접 메모리에 데이터를 쓴다고 하여 이 방법을 DMA라 부르는 것입니다.
 
-  컴퓨터의 종류에 따라 그 통신 과정은 달라질 수 있습니다. 예컨대 우리가 사용하는 일반적인 컴퓨터의 경우, CPU가 Front-Side Bus (FSB)를 통해 north bridge와 연결되고, north bridge와 ram, south bridge가  버스를 통해 연결되며, south bridge가 USB 드라이버와 연결됩니다. 그러나 제가 좋아하는 ARM Cortex M4 MCU의 경우 Advanced High-performance Bus (AHB)를 통해 USB 컨트롤러와 core, RAM이 직접 연결되어있습니다.
+컴퓨터의 종류에 따라 그 통신 과정은 달라질 수 있습니다. 예컨대 우리가 사용하는 일반적인 컴퓨터의 경우, CPU가 Front-Side Bus (FSB)를 통해 north bridge와 연결되고, north bridge와 ram, south bridge가 버스를 통해 연결되며, south bridge가 USB 드라이버와 연결됩니다. 그러나 제가 좋아하는 ARM Cortex M4 MCU의 경우 Advanced High-performance Bus (AHB)를 통해 USB 컨트롤러와 core, RAM이 직접 연결되어있습니다.
 
- 이렇게 DMA를 통해 RAM에 데이터를 썼으면 CPU에게 알려주어야 합니다. 따라서 USB컨트롤러는 인터럽트 신호를 발생시킵니다. 이 인터럽트 신호 또한 컴퓨터의 종류에 따라 처리 과정이 달라집니다.
+이렇게 DMA를 통해 RAM에 데이터를 썼으면 CPU에게 알려주어야 합니다. 따라서 USB컨트롤러는 인터럽트 신호를 발생시킵니다. 이 인터럽트 신호 또한 컴퓨터의 종류에 따라 처리 과정이 달라집니다.
 
- 우리가 사용하는 일반적인 컴퓨터에서는 8259A와 같은 인터럽트 컨트롤러(이것 역시 하드웨어입니다)로 신호가 전달됩니다. USB 컨트롤러와 같은 다른 컨트롤러들과 인터럽트 컨트롤러는 IRQ라 하는 line으로 연결되어있습니다. IRQ 라인은 물리적으로는 그냥 1bit를 전송할 수 있는 도선입니다. 8259A칩과 같은 인터럽트 컨트롤러의 경우 IRQ 0~7까지 7개의 IRQ라인을 가지고 있으며, Master와 Slave 모드로 동작할 수 있어 두 개를 cascade 구조로 연결할 수 있고, Master의 IRQ2가 Slave의 인터럽트를 받아들이기 위해 사용되므로 총 15개의 인터럽트가 사용될 수 있습니다. Master는 결과적으로 INTR 라인을 통해 CPU에게 직접 시그널을 보냅니다. 이 INTR 라인 역시 그냥 하나의 도선입니다.
+우리가 사용하는 일반적인 컴퓨터에서는 8259A와 같은 인터럽트 컨트롤러(이것 역시 하드웨어입니다)로 신호가 전달됩니다. USB 컨트롤러와 같은 다른 컨트롤러들과 인터럽트 컨트롤러는 IRQ라 하는 line으로 연결되어있습니다. IRQ 라인은 물리적으로는 그냥 1bit를 전송할 수 있는 도선입니다. 8259A칩과 같은 인터럽트 컨트롤러의 경우 IRQ 0~7까지 7개의 IRQ라인을 가지고 있으며, Master와 Slave 모드로 동작할 수 있어 두 개를 cascade 구조로 연결할 수 있고, Master의 IRQ2가 Slave의 인터럽트를 받아들이기 위해 사용되므로 총 15개의 인터럽트가 사용될 수 있습니다. Master는 결과적으로 INTR 라인을 통해 CPU에게 직접 시그널을 보냅니다. 이 INTR 라인 역시 그냥 하나의 도선입니다.
 
- 라즈베리파이나 모바일 기기 등에서 사용하는 MCU는 System on Chip (SoC)라고 해서 이런 기기들이 모두 프로세서 내부에 내장되어있습니다. 예를 들어 상기한 Cortex M4 MCU의 경우 Nested Vector Interrupt Controller (NVIC)이라는 인터럽트 컨트롤러가 아예 코어 바로 옆에 붙어있습니다. 이 경우 모든 인터럽트는 NVIC을 통해서 처리됩니다. 예를들어서 Core에서 발생하는 System Exception과 같은 인터럽트 역시 코어가 자체적으로 처리하는 것이 아니라, 먼저 signal을 NVIC에게 보내면 NVIC이 이를 처리합니다. 굳이 이렇게 복잡하게 구성된 이유는 NVIC의 경우 Interrupt Vector Register를 통해 인터럽트의 우선순위를 사용자가 마음대로 조정할 수 있도록 하기 위해서입니다.
+라즈베리파이나 모바일 기기 등에서 사용하는 MCU는 System on Chip (SoC)라고 해서 이런 기기들이 모두 프로세서 내부에 내장되어있습니다. 예를 들어 상기한 Cortex M4 MCU의 경우 Nested Vector Interrupt Controller (NVIC)이라는 인터럽트 컨트롤러가 아예 코어 바로 옆에 붙어있습니다. 이 경우 모든 인터럽트는 NVIC을 통해서 처리됩니다. 예를들어서 Core에서 발생하는 System Exception과 같은 인터럽트 역시 코어가 자체적으로 처리하는 것이 아니라, 먼저 signal을 NVIC에게 보내면 NVIC이 이를 처리합니다. 굳이 이렇게 복잡하게 구성된 이유는 NVIC의 경우 Interrupt Vector Register를 통해 인터럽트의 우선순위를 사용자가 마음대로 조정할 수 있도록 하기 위해서입니다.
 
- 코어는 INTR 라인을 통해 인터럽트 시그널을 받으면 일반적으로 미리 지정된 특정한 주소로 점프하여 인터럽트 루틴이 실행되며, 이는 context change와 유사하게 CPU의 일반 레지스터 및 컨텍스트를 스택에 저장한 후 지정된 주소로 분기하는 방식으로 이루어집니다. 이후의 처리는 일반적으로 커널에서 이루어지나, 상기한 NVIC의 경우 NVIC 자체에 인터럽트에 따라 어떤 주소로 분기할지 정해진 인터럽트 벡터 레지스터가 있어 프로세서가 커널의 개입 없이 적절한 인터럽트 서비스 루틴을 실행합니다.
+코어는 INTR 라인을 통해 인터럽트 시그널을 받으면 일반적으로 미리 지정된 특정한 주소로 점프하여 인터럽트 루틴이 실행되며, 이는 context change와 유사하게 CPU의 일반 레지스터 및 컨텍스트를 스택에 저장한 후 지정된 주소로 분기하는 방식으로 이루어집니다. 이후의 처리는 일반적으로 커널에서 이루어지나, 상기한 NVIC의 경우 NVIC 자체에 인터럽트에 따라 어떤 주소로 분기할지 정해진 인터럽트 벡터 레지스터가 있어 프로세서가 커널의 개입 없이 적절한 인터럽트 서비스 루틴을 실행합니다.
 
 ## 커널에서
 
- 상기한 바와 같이 적절한 서비스 루틴이 실행되면 커널은 어떤 인터럽트인지를 알아낸 후 적절한 처리를 수행해야 합니다. NVIC의 경우 각 인터럽트마다 다른 서비스 루틴이 실행되므로 이를 별도로 처리할 필요가 없지만, 고정된 서비스 루틴이 실행되는 경우 어떤 인터럽트 요청 (Interrupt Request, IRQ)이 서비스 루틴을 실행시켰는지 알아낼 필요가 있습니다. 일단 저는 리눅스 시스템만 공부했기 때문에, 리눅스 커널을 기준으로 설명하겠습니다. 이 경우 커널은 인터럽트 상태 레지스터 (ISR)를 읽게 되는데, 이는 CPU 내부의 레지스터가 아닌 인터럽트 컨트롤러의 레지스터입니다.
+상기한 바와 같이 적절한 서비스 루틴이 실행되면 커널은 어떤 인터럽트인지를 알아낸 후 적절한 처리를 수행해야 합니다. NVIC의 경우 각 인터럽트마다 다른 서비스 루틴이 실행되므로 이를 별도로 처리할 필요가 없지만, 고정된 서비스 루틴이 실행되는 경우 어떤 인터럽트 요청 (Interrupt Request, IRQ)이 서비스 루틴을 실행시켰는지 알아낼 필요가 있습니다. 일단 저는 리눅스 시스템만 공부했기 때문에, 리눅스 커널을 기준으로 설명하겠습니다. 이 경우 커널은 인터럽트 상태 레지스터 (ISR)를 읽게 되는데, 이는 CPU 내부의 레지스터가 아닌 인터럽트 컨트롤러의 레지스터입니다.
 
- 컴퓨터의 종류에 따라 이 레지스터를 읽어오는 방법도 달라집니다. I/O Space라고 하여, 이런 외부 장치를 위한 주소 공간이 따로 있는 경우에는 특수한 instruction을 사용하여 레지스터를 읽어올 수 있습니다. 대표적으로 x86 코어가 I/O space를 따로 가지고 있는데, 이 경우 일반적인 `MOV` instruction으로는 CPU 외부의 레지스터에 접근할 수 없으며, `IN AL, DX` (Input byte from I/O port in DX into AL) 등의 특수한 instruction을 사용해야만 합니다.
+컴퓨터의 종류에 따라 이 레지스터를 읽어오는 방법도 달라집니다. I/O Space라고 하여, 이런 외부 장치를 위한 주소 공간이 따로 있는 경우에는 특수한 instruction을 사용하여 레지스터를 읽어올 수 있습니다. 대표적으로 x86 코어가 I/O space를 따로 가지고 있는데, 이 경우 일반적인 `MOV` instruction으로는 CPU 외부의 레지스터에 접근할 수 없으며, `IN AL, DX` (Input byte from I/O port in DX into AL) 등의 특수한 instruction을 사용해야만 합니다.
 
- 반대로 앞서 언급한 Cortex M4 MCU는 Memory Mapped IO를 사용합니다. 그러므로 모든 주소 공간은 메인 메모리 주소 공간과 같은 공간으로 통합되어 있고, `MOV` 등 일반적인 어셈블리가 사용가능할 뿐만  아니라 C언의의 포인터 연산을 사용해서도 외부 레지스터에 접근할 수 있어 편리합니다.
+반대로 앞서 언급한 Cortex M4 MCU는 Memory Mapped IO를 사용합니다. 그러므로 모든 주소 공간은 메인 메모리 주소 공간과 같은 공간으로 통합되어 있고, `MOV` 등 일반적인 어셈블리가 사용가능할 뿐만 아니라 C언의의 포인터 연산을 사용해서도 외부 레지스터에 접근할 수 있어 편리합니다.
 
- 구체적으로는, 코어가 인터럽트 신호(INTR signal)를 받으면 다시 (INTA, Interrupt Accepted) 신호를 보냅니다. INTA역시 하드웨어적으로 구현된 시그널로, INTR와 마찬가지로 단일 라인입니다. INTA 신호를 받으면 인터럽트 컨트롤러가 Data Bus에 적절한 인터럽트 번호를 전송합니다.
+구체적으로는, 코어가 인터럽트 신호(INTR signal)를 받으면 다시 (INTA, Interrupt Accepted) 신호를 보냅니다. INTA역시 하드웨어적으로 구현된 시그널로, INTR와 마찬가지로 단일 라인입니다. INTA 신호를 받으면 인터럽트 컨트롤러가 Data Bus에 적절한 인터럽트 번호를 전송합니다.
 
- 이렇게 인터럽트 레지스터를 읽어왔으면 적절한 인터럽트 서비스 루틴을 실행해야 합니다.  커널은 인터럽트 번호 (IRQ 번호)를 인덱스로 사용하여 인터럽트 벡터 테이블에서 적절한 서비스 루틴을 찾은 후 실행합니다. 일부 기기는 인터럽트를 발생시킨 기기에 따라 IRQ가 고정되어있습니다. 예를 들어 플로피 디스크의 경우 항상 IRQ 6을 요청합니다. 그러나 최근 대부분의 기기들은 그렇지 않으며, 디바이스 드라이버가 탐사(probe)라는 과정을 통하여 동적으로 IRQ를 등록할 수 있습니다.
+이렇게 인터럽트 레지스터를 읽어왔으면 적절한 인터럽트 서비스 루틴을 실행해야 합니다. 커널은 인터럽트 번호 (IRQ 번호)를 인덱스로 사용하여 인터럽트 벡터 테이블에서 적절한 서비스 루틴을 찾은 후 실행합니다. 일부 기기는 인터럽트를 발생시킨 기기에 따라 IRQ가 고정되어있습니다. 예를 들어 플로피 디스크의 경우 항상 IRQ 6을 요청합니다. 그러나 최근 대부분의 기기들은 그렇지 않으며, 디바이스 드라이버가 탐사(probe)라는 과정을 통하여 동적으로 IRQ를 등록할 수 있습니다.
 
 - 구체적으로 디바이스 드라이브의 Probe 과정이 어떻게 진행되는지는 나중에 작성하기로.
 
- 인터럽트 루틴이 실행될 때 원하는 처리를 전부 할 수 있으면 참 좋겠지만, 이러한 서비스 루틴들은 기존 CPU의 실행을 중단하고 실행되는데다 다른 인터럽트가 또 발생할 수 있기 때문에 최대한 빨리 할 일을 마치고 빠져나와야 합니다. 이를 위해 `Bottom Halves`, `Task Queues`, `Softirq`, `Tasklet`, `Work queues` 등 다양한 매커니즘이 제안되었습니다.
+인터럽트 루틴이 실행될 때 원하는 처리를 전부 할 수 있으면 참 좋겠지만, 이러한 서비스 루틴들은 기존 CPU의 실행을 중단하고 실행되는데다 다른 인터럽트가 또 발생할 수 있기 때문에 최대한 빨리 할 일을 마치고 빠져나와야 합니다. 이를 위해 `Bottom Halves`, `Task Queues`, `Softirq`, `Tasklet`, `Work queues` 등 다양한 매커니즘이 제안되었습니다.
 
 - 이중 몇 개만 설명하고자 하는데, 지금 머리가 터질 것 같으니 이것도 나중에 쓰기로
 
- 이러한 인터럽트 서비스 루틴들은 디바이스 드라이버가 등록하는 것이며, 디바이스 드라이버는 역할에 따라 적절한 처리를 수행합니다. 이후 인터럽트가 안전하게 끝나면 이제 대기 큐에 미리 정의돼있었던 이벤트가 동작합니다. 커널에서는 적절한 데이터 처리를 거친 후 특수한 커널 함수(`copy_to_user`)를 사용하여 키 정보를 유저 메모리로 복사합니다. 이는 커널 메모리는 실제 물리적 메모리 주소를 사용하는 반면, 유저 메모리는 페이징에 의해 이루어지는 가상 메모리 주소를 사용하므로 직접 복사가 불가능하기 때문입니다. 그리고 커널이 반환하면 CPU는 유저 모드로 동작하게 되며, 유저 프로세스가 다시 실행됩니다.
+이러한 인터럽트 서비스 루틴들은 디바이스 드라이버가 등록하는 것이며, 디바이스 드라이버는 역할에 따라 적절한 처리를 수행합니다. 이후 인터럽트가 안전하게 끝나면 이제 대기 큐에 미리 정의돼있었던 이벤트가 동작합니다. 커널에서는 적절한 데이터 처리를 거친 후 특수한 커널 함수(`copy_to_user`)를 사용하여 키 정보를 유저 메모리로 복사합니다. 이는 커널 메모리는 실제 물리적 메모리 주소를 사용하는 반면, 유저 메모리는 페이징에 의해 이루어지는 가상 메모리 주소를 사용하므로 직접 복사가 불가능하기 때문입니다. 그리고 커널이 반환하면 CPU는 유저 모드로 동작하게 되며, 유저 프로세스가 다시 실행됩니다.
 
 ## 유저 프로세스에서
 
@@ -76,7 +75,7 @@ date: 2020-12-25T04:30:59.671Z
 - `/etc/hostname` 파일에는 말 그대로 hostname이 적혀 있습니다.
 - `/etc/resolv.conf`파일에는 네임 서버의 주소들이 적혀 있습니다.
 
-브라우저 역시 `/etc/resolv.conf` 파일에 적힌 DNS들에 질의할 것이고, 그 질의 자체는 역시 어플리케이션 레벨에서 이뤄질 것입니다. 물론 브라우저는 빠른 연결을 위해 내부적으로 캐시를 가지고 있을 것입니다. 적어도 크롬의 경우에는 내부적으로 도메인, IP간의 변환을 저장하고 있는 것이 분명한데, 왜냐하면 예전에 ARP Spoofing 공격을 시험해봤을 때 크롬은 보안 경고를 띄우면서 접속을 차단했기 때문입니다. 
+브라우저 역시 `/etc/resolv.conf` 파일에 적힌 DNS들에 질의할 것이고, 그 질의 자체는 역시 어플리케이션 레벨에서 이뤄질 것입니다. 물론 브라우저는 빠른 연결을 위해 내부적으로 캐시를 가지고 있을 것입니다. 적어도 크롬의 경우에는 내부적으로 도메인, IP간의 변환을 저장하고 있는 것이 분명한데, 왜냐하면 예전에 ARP Spoofing 공격을 시험해봤을 때 크롬은 보안 경고를 띄우면서 접속을 차단했기 때문입니다.
 
 ### Socket
 
@@ -94,9 +93,9 @@ date: 2020-12-25T04:30:59.671Z
 
 ### Transport Layer
 
- 이제부터는 transport layer의 영역입니다. TCP를 사용중이므로 먼저 connection establish 단계가 수행됩니다. 정상적으로 connection이 생성된 경우, 실제 데이터 전송 과정이 이어집니다. 이 과정에 도달하면 user space에서 kernel space로 데이터 복사가 발생하며, `sk_buff` 구조체가 생성됩니다. 이 이전까지의 과정에서는 어플리케이션에서 생성한 데이터 자체는 복사되지 않으며, 데이터의 주소를 담고 있는 `io vector`만이 복사됩니다.
+이제부터는 transport layer의 영역입니다. TCP를 사용중이므로 먼저 connection establish 단계가 수행됩니다. 정상적으로 connection이 생성된 경우, 실제 데이터 전송 과정이 이어집니다. 이 과정에 도달하면 user space에서 kernel space로 데이터 복사가 발생하며, `sk_buff` 구조체가 생성됩니다. 이 이전까지의 과정에서는 어플리케이션에서 생성한 데이터 자체는 복사되지 않으며, 데이터의 주소를 담고 있는 `io vector`만이 복사됩니다.
 
- 이 과정에서는 또한 packet segmentation이 이뤄집니다. Packet segmentation이란 전달해야 할 데이터가 Maximum Transmission Unit(MTU)보다 클 경우 이를 여러 개의 packet으로 쪼개는 것을 말합니다. 이후 `tcp transmit skb ` 함수가 호출되고, 생성된 패킷의 포인터가 network layer (IP layer)로 전송됩니다.
+이 과정에서는 또한 packet segmentation이 이뤄집니다. Packet segmentation이란 전달해야 할 데이터가 Maximum Transmission Unit(MTU)보다 클 경우 이를 여러 개의 packet으로 쪼개는 것을 말합니다. 이후 `tcp_transmit_skb` 함수가 호출되고, 생성된 패킷의 포인터가 network layer (IP layer)로 전송됩니다.
 
 ### Network Layer
 
@@ -150,8 +149,7 @@ date: 2020-12-25T04:30:59.671Z
 - https://www.keil.com/pack/doc/CMSIS/Core/html/group__NVIC__gr.html
 - https://www.motioncontroltips.com/what-is-nested-vector-interrupt-control-nvic/
 - https://wiki.kldp.org/Translations/html/The_Linux_Kernel-KLDP/tlk7.html
-- http://books.gigatux.nl/mirror/kerneldevelopment/0672327201/ch07lev1sec1.html#:~:text=%22Bottom%20half%22%20is%20a%20generic,currently%20has%20this%20meaning%2C%20too.
-- https://www.gabrielececchetti.it/Teaching/CalcolatoriElettronici/Docs/i8086_instruction_set.pdf
+- http://books.gigatux.nl/mirror/kerneldevelopment/0672327201/ch07lev1sec1.html
 - https://docs.google.com/document/d/1VtcZkqtvVFxYowI0PG8O0PUDhvZm8wO_BiUmV7tGdwI/edit
 - http://www.qnx.com/developers/docs/qnxcar2/index.jsp?topic=%2Fcom.qnx.doc.neutrino.prog%2Ftopic%2Ffreedom_IO_space_vs_memory_mapped.html
 - https://datasheetspdf.com/pdf/45361/IntelCorporation/8259A/1
@@ -162,10 +160,9 @@ date: 2020-12-25T04:30:59.671Z
 - https://en.wikipedia.org/wiki/Intel_8259
 - https://en.wikipedia.org/wiki/Programmable_interrupt_controller
 - https://www.embien.com/blog/arm-interrupt-controllers/
-- https://stackoverflow.com/questions/1723481/relation-between-usb-and-pci#:~:text=The%20USB%20controller%20communicates%20both,across%20the%20PCI%20bus%20first.&text=...%20as%20you%20see%2C%20PCI%20is%20rather%20incidental.
+- https://stackoverflow.com/questions/1723481/relation-between-usb-and-pci
 - https://zwischenzugs.com/2018/06/08/anatomy-of-a-linux-dns-lookup-part-i/
 - https://tldp.org/LDP/solrhe/Securing-Optimizing-Linux-RH-Edition-v1.3/chap9sec95.html
 - https://en.wikipedia.org/wiki/Resolv.conf
 - https://en.wikipedia.org/wiki/Packet_segmentation
 - https://www.cs.dartmouth.edu/~sergey/netreads/path-of-packet/Network_stack.pdf
-
