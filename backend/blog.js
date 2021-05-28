@@ -7,7 +7,7 @@ const ketex = require('./libs/md-latex');
 const markdown = require('markdown-it')({
     html: true,
     langPrefix: 'language-',
-    linkify: true,
+    linkify: false,
     typographer: false,
     highlight: (str, lang) => {
         if (lang && hljs.getLanguage(lang)) {
