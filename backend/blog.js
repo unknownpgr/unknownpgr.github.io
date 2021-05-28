@@ -185,15 +185,21 @@ async function processPost(srcDir, dstDir, name) {
 }
 
 async function generateRedirection(redirectionPath, meta) {
-    await Promise.all(Object.keys(meta).map(post => {
+    await Promise.all(Object.entries(meta).map(([name, post]) => {
         const HTML = `
+            <meta property="og:url"         content="/posts/${name}"/>
+            <meta property="og:type"        content="website"/>
+            <meta property="og:title"       content="${post.title}"/>
+            <meta property="og:description" content="Blog of Unknownpgr"/>
+            <meta property="og:image"       content="${post.thumbnail}"/>
+
             <script>
-            window.location.replace("/?page=/posts/${encodeURIComponent(post)}");
+            window.location.replace("/?page=/posts/${encodeURIComponent(name)}");
             </script>
             `
             .replace(/(\r|\n|\t)/g, '')
             .replace(/ +/g, ' ');
-        const PATH_HTML = join(redirectionPath, post, 'index.html');
+        const PATH_HTML = join(redirectionPath, name, 'index.html');
         return write(PATH_HTML, HTML, 'utf-8');
     }));
 }
