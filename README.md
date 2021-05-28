@@ -295,3 +295,4 @@ category: this_is_category.
 - 각종 자잘한 오류들 해결
   - Linkify disable
   - 라이브러리 업데이트
+- Open graph meta tag 추가
