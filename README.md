@@ -8,16 +8,14 @@
 ## 기본 설정
 
 1. 깃허브 workflow 설정 : `.github/workflows/auto-update.yml`에서 MY_NAME, MY_EMAIL 수정
-   - 추후 파일 하나에 전부 포함하게 하는 것 고려 중.
-2. Secret 설정 : 깃허브 토큰 발행 받아서 secret으로 설정
-   - SSH 안 쓰고 Token만으로 push 가능하게 하는 것, 힘들었다...엄청...
+2. Secret 설정 : 깃허브 토큰 발행 받아서 `ACCESS_TOKEN`이라는 이름의 secret으로 설정
 3. `username.github.io` 리포지토리에서 Slack webhook 주소를 SLAKC_KEY로 주면, 자동으로 슬랙 봇에게 메시지를 보낸다.
 
 ## 새 포스트 작성하기
 
-/src/post 디렉토리에 새로운 폴더를 만들고, 그 안에서 yaml formatter가 있는 markdown 형식으로 글을 작성하면 된다. 아래는 마크다운 파일의 예시다.
+`/post` 디렉토리에 새로운 폴더를 만들고, 그 안에서 `yaml formatter`가 있는 markdown 형식으로 글을 작성하면 된다. 아래는 마크다운 파일의 예시다.
 
-```
+```markdown
 ---
 title: This is title!
 category: this_is_category.
@@ -25,14 +23,13 @@ category: this_is_category.
 # This is h1 title.
 ```
 
-이것 역시 너무 불편하므로, 추후 GUI를 만들거나 적어도 posts 디렉토리를 root로 옮길 예정이다.
+날짜는 자동으로 추가된다.
 
 ## 포스트 발행하기
 
-로컬에서 작성한 포스트를 발행하려면, 이 리포지토리를 `master`에 push하면 된다. 그러면 GitHub action의 workflow가 자동으로 `blog.js`를 실행하여 포스트를 컴파일하고, 깃헙 블로그 `unknownpgr.github.io`에 푸시한다.
+로컬에서 작성한 포스트를 발행하려면, 이 리포지토리를 `master`에 push하면 된다. 그러면 GitHub action의 workflow가 자동으로 `blog.js`를 실행하여 포스트를 컴파일하고, 깃헙 블로그 `https://github.com/${{env.MY_NAME}}/${{env.MY_NAME}}.github.io.git`에 푸시한다.
 
-정리하자면, 포스트를 쓰고 발행하려면, 포스트를 작성한 후 커밋하고 마스터 브랜치에 푸시하면 된다.
-귀찮다면, 윈도우에서는 `publish.bat`, 리눅스에서는 `publish.sh`를 실행하면 된다. 물론, 리눅스에서 실행할 때에는 chmod를 통하여 실행 권한을 부여받아야 한다.
+정리하자면, 포스트를 쓰고 발행하려면, 포스트를 작성한 후 커밋하고 마스터 브랜치에 푸시하면 된다. 간단하게는 포스트 작성 후 `post-publish.bat`을 실행하면 된다.
 
 ## 알림
 
@@ -59,20 +56,13 @@ category: this_is_category.
 
 ## 2020 / 07 / 12
 
-- 원래는 지킬과 같은 플랫폼을 먼저 만든 후, 깃허브 블로그를 만드려고 했었다. 그러나 React나 Bootstrap등을 공부해본 바, 그러한 라이브러리를 이용하면서 플랫폼까지 만드는 것은 상당히 어렵고 귀찮다는 것을 알게 되었다.
+- 원래는 지킬과 같은 일종의 플랫폼을 먼저 만든 후 깃허브 블로그를 만드려고 했었다. 그러나 React나 Bootstrap등을 공부해본 바, 그러한 라이브러리를 이용하면서 플랫폼까지 만드는 것은 상당히 번거롭다는 것을 알게 되었다.
 - 그래서 그냥 깃허브 블로그만을 만들려고 한다.
 - 그렇다면, 스킨 관련된 기능은 전부 제거하고, 포스트 관련 기능만 구현하면 된다.
 
-### Serverside 구성
-
-- 기본적으로 React app으로 하고, SPA로 만들어보자.
-- 개발을 위해서는, 그냥 기본으로 제공하는 start 스크립트를 사용한다.
-- Browser routing을 구현하기 위해 `react-router-dom`을 사용한다.
-- 디자인으로는 `react-bootstrap`을 사용한다. 추후 업데이트하던가 하자.
-
 ### 구현 방법
 
-여기서도 막히는 것이, 어떻게 포스트와 그 목록을 적절히 구현하는가 하는 것이다.
+어떻게 포스트와 그 목록을 적절히 구현하는가?
 
 - 일단 이전에 작성해놓은 스크립트를 사용하면 포스트의 목록을 다 가져올 수 있기는 하다.
 - Browser routing을 하면, 심지어 적절한 HTML파일을 가져올 수도 있다.
