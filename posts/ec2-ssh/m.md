@@ -30,7 +30,7 @@ sudo passwd [사용자 이름]
 
 # 3. SSH Key 생성
 
-위 2번 과정을 통해 생성한 유저로 로그인한 후, 아래 명령어들을 통해 SSH Key를 생성해줍니다.
+위 2번 과정을 통해 생성한 유저로 로그인한 후, 아래 명령어들을 통해 SSH Key를 생성해줍니다. 아래 명령어는 홈 디렉토리로 이동하신 후에(`cd ~`) 수행해주시면 됩니다. 아마 로그인하신 후 디렉토리를 이동하시지 않으셨다면 이미 이 디렉토리에 위치해있을 것입니다.
 
 ```bash
 mkdir .ssh
@@ -38,9 +38,12 @@ chmod 700 .ssh
 touch .ssh/authorized_keys
 chmod 600 .ssh/authorized_keys
 ssh-keygen -m PEM
+cat .ssh/id_rsa.pub >> .ssh/authorized_keys
 ```
 
-제가 본 인터넷의 튜토리얼에는 마지막의 `-m PEM` 옵션이 없었는데, 이것을 설정하지 않으면 ssh 클라이언트에서 private key를 인식하지 못하는 것 같습니다.
+제가 본 어떤 튜토리얼에는 마지막의 `-m PEM` 옵션이 없었는데, 이것을 설정하지 않으면 SSH 클라이언트에서 private key를 인식하지 못하는 것 같습니다. 혹시 제 서버/로컬에서만 그런 것일 수도 있으니 만약 위 명령어대로 했을 때 접속이 안 되는 분이 계시다면 `-m PEM` 옵션을 설정하지 마시고 한번 시도해보시기 바랍니다.
+
+`authorized_keys` 파일은, 그 파일 안에 `id_rsa.pub`의 내용을 적어 두면 해당 key를 통해 현재 유저로 로그인하는 것을 허용해주는 설정 파일입니다. `touch` 명령어를 통해 이 파일을 생성하지 않고 `.ssh/id_rsa.pub>.ssh/authorized_keys` 로 즉시 생성해도 별 문제가 없지만, 이렇게 하면 혹시 기존에 이미 파일이 있을 경우 덮어쓰게 될 위험이 있어 위와 같이 해 두 었습니다.
 
 # 4. Private Key 다운로드
 
