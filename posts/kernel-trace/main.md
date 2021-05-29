@@ -1,18 +1,18 @@
 ---
 title: trace-cmd 및 ftrace 이해하기
 category: computer structure
+date: 2021-05-29T10:56:39.790Z
 ---
 
 이 글에서는 `ftrace` 및 `ftrace`의 커맨드라인 유틸리티인 `trace-cmd`의 동작 원리를 이해하고, 이를 사용하여 리눅스 커널 트레이싱을 해 보고자 합니다.
 
 ![Commands To Check Bad Sectors On Hard Disk In Linux | Itsubuntu.com](imgs/Free_Linux_Tutorials.png)
 
-
 # ftrace 이해하기
 
 ## ftrace란?
 
- `ftrace` 란 linux에서 제공하는 일종의 프레임워크입니다. `ftrace`는 `strace` 등과 다르게 하나의 프로그램이 아니고 리눅스에서 제공하는 기능의 일종이라서, 안타깝게도 `ftrace ping 8.8.8.8` 과 같은 느낌으로 간단하게 사용할 수는 없습니다.
+`ftrace` 란 linux에서 제공하는 일종의 프레임워크입니다. `ftrace`는 `strace` 등과 다르게 하나의 프로그램이 아니고 리눅스에서 제공하는 기능의 일종이라서, 안타깝게도 `ftrace ping 8.8.8.8` 과 같은 느낌으로 간단하게 사용할 수는 없습니다.
 
 `ftrace`는 `/sys/kernel/debug/tracing` 디렉토리에 있는 파일시스템에 접근하여 읽거나 쓰는 방식으로 작동합니다. 예를 들어서, 아래와 같이 `do_page_fault` 함수 호출을 tracing할 수 있습니다.
 
@@ -51,7 +51,7 @@ cat trace
 
 ### Function Entry Tracing
 
-먼저 function entry tracing의 경우 애초에 커널이 컴파일될 때 특수한 instruction이 삽입됩니다. 구체적으로는 커널을 컴파일할 때  `gcc`에서 `-pg` 옵션을 주면 함수가 호출될 때 `mcount`라는 함수를 호출하는 instruction을 삽입합니다. 구체적으로는 아래와 같습니다.
+먼저 function entry tracing의 경우 애초에 커널이 컴파일될 때 특수한 instruction이 삽입됩니다. 구체적으로는 커널을 컴파일할 때 `gcc`에서 `-pg` 옵션을 주면 함수가 호출될 때 `mcount`라는 함수를 호출하는 instruction을 삽입합니다. 구체적으로는 아래와 같습니다.
 
 ```asm
 mov ip, lr
@@ -61,9 +61,9 @@ andeq r0, r0, r8, lsr #32
 
 이 `mcount`라는 함수는 실제로 사용되는 함수는 아니며, 나중에 다른 함수로 대체될, 아무것도 하지 않는 function stub입니다.
 
-이렇게 컴파일이 끝난 후, `recordmcount`라는 프로그램이 실행됩니다. 이 프로그램은 C 오브젝트의 ELF header를 파싱하여  `.text` 섹션(실제로 코드가 저장되는 섹션)에서 `mcount`함수를 호출하는 위치를 전부 찾아냅니다. 그리고 `__mcount_loc`이라는 섹션을 생성하여 이 섹션에 `mcount` 함수를 호출하는 위치를 전부 기록하고, 이것을 다시 원래 오브젝트에 링크합니다. 
+이렇게 컴파일이 끝난 후, `recordmcount`라는 프로그램이 실행됩니다. 이 프로그램은 C 오브젝트의 ELF header를 파싱하여 `.text` 섹션(실제로 코드가 저장되는 섹션)에서 `mcount`함수를 호출하는 위치를 전부 찾아냅니다. 그리고 `__mcount_loc`이라는 섹션을 생성하여 이 섹션에 `mcount` 함수를 호출하는 위치를 전부 기록하고, 이것을 다시 원래 오브젝트에 링크합니다.
 
-이후 커널이 부팅될 때, SMP가 초기화되기 전에 `ftrace`에 의해 이 부분이 전부 `NOP` (아무것도 하지 않는 instruction)으로 바뀝니다. 모듈의 경우에는 모듈이 로드되기 전에 이 과정이 수행됩니다. `ftrace`에는 트레이싱이 가능한 함수들의 목록이 저장되는 `available_filter_functions`  리스트가 있는데, 모듈의 경우에는 추가적으로 이 리스트에 모듈의 함수들이 등록됩니다. 물론 모듈이 unload될 때에는 이 리스트에서 모듈에 포함된 함수들을 삭제합니다.
+이후 커널이 부팅될 때, SMP가 초기화되기 전에 `ftrace`에 의해 이 부분이 전부 `NOP` (아무것도 하지 않는 instruction)으로 바뀝니다. 모듈의 경우에는 모듈이 로드되기 전에 이 과정이 수행됩니다. `ftrace`에는 트레이싱이 가능한 함수들의 목록이 저장되는 `available_filter_functions` 리스트가 있는데, 모듈의 경우에는 추가적으로 이 리스트에 모듈의 함수들이 등록됩니다. 물론 모듈이 unload될 때에는 이 리스트에서 모듈에 포함된 함수들을 삭제합니다.
 
 부팅이 끝난 후 나중에 `ftrace`가 enable 되면 앞서 `NOP`으로 대체했던 instruction들을 다시 원래대로 돌리는 작업이 수행됩니다. 구체적으로는 다시 원래의 `mcount`를 호출하는 instruction들을 복구하되, 이번에는 기존의 function stub인 `mcount`를 호출하는 대신 `ftrace`에 구현되어있는 새로운 `mcount`를 호출하도록 합니다. 이 새로운 `mcount`는 stack frame 구조를 파악해서 tracing을 수행해주는 유용한 기능을 가지고 있습니다. (마치 Java에서 실제 함수 대신 interface 함수를 사용하는 것과 비슷하다고 보시면 되겠습니다.)
 
@@ -79,7 +79,7 @@ andeq r0, r0, r8, lsr #32
 
 - 먼저 어떤 커널 함수 `void someFunction()`이 `ftrace`에 의해 구현된 `mcount`를 호출한다고 가정합니다.
 - 어느 시점에 `someFunction`이 호출되었는데, 호출된 후 리턴해야 할 주소를 `someFunction_ret`이라 가정합니다.
--  `ftrace`에는 함수의 리턴을 트레이싱할 수 있는 특수한 함수가 있는데, 이를 `functionExitTracer`라 부르기로 합니다.
+- `ftrace`에는 함수의 리턴을 트레이싱할 수 있는 특수한 함수가 있는데, 이를 `functionExitTracer`라 부르기로 합니다.
 
 그러면 함수가 호출될 때 다음 작업이 이루어집니다.
 
@@ -100,9 +100,9 @@ andeq r0, r0, r8, lsr #32
 
 ## 사용법
 
- `trace-cmd`는 크게 record, report라는 두 가지 단계를 통해 트레이싱을 수행합니다.
+`trace-cmd`는 크게 record, report라는 두 가지 단계를 통해 트레이싱을 수행합니다.
 
-먼저 record 단계에서는 `ftrace`를 이용하여 트레이싱을 수행하고, 그 내용을 `trace.dat`이라는 파일에 저장합니다. 이 파일에는 `raw`데이터가 들어 있습니다. 아래와 같이 실행할 수 있습니다. 
+먼저 record 단계에서는 `ftrace`를 이용하여 트레이싱을 수행하고, 그 내용을 `trace.dat`이라는 파일에 저장합니다. 이 파일에는 `raw`데이터가 들어 있습니다. 아래와 같이 실행할 수 있습니다.
 
 ```bash
 trace-cmd record host google.com # 특정 프로그램을 시작과 동시에 트레이싱
@@ -117,7 +117,7 @@ trace-cmd report
 
 물론 `trace-cmd`는 이 두 가지 말고도 다양한 모드를 지원합니다. [trace-cmd man page](https://man7.org/linux/man-pages/man1/trace-cmd.1.html)를 읽어보시면 모든 기능이 상세히 설명되어 있습니다. 그리고 `trace-cmd`의 record 역시 다양한 옵션을 제공합니다. 이 옵션들 역시 [trace-cmd-record man page](https://man7.org/linux/man-pages/man1/trace-cmd-record.1.html)를 읽어보시면 상세히 설명되어있습니다. 그래서 이 글에서는 몇 가지 유용한 옵션만을 설명하고자 합니다.
 
-`-p` : 어떤 트레이서를 사용할지 설정합니다. `function` 트레이서는 이 옵션을 주지 않을 때 선택되는 기본 트레이서로, 모든 function call을 트레이싱합니다. `function_graph`는 function call  및 function exit을 트레이싱하여 보여줍니다.
+`-p` : 어떤 트레이서를 사용할지 설정합니다. `function` 트레이서는 이 옵션을 주지 않을 때 선택되는 기본 트레이서로, 모든 function call을 트레이싱합니다. `function_graph`는 function call 및 function exit을 트레이싱하여 보여줍니다.
 
 `-F` : `trace-cmd`는 기본적으로 모든 CPU의 모든 프로세스를 트레이싱합니다. 그러므로 실제로 트레이싱된 결과를 보면 온갖 프로세스가 섞여있을 뿐만 아니라, 문맥 교환 관련 호출들도 다 트레이싱됩니다. 이는 문맥 교환 등을 고려할 때에는 좋은 방법이겠지만, 한 프로세스의 동작을 보기에는 적합하지 않습니다. `-F` 옵션을 주면 특정 프로그램을 인자로 줘서 트레이싱할 때, 오직 그 프로세스만을 트레이싱합니다. (아무 프로그램도 인자로 주지 않고 실행할 때에는 사용할 수 없습니다.)
 
