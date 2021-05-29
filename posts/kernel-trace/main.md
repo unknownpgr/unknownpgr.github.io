@@ -1,6 +1,6 @@
 ---
 title: trace-cmd 및 ftrace 이해하기
-category: computer structureftrace 이해하기
+category: computer structure
 ---
 
 이 글에서는 `ftrace` 및 `ftrace`의 커맨드라인 유틸리티인 `trace-cmd`의 동작 원리를 이해하고, 이를 사용하여 리눅스 커널 트레이싱을 해 보고자 합니다.
