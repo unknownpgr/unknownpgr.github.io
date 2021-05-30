@@ -65,7 +65,7 @@ andeq r0, r0, r8, lsr #32
 
 이후 커널이 부팅될 때, SMP가 초기화되기 전에 `ftrace`에 의해 이 부분이 전부 `NOP` (아무것도 하지 않는 instruction)으로 바뀝니다. 모듈의 경우에는 모듈이 로드되기 전에 이 과정이 수행됩니다. `ftrace`에는 트레이싱이 가능한 함수들의 목록이 저장되는 `available_filter_functions` 리스트가 있는데, 모듈의 경우에는 추가적으로 이 리스트에 모듈의 함수들이 등록됩니다. 물론 모듈이 unload될 때에는 이 리스트에서 모듈에 포함된 함수들을 삭제합니다.
 
-부팅이 끝난 후 나중에 `ftrace`가 enable 되면 앞서 `NOP`으로 대체했던 instruction들을 다시 원래대로 돌리는 작업이 수행됩니다. 구체적으로는 다시 원래의 `mcount`를 호출하는 instruction들을 복구하되, 이번에는 기존의 function stub인 `mcount`를 호출하는 대신 `ftrace`에 구현되어있는 새로운 `mcount`를 호출하도록 합니다. 이 새로운 `mcount`는 stack frame 구조를 파악해서 tracing을 수행해주는 유용한 기능을 가지고 있습니다. (마치 Java에서 실제 함수 대신 interface 함수를 사용하는 것과 비슷하다고 보시면 되겠습니다.)
+부팅이 끝난 후 나중에 `ftrace`가 enable 되면 앞서 `NOP`으로 대체했던 instruction들을 다시 원래대로 돌리는 작업이 수행됩니다. 구체적으로는 다시 원래의 `mcount`를 호출하는 instruction들을 복구하되, 이번에는 기존의 function stub인 `mcount`를 호출하는 대신 `ftrace`에 구현되어있는 새로운 `mcount`를 호출하도록 합니다. 이 새로운 `mcount`는 stack frame 구조를 파악해서 tracing을 수행해주는 유용한 기능을 가지고 있습니다. (마치 Java에서 특정 객체 대신 interface를 사용하여 코딩해두면 나중에 해당 코드가 실행될 때에는 텅 빈 interface 대신 실제 객체가 들어가는 것과 비슷하다고 보시면 되겠습니다.)
 
 (제가 참고한 자료들을 보면 Multi core CPU에서 race condition 방지를 위한 방법까지 포함돼 있지만, 이는 생략하겠습니다.)
 
