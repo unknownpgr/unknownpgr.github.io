@@ -256,7 +256,7 @@ async function main() {
     write(PATH_META, JSON.stringify(meta), 'utf-8');
 
     // Generate sitemap from metadata
-    let sitemap = getSitemap('https://unknownpgr.github.io/', meta);
+    let sitemap = getSitemap('https://unknownpgr.com/', meta);
     write(PATH_SITEMAP, sitemap);
     console.log('Post update finished!');
 
