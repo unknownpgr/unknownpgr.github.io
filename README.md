@@ -11,3 +11,4 @@
 ## Root files
 
 - Files in `/root` of the develop repository will be automatically copied to here.
+- CNAME file is required to maintain custom domain in github page.
