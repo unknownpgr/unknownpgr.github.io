@@ -49,7 +49,7 @@ function App() {
               <Nav />
             </div>
             <hr className="hr-full"></hr>
-            <Route exact path="/about" >
+            <Route exact path="/O_o" >
               <AboutPage />
             </Route>
             <Route>
@@ -89,7 +89,7 @@ function App() {
           </div>
           <div className="blog-footer">
             © 2020 Copyright :
-          <a href="https://github.com/unknownpgr"> Unknownpgr</a>
+            <a href="https://github.com/unknownpgr"> Unknownpgr</a>
           </div>
         </div>
       </footer>
