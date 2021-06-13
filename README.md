@@ -20,6 +20,7 @@
 title: This is title!
 category: this_is_category.
 ---
+
 # This is h1 title.
 ```
 
@@ -286,3 +287,7 @@ category: this_is_category.
   - Linkify disable
   - 라이브러리 업데이트
 - Open graph meta tag 추가
+
+## 2021 / 06 / 14
+
+- 커스텀 도메인 리셋되는 오류 수정
