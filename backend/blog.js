@@ -51,7 +51,7 @@ function parseRawPostString(src) {
 
 // Parse YAML formatter string into json object.
 // Automatically correct some data
-// Alomost pure function (use `new Date()` in code)
+// Alomost pure function except `new Date()` use in code
 function parseFormatter(formatterStr) {
     let formatter = yaml.safeLoad(formatterStr);
 
@@ -97,7 +97,7 @@ function parseMarkdown(postName, markdownStr) {
         for (let token of _tokens) {
             if (token.type === 'image') {
                 token.attrs[0][1] = join('/posts', postName, token.attrs[0][1]);
-                if (!thumbnail) thumbnail = token.attrs[0][1];
+                thumbnail |= token.attrs[0][1];
             }
             if (token.type === 'inline') recursiveUpdate(token.children);
         }
@@ -118,7 +118,7 @@ function parseMarkdown(postName, markdownStr) {
             const type = tokens[i].tag;
             const content = markdown.renderInline(nxt.content);
 
-            if (!cur.attrs) cur.attrs = [];
+            cur.attrs = cur.attrs || [];
             cur.attrs.push(['id', id]);
 
             toc.push({ type, content, id });
@@ -205,10 +205,14 @@ async function generateRedirection(redirectionPath, meta) {
 }
 
 async function main() {
-    const POSTS_SRC = join(__dirname, '../posts');
-    const POSTS_DST = join(__dirname, 'posts');
-    const PATH_SITEMAP = join(__dirname, 'sitemap.xml');
-    const PATH_META = join(__dirname, 'meta.json');
+
+    const ROOT = 'https://unknownpgr.com/';
+
+    const PATH_BUILD = join(__dirname, 'build');
+    const PATH_SRC = join(__dirname, '..', 'posts');
+    const PATH_DST = join(PATH_BUILD, 'posts');
+    const PATH_SITEMAP = join(PATH_BUILD, 'sitemap.xml');
+    const PATH_META = join(PATH_BUILD, 'meta.json');
 
     // Delete existing data
     try {
@@ -216,37 +220,40 @@ async function main() {
         if (+(process.version.substr(1, 2)) < 12) {
             console.error("Could not run rmdir because of node version is too low.");
         }
-        await Promise.all([
-            fs.rmdir(POSTS_DST, { recursive: true }),
-            fs.unlink(PATH_META),
-            fs.unlink(PATH_SITEMAP)
-        ]);
+        await fs.rmdir(PATH_BUILD, { recursive: true });
+        console.log("All existing files were removed.");
     } catch (e) {
         console.log("There was some minor error while removing data.");
         console.log("The error occurred is as follows.");
         console.log(e);
     }
 
-    console.log("All existing files were removed.");
+    // Create build directory
+    try {
+        await fs.mkdir(PATH_BUILD);
+    } catch (e) {
+        console.error('Could not make build directory. Stop blog build.');
+        return -1;
+    }
 
     // Copy raw post data to dst directory
     try {
-        await pncp(POSTS_SRC, POSTS_DST);
+        await pncp(PATH_SRC, PATH_DST);
         console.log("Raw post data was copied to destination directory.");
     } catch (e) {
-        console.log("Error occurred while coping data to destination directory.");
-        console.log("Therefore, could not build blog.");
-        console.log("The error occurred is as follows.");
-        console.log(e);
+        console.error("Error occurred while coping data to destination directory. Stop blog build.");
+        console.error("The error occurred was as follows.");
+        console.error(e);
         return -1;
     }
 
     // Compile them and save compiled results
-    let postData = (await Promise.all((await fs.readdir(POSTS_DST)).map(name => processPost(POSTS_SRC, POSTS_DST, name))))
-        .filter(x => x);
+    const postList = await fs.readdir(PATH_DST);
+    const tasks = postList.map(name => processPost(PATH_SRC, PATH_DST, name));
+    let postData = (await Promise.all(tasks)).filter(x => x);
 
     // Sort the metadata by the date and convert it to a dictionary.
-    // Actually, a dictionary should not have an order.
+    // Actually, items in a dictionary should not have an order.
     // Thus, it is just a trick and not a recommaned coding pattern.
     let meta = {};
     postData = postData.sort((a, b) => b.date - a.date);
@@ -256,12 +263,12 @@ async function main() {
     write(PATH_META, JSON.stringify(meta), 'utf-8');
 
     // Generate sitemap from metadata
-    let sitemap = getSitemap('https://unknownpgr.com/', meta);
+    let sitemap = getSitemap(ROOT, meta);
     write(PATH_SITEMAP, sitemap);
     console.log('Post update finished!');
 
     // generate redirection page, because github page cannot handle spa.
-    generateRedirection(POSTS_DST, meta);
+    generateRedirection(PATH_DST, meta);
 }
 
 main();

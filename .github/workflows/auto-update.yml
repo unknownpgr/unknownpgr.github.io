@@ -84,10 +84,8 @@ jobs:
         run: |
           rm -rf ../blog-publish/*
           yes | cp -rf frontend/build/* ../blog-publish
+          yes | cp -rf  backend/build/* ../blog-publish
           yes | cp -rf root/. ../blog-publish
-          yes | cp -rf backend/posts ../blog-publish
-          yes | cp -rf backend/sitemap.xml ../blog-publish
-          yes | cp -rf backend/meta.json ../blog-publish
           echo "Copied."
           ls ../blog-publish -al
 
@@ -156,10 +154,8 @@ jobs:
 
       - name: Copy posts
         run: |
-          rm -rf ../blog-publish/posts
-          yes | cp -rf backend/posts ../blog-publish
-          yes | cp -rf backend/sitemap.xml ../blog-publish
-          yes | cp -rf backend/meta.json ../blog-publish
+          rm -rf ../blog-publish/*
+          yes | cp -rf  backend/build/* ../blog-publish
           echo "Copied."
           ls ../blog-publish -al
 

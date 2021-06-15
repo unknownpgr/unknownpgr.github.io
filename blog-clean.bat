@@ -1,5 +1,3 @@
-rmdir /Q /S "backend/posts"
-rmdir /Q /S "frontend/node_modules"
+rmdir /Q /S "backend/build"
 rmdir /Q /S "frontend/build"
-del "backend\meta.json"
-del "backend\sitemap.xml"
+rmdir /Q /S "frontend/node_modules"
