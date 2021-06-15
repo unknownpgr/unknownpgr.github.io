@@ -7,9 +7,6 @@ inputs:
   name:
     description: 'Name of the user'
     required: true
-  message:
-    description: 'Commit message'
-    required: true
 
 runs:
   using: 'composite'

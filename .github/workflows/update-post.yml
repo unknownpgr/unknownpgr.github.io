@@ -23,7 +23,6 @@ jobs:
         with:
           name: ${{ env.MY_NAME }}
           email: ${{ env.MY_EMAIL }}
-          message: Auto blog update at $(date)
 
       - name: Make a new directory for publish
         run: mkdir ../blog-publish
