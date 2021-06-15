@@ -97,7 +97,7 @@ function parseMarkdown(postName, markdownStr) {
         for (let token of _tokens) {
             if (token.type === 'image') {
                 token.attrs[0][1] = join('/posts', postName, token.attrs[0][1]);
-                thumbnail |= token.attrs[0][1];
+                thumbnail = thumbnail || token.attrs[0][1];
             }
             if (token.type === 'inline') recursiveUpdate(token.children);
         }
