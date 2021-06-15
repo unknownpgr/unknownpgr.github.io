@@ -4,8 +4,8 @@ $breakpoint-desktop-min: 1024px;
 
 // Colors
 $color-text-default: #515151;
-$color-text-dark: $color-text-default * 0.6;
-$color-text-light: $color-text-default * 1.6;
+$color-text-dark: color.scale($color-text-default, $lightness: -40%);
+$color-text-light: color.scale($color-text-default, $lightness: +40%);
 $color-text-lighter: #d8d8d8;
 $color-text-a: #007bff;
 
