@@ -1,0 +1,26 @@
+name: 'Commit'
+description: 'Commit all files'
+inputs:
+  email:
+    description: 'Email of the user'
+    required: true
+  name:
+    description: 'Name of the user'
+    required: true
+  message:
+    description: 'Commit message'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - run: git add .
+      shell: bash
+    - run: |
+        if [[ `git status --porcelain` ]]; then
+          git config --local user.email ${{ inputs.email }}
+          git config --local user.name ${{ inputs.name }}
+          git add .
+          git commit -m "${{ inputs.message }}"
+        fi
+      shell: bash

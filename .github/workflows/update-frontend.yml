@@ -2,7 +2,7 @@ name: Github blog auto update
 
 on:
   push:
-    branches: [master]
+    branches: [master, test]
 
 jobs:
   update-frontend:

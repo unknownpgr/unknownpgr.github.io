@@ -19,7 +19,7 @@ jobs:
           fetch-depth: 0 # otherwise, you will be failed to push refs to dest repo
 
       - name: Update posts
-        uses: ./.github/actions/commit
+        uses: ./.github/actions/run-backend
         with:
           name: ${{ env.MY_NAME }}
           email: ${{ env.MY_EMAIL }}
