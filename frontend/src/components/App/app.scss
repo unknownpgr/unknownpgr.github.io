@@ -37,9 +37,12 @@
 
 .google-ads {
 	text-align: center;
-	margin: 4rem auto;
-	max-width: 800px;
-	min-width: 200px;
+	margin: 4rem;
+
+	ins {
+		max-width: 800px;
+		margin: 0 auto;
+	}
 }
 
 footer {
