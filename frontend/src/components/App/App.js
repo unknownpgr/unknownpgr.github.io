@@ -16,6 +16,7 @@ import Categories from "components/Categories/Categories";
 
 // Import constants
 import Constants from "constants/constants";
+import NoMatchPage from "components/NoMatchPage/NoMatchPage";
 
 console.log("Powered by : React " + React.version);
 
@@ -49,20 +50,22 @@ function App() {
               <Nav />
             </div>
             <hr className="hr-full"></hr>
-            <Route exact path="/O_o" >
-              <AboutPage />
-            </Route>
-            <Route>
-              <div className="container container-main">
-                <Switch>
-                  <Route exact path="/" component={PostListPage} />
-                  <Route path="/categories/:category" component={CategoryPage} />
-                  <Route exect path="/categories" component={Categories} />
-                  <Route path="/lab" component={LabPage} />
-                </Switch>
-              </div>
-            </Route>
-            <Route component={NoMatchPage} />
+            <Switch>
+              <Route exact path="/O_o" >
+                <AboutPage />
+              </Route>
+              <Route>
+                <div className="container container-main">
+                  <Switch>
+                    <Route exact path="/" component={PostListPage} />
+                    <Route path="/categories/:category" component={CategoryPage} />
+                    <Route exect path="/categories" component={Categories} />
+                    <Route path="/lab" component={LabPage} />
+                    <Route component={NoMatchPage} />
+                  </Switch>
+                </div>
+              </Route>
+            </Switch>
           </Route>
         </Switch>
       </BrowserRouter>
@@ -95,10 +98,6 @@ function App() {
       </footer>
     </>
   );
-}
-
-function NoMatchPage() {
-  return <div>Path is unregistered route.</div>;
 }
 
 function CategoryPage(props) {
