@@ -1,0 +1,47 @@
+name: 'Backend run'
+description: 'Init backend, run blog.js, and push updated posts'
+inputs:
+  email:
+    description: 'Email of the user'
+    required: true
+  name:
+    description: 'Name of the user'
+    required: true
+  message:
+    description: 'Commit message'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Cache node modules
+      uses: actions/cache@v1
+      with:
+        path: backend/node_modules
+        key: ${{ runner.OS }}-update-${{ hashFiles('backend/yarn.lock') }}
+
+    - name: Initialize backend
+      working-directory: backend
+      run: yarn install
+      shell: bash
+
+    - name: Update posts
+      working-directory: backend
+      run: node blog.js
+      shell: bash
+
+    - name: Commit updated posts
+      run: |
+        git add .
+        if [[ `git status --porcelain` ]]; then
+          git config --local user.email ${{ inputs.email }}
+          git config --local user.name ${{ inputs.email }}
+          git add .
+          git commit -m "Auto blog update at $(date)"
+        fi
+      shell: bash
+
+    - name: Push updated posts
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.ACCESS_TOKEN }}
