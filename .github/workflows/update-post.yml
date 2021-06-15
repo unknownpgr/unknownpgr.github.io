@@ -18,11 +18,34 @@ jobs:
           persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
           fetch-depth: 0 # otherwise, you will be failed to push refs to dest repo
 
-      - name: Update posts
-        uses: ./.github/actions/run-backend
+      - name: Cache node modules
+        uses: actions/cache@v1
         with:
-          name: ${{ env.MY_NAME }}
-          email: ${{ env.MY_EMAIL }}
+          path: backend/node_modules
+          key: ${{ runner.OS }}-update-${{ hashFiles('backend/yarn.lock') }}
+
+      - name: Initialize backend
+        working-directory: backend
+        run: yarn install
+
+      - name: Update posts
+        working-directory: backend
+        run: node blog.js
+
+      - name: Commit updated posts
+        run: |
+          git add .
+          if [[ `git status --porcelain` ]]; then
+            git config --local user.email ${{env.MY_EMAIL}}
+            git config --local user.name ${{env.MY_NAME}}
+            git add .
+            git commit -m "Auto blog update at $(date)"
+          fi
+
+      - name: Push updated posts
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.ACCESS_TOKEN }}
 
       - name: Make a new directory for publish
         run: mkdir ../blog-publish
