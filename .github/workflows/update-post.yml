@@ -1,0 +1,77 @@
+name: Github blog auto update
+
+on:
+  push:
+    branches: [master, test]
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    if: "contains(github.event.head_commit.message, 'post')"
+    env:
+      MY_NAME: unknownpgr
+      MY_EMAIL: unknownpgr@gmail.com
+
+    steps:
+      # Run checkout
+      - uses: actions/checkout@v2
+        with:
+          persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
+          fetch-depth: 0 # otherwise, you will be failed to push refs to dest repo
+
+      - name: Cache node modules
+        uses: actions/cache@v1
+        with:
+          path: backend/node_modules
+          key: ${{ runner.OS }}-update-${{ hashFiles('backend/yarn.lock') }}
+
+      - name: Initialize backend
+        working-directory: backend
+        run: yarn install
+
+      - name: Update posts
+        working-directory: backend
+        run: node blog.js
+
+      - name: Commit updated posts
+        uses: ./.github/actions/commit
+        with:
+          name: ${{ env.MY_NAME }}
+          email: ${{ env.MY_EMAIL }}
+          message: Auto blog update at $(date)
+
+      - name: Push update
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.ACCESS_TOKEN }}
+
+      - name: Make a new directory
+        run: mkdir ../blog-publish
+
+      - name: Git init
+        working-directory: ../blog-publish
+        run: |
+          git init
+          git remote add origin https://github.com/${{env.MY_NAME}}/${{env.MY_NAME}}.github.io.git
+          git pull origin master
+
+      - name: Copy posts
+        run: |
+          rm -rf ../blog-publish/*
+          yes | cp -rf  backend/build/* ../blog-publish
+          echo "Copied."
+          ls ../blog-publish -al
+
+      - name: Commit
+        working-directory: ../blog-publish
+        run: |
+          git config --global user.email ${{env.MY_EMAIL}};
+          git config --global user.name ${{env.MY_NAME}};
+          git add .
+          git diff-index --quiet HEAD || git commit -m "Update blog at $(date).";
+          remote_repo="https://${MY_NAME}:${{ secrets.ACCESS_TOKEN }}@github.com/${{env.MY_NAME}}/${{env.MY_NAME}}.github.io.git"
+          git push "${remote_repo}" HEAD:master;
+
+      - name: Update fail
+        run: 'curl -X POST -H ''Content-type: application/json'' --data ''{"text":"Github blog update failed."}'' "${{secrets.SLACK_KEY}}"'
+        if: failure()
