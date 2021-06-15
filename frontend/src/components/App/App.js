@@ -68,17 +68,17 @@ function App() {
             </Switch>
           </Route>
         </Switch>
+        <div className="google-ads">
+          <GoogleAds>
+            <ins class="adsbygoogle"
+              style={{ display: 'block' }}
+              data-ad-client="ca-pub-5695206410217978"
+              data-ad-slot="3086325939"
+              data-ad-format="auto"
+              data-full-width-responsive="true"></ins>
+          </GoogleAds>
+        </div>
       </BrowserRouter>
-      <div className="google-ads">
-        <GoogleAds>
-          <ins class="adsbygoogle"
-            style={{ display: 'block' }}
-            data-ad-client="ca-pub-5695206410217978"
-            data-ad-slot="3086325939"
-            data-ad-format="auto"
-            data-full-width-responsive="true"></ins>
-        </GoogleAds>
-      </div>
       <footer className="page-footer">
         <div className="footer-inner">
           <div className="logos">
