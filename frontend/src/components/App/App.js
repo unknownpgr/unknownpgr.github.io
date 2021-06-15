@@ -62,11 +62,11 @@ function App() {
                 </Switch>
               </div>
             </Route>
+            <Route component={NoMatchPage} />
           </Route>
-          <Route component={NoMatchPage} />
         </Switch>
       </BrowserRouter>
-      <div>
+      <div className="google-ads">
         <GoogleAds>
           <ins class="adsbygoogle"
             style={{ display: 'block' }}
