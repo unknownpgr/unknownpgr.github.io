@@ -1,6 +1,7 @@
 ---
 title: 공인 IP 주소는 어떻게 할당되는가?
 category: computer structure
+date: 2021-06-18T18:49:15.638Z
 
 ---
 
