@@ -295,3 +295,4 @@ category: this_is_category.
 ## 2021 / 06 / 19
 
 - 빌드 설정 실수한 것 수정
+  - gitignore에서 build 삭제
