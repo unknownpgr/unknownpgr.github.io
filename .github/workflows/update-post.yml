@@ -60,9 +60,10 @@ jobs:
       - name: Copy posts
         run: |
           rm -rf ../blog-publish/*
+          yes | cp -rf frontend/build/* ../blog-publish
           yes | cp -rf  backend/build/* ../blog-publish
+          yes | cp -rf root/. ../blog-publish
           echo "Copied."
-          ls ../blog-publish -al
 
       - name: Publish blog
         working-directory: ../blog-publish
