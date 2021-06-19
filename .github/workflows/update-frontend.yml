@@ -42,6 +42,10 @@ jobs:
         working-directory: backend
         run: node blog.js
 
+      - name: Build blog
+        working-directory: frontend
+        run: yarn build
+
       - name: Commit updated posts
         run: |
           git add .
@@ -56,10 +60,6 @@ jobs:
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.ACCESS_TOKEN }}
-
-      - name: Build blog
-        working-directory: frontend
-        run: yarn build
 
       - name: Build fail
         run: 'curl -X POST -H ''Content-type: application/json'' --data ''{"text":"Github blog build failed."}'' "${{secrets.SLACK_KEY}}"'
