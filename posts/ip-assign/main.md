@@ -48,7 +48,7 @@ date: 2021-06-18T18:49:15.638Z
 
 1. 모든 IP주소의 초기 소유권은 Internet Assigned Numbers Authority(IANA) 라는 단체가 가지고 있습니다. 이 단체는 각 대륙별로 사용가능한 IP 주소 범위를 할당합니다.
 2. 각 대륙별 주소 관리 기관에서는 다시 각 국가별로 IP 주소 범위를 할당합니다.
-3. 각 국가별 주소 관리 기관에서는 Internet Service Provider (ISP)들에게 IP 주소를 할당해줍니다. 그러므로 ISP는 국가를 대신하여 IP 주소 할당을 할 수 있으며, 따라서 [관리대항자](https://xn--3e0bx5euxnjje69i70af08bea817g.xn--3e0b707e/jsp/business/management/isCurrent.jsp)라고도 합니다.
+3. 각 국가별 주소 관리 기관에서는 Internet Service Provider (ISP)들에게 IP 주소를 할당해줍니다. 그러므로 ISP는 국가를 대신하여 IP 주소 할당을 할 수 있으며, 따라서 [관리대행자](https://xn--3e0bx5euxnjje69i70af08bea817g.xn--3e0b707e/jsp/business/management/isCurrent.jsp)라고도 합니다.
 
 다음으로 이러한 관리대행자가 어떻게 인터넷을 할당하는지 알아보겠습니다.
 
@@ -60,7 +60,7 @@ date: 2021-06-18T18:49:15.638Z
 
 물론 앞서 말한 1:1로 연결되어있다는 것은 논리적으로 그렇다는 것이고, 실제로는 수천만 개나 되는 선들이 전부 연결될 수는 없습니다. 실제로는 아파트의 네트워크 장비실 등에 광통신을 중개할 수 있는 라우터가 장치되어있으며, 외부에서는 물리적으로 단일 회선이 들어와서 내부에서 라우터를 통해서 여러 회선으로 쪼개집니다.
 
-이렇게 물리적으로는 하나의 회선을 공유하지만 논리적으로는 PPP를 구현하기 위한 방법으로 Point to Point Protocol over Ehernet (PPPoE)이라는 기술이 있습니다. 이는 일반적은 ethernet을 이욯하여 PPP를  구현하는 기술입니다.
+이렇게 물리적으로는 하나의 회선을 공유하지만 논리적으로는 PPP를 구현하기 위한 방법으로 Point to Point Protocol over Ehernet (PPPoE)이라는 기술이 있습니다. 이는 일반적인 ethernet을 이욯하여 PPP를  구현하는 기술입니다.
 
 # 결론
 
