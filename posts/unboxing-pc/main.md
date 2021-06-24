@@ -1,6 +1,8 @@
 ---
 title: ASUS MiniPC PN50 언박싱
 category: unboxing
+date: 2021-06-24T15:36:42.501Z
+
 ---
 
  
