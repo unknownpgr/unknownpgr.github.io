@@ -9,8 +9,9 @@ jobs:
     runs-on: ubuntu-latest
     if: contains(github.event.head_commit.message, '[post]')
     env:
-      MY_NAME: unknownpgr
-      MY_EMAIL: unknownpgr@gmail.com
+      USER_NAME: unknownpgr
+      USER_EMAIL: unknownpgr@gmail.com
+      BLOG_URL: unknownpgr.com
 
     steps:
       - uses: actions/checkout@v2
@@ -36,8 +37,8 @@ jobs:
         run: |
           git add .
           if [[ `git status --porcelain` ]]; then
-            git config --local user.email ${{env.MY_EMAIL}}
-            git config --local user.name ${{env.MY_NAME}}
+            git config --local user.email ${{env.USER_EMAIL}}
+            git config --local user.name ${{env.USER_NAME}}
             git add .
             git commit -m "Auto blog update at $(date)"
           fi
@@ -54,7 +55,7 @@ jobs:
         working-directory: ../blog-publish
         run: |
           git init
-          git remote add origin https://github.com/${{env.MY_NAME}}/${{env.MY_NAME}}.github.io.git
+          git remote add origin https://github.com/${{env.USER_NAME}}/${{env.USER_NAME}}.github.io.git
           git pull origin master
 
       - name: Copy posts
@@ -68,13 +69,16 @@ jobs:
       - name: Publish blog
         working-directory: ../blog-publish
         run: |
-          git config --global user.email ${{env.MY_EMAIL}};
-          git config --global user.name ${{env.MY_NAME}};
+          git config --global user.email ${{env.USER_EMAIL}};
+          git config --global user.name ${{env.USER_NAME}};
           git add .
           git diff-index --quiet HEAD || git commit -m "Update blog at $(date).";
-          remote_repo="https://${MY_NAME}:${{ secrets.ACCESS_TOKEN }}@github.com/${{env.MY_NAME}}/${{env.MY_NAME}}.github.io.git"
+          remote_repo="https://${USER_NAME}:${{ secrets.ACCESS_TOKEN }}@github.com/${{env.USER_NAME}}/${{env.USER_NAME}}.github.io.git"
           git push "${remote_repo}" HEAD:master;
 
-      - name: Update fail
+      - name: Update Success
+        run: 'curl -X POST -H ''Content-type: application/json'' --data ''{"text":"Github blog update succeed. ${{env.BLOG_URL}}"}'' "${{secrets.SLACK_KEY}}"'
+
+      - name: Update Fail
         run: 'curl -X POST -H ''Content-type: application/json'' --data ''{"text":"Github blog update failed."}'' "${{secrets.SLACK_KEY}}"'
         if: failure()
