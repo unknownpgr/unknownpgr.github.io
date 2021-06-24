@@ -25,8 +25,8 @@ function App() {
   let redirect = null;
   {
     let param = window.location.search.substr(1);
-    if (param.indexOf("page=") >= 0) {
-      let dest = decodeURIComponent(param.replace("page=", ""));
+    if (param.indexOf("rd=") >= 0) {
+      let dest = decodeURIComponent(param.replace("rd=", ""));
       if (dest.indexOf("/404.html") >= 0) {
         console.log("Ignore redirect to 404 page.");
       } else {

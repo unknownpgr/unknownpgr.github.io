@@ -192,10 +192,7 @@ async function generateRedirection(redirectionPath, meta) {
             <meta property="og:title"       content="${post.title}"/>
             <meta property="og:description" content="Blog of Unknownpgr"/>
             <meta property="og:image"       content="${post.thumbnail}"/>
-
-            <script>
-            window.location.replace("/?page=/posts/${encodeURIComponent(name)}");
-            </script>
+            <script>window.location.replace("/?rd="+encodeURIComponent(location.pathname+location.search+location.hash));</script>
             `
             .replace(/(\r|\n|\t)/g, '')
             .replace(/ +/g, ' ');
