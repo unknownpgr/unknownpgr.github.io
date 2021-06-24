@@ -13,4 +13,4 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Send message
-        run: "curl -X POST -H \'Content-type: application/json\' --data \'{\"text\":\"Github blog updated! : ${{env.URL}}"}\' \"${{secrets.SLACK_KEY}}\""
+        run: "curl -X POST -H 'Content-type: application/json' --data '{\"text\":\"Github blog updated! : ${{env.URL}}"}' \"${{secrets.SLACK_KEY}}\""
