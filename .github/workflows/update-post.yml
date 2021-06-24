@@ -7,7 +7,7 @@ on:
 jobs:
   update-post:
     runs-on: ubuntu-latest
-    if: contains(github.event.head_commit.message, 'post')
+    if: contains(github.event.head_commit.message, '[post]')
     env:
       MY_NAME: unknownpgr
       MY_EMAIL: unknownpgr@gmail.com
