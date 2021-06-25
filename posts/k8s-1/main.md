@@ -113,7 +113,7 @@ Bridged Adapter 모드는 호스트의 어떤 랜카드를 통해 호스트가 �
 
 # 참고문헌
 
-- https://www.nakivo.com/blog/virtualbox-network-setting-guide/
+- [https://www.nakivo.com/blog/virtualbox-network-setting-guide/](https://www.nakivo.com/blog/virtualbox-network-setting-guide/)
   - 가상 머신의 네트워크에 대해 아주 상세히 설명되어있습니다. 가상 머신 뿐만이 아니라 NAT이나 Bridge같은 일반적인 네트워크 개념을 잡기에도 아주 좋은 글이므로 꼭 읽어 보시기를 추천드립니다.
-- https://www.vagrantup.com/docs/index
+- [https://www.vagrantup.com/docs/index](https://www.vagrantup.com/docs/index)
   - 베이그란트 공식 독스.
