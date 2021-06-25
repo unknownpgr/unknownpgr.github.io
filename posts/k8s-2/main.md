@@ -64,7 +64,7 @@ kubelet은 직접 apiserver에 접속해서 PodSpec을 받아올 수도 있지�
 
 쿠버네티스에서는 외부에 노출할 pod들을 service라는 개념으로 관리합니다. Service는 간단히 설명하자면 노드로 들어오는 트래픽을 적절히 관련된 pod으로 보내주는 proxy라 할 수 있습니다. kube-proxy는 바로 이 프록시를 실제로 구현하는 컴포넌트입니다.
 
-### dns
+## dns
 
 마지막으로 dns는 클러스터 내부에서 동적으로 변화하는 pod들을 ip주소가 아니라 domain name을 통해 통신할 수 있도록 해주는 클러스터 내부 dns 서버입니다.
 
@@ -82,9 +82,7 @@ K3S는 쿠버네티스 운영에 필요한 여러 프로세스들을 하나로 �
 
 > 물론 Lens같은 GUI 도구 대신 kubectl이라는 커맨드라인 도구를 통해서 클러스터를 관리할 수도 있습니다.
 
-## Lens를 통해 클러스터 접속하기
-
-### kubeconfig
+## kubeconfig
 
 Lens든 kubectl이든 쿠버네티스의 apiserver에 접속하여 작업을 수행하려면 `kubeconfig` 파일이 필요합니다. `kubeconfig` 파일은 쿠버네티스 클러스터에 접속할 수 있는 인증 정보를 담고 있습니다. 물론 실제 파일 이름이 `kubeconfig`인 것은 아니며 그냥 쿠버네티스 인증을 위한 yaml파일을 그렇게 부르는 것입니다.
 
@@ -124,7 +122,7 @@ kubectl --kubeconfig /etc/rancher/k3s/k3s.yaml get nodes
 export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
 ```
 
-### Lens 연동하기
+## Lens 연동하기
 
 ![image-20210626034050664](imgs/image-20210626034050664.png)
 
