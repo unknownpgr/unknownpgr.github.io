@@ -1,1 +1,0 @@
-window.location.replace("/?rd=" + encodeURIComponent(location.pathname + location.search + location.hash));
