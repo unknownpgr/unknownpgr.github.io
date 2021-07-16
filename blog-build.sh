@@ -1,3 +1,5 @@
+#!/bin/sh
+cd "$(dirname "$0")"
 read -p "Enter commit message : " msg
 git add .
 git commit -m "[build] $msg at $(date +"%Y-%M-%d %H:%M:%S")"
