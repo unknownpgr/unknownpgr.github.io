@@ -1,6 +1,7 @@
 ---
 title: 멱등성 (idempotent)에 대한 설명
 category: development
+date: 2021-07-19T05:36:15.583Z
 
 ---
 
