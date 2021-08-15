@@ -146,7 +146,7 @@ async function processPost(srcDir, dstDir, name) {
         let postDir = join(dstDir, name);
 
         // Check if given post is a hidden post
-        if (name.startsWith('.')) return;
+        if (name.startsWith('.') || name.startsWith('_')) return;
         // Check if given path is a valid directory
         if (!(await fs.stat(postDir)).isDirectory()) return;
         let mdFile = (await fs.readdir(postDir))
