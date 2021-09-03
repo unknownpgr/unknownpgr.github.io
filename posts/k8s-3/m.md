@@ -1,8 +1,7 @@
 ---
 title: '쿠버네티스 클러스터 구축[3] - Traefik'
 category: kubernetes
-date: 
-
+date: 2021-09-03T23:01:24.540Z
 
 ---
 
