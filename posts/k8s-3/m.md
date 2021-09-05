@@ -114,4 +114,14 @@ spec:
       port: 80
 ```
 
-끝! 심플합니다. 위 `whoami.server.unknownpgr.com`은 제 서버의 도메인이며, 적절히 바꾸어 사용하시면 되겠습니다. 위와 같이 설정하면 제 서버로 들어오는 트래픽 중 `whoami.server.unknownpgr.com`으로 들어오는 트래픽은 모두 whoami 서비스로 라우팅됩니다. 위 `match` 부분에는 다양한 함수 및 연산자를 사용할 수 있으며, [Traefik 공식 도큐먼트의 Routing 부분](https://doc.traefik.io/traefik/v2.4/routing/routers/)을 참고하시면 됩니다.  
+끝! 심플합니다. 위 `whoami.server.unknownpgr.com`은 제 서버의 도메인이며, 적절히 바꾸어 사용하시면 되겠습니다. 위와 같이 설정하면 제 서버로 들어오는 트래픽 중 `whoami.server.unknownpgr.com`으로 들어오는 트래픽은 모두 whoami 서비스로 라우팅됩니다. 위 `match` 부분에는 다양한 함수 및 연산자를 사용할 수 있으며, [Traefik 공식 도큐먼트의 Routing 부분](https://doc.traefik.io/traefik/v2.4/routing/routers/)을 참고하시면 됩니다.
+
+# 예외
+
+저는 가상 머신 위에서 작업을 하다 보니 한 머신이 여러 네트워크에 속해 있었고, 따라서 IP가 여러 개 할당되어있는 상태였습니다. 그런데 어쩌다 보니 설정이 잘못되었는지, Traefik service의 external ip가 외부 네트워크가 아닌 내부 네트워크로 잡혀 있어 외부에서는 접근이 불가능하게 되었습니다. 저는 그냥 Lens에서 service의 external ip를 바꿔 주는 방식으로 해결했습니다.
+
+# 참고문헌
+
+Traefik을 설치할 때 정리를 제대로 해 두지 않아 어떤 자료를 참고했는지 기억이 나지 않습니다...
+
+다만 대부분 공식 홈페이지를 참고하였으므로 글 내부의 링크를 모두 참고 문헌으로 간주해주시기 바랍니다.
