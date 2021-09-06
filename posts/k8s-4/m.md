@@ -19,7 +19,7 @@ helm repo update
 helm install cert-manager --namespace cert-manager stable/cert-manager
 ```
 
-그러면 Cert-Manager deployment와 함께 다양한 CRD들이 설정됩니다. 그중 중요한 세 가지 CRD가 있는데, 아래와 같습니다.
+그러면 Cert-Manager Deployment와 함께 다양한 CRD들이 설정됩니다. 그중 중요한 세 가지 CRD가 있는데, 아래와 같습니다.
 
 - Certificate
 - Issuer
@@ -27,7 +27,7 @@ helm install cert-manager --namespace cert-manager stable/cert-manager
 
 ## Certificate
 
-먼저 Certificate란 직역하자면 '증명', 혹은 '증명서' 라는 뜻으로 어떤 사실을 확인해주는 문서를 말합니다. TLS를 구축할 때 certificate라 함은 특정 도메인을 소유하고 있음을 증명하는 전자 증명서로 우리가 흔히 도메인 인증서라고 부르는 바로 그 문서입니다. 이 인증서는 원래 신뢰할 만한 기관에서 각종 검사를 거친 후 발행하는 것이었지만, Let's encrypt와 Certbot을 사용하면 그런 복잡한 절차 없이 자동으로 도메인 인증서를 발급받고 갱신할 수 있습니다.
+먼저 Certificate란 직역하자면 '증명', 혹은 '증명서' 라는 뜻으로 어떤 사실을 확인해주는 문서를 뜻합니다. TLS를 구축할 때 Certificate는 어떤 도메인을 소유하고 있음을 인증해주는 인증서입니다. 인증서는 원래 신뢰할 만한 기관에서 각종 검사를 거친 후 발행하는 것이었지만, Let's encrypt와 Certbot을 사용하면 그런 복잡한 절차 없이 자동으로 도메인 인증서를 발급받고 갱신할 수 있습니다. Let's encrypt는 도메인의 소유를 주장하는 클라이언트에게 토큰을 발급하고, 도메인을 통해 토큰에 접근이 가능한지 확인하는 방식으로 클라이언트의 도메인 소유권을 증명합니다. 이에 대해서는 아래에 자세히 설명하겠습니다.
 
 쿠버네티스에서 Certificate는 아래와 같은 리소스로 표현됩니다.
 
@@ -50,15 +50,15 @@ spec:
 
 이 리소스를 생성하면 아래 설명할 Issuer에 의해 인증 절차가 진행된 후 인증서가 발급됩니다. 그러면 `<SECRET_NAME>` 이라는 이름의 시크릿이 생성되어 거기에 인증서 정보가 저장됩니다.
 
-이때 중요한 부분은 와일드카드 도메인의 설정 방법입니다. 위 Certificate의 `dnsNames` 필드를 보면  `*.server.unknownpgr.com`이라는 부분을 볼 수 있습니다. 이 부분이 바로 와일드카드 도메인을 설정하는 방법으로, 이렇게 애스터리스크를 앞에 붙여 주면 asdf.server.unknownpgr.com과 같은 모든 서브도메인을 한 번에 인증하는 인증서를 발급받을 수 있습니다. 즉, 이 와일드카드 인증서 하나만 발급받아놓으면 서비스를 만들 때 매번 Certificate를 새로 생성할 필요 없이 간단히 관리가 가능해집니다.
+이때 중요한 부분은 와일드카드 도메인의 설정 방법입니다. 위 Certificate의 `dnsNames` 필드를 보면  `*.server.unknownpgr.com`이라는 부분을 볼 수 있습니다. 이 부분이 바로 와일드카드 도메인을 설정하는 방법으로, 이렇게 애스터리스크를 앞에 붙여 주면 `asdf.server.unknownpgr.com`과 같은 모든 서브도메인을 한 번에 인증하는 인증서를 발급받을 수 있습니다. 즉, 이 와일드카드 인증서 하나만 발급받아놓으면 서비스를 만들 때 매번 Certificate를 새로 생성할 필요 없이 간단히 관리가 가능해집니다.
 
 다만 이런 편리함이 있어서인지 와일드카드 도메인 인증서를 발급받는 것은 쉽지만은 않습니다. 아래 자세히 설명하겠습니다.
 
 ## Issuer
 
-Issuer는 Certificate Authorities(CA), 즉 인증 기관을 나타내는 리소스입니다. Issuer는 Certificate를 발급하는 주체이며, Certificate를 발급하기 위해, 즉 자신이 특정 도메인을 소유했음을 증명하기 위해 특수한 과정을 수행하는데 이를 Challenge라 합니다.
+Issuer는 Certificate Authorities(CA), 즉 인증 기관을 나타내는 리소스입니다. Issuer는 Certificate를 발급하는 주체이며, 우리가 사용할 CA인 Let's Encrypt는 앞서 설명한 바와 같이 Certificate를 발급하기 위해, 즉 자신이 특정 도메인을 소유했음을 증명하기 위해 토큰을 발급하고 검증하는 절차를 수행하는데 이를 Challenge라 합니다.
 
-Challenge에는 다양한 종류가 있습니다만 대표적으로 `http-01` Challenge와 `dns-01` Challenge가 사용됩니다.
+Challenge에는 다양한 종류가 있습니다. 그 중에서도 `http-01` Challenge와 `dns-01` Challenge가 주로 사용됩니다.
 
 > 쿠버네티스에서는 Challenge 역시 하나의 리소스로 표현되기는 합니다만 사용자가 직접 생성하지 않기 때문에 넘어가겠습니다.
 
@@ -70,7 +70,9 @@ Challenge에는 다양한 종류가 있습니다만 대표적으로 `http-01` Ch
 
 이 Challenge는 비교적 복잡합니다. 만약 도메인을 완전히 소유하고 있다면, 그 도메인에 여러가지 레코드를 설정할 수 있을 것입니다. `dns-01` Challenge는 이를 이용합니다. 이번에는 `http-01` 방식과 마찬가지로 토큰을 발급받은 후 이 토큰을 `_acme-challenge.<YOUR_DOMAIN>`라는 이름의 TXT 레코드 안에 집어넣습니다. 이후 Let's encrypt에서 DNS 쿼리를 수행하여 실제로 이러한 TXT 레코드가 존재하고 그 내용이 자신이 발급한 토큰과 일치함이 확인되면 인증서를 발급받을 수 있습니다.
 
-그런데 이렇게만 보면 `dns-01` 도 별로 복잡해보이지 않습니다. 하지만 위 내용은 모두 사람이 직접 수행하는 것이 아니라 Certbot이라는 프로그램이 대신 수행해줍니다. 사람은 단지 이메일, 도메인 등 간단한 정보만을 Certbot에 넘겨주면 됩니다. 이때 `http-01`은 자동화하기가 비교적 편하지만, `dns-01`은 DNS provider가 DNS 레코드를 수정할 수 있는 API를 제공하는 경우에만 사용할 수 있습니다. 그래서 설정이 상당히 까다롭습니다. 그런데 와일드카드 도메인은 오직 `dns-01` 방식을 사용할 경우에만 발급받을 수 있습니다. 그래서 저는 `dns-01` 방식을 어쩔 수 없이 사용하였습니다.
+그런데 이렇게만 보면 `dns-01` 도 별로 복잡해보이지 않습니다. 하지만 위 절차는 사람이 직접 수행하는 것이 아니라 Certbot이라는 프로그램이 대신 수행합니다. 사람은 단지 이메일, 도메인 등 간단한 정보만을 Certbot에 넘겨주기만 하면 됩니다. 이때 `http-01`은 자동화하기가 비교적 편하지만, `dns-01`은 DNS provider가 DNS 레코드를 수정할 수 있는 API를 제공하는 경우에만 사용할 수 있습니다. 그래서 설정이 상당히 까다롭습니다.
+
+그런데 와일드카드 도메인은 오직 `dns-01` 방식을 사용할 경우에만 발급받을 수 있습니다. 그래서 까다롭지만 `dns-01` 방식을 사용하게 되었습니다.
 
 > 아래 설명은 AWS Route53 DNS Provider를 기준으로 합니다. Cert-Manager 공식 홈페이지에 [여러가지 DNS Provider에 따른  `dns-01` Challenge 설정 방법](https://cert-manager.io/docs/configuration/acme/dns01/)이 나와 있습니다.
 
@@ -139,9 +141,30 @@ spec:
               key: secret-access-key
 ```
 
- 위 Issuer를 보면 server 부분이 두 줄이며 하나가 주석처리되어있습니다. 이렇게 한 이유는 Let's encrypt 서버의 하루 인증 횟수에 제한이 있기 때문입니다. 맨 처음에 인증을 수행하다 보면 실패하는 경우가 많으므로 횟수 제한이 없는 staging 서버를 사용하여 여러 번 실패해본 후, 성공적으로 staging 인증서를 발급받고 나면 위 주석 처리한 부분만 바꾸어서 production용 인증서를 발급받으면 됩니다. (staging certificate는 브라우저에서 self-signed certificate와 마찬가지로 신뢰할 수 없다고 뜹니다.)
+Issure를 생성할 때에는 Let's Encrypt 인증 횟수에 제한이 있다는 점을 유의해야 합니다. Cert-Manager를 처음 사용해보는 경우 설정을 실수하여 인증에 실패하는 경우가 많습니다. 그러므로 위와 같이 횟수 제한이 없는 staging 서버를 사용하여 연습해본 뒤, staging 서버에서 인증서 발급을 성공하면 아래 주석 처리해둔 production 서버로 바꾸어 새로 인증서를 발급받으면 됩니다.
 
-이후에는 위 Certificate 부분을 참고하여 Certificate를 생성하면 됩니다.
+이후에는 위 Certificate 부분을 참고하여 Certificate를 생성하면 됩니다. 예를 들어 아래와 같이 위 Issure를 이용하는 Certificate를 생성할 수 있습니다.
+
+```yaml
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: wildcard-certificate
+spec:
+  secretName: cert-wildcard
+  dnsNames:
+  - server.unknownpgr.com
+  - '*.server.unknownpgr.com'
+  issuerRef:
+    name: le-wildcard-issuer
+    kind: Issuer
+```
+
+어떤 경우 Issure 서버를 staging에서 production으로 바꾸었는데도 브라우저에서 staging 인증서로 표시될 수도 있습니다. 이는 기존 인증서가 남아 있어서 그런 것입니다. 그럴 때에는 Certificate가 생성한 Secret을 삭제해주면 (위 예시에서는 cert-wildcard) 곧 인증이 새로 이루어지고 올바른 인증서가 발급됩니다.
+
+단, 이렇게 했음에도 불구하고 브라우저에서 그대로 staging 인증서가 뜨는 경우도 있었습니다. 아마도 브라우저에서 인증서를 캐싱한 것으로 보입니다. 이런 경우에는 시크릿 탭을 통해 접속해보면 정상적으로 표시되는 것을 확인할 수 있었습니다. 조금만 기다려주면 원래 브라우저에서도 인증서가 업데이트됩니다.
+
+> Staging 서버에서 발급받은 인증서는 self-signed 인증서와 마찬가지로 신뢰할 수 없다고 표시됩니다. 그러므로 실제로 서비스를 배포할 때에는 사용할 수 없습니다.
 
 ## ClusterIssuer
 
@@ -167,6 +190,37 @@ spec:
       port: 80
   tls:
     secretName: cert-wildcard
+```
+
+### Default Certificate
+
+그런데 Issure는 ClusterIssurer가 있어서 한 번 만들어둔 후 여러 네임스페이스에서 사용할 수 있지만, Certificate는 namespaced resource이므로 한 개 네임스페이스에서만 사용할 수 있습니다. 그래서 wildcard domain을 사용하는 경우 모든 네임스페이스에 같은 Certificate를 생성해주어야 하는 번거로움이 있습니다. 그런 경우 아래와 같이 default certificate를 저장하는 TLSStore를 생성해주고 IngressRoute를 생성할 때 tls 옵션을 빈 오브젝트로 설정하면 해당 IngressRoute에 default certificate가 적용됩니다.
+
+```yaml
+apiVersion: traefik.containo.us/v1alpha1
+kind: TLSStore
+metadata:
+  name: default
+  namespace: default
+spec:
+  defaultCertificate:
+    secretName: cert-wildcard
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: ingress-whoami
+spec:
+  entryPoints:
+    - websecure
+  routes:
+  - match: Host(`whoami.your.domain.com`)
+    kind: Rule
+    services:
+    - name : whoami
+      port: 80
+  # 다음과 같이 tls 옵션을 빈 오브젝트로 주면 default certificate가 적용됩니다.
+  tls: {}
 ```
 
 
