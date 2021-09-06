@@ -196,6 +196,8 @@ spec:
 
 그런데 Issure는 ClusterIssurer가 있어서 한 번 만들어둔 후 여러 네임스페이스에서 사용할 수 있지만, Certificate는 namespaced resource이므로 한 개 네임스페이스에서만 사용할 수 있습니다. 그래서 wildcard domain을 사용하는 경우 모든 네임스페이스에 같은 Certificate를 생성해주어야 하는 번거로움이 있습니다. 그런 경우 아래와 같이 default certificate를 저장하는 TLSStore를 생성해주고 IngressRoute를 생성할 때 tls 옵션을 빈 오브젝트로 설정하면 해당 IngressRoute에 default certificate가 적용됩니다.
 
+> TLSStore는 겉보기에는 여러 개 만들 수 있을 것처럼 보입니다. 그러나 사실 default certificate 설정을 위한, `default`라는 이름을 가지는 것 하나만을 생성할 수 있습니다. 여러 네임스페이스에  `default` 라는 이름을 가지는 TLSStore를 여러 개 생성하는 것이 가능하기는 하지만, 그럴 경우 그냥 그 중 하나가 랜덤하게 선택되는 방식으로 작동합니다.
+
 ```yaml
 apiVersion: traefik.containo.us/v1alpha1
 kind: TLSStore
@@ -232,3 +234,4 @@ spec:
 - [https://www.padok.fr/en/blog/traefik-kubernetes-certmanager](https://www.padok.fr/en/blog/traefik-kubernetes-certmanager)
 - [https://blog.devgenius.io/quickstart-with-traefik-v2-on-kubernetes-e6dff0d65216](https://blog.devgenius.io/quickstart-with-traefik-v2-on-kubernetes-e6dff0d65216)
 - [https://doc.traefik.io/traefik/https/acme/](https://doc.traefik.io/traefik/https/acme/)
+- [https://doc.traefik.io/traefik/routing/providers/kubernetes-crd/#kind-serverstransport](https://doc.traefik.io/traefik/routing/providers/kubernetes-crd/#kind-serverstransport)
