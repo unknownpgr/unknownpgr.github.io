@@ -1,8 +1,7 @@
 ---
-title: '데이터베이스 최적화 방법'
-category: Database
-date: 
-
+title: 데이터베이스 최적화 방법
+category: database
+date: 2021-09-14T09:29:21.078Z
 
 ---
 
