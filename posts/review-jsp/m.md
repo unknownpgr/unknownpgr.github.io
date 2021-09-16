@@ -1,7 +1,7 @@
 ---
 title: '개발자가 마주치는 진짜 문제들[2]'
 category: development
-date: 
+date: 2021-09-16T01:20:31.668Z
 
 ---
 
