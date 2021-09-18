@@ -1,5 +1,5 @@
 ---
-title: '쿠버네티스 클러스터 구축[5] - Multi-Node
+title: 쿠버네티스 클러스터 구축[5] - Multi-Node
 category: kubernetes
 
 ---
