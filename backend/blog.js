@@ -29,6 +29,14 @@ const write = fs.writeFile;
 // Promisified ncp
 const pncp = (src, dst) => new Promise((res, rej) => ncp(src, dst, (err) => { err ? rej(err) : res(); }));
 
+// Constants
+const ROOT = 'https://unknownpgr.com/';
+const PATH_BUILD = join(__dirname, 'build');
+const PATH_SRC = join(__dirname, '..', 'posts');
+const PATH_DST = join(PATH_BUILD, 'posts');
+const PATH_SITEMAP = join(PATH_BUILD, 'sitemap.xml');
+const PATH_META = join(PATH_BUILD, 'meta.json');
+
 // Split post into YAML formatter part and markdown part.
 // Pure function
 function parseRawPostString(src) {
@@ -168,20 +176,30 @@ async function processPost(srcDir, dstDir, name) {
         let { formatter, markdownStr, html, thumbnail, toc } = parsePost(name, rawPostStr);
 
         // Update post file
-        write(join(srcDir, name, path.basename(mdFile)), '---\n' + yaml.dump(formatter) + '\n---' + markdownStr);
+        await write(join(srcDir, name, path.basename(mdFile)), '---\n' + yaml.dump(formatter) + '\n---' + markdownStr);
         // Write generated html, table of contents
-        write(join(postDir, 'post.html'), html, 'utf-8');
-        write(join(postDir, 'toc.json'), JSON.stringify(toc), 'utf-8');
+        await write(join(postDir, 'post.html'), html, 'utf-8');
+        await write(join(postDir, 'toc.json'), JSON.stringify(toc), 'utf-8');
         // Generate thumbnail files
-        try {
-            // Notice that thumbnaile file may not have extenstion.
-            const resizedThumbnail = "thumbnail." + thumbnail;
-            await resize(thumbnail, resizedThumbnail);
-            thumbnail = resizedThumbnail;
-        } catch { }
+        if (thumbnail) {
+            try {
+                // Notice that thumbnaile file may not have extenstion.
+                const { dir, base, ext } = path.parse(thumbnail);
+                if (!ext) throw new Error("No extension");
+                const newName = path.join(dir, `thumbnail.${base}`);
+                const result = await resize(join(PATH_BUILD, thumbnail), join(PATH_BUILD, newName));
+                if (result === 'Fail') throw new Error("Worker side error");
+                thumbnail = newName;
+            } catch (e) {
+                console.log(`Image ${thumbnail} is not converted due to error below.`);
+                console.log(e);
+            }
+        }
 
         // Remove markdown file
         fs.unlink(mdFile);
+
+        console.log(`Post ${name} successfully processed.`);
 
         // Return metadata
         return { ...formatter, name, thumbnail };
@@ -210,15 +228,6 @@ async function generateRedirection(redirectionPath, meta) {
 }
 
 async function main() {
-
-    const ROOT = 'https://unknownpgr.com/';
-
-    const PATH_BUILD = join(__dirname, 'build');
-    const PATH_SRC = join(__dirname, '..', 'posts');
-    const PATH_DST = join(PATH_BUILD, 'posts');
-    const PATH_SITEMAP = join(PATH_BUILD, 'sitemap.xml');
-    const PATH_META = join(PATH_BUILD, 'meta.json');
-
     // Delete existing data
     try {
         // `rmdir` commmand with recursive option equires node version > 12
@@ -255,7 +264,9 @@ async function main() {
     // Compile them and save compiled results
     const postList = await fs.readdir(PATH_DST);
     const tasks = postList.map(name => processPost(PATH_SRC, PATH_DST, name));
+    console.log('Task array constructed.');
     let postData = (await Promise.all(tasks)).filter(x => x);
+    console.log('All post were processed.');
 
     // Sort the metadata by the date and convert it to a dictionary.
     // Actually, items in a dictionary should not have an order.
@@ -263,13 +274,15 @@ async function main() {
     let meta = {};
     postData = postData.sort((a, b) => b.date - a.date);
     postData.forEach(data => meta[data.name] = data);
+    console.log("Metadata constructed :");
+    console.log(meta);
 
     // Write the metadata to file
-    write(PATH_META, JSON.stringify(meta), 'utf-8');
+    await write(PATH_META, JSON.stringify(meta), 'utf-8');
 
     // Generate sitemap from metadata
     let sitemap = getSitemap(ROOT, meta);
-    write(PATH_SITEMAP, sitemap);
+    await write(PATH_SITEMAP, sitemap);
     console.log('Post update finished!');
 
     // generate redirection page, because github page cannot handle spa.
