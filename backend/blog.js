@@ -20,6 +20,7 @@ const markdown = require('markdown-it')({
 });
 markdown.use(ketex);
 const getSitemap = require('./libs/sitemap');
+const resize = require('./libs/resizer');
 
 // Alias for frequently used functions
 const { join } = path;
@@ -171,6 +172,13 @@ async function processPost(srcDir, dstDir, name) {
         // Write generated html, table of contents
         write(join(postDir, 'post.html'), html, 'utf-8');
         write(join(postDir, 'toc.json'), JSON.stringify(toc), 'utf-8');
+        // Generate thumbnail files
+        try {
+            // Notice that thumbnaile file may not have extenstion.
+            const resizedThumbnail = "thumbnail." + thumbnail;
+            await resize(thumbnail, resizedThumbnail);
+            thumbnail = resizedThumbnail;
+        } catch { }
 
         // Remove markdown file
         fs.unlink(mdFile);
