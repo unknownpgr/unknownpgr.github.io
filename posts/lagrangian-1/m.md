@@ -9,7 +9,7 @@ date: 2020-10-22T22:30:26.341Z
 
 어쨌든 이번에 이걸 다시 써먹을 일이 생겨서 이번에 한 번 정리해두고자 합니다.
 
-![이중진자(Double Pendulum) : 네이버 블로그](ZR6N6ZUr2XvucohwT3cvKEYpnvE5EmDFmLdFotPQEGN5KvMTV9h0NtSlOJg9JB1g9IAbrwSQm90ol5WShaOFrurNtUfGm7OGfr9ZQOvpkPhgu5itGOONpmK1Yfq6_rODnhPrteRUMPDZO5KnTpISDxTOsOPj35b3DF77Q9lVeWzdLV2z0pgtVw)
+![이중진자(Double Pendulum) : 네이버 블로그](pendulumn.gif)
 
 # 변분법
 
