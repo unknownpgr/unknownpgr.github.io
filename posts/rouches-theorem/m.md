@@ -1,6 +1,6 @@
 ---
 title: 'Rouché's Theorem을 이용한 근의 개수 찾기'
-category: math science
+category: 'math science'
 date: 
 
 ---
