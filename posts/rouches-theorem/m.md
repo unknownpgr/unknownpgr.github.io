@@ -1,7 +1,7 @@
 ---
-title: "Rouché's Theorem을 이용한 근의 개수 찾기"
-category: "math science"
-date: 
+title: Rouché's Theorem을 이용한 근의 개수 찾기
+category: math science
+date: 2021-10-10T05:13:19.949Z
 
 ---
 
