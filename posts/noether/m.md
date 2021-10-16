@@ -1,7 +1,7 @@
 ---
-title: "Noether's Theorem에 대한 명쾌한 설명"
+title: Noether's Theorem에 대한 명쾌한 설명
 category: math/science
-date: 
+date: 2021-10-16T16:33:15.940Z
 
 ---
 
