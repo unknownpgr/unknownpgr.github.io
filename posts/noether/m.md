@@ -1,6 +1,6 @@
 ---
 title: "Noether's Theorem에 대한 명쾌한 설명"
-category: math/science
+category: math science
 date: 
 
 ---
