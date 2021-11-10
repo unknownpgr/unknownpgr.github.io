@@ -1,7 +1,13 @@
 ---
+<<<<<<< HEAD
 title: "Noether's Theorem에 대한 명쾌한 설명"
 category: math science
 date: 
+=======
+title: Noether's Theorem에 대한 명쾌한 설명
+category: math/science
+date: 2021-10-16T16:33:15.940Z
+>>>>>>> 579142b64e4320224132b066449066945b8ad13b
 
 ---
 
