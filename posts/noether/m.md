@@ -1,14 +1,7 @@
 ---
-<<<<<<< HEAD
-title: "Noether's Theorem에 대한 명쾌한 설명"
-category: math science
-date: 
-=======
 title: Noether's Theorem에 대한 명쾌한 설명
-category: math/science
+category: math science
 date: 2021-10-16T16:33:15.940Z
->>>>>>> 579142b64e4320224132b066449066945b8ad13b
-
 ---
 
 저는 옛날, 그러니까 고등학생 때부터 뇌터의 정리(Noether's Theorem)가 대체 어떻게 성립하는지가 정말 궁금했었습니다. 그런데 얼마 전 뇌터의 정리를 명쾌하게 설명해주는 영상을 찾았습니다. 그래서 그 내용을 정리해두고자 합니다.
@@ -49,7 +42,7 @@ Disclaimer: 이 부분은 수학적으로 엄밀한 증명이라기보다는 어
 
 이때 coordinate라 함은 해밀토니언에서의 일반화 좌표를 말하는 것입니다. 해밀토니언과 라그랑지언은 비슷한 개념이므로 라그랑지언으로 생각해도 무방할 것으로 보입니다. (일반화 좌표와 라그랑주 역학에 대해서는 이전에 [라그랑주 역학 시리즈](/posts/lagrangian-1)에서 다뤘었습니다.)
 
-예컨대 중력 및 공기저항이 없는 무한히 넓은 공간상에서 움직이는 입자를 고려해보겠습니다. 이 입자는 운동 에너지 $\frac{mv^2}{2}$ 를 가지며 위치 에너지는 가지지  않습니다. 라그랑지언은 $L=T-V$ 로 주어지므로 이 경우 $L=T=\frac{mv^2}{2}$ 입니다. 이때 이 입자의 라그랑지언에는 입자의 위치가 등장하지 않습니다. 그러므로 입자의 위치 $x, y$는 이 시스템에 대하여 cyclic coordinate가 됩니다.
+예컨대 중력 및 공기저항이 없는 무한히 넓은 공간상에서 움직이는 입자를 고려해보겠습니다. 이 입자는 운동 에너지 $\frac{mv^2}{2}$ 를 가지며 위치 에너지는 가지지 않습니다. 라그랑지언은 $L=T-V$ 로 주어지므로 이 경우 $L=T=\frac{mv^2}{2}$ 입니다. 이때 이 입자의 라그랑지언에는 입자의 위치가 등장하지 않습니다. 그러므로 입자의 위치 $x, y$는 이 시스템에 대하여 cyclic coordinate가 됩니다.
 
 ## Cyclic coordinate와 대칭성
 
@@ -60,13 +53,17 @@ Disclaimer: 이 부분은 수학적으로 엄밀한 증명이라기보다는 어
 ## 대칭성과 보존 법칙
 
 이제 대칭성과 보존 법칙을 연결해보겠습니다. 먼저 오일러-라그랑주 방정식(Euler-Lagrange equation) 은 아래와 같습니다.
+
 $$
 \frac{\partial L}{\partial q}-\frac{d}{dt}\left(\frac{\partial L}{\partial \dot q}\right)=0
 $$
+
 이때 이 일반화 좌표 $q$ 가 cyclic coordinate라 함은 $L$ 이 $q$ 에 독립이라는 의미입니다. 그러므로 앞의 항이 0이 되고, 따라서 아래와 같은 결과를 얻습니다.
+
 $$
 \frac{d}{dt}\left(\frac{\partial L}{\partial \dot q}\right)=0
 $$
+
 이는 어떤 물리량 $\left(\frac{\partial L}{\partial \dot q}\right)$의 시간에 따른 변화 $\left(\frac{d}{dt}\right)$가 0, 즉 물리량이 불변한다는 의미이며 곧 보존법칙을 의미합니다.
 
 > 이때 $\frac{\partial L}{\partial q}=0$ 이라 하더라도 $\frac{\partial L}{\partial \dot q}\neq 0$ 일 수 있음에 주의해야 합니다.
@@ -82,6 +79,7 @@ $$
 > $q$와 $\dot q$ 는 라그랑주 역학에서는 서로 무관한 것으로 간주한다는 점에 주의해야 합니다.
 
 그러므로 이 일반화 좌표, 즉 각도는 cyclic coordinate이며 따라서 이 시스템은 연속적인 회전 대칭성을 갖습니다. 그리고 이에 따라 오일러-라그랑주 방정식을 전개해보면 아래와 같이 됩니다.
+
 $$
 \frac{d}{dt}\frac{\partial \frac{mr^2\dot q^2}{2}-E_p}{\partial \dot q}
            -\frac{\partial \frac{mr^2\dot q^2}{2}-E_p}{\partial q}=0\\
@@ -90,5 +88,5 @@ $$
 \leftrightarrow \frac{d}{dt}mr^2\dot q=0\\
 \leftrightarrow \frac{d}{dt}mrv=0
 $$
-그런데 $mrv$ 는 곧 각운동량입니다. 그러므로 위 식은 이 시스템에서 각운동량이 시간에 대해 불변임을 뜻하며, 곧 각운동량 보존법칙이 됩니다.
 
+그런데 $mrv$ 는 곧 각운동량입니다. 그러므로 위 식은 이 시스템에서 각운동량이 시간에 대해 불변임을 뜻하며, 곧 각운동량 보존법칙이 됩니다.
