@@ -274,8 +274,6 @@ async function main() {
     let meta = {};
     postData = postData.sort((a, b) => b.date - a.date);
     postData.forEach(data => meta[data.name] = data);
-    console.log("Metadata constructed :");
-    console.log(meta);
 
     // Write the metadata to file
     await write(PATH_META, JSON.stringify(meta), 'utf-8');

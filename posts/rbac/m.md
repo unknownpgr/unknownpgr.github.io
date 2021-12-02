@@ -1,7 +1,7 @@
 ---
-title: 'RBAC 구현'
-category: DEVELOPMENT
-date: 
+title: RBAC 구현
+category: development
+date: 2021-12-02T17:45:23.057Z
 
 ---
 
@@ -149,7 +149,7 @@ const MenuPermission = RBAC.getRBACModule('menu', ['list', 'write'], async knex 
 
 또한 유저 등은 단순히 숫자로만 표현하는 경우도 있으므로 object의 기본 키만을 보여주면 관리자가 권한을 설정하기 어려울 것입니다. 그래서 위와 같이 리스트 대신 `{id, description}`의 딕셔너리를 공급하도록 하여 관리자가 볼 때에는 id와 description이 함께 보이도록 구현했습니다.
 
-> 별로 중요한 것은 아니지만, 실제로는 Objects로 Object[], Promise<Object[]>, function => Promise<Object[]> 를 입력받을 수 있도록 구현했습니다.
+> 별로 중요한 것은 아니지만, 실제로는 objects로 `Object[]`, `Promise<Object[]>`, `function => Promise<Object[]>` 를 입력받을 수 있도록 구현했습니다.
 >
 > 그리고 위 구현에서 카테고리를 관리자가 서버 실행 중에 변경하는 것을 반영하기 위해 해당 쿼리가 매 메뉴 조회마다 발생한다고 생각할 수도 있습니다. 그러나 실제로 권한 검사 때 조회되는 것은 PA이지 P가 아닙니다. 그러므로 위 메뉴 리스트 조회는 관리자 페이지에서 관리자가 권한을 설정하기 위해 권한 목록을 불러오는 경우에만 조회됩니다.
 >
