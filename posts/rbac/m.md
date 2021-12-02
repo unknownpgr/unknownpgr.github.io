@@ -74,7 +74,7 @@ RBAC 모델에서는 아래와 같은 5개의 주요한 구성 요소가 있습�
 
 - $P$, $S$, $R$은 모두 단순한 집합으로 생각할 수 있으며
 - $PA\subset P\times R$이고
-- $SA\subset S\times R $입니다.
+- $SA\subset S\times R$입니다.
 
 # 구현
 
