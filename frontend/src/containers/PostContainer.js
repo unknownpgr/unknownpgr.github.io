@@ -1,4 +1,4 @@
-import React, { Component, useEffect } from "react";
+import React, { useEffect } from "react";
 import ViewPage from "components/ViewPage/ViewPage";
 import { withRouter } from "react-router-dom";
 import { useState } from "react";
@@ -31,11 +31,11 @@ function PostContainer({ history }) {
       setToc(toc);
       setCurrentPostName(postName);
     })();
-  }, [postName]);
+  }, [post, postName]);
 
-  if (postName !== currentPostName) return null;
+  const isLoading = postName !== currentPostName;
 
-  return <ViewPage {...{ post, html, toc }}></ViewPage>;
+  return <ViewPage {...{ post, html, toc, isLoading }}></ViewPage>;
 }
 
 export default withRouter(PostContainer);

@@ -1,215 +1,217 @@
-@import '../../scss/style.scss';
+@import "../../scss/style.scss";
 
 .view-page {
-	.title {
-		text-align: center;
-		margin-top: 2rem;
-	}
+  .title {
+    text-align: center;
+    margin-top: 2rem;
+  }
 
-	.container {
-		margin-top: 2rem;
-		padding-left: 2rem;
-		padding-right: 2rem;
-		max-width: 800px;
-		position: relative;
-	}
+  .container {
+    margin-top: 2rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    max-width: 800px;
+    position: relative;
+  }
 
-	.toc {
-		position: absolute;
-		left: 100%;
-		width: fit-content;
-		height: 100%;
-		padding-left: 2rem;
-		ul {
-			padding-inline-start: 24px;
-		}
+  .toc {
+    position: absolute;
+    left: 100%;
+    width: fit-content;
+    height: 100%;
+    padding-left: 2rem;
+    ul {
+      padding-inline-start: 24px;
+    }
 
-		ul:first-child {
-			position: sticky;
-			top: 10rem;
-		}
+    ul:first-child {
+      position: sticky;
+      top: 10rem;
+    }
 
-		li {
-			line-height: 1.8rem;
-		}
-	}
+    li {
+      line-height: 1.8rem;
+    }
+  }
 
-	.post-header {
-		margin: 50px auto 40px auto;
-		text-align: center;
+  .post-header {
+    margin: 50px auto 40px auto;
+    text-align: center;
 
-		h1 {
-			position: relative;
-			letter-spacing: -1px;
-			font-weight: 100;
-			margin: 7rem 0 7rem 0;
-			white-space: normal;
-			word-break: keep-all;
-		}
-	}
+    h1 {
+      position: relative;
+      letter-spacing: -1px;
+      font-weight: 100;
+      margin: 7rem 0 7rem 0;
+      white-space: normal;
+      word-break: keep-all;
+    }
+  }
 
-	@media (max-width: 1500px) {
-		.toc {
-			position: static;
-			margin-top: 2rem;
-			margin-bottom: 3rem;
-		}
-	}
+  @media (max-width: 1500px) {
+    .toc {
+      position: static;
+      margin-top: 2rem;
+      margin-bottom: 3rem;
+    }
+  }
 
-	// =====[ Markdown re-define ]=====
-	code {
-		padding: 0.1rem 0.2rem 0.075rem 0.2rem;
-		margin: 0 0.15rem 0 0;
-		background-color: $color-background-light;
-		border-radius: 3px;
-		border: $color-border-light $border-thin solid;
-		vertical-align: auto;
-	}
+  // =====[ Markdown re-define ]=====
+  code {
+    padding: 0.1rem 0.2rem 0.075rem 0.2rem;
+    margin: 0 0.15rem 0 0;
+    background-color: $color-background-light;
+    border-radius: 3px;
+    border: $color-border-light $border-thin solid;
+    vertical-align: auto;
+  }
 
-	pre > code {
-		display: block;
-		overflow-x: auto;
-		padding: 0.5rem 0.775rem 0.5rem 0.775rem;
-	}
+  pre > code {
+    display: block;
+    overflow-x: auto;
+    padding: 0.5rem 0.775rem 0.5rem 0.775rem;
+  }
 
-	blockquote {
-		background-color: $color-background-default;
-		padding: 0.5rem;
-		padding-left: 1rem;
-		border-left: $border-thick solid $color-border-light;
-		border-right: $border-thick solid $color-border-light;
+  blockquote {
+    background-color: $color-background-default;
+    padding: 0.5rem;
+    padding-left: 1rem;
+    border-left: $border-thick solid $color-border-light;
+    border-right: $border-thick solid $color-border-light;
 
-		p {
-			margin-top: 0px;
-			margin-bottom: 0px;
-		}
-	}
+    p {
+      margin-top: 0px;
+      margin-bottom: 0px;
+    }
+  }
 
-	// Math expressions
-	.katex {
-		.newline {
-			height: 1rem;
-		}
-	}
+  // Math expressions
+  .katex {
+    .newline {
+      height: 1rem;
+    }
+  }
 
-	.blog-post {
-		h1 {
-			margin-top: 3rem;
-		}
+  .blog-post {
+    h1 {
+      margin-top: 3rem;
+    }
 
-		h2 {
-			margin-top: 2rem;
-		}
+    h2 {
+      margin-top: 2rem;
+    }
 
-		h3 {
-			margin-top: 1rem;
-		}
+    h3 {
+      margin-top: 1rem;
+    }
 
-		p {
-			line-height: 1.8;
-			word-break: keep-all;
-		}
+    p {
+      line-height: 1.8;
+      word-break: keep-all;
+    }
 
-		ul {
-			padding-left: 2rem;
-		}
+    ul {
+      padding-left: 2rem;
+    }
 
-		li {
-			line-height: 2;
-		}
+    li {
+      line-height: 2;
+    }
 
-		table {
-			width: 90%;
-		}
+    table {
+      width: 90%;
+    }
 
-		th,
-		td {
-			padding: 12px;
-			text-align: center;
-			border-bottom: $border-thin solid $color-border-default;
-		}
+    th,
+    td {
+      padding: 12px;
+      text-align: center;
+      border-bottom: $border-thin solid $color-border-default;
+    }
 
-		img {
-			max-width: 80%;
-			min-width: 25%;
+    img {
+      max-width: 80%;
+      min-width: 25%;
 
-			// Algin image center
-			display: block;
-			margin: auto;
-		}
+      // Algin image center
+      display: block;
+      margin: auto;
+    }
 
-		a {
-			color: $color-text-a;
-		}
+    a {
+      color: $color-text-a;
+    }
 
-		li {
-			word-break: break-all;
-		}
+    li {
+      word-break: break-all;
+    }
 
-		u {
-			text-decoration: none;
-			font-weight: bold;
-		}
+    u {
+      text-decoration: none;
+      font-weight: bold;
+    }
 
-		iframe {
-			height: 800px;
-			width: 100%;
-			border: none;
-		}
-	}
+    iframe {
+      height: 800px;
+      width: 100%;
+      border: none;
+    }
+  }
 
-	.blog-post-loading {
-		height: 2000px;
-	}
+  .blog-post-loading {
+    height: 2000px;
+    font-size: 2rem;
+    text-align: center;
+  }
 
-	.link-button {
-		border: none;
-		text-decoration: none;
-		background-color: inherit;
-	}
+  .link-button {
+    border: none;
+    text-decoration: none;
+    background-color: inherit;
+  }
 
-	.adj-posts {
-		display: flex;
-		justify-content: space-between;
-		margin-top: 4rem;
-		margin-bottom: 2rem;
+  .adj-posts {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 4rem;
+    margin-bottom: 2rem;
 
-		.adj-post {
-			margin-top: 1rem;
-		}
-	}
+    .adj-post {
+      margin-top: 1rem;
+    }
+  }
 
-	.category-list {
-		border-top: solid $border-thin $color-border-default;
-		padding: 2rem;
-		padding-left: 0;
+  .category-list {
+    border-top: solid $border-thin $color-border-default;
+    padding: 2rem;
+    padding-left: 0;
 
-		.label {
-			font-weight: bold;
-			margin-bottom: 1.5rem;
+    .label {
+      font-weight: bold;
+      margin-bottom: 1.5rem;
 
-			a {
-				color: $color-text-a;
-			}
-		}
+      a {
+        color: $color-text-a;
+      }
+    }
 
-		ul {
-			padding-left: 0rem;
-			list-style: none;
+    ul {
+      padding-left: 0rem;
+      list-style: none;
 
-			li {
-				margin-top: 0.5rem;
-				position: relative;
-				a {
-					color: $color-text-light;
-				}
-			}
+      li {
+        margin-top: 0.5rem;
+        position: relative;
+        a {
+          color: $color-text-light;
+        }
+      }
 
-			.bold {
-				a {
-					color: $color-text-dark;
-				}
-			}
-		}
-	}
+      .bold {
+        a {
+          color: $color-text-dark;
+        }
+      }
+    }
+  }
 }

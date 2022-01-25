@@ -1,6 +1,5 @@
 import React from "react";
 import { Link, withRouter } from "react-router-dom";
-import mapDict from "libs/mapDict";
 import "./categories.scss";
 import { useMetadata } from "context/metaContext";
 

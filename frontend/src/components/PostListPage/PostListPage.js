@@ -2,7 +2,6 @@ import React from "react";
 import CardDeck from "react-bootstrap/CardDeck";
 import PostCard from "components/PostCard/PostCard";
 import "./postlistpage.scss";
-import mapDict from "libs/mapDict";
 import { useMetadata } from "context/metaContext";
 
 function PostListPage({ filter }) {

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import dateFormat from "libs/dateFormat";
 import { Link } from "react-router-dom";
 import TOC from "./TOC";
@@ -31,6 +31,7 @@ function useAdjacentPost(currentPostName) {
 
 function CategoryPosts({ post }) {
   const meta = useMetadata();
+  if (!post) return null;
 
   const { category, name } = post;
   let center = 0;
@@ -69,13 +70,11 @@ function CategoryPosts({ post }) {
   );
 }
 
-function ViewPage({ post, html, toc }) {
-  // When the page is refreshed, go to the top of the page
-  if (!html) {
-    window.scrollTo(0, 0);
-  }
-
+function ViewPage({ isLoading, post, html, toc }) {
   const [prev, next] = useAdjacentPost(post.name);
+  useEffect(() => {
+    if (isLoading) window.scrollTo(0, 0);
+  }, [isLoading]);
 
   return (
     <div className="view-page">
@@ -109,12 +108,17 @@ function ViewPage({ post, html, toc }) {
         <hr style={{ marginTop: "2rem" }}></hr>
       </div>
       <div className="container">
-        <div className="toc">
+        <div className="toc" hidden={isLoading}>
           <TOC toc={toc}></TOC>
         </div>
-        <div
-          className={"blog-post " + (html ? "" : "blog-post-loading")}
-          dangerouslySetInnerHTML={{ __html: html }}></div>
+        {isLoading ? (
+          <div className="blog-post blog-post-loading">Loading...</div>
+        ) : (
+          <div
+            className="blog-post"
+            dangerouslySetInnerHTML={{ __html: html }}
+          />
+        )}
         <div className="adj-posts">
           <div className="adj-post">
             <AdjacentPost adj={prev} />
