@@ -9,6 +9,7 @@ function PostContainer({ history }) {
 
   const [html, setHTML] = useState(null);
   const [toc, setToc] = useState(null);
+  const [currentPostName, setCurrentPostName] = useState(null);
 
   let list = history.location.pathname.split("/");
   let postName = list.pop();
@@ -28,10 +29,11 @@ function PostContainer({ history }) {
 
       setHTML(html);
       setToc(toc);
+      setCurrentPostName(postName);
     })();
   }, [postName]);
 
-  if (!html || !toc) return null;
+  if (postName !== currentPostName) return null;
 
   return <ViewPage {...{ post, html, toc }}></ViewPage>;
 }
