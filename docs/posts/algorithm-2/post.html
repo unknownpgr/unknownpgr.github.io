@@ -1,0 +1,112 @@
+<p>다음 문제로 뭘 풀까 하다가 양심없게도 알고리즘 소모임에서 이번에 진행하는 <code>LeetCode</code> 문제를 보고 풀어보기로 했습니다. 오늘 풀어 본 문제는 <code>반복되는 문자가 없는 가장 긴 부분문자열</code>이라는 문제인데요. 말 그대로</p>
+<ol>
+<li>주어진 문자열의 연속되는 부분 문자열 중</li>
+<li>반복되는 문자가 하나도 없는 것들 중</li>
+<li>가장 긴 것의 길이는?</li>
+</ol>
+<p>이라는 문제였습니다.</p>
+<h1 id="header-1"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><msup><mi>n</mi><mn>2</mn></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(n^2)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.064108em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span> 접근</h1>
+<p>저는 처음에 이것이 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><msup><mi>n</mi><mn>2</mn></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(n^2)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.064108em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span> 시간/공간복잡도를 필요로 하는 dynamic programming 문제인줄로만 생각했습니다. 그래서 <code>dp</code>라는 이름의 2차원 배열을 만들고, <code>dp[s][e]</code>를 채웠습니다. <code>dp[s][e]</code>는</p>
+<ul>
+<li>만약 주어진 문자열에서 <code>s</code> 번째에서 시작해서 <code>e</code>번째에서 끝나는 부분 문자열이 반복되는 문자가 없을 경우
+<ul>
+<li>그 부분 문자열을 값을 가지고</li>
+</ul>
+</li>
+<li>반복되는 문자가 있을 경우
+<ul>
+<li>False를 값으로 가집니다.</li>
+</ul>
+</li>
+</ul>
+<p>이렇게 구성할 경우, <code>dp[s][e]</code>의 값을 알아내려면 <code>dp[s+1][e]</code>와 <code>dp[s][e-1]</code>의 값만 알면 됩니다. 그러므로 <code>dp[x][x]=str[x]</code>로 초기화하고 점차 이 배열을 채워나가면서 <code>문자열 길이 = e-s+1</code>의 최댓값을 구하면 됩니다.</p>
+<p>(실제로는 <code>dp[s][e]</code>에는 문자열 전체가 아니라 시작 문자와 끝 문자만 저장되면 됩니다. 그러나 이 알고리즘은 실패한 알고리즘이므로 아이디어만 설명하고 넘어갑니다.)</p>
+<p>이 알고리즘은 <code>dp</code>배열을 구상하고 채우는 것이 약간 복잡할 뿐, 아이디어만 떠올리면 별로 어렵지 않습니다. 그래서 금방 python으로 코딩한 후, 제출해봤습니다. 아래는 소스코드입니다.</p>
+<pre><code class="language-python"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Solution</span>(<span class="hljs-params"><span class="hljs-built_in">object</span></span>):</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">lengthOfLongestSubstring</span>(<span class="hljs-params">self, st</span>):</span>
+        <span class="hljs-string">&quot;&quot;&quot;
+        :type s: str
+        :rtype: int
+        &quot;&quot;&quot;</span>
+        l = <span class="hljs-built_in">len</span>(st)
+        <span class="hljs-keyword">if</span> l==<span class="hljs-number">0</span>:
+            <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>
+        dp = [[<span class="hljs-literal">False</span>]*l <span class="hljs-keyword">for</span> _ <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(l)]
+        <span class="hljs-string">&#x27;&#x27;&#x27;
+        dp[s][e] = substr[s][e] including s,e
+        &#x27;&#x27;&#x27;</span>
+        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(l):
+            dp[i][i] = st[i]
+        ml = <span class="hljs-number">1</span>
+        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>,l):
+<span class="hljs-comment">#           i = string length - 1</span>
+            trueFlag = <span class="hljs-literal">False</span>
+            <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(l-i):
+                s = j
+                e = s+i
+                a = dp[s+<span class="hljs-number">1</span>][e]
+                b = dp[s][e-<span class="hljs-number">1</span>]
+                <span class="hljs-keyword">if</span> (a <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-literal">False</span>) <span class="hljs-keyword">and</span> (b <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-literal">False</span>) <span class="hljs-keyword">and</span> (b[<span class="hljs-number">0</span>] <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> a[-<span class="hljs-number">1</span>]):
+                    ml = i+<span class="hljs-number">1</span>
+                    dp[s][e] = st[s]+st[e]
+                    trueFlag = <span class="hljs-literal">True</span>
+                <span class="hljs-keyword">else</span>:
+                    dp[s][e] = <span class="hljs-literal">False</span>
+            <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> trueFlag:
+                <span class="hljs-keyword">return</span> ml
+        <span class="hljs-keyword">return</span> ml
+</code></pre>
+<p>결과는...</p>
+<p><img src="/posts/algorithm-2/imgs/image-20210119224241196.png" alt="image-20210119224241196"></p>
+<p>하나가 시간이 부족해서 안 되네요. 맞왜틀을 몇 번 시전하고 난 후, 입력을 자세히 살펴보니 아래와 같은 문자열이 계속 반복되고 있었습니다. (<code>LeetCode</code>에서는 친절하게도 실패한 입력이 무엇인지를 알려줬습니다.)</p>
+<pre><code>abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!\&quot;#$%&amp;'()*+,-./:;&lt;=&gt;?@[\\]^_`{|}~
+</code></pre>
+<p>그러므로 전체 문자열 길이가 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi></mrow><annotation encoding="application/x-tex">m</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal">m</span></span></span></span>이라 하고, 이 문자열의 길이가 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span></span></span></span>라 하면 길이 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span></span></span></span>미만의 부분 문자열에서는 반복이 절대 나타나지 않습니다. 이 경우, 제 알고리즘에서는 시간복잡도가 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mn>2</mn><mi>m</mi><mi>k</mi><mo>−</mo><msup><mi>k</mi><mn>2</mn></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(2mk-k^2)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord">2</span><span class="mord mathnormal">m</span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1.064108em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>이 됩니다. 이는 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi></mrow><annotation encoding="application/x-tex">m</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal">m</span></span></span></span>과 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span></span></span></span>에 대해 단조증가입니다. 그런데 대충 보니 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi></mrow><annotation encoding="application/x-tex">m</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal">m</span></span></span></span>은 문제에서 제시한 최댓값정도인 듯하고, <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span></span></span></span>는 가능한 모든 문자를 사용했으므로 또한 최댓값이 됩니다. 그래서 이것이 가능한 입력 중 최악의 입력케이스였습니다.</p>
+<h1 id="header-2"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span> 접근</h1>
+<p>근데 한참 고민하다 보니까, 그냥 해결책이 떠올랐습니다. <code>dp</code>배열을 저렇게 구상할 게 아니라, 이렇게 하면 어떨까?</p>
+<pre><code>dp[i]=i번째 문자열을 끝으로 하는 반복되는 문자가 없는 가장 긴 부분문자열의 시작 위치
+</code></pre>
+<p>그리고 딕셔너리 <code>la</code>를 만들어서, 다음과 같이 정의합니다.</p>
+<pre><code>la[x]=현재 위치 이전에 문자 x가 나타난 마지막 위치. x가 한 번도 만약 나타나지 않았으면 0.
+</code></pre>
+<p>이렇게 하면 다음과 같은 알고리즘을 사용할 수 있습니다.</p>
+<ul>
+<li>부분문자열의 최대 길이를 <code>maxLength=0</code>이라 두자.</li>
+<li>위치 <code>i</code>에서 문자가 <code>x</code>라 하자.</li>
+<li>만약 마지막으로 <code>x</code>가 나타난 위치가 <code>dp[i-1]</code>보다 작다면, 이는 <code>dp[i-1]</code>에서 <code>i</code>사이에는 중복된 문자가 하나도 없다는 뜻이다.
+<ul>
+<li>그러므로 <code>dp[i]=dp[i-1]</code></li>
+</ul>
+</li>
+<li>만약 마지막으로 <code>x</code>가 나타난 위치(<code>la[x]</code>)가 <code>dp[i-1]</code>보다 크다면, 이는 <code>la[x]+1</code>과 <code>i</code>사이에는 중복된 문자가 하나도 없다는 뜻이다.
+<ul>
+<li>그러므로 <code>dp[i]=la[x]+1</code></li>
+</ul>
+</li>
+<li><code>i-dp[i]+1</code>이 <code>maxLength</code>보다 크다면 <code>maxLength=i-dp[i]+1</code>.</li>
+</ul>
+<p>사실 이 알고리즘을 다시 한 번 살펴보면 <code>dp</code>배열에서 오직 <code>i-1</code>번째 인덱스에만 접근한다는 것을 알 수 있습니다. 그러므로 <code>dp</code>는 굳이 배열로 구성할 필요 없이 그냥 변수 하나로 둬도 무방합니다.</p>
+<p>따라서 다음과 같이 코드를 작성해봤습니다. 아래 코드에서 <code>av</code>가 <code>dp</code>와 같은 의미입니다.</p>
+<pre><code class="language-python"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Solution</span>(<span class="hljs-params"><span class="hljs-built_in">object</span></span>):</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">lengthOfLongestSubstring</span>(<span class="hljs-params">self, st</span>):</span>
+        l = <span class="hljs-built_in">len</span>(st)
+        <span class="hljs-keyword">if</span> l&lt;<span class="hljs-number">2</span>:
+            <span class="hljs-keyword">return</span> l
+        la = {st[<span class="hljs-number">0</span>]:<span class="hljs-number">0</span>}
+        av = <span class="hljs-number">0</span>
+        ml = <span class="hljs-number">0</span>
+        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>,l):
+            <span class="hljs-keyword">if</span> st[i] <span class="hljs-keyword">in</span> la:
+                av = <span class="hljs-built_in">max</span>(av,la[st[i]]+<span class="hljs-number">1</span>)
+            la[st[i]]=i
+            <span class="hljs-keyword">if</span> (i-av)&gt;ml:
+                ml = i-av
+        <span class="hljs-keyword">return</span> ml+<span class="hljs-number">1</span>
+</code></pre>
+<p>코드가 훨씬 짧고 간결해졌습니다.</p>
+<p><img src="/posts/algorithm-2/imgs/image-20210119230859665.png" alt="image-20210119230859665"></p>
+<p>제출 결과, 모든 케이스를 통과했고 상위 10%정도 실행 속도라고 하네요. ㅎㅎ</p>
+<p>아래쪽에는 사용한 메모리에서 어느 정도 위치에 있는지를 보여주는데요.</p>
+<p><img src="/posts/algorithm-2/imgs/image-20210119231015410.png" alt="image-20210119231015410"></p>
+<p>흠... 뭔가 제가 모르는, 메모리를 더 적게 사용하는 방법이 있나 봅니다. 어쨌든 통과했고... 빠르면 된 거 아니겠습니까.ㅎ</p>
+<p>메모리도 그래프가 저렇게 생겨서 그렇지, 5%정도밖에 차이가 나지 않습니다. 그런 걸 보니 뭔가 변수 하나 더 쓰고 말고 정도의 차이인가 봅니다.</p>
