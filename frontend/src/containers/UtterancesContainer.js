@@ -1,11 +1,12 @@
-import React, { Component } from 'react';
+import React, { useEffect, useRef } from 'react';
 
-class UtterancesContainer extends Component {
+export default function UtterancesContainer({ hash }) {
+  const ref = useRef(null);
 
-  componentDidMount() {
+  useEffect(() => {
     // Add Uterances comment
     let script = document.createElement("script");
-    let anchor = this.ref;
+    let anchor = ref.current;
     anchor.innerHTML = "";
     script.setAttribute("src", "https://utteranc.es/client.js");
     script.setAttribute("crossorigin", "anonymous");
@@ -15,14 +16,9 @@ class UtterancesContainer extends Component {
     script.setAttribute("label", "Comment💬");
     script.setAttribute("theme", "github-light");
     anchor.appendChild(script);
-  }
+  }, [hash]);
 
-  render() {
-    return (
-      <div ref={ref => this.ref = ref}>
-      </div>
-    );
-  }
+  return (
+    <div ref={ref} />
+  );
 }
-
-export default UtterancesContainer;

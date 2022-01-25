@@ -65,7 +65,7 @@ function ViewPage({ post, html, toc, adj, posts }) {
           </ul>
         </div>
         {/* Comment section */}
-        <UtterancesContainer />
+        <UtterancesContainer hash={post?.name} />
       </div>
     </div >
   );
