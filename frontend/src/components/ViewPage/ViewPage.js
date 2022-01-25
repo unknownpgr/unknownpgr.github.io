@@ -70,8 +70,6 @@ function CategoryPosts({ post }) {
 }
 
 function ViewPage({ post, html, toc }) {
-  console.log(post, html, toc);
-
   // When the page is refreshed, go to the top of the page
   if (!html) {
     window.scrollTo(0, 0);
