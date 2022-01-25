@@ -3,27 +3,29 @@ import CardDeck from "react-bootstrap/CardDeck";
 import PostCard from "components/PostCard/PostCard";
 import "./postlistpage.scss";
 import mapDict from "libs/mapDict";
-import withMetadata from "hocs/withMetadata";
+import { useMetadata } from "context/metaContext";
 
-function PostListPage({ filter, meta }) {
+function PostListPage({ filter }) {
+  const meta = useMetadata();
+
+  let postList = Object.entries(meta);
+  if (filter)
+    postList = postList.filter(([, { category }]) => category === filter);
+
+  postList = postList.map(([postName, post]) => (
+    <PostCard {...post} key={postName} />
+  ));
+
   return (
     <div className="blog-post-list">
       {
-        filter && <div className={"category"}>
+        <div className="category" hidden={!filter}>
           <h1>{filter}</h1>
         </div>
       }
-      <CardDeck className="justify-content-around">
-        {
-          mapDict(meta, (postName, post) => {
-            if (filter && filter !== post.category)
-              return null;
-            return <PostCard {...post} key={postName}></PostCard>;
-          }).filter((x) => x)
-        }
-      </CardDeck>
+      <CardDeck className="justify-content-around">{postList}</CardDeck>
     </div>
   );
 }
 
-export default withMetadata(PostListPage);
+export default PostListPage;

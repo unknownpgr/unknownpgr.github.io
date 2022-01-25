@@ -5,8 +5,8 @@ export default function UtterancesContainer({ hash }) {
 
   useEffect(() => {
     // Add Uterances comment
-    let script = document.createElement("script");
-    let anchor = ref.current;
+    const script = document.createElement("script");
+    const anchor = ref.current;
     anchor.innerHTML = "";
     script.setAttribute("src", "https://utteranc.es/client.js");
     script.setAttribute("crossorigin", "anonymous");

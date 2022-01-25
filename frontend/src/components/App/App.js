@@ -13,6 +13,7 @@ import AboutPage from "components/AboutPage/AboutPage";
 import Nav from "components/Nav/Nav";
 import GoogleAds from "components/GoogleAds/GoogleAds";
 import Categories from "components/Categories/Categories";
+import { withMetadata } from 'context/metaContext';
 
 // Import constants
 import Constants from "constants/constants";
@@ -104,4 +105,4 @@ function CategoryPage(props) {
   return <PostListPage filter={props.match.params.category} />;
 }
 
-export default App;
+export default withMetadata(App);
