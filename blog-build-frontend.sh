@@ -6,3 +6,4 @@ docker run\
  -v $(pwd)/docs:/app/build\
  node:16\
  yarn build
+./blog-build.sh
