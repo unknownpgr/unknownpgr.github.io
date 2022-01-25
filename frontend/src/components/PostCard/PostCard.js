@@ -9,21 +9,24 @@ function PostCard(props) {
 
   return (
     <Card className="post-card m-4">
-      <Card.Img
-        variant="top"
-        src={props.thumbnail ? props.thumbnail : "/code.png"}
-        className="card-img"
-      ></Card.Img>
+      <Link to={"/posts/" + props.name}>
+        <Card.Img
+          variant="top"
+          src={props.thumbnail ? props.thumbnail : "/code.png"}
+          className="card-img"></Card.Img>
+      </Link>
       <Card.Body>
         <Link to={"/posts/" + props.name}>
-          <Card.Title>
-            {props.title}
-          </Card.Title>
+          <Card.Title>{props.title}</Card.Title>
         </Link>
         <Card.Subtitle className="mb-2 text-muted">
           <OverlayTrigger
             placement="bottom"
-            overlay={<Tooltip id="button-tooltip" {...props}>{new Date(props.date) + ''}</Tooltip>}>
+            overlay={
+              <Tooltip id="button-tooltip" {...props}>
+                {new Date(props.date) + ""}
+              </Tooltip>
+            }>
             <small> {dateFormat(new Date(props.date))}</small>
           </OverlayTrigger>
           <Link to={`/categories/${props.category}`}>
