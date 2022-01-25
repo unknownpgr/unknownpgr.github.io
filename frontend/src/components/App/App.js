@@ -70,7 +70,7 @@ function App() {
         </Switch>
         <div className="google-ads">
           <GoogleAds>
-            <ins class="adsbygoogle"
+            <ins className="adsbygoogle"
               style={{ display: 'block' }}
               data-ad-client="ca-pub-5695206410217978"
               data-ad-slot="3086325939"
