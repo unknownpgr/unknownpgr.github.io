@@ -31,7 +31,7 @@ const pncp = (src, dst) => new Promise((res, rej) => ncp(src, dst, (err) => { er
 
 // Constants
 const ROOT = 'https://unknownpgr.com/';
-const PATH_BUILD = join(__dirname, 'build');
+const PATH_BUILD = join(__dirname, '..', 'docs');
 const PATH_SRC = join(__dirname, '..', 'posts');
 const PATH_DST = join(PATH_BUILD, 'posts');
 const PATH_SITEMAP = join(PATH_BUILD, 'sitemap.xml');
@@ -234,20 +234,12 @@ async function main() {
         if (+(process.version.substr(1, 2)) < 12) {
             console.error("Could not run rmdir because of node version is too low.");
         }
-        await fs.rmdir(PATH_BUILD, { recursive: true });
+        await fs.rmdir(PATH_DST, { recursive: true });
         console.log("All existing files were removed.");
     } catch (e) {
         console.log("There was some minor error while removing data.");
         console.log("The error occurred is as follows.");
         console.log(e);
-    }
-
-    // Create build directory
-    try {
-        await fs.mkdir(PATH_BUILD);
-    } catch (e) {
-        console.error('Could not make build directory. Stop blog build.');
-        return -1;
     }
 
     // Copy raw post data to dst directory
