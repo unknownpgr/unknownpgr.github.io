@@ -5,6 +5,6 @@ cd "$(dirname "$0")"
 
 git add .
 git commit -m "[post] Post update post at $(date) $(time)."
-git push origin master
+git push blog master
 echo Publish finished.
 read -p "Press any key to resume ..."
