@@ -2,217 +2,230 @@ const fs = require("fs").promises;
 const ncp = require("ncp");
 const path = require("path");
 const yaml = require("js-yaml");
-const hljs = require('highlight.js');
-const ketex = require('./libs/md-latex');
-const markdown = require('markdown-it')({
-    html: true,
-    langPrefix: 'language-',
-    linkify: false,
-    typographer: false,
-    highlight: (str, lang) => {
-        if (lang && hljs.getLanguage(lang)) {
-            try {
-                return hljs.highlight(str, { language: lang }).value;
-            } catch (_) { }
-        }
-        return ''; // use external default escaping
+const hljs = require("highlight.js");
+const ketex = require("./libs/md-latex");
+const markdown = require("markdown-it")({
+  html: true,
+  langPrefix: "language-",
+  linkify: false,
+  typographer: false,
+  highlight: (str, lang) => {
+    if (lang && hljs.getLanguage(lang)) {
+      try {
+        return hljs.highlight(str, { language: lang }).value;
+      } catch (_) {}
     }
+    return ""; // use external default escaping
+  },
 });
 markdown.use(ketex);
-const getSitemap = require('./libs/sitemap');
-const resize = require('./libs/resizer');
+const getSitemap = require("./libs/sitemap");
+const resize = require("./libs/resizer");
 
 // Alias for frequently used functions
 const { join } = path;
 const write = fs.writeFile;
 
 // Promisified ncp
-const pncp = (src, dst) => new Promise((res, rej) => ncp(src, dst, (err) => { err ? rej(err) : res(); }));
+const pncp = (src, dst) =>
+  new Promise((res, rej) =>
+    ncp(src, dst, (err) => {
+      err ? rej(err) : res();
+    })
+  );
 
 // Constants
-const ROOT = 'https://unknownpgr.com/';
-const PATH_BUILD = join(__dirname, '..', 'docs');
-const PATH_SRC = join(__dirname, '..', 'posts');
-const PATH_DST = join(PATH_BUILD, 'posts');
-const PATH_SITEMAP = join(PATH_BUILD, 'sitemap.xml');
-const PATH_META = join(PATH_BUILD, 'meta.json');
+const ROOT = "https://unknownpgr.com/";
+const PATH_BUILD = join(__dirname, "..", "docs");
+const PATH_SRC = join(__dirname, "..", "posts");
+const PATH_DST = join(PATH_BUILD, "posts");
+const PATH_SITEMAP = join(PATH_BUILD, "sitemap.xml");
+const PATH_META = join(PATH_BUILD, "meta.json");
 
 // Split post into YAML formatter part and markdown part.
 // Pure function
 function parseRawPostString(src) {
-
-    // Find n-th appearence of pattern in string. index starts from 1.
-    function getNthIndexOf(str, pattern, n) {
-        let l = str.length,
-            i = -1;
-        while (n-- && i++ < l) {
-            i = str.indexOf(pattern, i);
-            if (i < 0) break;
-        }
-        return i;
+  // Find n-th appearence of pattern in string. index starts from 1.
+  function getNthIndexOf(str, pattern, n) {
+    let l = str.length,
+      i = -1;
+    while (n-- && i++ < l) {
+      i = str.indexOf(pattern, i);
+      if (i < 0) break;
     }
+    return i;
+  }
 
-    const splitter = getNthIndexOf(src, "---", 2);
-    const formatter = src.slice(0, splitter);
-    let md = src.slice(splitter + 3);
-    return [formatter, md];
+  const splitter = getNthIndexOf(src, "---", 2);
+  const formatter = src.slice(0, splitter);
+  let md = src.slice(splitter + 3);
+  return [formatter, md];
 }
 
 // Parse YAML formatter string into json object.
 // Automatically correct some data
 // Alomost pure function except `new Date()` use in code
 function parseFormatter(formatterStr) {
-    let formatter = yaml.safeLoad(formatterStr);
+  let formatter = yaml.safeLoad(formatterStr);
 
-    // Check required properties
-    if (!formatter["title"])
-        throw new Error("YAML formatter does not contain 'title' attribute.");
-    if (!formatter["category"])
-        throw new Error("YAML formatter does not contain 'category' attribute.");
+  // Check required properties
+  if (!formatter["title"])
+    throw new Error("YAML formatter does not contain 'title' attribute.");
+  if (!formatter["category"])
+    throw new Error("YAML formatter does not contain 'category' attribute.");
 
-    // Add date if it doesnt exists, else just \ beautify it
-    const date = new Date(formatter.date);
-    if (!formatter.date || isNaN(date)) {
-        formatter["date"] = new Date();
-    } else {
-        formatter["date"] = new Date(date);
-    }
+  // Add date if it doesnt exists, else just \ beautify it
+  const date = new Date(formatter.date);
+  if (!formatter.date || isNaN(date)) {
+    formatter["date"] = new Date();
+  } else {
+    formatter["date"] = new Date(date);
+  }
 
-    // Beautify category
-    let { category } = formatter;
-    category = category.replace(/( |\t|_|-)+/g, " ").toLowerCase();
-    formatter.category = category;
+  // Beautify category
+  let { category } = formatter;
+  category = category.replace(/( |\t|_|-)+/g, " ").toLowerCase();
+  formatter.category = category;
 
-    return formatter;
+  return formatter;
 }
 
 // Parse markdown and return html, thumbnail path, toc.
 // Pure function
 function parseMarkdown(postName, markdownStr) {
+  let thumbnail = "";
+  let toc = [];
+  let tokens = markdown.parse(markdownStr);
 
-    let thumbnail = '';
-    let toc = [];
-    let tokens = markdown.parse(markdownStr);
-
-    /**
-     * This section does
-     * - Change the image path(which is a relative path) to an absolute path.
-     * - Get the first image as a thumbnal.
-     * 
-     * token.attrs[0][1] : the soruce path of the image tag
-     * Update the image path to an absolute path
-     */
-    (function recursiveUpdate(_tokens) {
-        for (let token of _tokens) {
-            if (token.type === 'image') {
-                token.attrs[0][1] = join('/posts', postName, token.attrs[0][1]);
-                thumbnail = thumbnail || token.attrs[0][1];
-            }
-            if (token.type === 'inline') recursiveUpdate(token.children);
-        }
-    })(tokens);
-
-    /**
-     * This section does
-     * - Assign an id to every header 
-     * - Build table of content
-     */
-    let headerIndex = 1;
-    for (let i = 0; i < tokens.length; i++) {
-        let cur = tokens[i];
-        let nxt = tokens[i + 1];
-
-        if (cur.type === 'heading_open') {
-            const id = `header-${headerIndex}`;
-            const type = tokens[i].tag;
-            const content = markdown.renderInline(nxt.content);
-
-            cur.attrs = cur.attrs || [];
-            cur.attrs.push(['id', id]);
-
-            toc.push({ type, content, id });
-            headerIndex++;
-        }
+  /**
+   * This section does
+   * - Change the image path(which is a relative path) to an absolute path.
+   * - Get the first image as a thumbnal.
+   *
+   * token.attrs[0][1] : the soruce path of the image tag
+   * Update the image path to an absolute path
+   */
+  (function recursiveUpdate(_tokens) {
+    for (let token of _tokens) {
+      if (token.type === "image") {
+        token.attrs[0][1] = join("/posts", postName, token.attrs[0][1]);
+        thumbnail = thumbnail || token.attrs[0][1];
+      }
+      if (token.type === "inline") recursiveUpdate(token.children);
     }
+  })(tokens);
 
-    const html = markdown.renderer.render(tokens, markdown.options);
-    return { html, thumbnail, toc };
+  /**
+   * This section does
+   * - Assign an id to every header
+   * - Build table of content
+   */
+  let headerIndex = 1;
+  for (let i = 0; i < tokens.length; i++) {
+    let cur = tokens[i];
+    let nxt = tokens[i + 1];
+
+    if (cur.type === "heading_open") {
+      const id = `header-${headerIndex}`;
+      const type = tokens[i].tag;
+      const content = markdown.renderInline(nxt.content);
+
+      cur.attrs = cur.attrs || [];
+      cur.attrs.push(["id", id]);
+
+      toc.push({ type, content, id });
+      headerIndex++;
+    }
+  }
+
+  const html = markdown.renderer.render(tokens, markdown.options);
+  return { html, thumbnail, toc };
 }
 
 // Parse raw string and return formatter, html.
 // Pure function
 function parsePost(postName, rawStr) {
-    let [yamlStr, markdownStr] = parseRawPostString(rawStr);
-    let formatter = parseFormatter(yamlStr);
-    let parsedPost = parseMarkdown(postName, markdownStr);
-    return { formatter, markdownStr, ...parsedPost };
+  let [yamlStr, markdownStr] = parseRawPostString(rawStr);
+  let formatter = parseFormatter(yamlStr);
+  let parsedPost = parseMarkdown(postName, markdownStr);
+  return { formatter, markdownStr, ...parsedPost };
 }
 
 // Parse an .md file, remove it, generate post.html and toc.json, then return metadata of post.
 // Not a pure function.
 async function processPost(srcDir, dstDir, name) {
-    try {
-        let postDir = join(dstDir, name);
+  try {
+    let postDir = join(dstDir, name);
 
-        // Check if given post is a hidden post
-        if (name.startsWith('.') || name.startsWith('_')) return;
-        // Check if given path is a valid directory
-        if (!(await fs.stat(postDir)).isDirectory()) return;
-        let mdFile = (await fs.readdir(postDir))
-            .map(x => path.join(postDir, x))
-            .filter(x => x.endsWith('.md'));
+    // Check if given post is a hidden post
+    if (name.startsWith(".") || name.startsWith("_")) return;
+    // Check if given path is a valid directory
+    if (!(await fs.stat(postDir)).isDirectory()) return;
+    let mdFile = (await fs.readdir(postDir))
+      .map((x) => path.join(postDir, x))
+      .filter((x) => x.endsWith(".md"));
 
-        // Check if there are exactly one markdown file
-        if (mdFile.length === 0) {
-            throw new Error("There are no markdown file for post " + name);
-        } else if (mdFile.length > 1) {
-            throw new Error("There are more than one markdown file for post " + name);
-        } else {
-            mdFile = mdFile[0];
-        }
-
-        // Parse markdown file
-        let rawPostStr = await fs.readFile(mdFile, { encoding: "utf-8" });
-        let { formatter, markdownStr, html, thumbnail, toc } = parsePost(name, rawPostStr);
-
-        // Update post file
-        await write(join(srcDir, name, path.basename(mdFile)), '---\n' + yaml.dump(formatter) + '\n---' + markdownStr);
-        // Write generated html, table of contents
-        await write(join(postDir, 'post.html'), html, 'utf-8');
-        await write(join(postDir, 'toc.json'), JSON.stringify(toc), 'utf-8');
-        // Generate thumbnail files
-        if (thumbnail) {
-            try {
-                // Notice that thumbnaile file may not have extenstion.
-                const { dir, base, ext } = path.parse(thumbnail);
-                if (!ext) throw new Error("No extension");
-                const newName = path.join(dir, `thumbnail.${base}`);
-                const result = await resize(join(PATH_BUILD, thumbnail), join(PATH_BUILD, newName));
-                if (result === 'Fail') throw new Error("Worker side error");
-                thumbnail = newName;
-            } catch (e) {
-                console.log(`Image ${thumbnail} is not converted due to error below.`);
-                console.log(e);
-            }
-        }
-
-        // Remove markdown file
-        fs.unlink(mdFile);
-
-        console.log(`Post ${name} successfully processed.`);
-
-        // Return metadata
-        return { ...formatter, name, thumbnail };
-    } catch (e) {
-        console.log("Error occrred while processing post", name);
-        console.log(e);
-        return null;
+    // Check if there are exactly one markdown file
+    if (mdFile.length === 0) {
+      throw new Error("There are no markdown file for post " + name);
+    } else if (mdFile.length > 1) {
+      throw new Error("There are more than one markdown file for post " + name);
+    } else {
+      mdFile = mdFile[0];
     }
+
+    // Parse markdown file
+    let rawPostStr = await fs.readFile(mdFile, { encoding: "utf-8" });
+    let { formatter, markdownStr, html, thumbnail, toc } = parsePost(
+      name,
+      rawPostStr
+    );
+
+    // Update post file
+    await write(
+      join(srcDir, name, path.basename(mdFile)),
+      "---\n" + yaml.dump(formatter) + "\n---" + markdownStr
+    );
+    // Write generated html, table of contents
+    await write(join(postDir, "post.html"), html, "utf-8");
+    await write(join(postDir, "toc.json"), JSON.stringify(toc), "utf-8");
+    // Generate thumbnail files
+    if (thumbnail) {
+      try {
+        // Notice that thumbnaile file may not have extenstion.
+        const { dir, base, ext } = path.parse(thumbnail);
+        if (!ext) throw new Error("No extension");
+        const newName = path.join(dir, `thumbnail.${base}`);
+        const result = await resize(
+          join(PATH_BUILD, thumbnail),
+          join(PATH_BUILD, newName)
+        );
+        if (result === "Fail") throw new Error("Worker side error");
+        thumbnail = newName;
+      } catch (e) {
+        console.log(`Image ${thumbnail} is not converted due to error below.`);
+        console.log(e);
+      }
+    }
+
+    // Remove markdown file
+    fs.unlink(mdFile);
+
+    console.log(`Post ${name} successfully processed.`);
+
+    // Return metadata
+    return { ...formatter, name, thumbnail };
+  } catch (e) {
+    console.log("Error occrred while processing post", name);
+    console.log(e);
+    return null;
+  }
 }
 
 async function generateRedirection(redirectionPath, meta) {
-    await Promise.all(Object.entries(meta).map(([name, post]) => {
-        const HTML = `
+  await Promise.all(
+    Object.entries(meta).map(([name, post]) => {
+      const HTML = `
             <meta property="og:url"         content="/posts/${name}"/>
             <meta property="og:type"        content="website"/>
             <meta property="og:title"       content="${post.title}"/>
@@ -220,63 +233,67 @@ async function generateRedirection(redirectionPath, meta) {
             <meta property="og:image"       content="${post.thumbnail}"/>
             <script src="/404.js"></script>
             `
-            .replace(/(\r|\n|\t)/g, '')
-            .replace(/ +/g, ' ');
-        const PATH_HTML = join(redirectionPath, name, 'index.html');
-        return write(PATH_HTML, HTML, 'utf-8');
-    }));
+        .replace(/(\r|\n|\t)/g, "")
+        .replace(/ +/g, " ");
+      const PATH_HTML = join(redirectionPath, name, "index.html");
+      return write(PATH_HTML, HTML, "utf-8");
+    })
+  );
 }
 
 async function main() {
-    // Delete existing data
-    try {
-        // `rmdir` commmand with recursive option equires node version > 12
-        if (+(process.version.substr(1, 2)) < 12) {
-            console.error("Could not run rmdir because of node version is too low.");
-        }
-        await fs.rmdir(PATH_DST, { recursive: true });
-        console.log("All existing files were removed.");
-    } catch (e) {
-        console.log("There was some minor error while removing data.");
-        console.log("The error occurred is as follows.");
-        console.log(e);
+  // Delete existing data
+  try {
+    // `rmdir` commmand with recursive option equires node version > 12
+    if (+process.version.substr(1, 2) < 12) {
+      console.error("Could not run rmdir because of node version is too low.");
     }
+    await fs.rmdir(PATH_DST, { recursive: true });
+    console.log("All existing files were removed.");
+  } catch (e) {
+    console.log("There was some minor error while removing data.");
+    console.log("The error occurred is as follows.");
+    console.log(e);
+  }
 
-    // Copy raw post data to dst directory
-    try {
-        await pncp(PATH_SRC, PATH_DST);
-        console.log("Raw post data was copied to destination directory.");
-    } catch (e) {
-        console.error("Error occurred while coping data to destination directory. Stop blog build.");
-        console.error("The error occurred was as follows.");
-        console.error(e);
-        return -1;
-    }
+  // Copy raw post data to dst directory
+  try {
+    await pncp(PATH_SRC, PATH_DST);
+    console.log("Raw post data was copied to destination directory.");
+  } catch (e) {
+    console.error(
+      "Error occurred while coping data to destination directory. Stop blog build."
+    );
+    console.error("The error occurred was as follows.");
+    console.error(e);
+    return -1;
+  }
 
-    // Compile them and save compiled results
-    const postList = await fs.readdir(PATH_DST);
-    const tasks = postList.map(name => processPost(PATH_SRC, PATH_DST, name));
-    console.log('Task array constructed.');
-    let postData = (await Promise.all(tasks)).filter(x => x);
-    console.log('All post were processed.');
+  // Compile them and save compiled results
+  const postList = await fs.readdir(PATH_DST);
+  const tasks = postList.map((name) => processPost(PATH_SRC, PATH_DST, name));
+  console.log("Task array constructed.");
+  let postData = (await Promise.all(tasks)).filter((x) => x);
+  console.log("All post were processed.");
 
-    // Sort the metadata by the date and convert it to a dictionary.
-    // Actually, items in a dictionary should not have an order.
-    // Thus, it is just a trick and not a recommaned coding pattern.
-    let meta = {};
-    postData = postData.sort((a, b) => b.date - a.date);
-    postData.forEach(data => meta[data.name] = data);
+  // Sort the metadata by the date and convert it to a dictionary.
+  // Actually, items in a dictionary should not have an order.
+  // Thus, it is just a trick and not a recommaned coding pattern.
+  let meta = {};
+  postData = postData.sort((a, b) => b.date - a.date);
+  postData.forEach((data) => (meta[data.name] = data));
 
-    // Write the metadata to file
-    await write(PATH_META, JSON.stringify(meta), 'utf-8');
+  // Write the metadata to file
+  await write(PATH_META, JSON.stringify(meta), "utf-8");
 
-    // Generate sitemap from metadata
-    let sitemap = getSitemap(ROOT, meta);
-    await write(PATH_SITEMAP, sitemap);
-    console.log('Post update finished!');
+  // Generate sitemap from metadata
+  let sitemap = getSitemap(ROOT, meta);
+  await write(PATH_SITEMAP, sitemap);
 
-    // generate redirection page, because github page cannot handle spa.
-    generateRedirection(PATH_DST, meta);
+  console.log("Post update finished!");
+
+  // generate redirection page, because github page cannot handle spa.
+  generateRedirection(PATH_DST, meta);
 }
 
 main();

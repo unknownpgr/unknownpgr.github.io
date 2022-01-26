@@ -1,7 +1,8 @@
 // Generate sitemap xml (return type string) from urls.
 // Use any[] for key-iteration
 function getSitemapFromURL(urls) {
-  let sitemap = '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
+  let sitemap =
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
   urls.forEach((url) => {
     sitemap += "<url>\n";
     for (let key in url) {
@@ -27,7 +28,7 @@ function getURLsFromMeta(host, meta) {
   for (let key in meta) {
     let data = meta[key];
     urls.push({
-      loc: host + "/posts/" + data.name,
+      loc: `${host}/posts/${data.name}/`,
       lastmod: data.date.toISOString(),
       changefreq: "monthly",
     });
