@@ -42,12 +42,12 @@ function CategoryPosts({ post }) {
       return meta[key];
     });
 
-  if (center < 2) center = 2;
-  if (center > posts.length - 3) center = posts.length - 3;
+  const start = Math.max(Math.min(center - 2, posts.length - 5), 0);
+  const end = Math.min(Math.max(center + 3, 5), posts.length);
 
-  let subposts = [];
-  for (let i = -2; i < 3; i++) {
-    subposts.push(posts[center + i]);
+  const subposts = [];
+  for (let i = start; i < end; i++) {
+    subposts.push(posts[i]);
   }
 
   return (
@@ -129,7 +129,11 @@ function ViewPage({ isLoading, post, html, toc }) {
         </div>
         <CategoryPosts post={post} />
         {/* Comment section */}
-        <UtterancesContainer hash={post?.name} />
+        {isLoading ? (
+          "Comment section is loading..."
+        ) : (
+          <UtterancesContainer hash={post?.name} />
+        )}
       </div>
     </div>
   );
