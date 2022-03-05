@@ -45,7 +45,7 @@
 <p>예를 들어, <code>hls_list_size</code>가 7이고, <code>hls_delete_threshold</code>가 3이라고 가정합니다. 그러면 <code>.m3u8</code>에는 n, n+1, n+2...n+6까지 총 7개의 segment에 대한 정보가 있을 것입니다. 이때 <code>hls_delete_threshold</code>가 3이기 때문에, n-1, n-2, n-3까지의 segment는 오래된 것으로 간주하지 않고, n-4부터를 오래된 것으로 간주합니다. 그러므로 <code>.ts</code>파일은 항상 10개가 존재하게 됩니다.</p>
 <p><code>hls_delete_threshold</code>옵션이 필요한 이유는, 비록 <code>.m3u8</code>의 segment 리스트에서는 특정 segment가 지워졌지만, 인터넷 속도 등의 문제로 해당 segment를 계속 다운받고 있는 클라이언트가 있을 수도 있기 때문입니다.</p>
 <p>이렇게 옵션을 주면 파일들이 실시간으로 업데이트되며, 클라이언트는 일반 HLS파일을 재생하듯 실시간 영상을 재생할 수 있습니다. 아래는 스크린샷입니다.</p>
-<p><img src="/posts/ffmpeg/screenshot.png" alt="screenshot"></p>
+<p><img src="screenshot.png" alt="screenshot"></p>
 <p>웹캠에서 찍은 영상을 HTML로 스트리밍하여 볼 수 있습니다. (URL은 개인 서버를 사용 중이라 지웠습니다.)</p>
 <h1 id="header-3">참고문헌</h1>
 <ul>

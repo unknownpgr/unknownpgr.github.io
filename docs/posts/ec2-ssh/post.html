@@ -1,6 +1,6 @@
 <p>이 글에서는 EC2 인스턴스에 안전하게 VSCode SSH를 연결하는 방법을 정리합니다.</p>
 <h1 id="header-1">1. Security Group 생성</h1>
-<p><img src="/posts/ec2-ssh/imgs/image-20210527042758059.png" alt="image-20210527042758059"></p>
+<p><img src="imgs/image-20210527042758059.png" alt="image-20210527042758059"></p>
 <p>적당히 위와 같이 SSH를 허용하는 Security Group을 생성하고, EC2에 설정해줍니다.</p>
 <h1 id="header-2">2. 사용자 생성</h1>
 <p>AWS웹 콘솔을 통해 EC2 인스턴스에 접속한 후, 다음 명령어를 통해 적절한 유저를 생성해줍니다. 기본 유저 <code>ubuntu</code>를 사용하지 않는 이유는 혹시 모를 해킹을 방지하기 위해서입니다.</p>
@@ -29,10 +29,10 @@ cat .ssh/id_rsa.pub &gt;&gt; .ssh/authorized_keys
 </code></pre>
 <h1 id="header-5">5. VSCode 설정</h1>
 <p>VSCode에서 <code>config</code> 파일을 엽니다. <code>config</code> 파일을 열기 위해서는 Remote explorer extension에서 설정 버튼을 누르면 됩니다.</p>
-<p><img src="/posts/ec2-ssh/imgs/image-20210527043909356.png" alt="image-20210527043909356"></p>
+<p><img src="imgs/image-20210527043909356.png" alt="image-20210527043909356"></p>
 <p>그러면 옵션이 여러 개 나올 텐데, 이 중에서 제일 위의 옵션을 선택하시면 됩니다. 파일이 열리면 다음과 같이 SSH 클라이언트 설정을 추가해줍니다.</p>
-<p><img src="/posts/ec2-ssh/imgs/image-20210527044058280.png" alt="image-20210527044058280"></p>
+<p><img src="imgs/image-20210527044058280.png" alt="image-20210527044058280"></p>
 <h1 id="header-6">6. 접속</h1>
 <p>이제 SSH Targets 섹션을 보면 새로운 타겟이 추가돼있습니다.</p>
-<p><img src="/posts/ec2-ssh/imgs/image-20210527044335771.png" alt="image-20210527044335771"></p>
+<p><img src="imgs/image-20210527044335771.png" alt="image-20210527044335771"></p>
 <p>오른쪽의 새 창에서 연결하기 버튼을 누르면 바로 접속됩니다.</p>

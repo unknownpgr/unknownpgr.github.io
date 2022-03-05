@@ -1,4 +1,4 @@
-<p><img src="/posts/k8s-2/imgs/favicon.png" alt="Kubernetes"></p>
+<p><img src="imgs/favicon.png" alt="Kubernetes"></p>
 <h1 id="header-1">K8S</h1>
 <p>Kubernetes는 여러 개의 머신 위에서 여러 개의 컨테이너들을 관리하기 위한 시스템입니다. 쿠버네티스는 여러 머신들을 하나의 클러스터로 묶어 관리하는데, 이 각각의 머신들을 노드(Node)라고 부릅니다.</p>
 <p>이 노드을 중 일부는 클러스터 전체를 관리하는 역할을 수행하는 master node이며 일부는 단순 작업을 수행하는 worker node입니다. 모든 클러스터에는 반드시 하나의 마스터 노드가 있어야 합니다.</p>
@@ -77,20 +77,20 @@
 <pre><code class="language-bash"><span class="hljs-built_in">export</span> KUBECONFIG=/etc/rancher/k3s/k3s.yaml
 </code></pre>
 <h2 id="header-12">Lens 연동하기</h2>
-<p><img src="/posts/k8s-2/imgs/image-20210626034050664.png" alt="image-20210626034050664"></p>
+<p><img src="imgs/image-20210626034050664.png" alt="image-20210626034050664"></p>
 <p>Lens를 실행시켜 보면 위 이미지와 같이 오른쪽 아래에 새 클러스터를 추가할 수 있는 버튼이 있습니다.</p>
-<p><img src="/posts/k8s-2/imgs/image-20210626034135662.png" alt="image-20210626034135662"></p>
+<p><img src="imgs/image-20210626034135662.png" alt="image-20210626034135662"></p>
 <p>버튼을 눌러 보면 이와 같이 <code>kubeconfig</code>파일을 선택하거나 텍스트 형식으로 붙여넣을 수 있는 옵션이 있습니다. 여기서 텍스트 형식을 선택하여 <code>kubeconfig</code>파일의 내용을 붙여넣어줍니다.</p>
 <p>그런데 위의 <code>kubeconfig</code> 파일을 보면 <code>server</code> 부분이 <code>127.0.0.1</code>로 되어 있습니다. 그러므로 이 <code>kubeconfig</code>파일을 통해서는 <strong>오직 마스터 노드에서만 클러스터에 접속할 수 있습니다</strong>. 우리는 Lens를 쿠버네티스 클러스터에 포함되지 않은 다른 컴퓨터에서 동작시킬 것이므로 <strong>이 부분을 마스터 노드의 주소로 바꾸어 주어야 합니다</strong>. 저는 로컬 네트워크상에서 접속하였으므로 저 부분을 저번 포스팅에서 설정한 바와 같이 <code>172.30.1.100</code>으로 바꿔 주었습니다.</p>
 <p>저는 처음에 Lens를 통해 접속할 때 이 간단한 것을 몰라서 다섯 시간도 넘게 헤맸습니다. 저는 <code>kubeconfig</code>파일은 권한이 포함된 중요한 파일이니까 수정하면 안 되는 줄 알고 SSH 프록시부터 해서 갖은 시도를 다 해 봤는데 잘 안 됐었습니다...</p>
 <p>그러면 아래와 같이 쿠버네티스 클러스터에 접속할 수 있습니다.</p>
-<p><img src="/posts/k8s-2/imgs/image-20210626034446233.png" alt="image-20210626034446233"></p>
+<p><img src="imgs/image-20210626034446233.png" alt="image-20210626034446233"></p>
 <h2 id="header-13">Prometheus 설치</h2>
 <p>그런데 아마 이 과정을 똑같이 따라오신 분들은 위 이미지와 같은 그래프들이 표시되지 않고 대신 에러 메시지가 표시될 것입니다. 왜냐하면 저 수치들은 Prometheus라는 패키지로부터 제공되는 것인데, 아직 해당 패키지를 클러스터에 설치하지 않았으므로 수치를 받아올 수가 없기 때문입니다. 그 경우 클러스터 아이콘을 우클릭하여 설정 페이지로 들어간 후 Metrics Stack 섹션의 Install 버튼을 눌러 주면 관련 패키지들이 자동으로 설치됩니다.</p>
 <blockquote>
 <p>패키지라는 표현이 올바른지 잘 모르겠습니다.</p>
 </blockquote>
-<p><img src="/posts/k8s-2/imgs/image-20210626034754935.png" alt="image-20210626034754935"></p>
+<p><img src="imgs/image-20210626034754935.png" alt="image-20210626034754935"></p>
 <h3 id="header-14">Helm</h3>
 <p>그런데 저는 알 수 없는 이유로 이게 제대로 설치가 안 됐어서 helm을 통해 수동으로 Prometheus를 설치해줬습니다. helm 이란 npm이나 pip과 같이 패키지 및 종속성들을 자동으로 설치할 수 있도록 해 주는 관리자입니다. helm 역시 클러스터 내부에 뭔가 설치를 해야 하므로 서버와 클라이언트 구조로 되어 있습니다. 사용자가 커맨드라인에서 사용하는 클라이언트 부분을 helm이라 하며 클러스터 내에서 클라이언트로부터 요청을 받아 실제로 작업을 수행하는 부분을 tiller라 합니다. Tiller는 이미 K3S 내부에 설치되어있기 때문에 helm만 설치해주면 됩니다. 아래 설치 메뉴얼을 따라, master node에 helm을 설치해줍니다.</p>
 <p><a href="https://helm.sh/docs/intro/install/">https://helm.sh/docs/intro/install/</a></p>
@@ -122,22 +122,22 @@ prometheus-operator-1624614050-prometheus-node-exporter-bd74t   1/1     Running 
 </code></pre>
 <p>이때 주의할 점은 이렇게 포트포워딩을 했다 하더라도 이는 오직 마스터 노드에서 <code>localhost</code>로만 접근이 가능하고 <code>172.30.1.100</code> 과 같은 <strong>로컬호스트가 아닌 아이피로는 접근이 불가능</strong>하다는 점입니다. 그러므로 이렇게 클러스터 내부 → master node로 포트포워딩을 한 후 다시 이를 SSH를 통해 master node → 사용 중인 컴퓨터로 proxy하고, 이후 사용 중인 컴퓨터의 브라우저에서 localhost로 접속해야만 합니다.</p>
 <p>VSCode를 사용하여 master node에 접근 중이라면 아래와 같이 이 과정을 쉽게 수행할 수 있습니다.</p>
-<p><img src="/posts/k8s-2/imgs/image-20210626041417125.png" alt="image-20210626041417125"></p>
+<p><img src="imgs/image-20210626041417125.png" alt="image-20210626041417125"></p>
 <p>이후 브라우저를 통해 접속해보면 아래와 같이 접속이 잘 이뤄집니다.</p>
-<p><img src="/posts/k8s-2/imgs/image-20210626041704593.png" alt="image-20210626041704593"></p>
+<p><img src="imgs/image-20210626041704593.png" alt="image-20210626041704593"></p>
 <h2 id="header-17">Lens와 Prometheus 연동</h2>
 <p>마지막으로, Lens의 설정 페이지에서 아래와 같이 Prometheus를 설정해줍니다.</p>
 <p>아마 초기에는 installation method가 Autodetect로 되어 있고 service address가 보이지 않을 텐데 installation method를 Prometheus Operator로 설정해주면 service address를 입력할 수 있는 칸이 표시됩니다.</p>
-<p><img src="/posts/k8s-2/imgs/image-20210626042443126.png" alt="image-20210626042443126"></p>
+<p><img src="imgs/image-20210626042443126.png" alt="image-20210626042443126"></p>
 <p>그러면 <strong>Lens 연동하기</strong> 섹션처럼 메인 화면에서 각종 metric들을 확인할 수 있습니다.</p>
 <h1 id="header-18">Grafana</h1>
 <p>그리고 위 방법으로 Prometheus를 설치하면 Grafana가 따라옵니다. Grafana는 오픈 소스 데이터 분석 및 시각화 툴로 이 경우 Prometheus로부터 데이터를 받아 이쁘게 시각화해줍니다. Grafana 역시 다음과 같이 포트포워딩을 해준 후 이를 다시 로컬로 proxy해주어야 합니다.</p>
 <pre><code class="language-bash">kubectl port-forward --namespace monitor $(kubectl get pods -n monitor --selector app.kubernetes.io/name=grafana --output=jsonpath=<span class="hljs-string">&quot;{.items..metadata.name}&quot;</span>) 3000
 </code></pre>
 <p>이후 브라우저에서 3000번으로 접근하면 아래와 같은 로그인 화면을 볼 수 있습니다.</p>
-<p><img src="/posts/k8s-2/imgs/image-20210626042113074.png" alt="image-20210626042113074"></p>
+<p><img src="imgs/image-20210626042113074.png" alt="image-20210626042113074"></p>
 <p>아이디와 패스워드를 <code>admin</code>, <code>prom-operator</code>를 입력해줍니다. 그러면 이와 같이 Prometheus로부터 수집된 다양한 metric들을 시각화하여 확인할 수 있습니다.</p>
-<p><img src="/posts/k8s-2/imgs/image-20210626042247059.png" alt="image-20210626042247059"></p>
+<p><img src="imgs/image-20210626042247059.png" alt="image-20210626042247059"></p>
 <h1 id="header-19">참고문헌</h1>
 <ul>
 <li><a href="http://www.dcasati.net/posts/installing-prometheus-on-kubernetes-v1.16.9/">http://www.dcasati.net/posts/installing-prometheus-on-kubernetes-v1.16.9/</a></li>
@@ -161,4 +161,4 @@ prometheus-operator-1624614050-prometheus-node-exporter-bd74t   1/1     Running 
 </ul>
 <h1 id="header-20">TMI</h1>
 <p>온갖 시행착오의 흔적들... 25일 새벽 2시부터 26일 새벽 4시(현재)까지 거의 450개 사이트에 방문... 여태 프로젝트들을 진행하면서 이렇게 많은 삽질을 했던 적이 없는 것 같아서 기념 삼아 남겨둡니다...</p>
-<p><img src="/posts/k8s-2/imgs/image-20210626043921889.png" alt="image-20210626043921889"></p>
+<p><img src="imgs/image-20210626043921889.png" alt="image-20210626043921889"></p>

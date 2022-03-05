@@ -14,7 +14,7 @@
 <li>그래서 예를 들자면, 일주일에 한 번씩 사본을 만들어 저장해둡니다.</li>
 </ul>
 <p>이때 사람들은 아래와 같이 파일 이름을 바꾸어서 관리하곤 합니다.</p>
-<p><img src="/posts/git-github/52B979BD503F240029" alt="img"></p>
+<p><img src="52B979BD503F240029" alt="img"></p>
 <p>(이 이미지를 <a href="https://bbs.ruliweb.com/community/board/300712/read/19635391">퍼온 곳</a>을 보면, 이런 작업과 관련된 온갖 고충을 다 볼 수 있습니다...)</p>
 <p>바로 이럴 때 Git이 필요합니다. 깃은 이런 버전 작업을 매우 쉽게 관리할 수 있도록 도와줍니다.</p>
 <h1 id="header-2">🖨그냥 파일을 복사하면 안 되는가?</h1>
@@ -46,18 +46,18 @@
 <p>먼저 Git이 설치되어있다는 가정 하에 실제로 설명드리겠습니다. <a href="https://coding-factory.tistory.com/245">코딩팩토리 블로그 글</a>을 보시면 설명이 잘 되어 있습니다.</p>
 <h2 id="header-4">리포지토리 만들기</h2>
 <p>앞서 깃은 프로젝트 버전을 관리해주는 프로그램이라고 설명했었습니다. 그러려면 각 버전들이 어딘가에 저장이 돼야 할 텐데요. 그 <u>버전들이 저장되는 곳을 <code>Repository(리포지토리, 저장소)</code>라고 부릅니다.</u> 이제 아래와 같이 프로젝트 폴더를 하나 만들고, 이 프로젝트에 리포지토리를 만들어보겠습니다.</p>
-<p><img src="/posts/git-github/image-20201006093218292.png" alt="image-20201006093218292"></p>
+<p><img src="image-20201006093218292.png" alt="image-20201006093218292"></p>
 <p>프로젝트 폴더에서 커맨드라인 창을 열어줍니다. 파워쉘도 괜찮습니다. 파워쉘을 열기 위해서는 <code>Shift</code>키를 누른 채로 우클릭을 하면 메뉴에 파워쉘 열기 버튼이 있을 것입니다.</p>
 <p>이후 열린 커맨드라인에서 <code>git init</code> 커맨드를 입력해줍니다. 그러면 아래와 같이 깃 리포지토리가 초기화되었다는 메시지가 뜹니다.</p>
-<p><img src="/posts/git-github/image-20201006093451001.png" alt="image-20201006093451001"></p>
+<p><img src="image-20201006093451001.png" alt="image-20201006093451001"></p>
 <p>이제 깃을 사용할 준비가 다 되었습니다.</p>
 <p>그런데 프로젝트 폴더를 보시면 아무 것도 변한 게 없습니다. 분명히 리포지토리를 생성했다고 했는데, 어떻게 된 걸까요?</p>
 <p>이는 숨김 파일을 보이도록 해 보면 알 수 있습니다.</p>
-<p><img src="/posts/git-github/image-20201006094604073.png" alt="image-20201006094604073"></p>
+<p><img src="image-20201006094604073.png" alt="image-20201006094604073"></p>
 <p>위와 같이 <code>.git</code>이라는 숨겨진 디렉토리가 보입니다. 이 숨겨진 디렉토리 안에 깃 설정 정보, 각 버전들 등 여러 데이터가 들어 있습니다. 물론 저 폴더 안에 단순히 프로젝트 전체의 사본이 날짜별로 들어있거나 한 것은 아닙니다. 이는 아래 Git Workflow 섹션에서 설명하겠습니다.</p>
 <h2 id="header-5">파일 상태</h2>
 <p>Git은 파일들을 아래 이미지에서 보이는 세 가지 단계로 관리합니다. (정확히는 <code>파일</code>을 관리하는 것이 아니라 <code>변경사항</code>을 관리하는 것입니다. 그러나 이 글은 기초적인 개념을 소개하는 글이므로 이는 생략하겠습니다.)</p>
-<p><img src="/posts/git-github/vxepyz5hzx5ufmptc7gx.png" alt="Diagram of git stages"></p>
+<p><img src="vxepyz5hzx5ufmptc7gx.png" alt="Diagram of git stages"></p>
 <p><code>Working Directory</code>는 우리가 작업하고 있는 디렉토리를 말합니다. 그냥 프로젝트 폴더입니다.</p>
 <p><code>Repository</code>는 앞서 보았듯이 버전들이 저장되는 장소입니다.</p>
 <p><code>Staging Area</code>는 약간 헷갈리는 개념입니다. 간단히는 <code>Working Directory</code>와 <code>Repository</code> 사이에 있는 임시 저장 공간이라고 생각하시면 됩니다. 좀 차이가 있기는 합니다만, 블로그에 글을 작성할 때, 작성을 완료해서 포스팅하기 전에 임시 저장 단계가 있습니다. 그런 거라고 생각하시면 됩니다.</p>
@@ -65,7 +65,7 @@
 <p>포스트 임시 저장과 <code>Staging Area</code>의 차이는, 포스트는 임시 저장 없이 바로 포스팅할 수 있지만 깃에서는 반드시 임시저장을 해야 하고, <u>임시저장을 한 내용만 새로운 버전으로 만들 수 있다는 것입니다.</u></p>
 <h3 id="header-6">Working Directory</h3>
 <p>그러면 프로젝트에서 내 파일들이 어떤 단계에 있는지 확인해보겠습니다. 커맨드라인에 <code>git status</code>를 입력하면 다음과 같이 파일의 상태가 나옵니다.</p>
-<p><img src="/posts/git-github/image-20201006095639331.png" alt="image-20201006095639331"></p>
+<p><img src="image-20201006095639331.png" alt="image-20201006095639331"></p>
 <p>파일이 <code>Untracked files</code>라고 되어 있는데, <code>Untracked</code> 혹은 <code>Modified</code>, <code>Deleted</code>는 임시 저장해둔 <code>Staging Area</code>의 내용과 <code>Working Directory</code>의 내용이 다르다는 것을 알려줍니다.</p>
 <ul>
 <li>우리는 아직 <code>Staging Area</code>에 아무것도 저장을 하지 않았기 때문에 임시 저장소에는 <code>MyTextFile.txt</code>자체가 없습니다. 그럴 경우 <code>untracked</code>가 표시됩니다.</li>
@@ -80,13 +80,13 @@
 <li>아까와 비슷하게 <code>Repository</code>에 파일이 있기는 한데 <code>Staging Area</code>와 내용이 다를 경우 <code>modified</code>가 표시됩니다.</li>
 <li><code>Repository</code>에는 파일이 있는데 <code>Staging Area</code>에는 없을 경우에는 <code>deleted</code>라고 표시됩니다.</li>
 </ul>
-<p><img src="/posts/git-github/image-20201006101816218.png" alt="image-20201006101816218"></p>
+<p><img src="image-20201006101816218.png" alt="image-20201006101816218"></p>
 <p>이제 파일들을 임시저장했기 때문에, 드디어 새로운 버전을 만들 수 있습니다.</p>
 <h3 id="header-8">Repository</h3>
 <p>여태까지 우리가 만들었던 리포지토리는 비어있던 상태였습니다. 이제 리포지토리에 새로운 버전을 추가해보겠습니다. 버전을 만드는 작업을 <code>Commit(커밋)</code>이라고 합니다.</p>
 <p><code>git commit -m &quot;Initial commit&quot;</code> 명령어를 입력해줍니다. 뒤에 <code>Initial commit</code>부분은 각 버전에 붙는 설명인데, 이를 커밋 메시지라 합니다. 보통 이 버전이 이전 버전에서 무엇을 수정한 것인지를 써 줍니다. 우리는 맨 처음 버전을 만드는 것이고, 이전 버전이 없기 때문에 저렇게 써 주었습니다. 예를 들어 새로운 기능을 추가했다면 <code>Add new feature ~~</code>과 같이 커밋 메시지를 쓸 수 있습니다.</p>
 <p>그러면 아래와 같이 이 버전에서 어떤 일이 이루어졌는지를 알려주는 로그가 뜹니다.</p>
-<p><img src="/posts/git-github/image-20201006103007848.png" alt="image-20201006103007848"></p>
+<p><img src="image-20201006103007848.png" alt="image-20201006103007848"></p>
 <p>메시지의 내용은 그냥 그렇구나~하고 넘기시면 됩니다. 아직 <code>브랜치</code>나 <code>변경 사항</code>에 대한 내용을 다루지 않았기 때문입니다.</p>
 <p>어쨌든 이제 새로운 버전을 만들었기 때문에, 언제든 이 버전으로 다시 돌아오거나, 이 버전과 다른 버전을 비교할 수 있습니다. 새로운 버전을 추가하고 싶으면 아래 과정을 반복하면 됩니다.</p>
 <ol>
@@ -106,7 +106,7 @@
 <li>git status</li>
 </ol>
 <p>그러면 아래와 같이 표시됩니다.</p>
-<p><img src="/posts/git-github/image-20201006113153727.png" alt="image-20201006113153727"></p>
+<p><img src="image-20201006113153727.png" alt="image-20201006113153727"></p>
 <ul>
 <li>3번 단계에서 파일을 수정한 후 <code>git add</code>를 수행하여 임시저장을 했습니다. 그러므로 <code>Changes to be committed</code> 섹션에는 <code>Repository</code>와 <code>Staging Area</code>에서 파일의 내용에 차이가 있으므로 <code>modified</code>가 표시됩니다.</li>
 <li>5번 단계에서 파일을 삭제했지만, <code>git add</code>를 수행하지는 않았습니다. 그러므로 <code>Staging Area</code>에는 여전히 파일이 있으나 <code>Working Directory</code>에는 파일이 없습니다. 따라서 아래쪽 섹션에는 <code>deleted</code>가 표시됩니다.</li>
@@ -124,12 +124,12 @@
 <h3 id="header-11">Git Diff</h3>
 <p>추가로, 두 커밋 사이에 어떤 변화가 생겼나 확인하는 방법을 알려드리겠습니다.</p>
 <p>먼저 <code>git log</code>를 사용하면 아래와 같이 어떤 커밋들이 있었는지 그 리스트를 볼 수 있습니다.</p>
-<p><img src="/posts/git-github/image-20201006110420405.png" alt="image-20201006110420405"></p>
+<p><img src="image-20201006110420405.png" alt="image-20201006110420405"></p>
 <p>각 커밋은 위에 보이는 <code>91156f75...</code>와 같은 고유 번호가 있습니다.</p>
 <p>이제 <code>git diff 커밋1고유번호 커밋2고유번호</code>를 입력하면 두 커밋의 차이를 볼 수 있습니다. 물론 저 긴 문자들을 다 입력할 필요는 없고 맨 앞의 네다섯 글자 정도만 입력해주면 됩니다.</p>
-<p><img src="/posts/git-github/image-20201006110755380.png" alt="image-20201006110755380"></p>
+<p><img src="image-20201006110755380.png" alt="image-20201006110755380"></p>
 <p>만약 그냥 <code>git diff</code>를 입력하면 현재 <code>Working Directory</code>의 내용과 가장 최근 커밋을 비교하여 보여줍니다.</p>
-<p><img src="/posts/git-github/image-20201006110859176.png" alt="image-20201006110859176"></p>
+<p><img src="image-20201006110859176.png" alt="image-20201006110859176"></p>
 <h1 id="header-12">다음엔?</h1>
 <p>순서는 좀 다를 수 있지만 아래와 같은 내용을 포스팅해보려 합니다.</p>
 <ul>
