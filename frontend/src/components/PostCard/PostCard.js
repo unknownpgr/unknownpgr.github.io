@@ -4,32 +4,30 @@ import { Link } from "react-router-dom";
 import dateFormat from "libs/dateFormat";
 import "./postcard.scss";
 
-function PostCard(props) {
-  const categoryStr = "# " + props.category;
+function PostCard({ name, category, title, date, thumbnail }) {
+  const categoryStr = "# " + category;
 
   return (
     <Card className="post-card m-4">
-      <Link to={"/posts/" + props.name}>
+      <Link to={`/posts/${name}/`}>
         <Card.Img
           variant="top"
-          src={props.thumbnail ? props.thumbnail : "/code.png"}
+          src={thumbnail ? thumbnail : "/code.png"}
           className="card-img"></Card.Img>
       </Link>
       <Card.Body>
-        <Link to={"/posts/" + props.name}>
-          <Card.Title>{props.title}</Card.Title>
+        <Link to={`/posts/${name}/`}>
+          <Card.Title>{title}</Card.Title>
         </Link>
         <Card.Subtitle className="mb-2 text-muted">
           <OverlayTrigger
             placement="bottom"
             overlay={
-              <Tooltip id="button-tooltip" {...props}>
-                {new Date(props.date) + ""}
-              </Tooltip>
+              <Tooltip id="button-tooltip">{new Date(date) + ""}</Tooltip>
             }>
-            <small> {dateFormat(new Date(props.date))}</small>
+            <small> {dateFormat(new Date(date))}</small>
           </OverlayTrigger>
-          <Link to={`/categories/${props.category}`}>
+          <Link to={`/categories/${category}/`}>
             <small className="text-muted">{" " + categoryStr}</small>
           </Link>
         </Card.Subtitle>

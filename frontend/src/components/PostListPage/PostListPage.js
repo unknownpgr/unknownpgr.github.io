@@ -17,11 +17,9 @@ function PostListPage({ filter }) {
 
   return (
     <div className="blog-post-list">
-      {
-        <div className="category" hidden={!filter}>
-          <h1>{filter}</h1>
-        </div>
-      }
+      <div className="category" hidden={!filter}>
+        <h1>{filter}</h1>
+      </div>
       <CardDeck className="justify-content-around">{postList}</CardDeck>
     </div>
   );
