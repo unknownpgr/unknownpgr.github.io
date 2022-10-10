@@ -108,8 +108,12 @@ function parseMarkdown(markdownStr) {
    */
   (function recursiveUpdate(_tokens) {
     for (let token of _tokens) {
-      if (firstImage === "" && token.type === "image") {
-        firstImage = token.attrs[0][1];
+      if (token.type === "image") {
+        const image = token.attrs[0][1];
+        if (firstImage === "") firstImage = image;
+        if (image.length > 64) {
+          console.log(`Image name ${image} is too long`);
+        }
       }
       if (token.type === "inline") recursiveUpdate(token.children);
     }
@@ -254,7 +258,7 @@ async function clearOutputDirectory() {
     if (+process.version.substr(1, 2) < 12) {
       console.error("Could not run rmdir because of node version is too low.");
     }
-    await fs.rmdir(PATH_DST, { recursive: true });
+    await fs.rm(PATH_DST, { recursive: true });
     console.log("All existing files were removed.");
   } catch (e) {
     console.log("There was some minor error while removing data.");
