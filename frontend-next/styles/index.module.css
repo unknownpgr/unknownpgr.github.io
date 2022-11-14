@@ -1,0 +1,11 @@
+.post {
+  margin-bottom: 1rem;
+}
+
+.post h1 {
+  margin-bottom: 0;
+}
+
+.post a::after {
+  display: none;
+}

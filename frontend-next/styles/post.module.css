@@ -1,0 +1,13 @@
+.title {
+  text-align: center;
+  margin: 2rem;
+}
+
+.main {
+  word-break: keep-all;
+}
+
+.main img {
+  width: 80%;
+  margin: 0 10%;
+}

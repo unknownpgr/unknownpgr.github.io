@@ -1,6 +1,5 @@
 import React, { ReactNode } from "react";
-import Header from "../components/header/header";
-// import "./aboutpage.scss";
+import styles from "../styles/about.module.css";
 
 function Ank({ href, children }: { href: string; children: React.ReactNode }) {
   return (
@@ -20,10 +19,10 @@ function ProjectItem({
   descriptions: string[];
 }) {
   return (
-    <li className="project-item">
-      <p>
+    <li>
+      <div className={styles.itemTitle}>
         <Ank href={link}>{title}</Ank>
-      </p>
+      </div>
       <ul>
         {descriptions.map((text, i) => (
           <li key={i}>{text}</li>
@@ -33,25 +32,13 @@ function ProjectItem({
   );
 }
 
-function ProjectGroup({
-  children,
-  label,
-}: {
-  children: ReactNode;
-  label?: string;
-}) {
-  return (
-    <div className="project-group">
-      <h3 className="group-title">{children}</h3>
-      <div className="group-label">{label}</div>
-    </div>
-  );
+function ProjectGroup({ children }: { children: ReactNode }) {
+  return <h1 className={styles.projectGroup}>{children}</h1>;
 }
 
 function AboutPage() {
   return (
-    <div>
-      <Header />
+    <div className={styles.about}>
       <h1>About UnknownPgr.</h1>
       <ul>
         <li>항상 새로운 분야에 도전합니다.</li>
@@ -65,6 +52,17 @@ function AboutPage() {
         </li>
         <li>
           그 중에서도 <strong>웹과 임베디드</strong>를 주로 공부하고 있습니다.
+        </li>
+      </ul>
+      <h2>Contact</h2>
+      <ul>
+        <li>Location : Korea / Seoul</li>
+        <li>
+          Email : <Ank href="unknownpgr@gmail.com">unknownpgr@gmail.com</Ank>
+        </li>
+        <li>
+          GitHub :{" "}
+          <Ank href="https://github.com/unknownpgr">github.com/unknownpgr</Ank>
         </li>
       </ul>
       <h2>Selected Projects</h2>
@@ -153,7 +151,7 @@ function AboutPage() {
             "지금 보기에는 조악한 구현이지만, 고등학생 때 구현했다는 것에 의의를 두겠습니다.",
           ]}
         />
-        <ProjectGroup label="와! 인공지능!">AI</ProjectGroup>
+        <ProjectGroup>Artifical Intelligence</ProjectGroup>
         <ProjectItem
           link="https://github.com/unknownpgr/face_recognize"
           title="Face Tracking"
@@ -161,7 +159,7 @@ function AboutPage() {
             "OpenFace 라이브러리 및 SVM을 이용하여 얼굴 인식과 트래킹을 수행하도록 구현해봤습니다.",
           ]}
         />
-        <ProjectGroup label="인생은 즐겁게.">Fun projects</ProjectGroup>
+        <ProjectGroup>Fun projects</ProjectGroup>
         <ProjectItem
           link="https://github.com/unknownpgr/t-png"
           title="t-png"
@@ -191,84 +189,62 @@ function AboutPage() {
         />
       </ul>
       <h2>Work Experiences</h2>
-      <ul>
+      <ul className={styles.splacedList}>
+        <li>Software Maestro 12기</li>
         <li>
-          <p>Software Maestro 12기</p>
-        </li>
-        <li>
-          <p>Undergraduate Research Intern, University of Seoul</p>
+          Undergraduate Research Intern, University of Seoul
           <ul>
             <li>Human-Centered Artificial Intelligence Lab(HCAIL)</li>
             <li>Supervisor: Prof. Hyunggu Jung</li>
           </ul>
         </li>
         <li>
-          <p>Undergraduate Research Intern, University of Seoul</p>
+          Undergraduate Research Intern, University of Seoul
           <ul>
             <li>International School of Urban Sciences</li>
             <li>Supervisor: Prof. Chun Ho Yeom</li>
           </ul>
         </li>
         <li>
-          <p>Teaching Assistant, University of Seoul</p>
+          Teaching Assistant, University of Seoul
           <ul>
             <li>C Programming and Practice, 2019 Winter Semister</li>
           </ul>
         </li>
       </ul>
       <h2>Honors / Awards</h2>
-      <ul>
+      <ul className={styles.splacedList}>
+        <li>2020년 2학기 학업우수상</li>
         <li>
-          <p>2020년 2학기 학업우수상</p>
-        </li>
-        <li>
-          <p>서울시립대학교 2020년 X-TWICE 실전문제연구단 장려상</p>
+          서울시립대학교 2020년 X-TWICE 실전문제연구단 장려상
           <ul>
             <li>딥러닝 기반 연관논문 추천시스템 개발 및 평가</li>
           </ul>
         </li>
+        <li>서울시립대학교 2020년 셈틀제 2등</li>
+        <li>서울시립대학교 2019년 셈틀제 5등</li>
         <li>
-          <p>서울시립대학교 2020년 셈틀제 2등</p>
+          성균관대학교 2019 전국 대학생 자율주행차 융합설계 경진대회
+          최우수상(주행 부문)
         </li>
         <li>
-          <p>서울시립대학교 2019년 셈틀제 5등</p>
+          서울시립대학교 2019 제3회 컴퓨터알고리즘 프로그래밍 경진대회 장려상
         </li>
         <li>
-          <p>
-            성균관대학교 2019 전국 대학생 자율주행차 융합설계 경진대회
-            최우수상(주행 부문)
-          </p>
+          서울시립대학교 2019 제22회 전국 라인트레이서 로봇 경연대회 장려상
         </li>
-        <li>
-          <p>
-            서울시립대학교 2019 제3회 컴퓨터알고리즘 프로그래밍 경진대회 장려상
-          </p>
-        </li>
-        <li>
-          <p>
-            서울시립대학교 2019 제22회 전국 라인트레이서 로봇 경연대회 장려상
-          </p>
-        </li>
-        <li>
-          <p>입학우수장학 (2019년 1학기)</p>
-        </li>
-        <li>
-          <p>국가장학 I (2019년 1학기~2020년 2학기)</p>
-        </li>
-        <li>
-          <p>학업우수장학(II) (2019년 2학기~2020년 2학기)</p>
-        </li>
+        <li>입학우수장학 (2019년 1학기)</li>
+        <li>국가장학 I (2019년 1학기~2020년 2학기)</li>
+        <li>학업우수장학(II) (2019년 2학기~2020년 2학기)</li>
       </ul>
       <h2>Publications</h2>
-      <ul>
+      <ul className={styles.splacedList}>
         <li>
-          <p>
-            <strong>Gwon, J</strong>., Kwon, M., &amp; Jung, H. (2020, April).
-            Analyzing Bias of Comments on Political News Articles to Facilitate
-            Transparent Online Communities. In Proceedings of the 2020 Symposium
-            on Emerging Research from Asia and on Asian Contexts and Cultures
-            (pp. 49-52).
-          </p>
+          <strong>Gwon, J</strong>., Kwon, M., &amp; Jung, H. (2020, April).
+          Analyzing Bias of Comments on Political News Articles to Facilitate
+          Transparent Online Communities. In Proceedings of the 2020 Symposium
+          on Emerging Research from Asia and on Asian Contexts and Cultures (pp.
+          49-52).
           <ul>
             <li>
               <Ank href="https://dl.acm.org/profile/99659569708">
@@ -278,12 +254,10 @@ function AboutPage() {
           </ul>
         </li>
         <li>
-          <p>
-            Lee, W., Kwon, M., Hyun, Y., Lee, J., <strong>Gwon, J</strong>., &
-            Jung, H. (2020, April). Uncovering CHI Reviewers Needs and Barriers.
-            In Proceedings of the 2020 Symposium on Emerging Research from Asia
-            and on Asian Contexts and Cultures (pp. 57-60).
-          </p>
+          Lee, W., Kwon, M., Hyun, Y., Lee, J., <strong>Gwon, J</strong>., &
+          Jung, H. (2020, April). Uncovering CHI Reviewers Needs and Barriers.
+          In Proceedings of the 2020 Symposium on Emerging Research from Asia
+          and on Asian Contexts and Cultures (pp. 57-60).
           <ul>
             <li>
               <Ank href="https://dl.acm.org/doi/abs/10.1145/3391203.3391218">
@@ -291,20 +265,6 @@ function AboutPage() {
               </Ank>
             </li>
           </ul>
-        </li>
-      </ul>
-      <h2>Contact</h2>
-      <ul>
-        <li>Location : Korea / Seoul</li>
-        <li>
-          Email : <Ank href="unknownpgr@gmail.com">unknownpgr@gmail.com</Ank>
-        </li>
-        <li>
-          GitHub :
-          <Ank href="https://github.com/unknownpgr">
-            {" "}
-            https://github.com/unknownpgr
-          </Ank>
         </li>
       </ul>
     </div>
