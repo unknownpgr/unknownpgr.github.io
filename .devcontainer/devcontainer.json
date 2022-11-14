@@ -14,5 +14,5 @@
     "ghcr.io/devcontainers/features/git:1": {},
     "ghcr.io/devcontainers/features/python:1": {}
   },
-  "extensions": ["eamodio.gitlens", "esbenp.prettier-vscode"]
+  "extensions": ["mhutchie.git-graph", "esbenp.prettier-vscode"]
 }
