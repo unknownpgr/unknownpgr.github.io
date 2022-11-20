@@ -14,13 +14,20 @@ function formatDateString(dateString: string) {
   return `${y}.${m}.${d}`;
 }
 
-export const getStaticProps: GetStaticProps<{
+interface IHomeProps {
   postNames: string[];
-  posts: IPost[];
-}> = async (context) => {
+  posts: Omit<IPost, "html">[];
+}
+
+export const getStaticProps: GetStaticProps<IHomeProps> = async (context) => {
   const postMetadata = await getPostMetadata();
+  const posts = postMetadata.posts.map((post) => {
+    const { html, ...others } = post;
+    return others;
+  });
+  const props = { ...postMetadata, posts };
   return {
-    props: postMetadata,
+    props,
   };
 };
 
