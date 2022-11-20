@@ -1,1 +1,0 @@
-docker run --rm -it -v $(pwd)/docs:/usr/share/nginx/html -p 8080:80 nginx
