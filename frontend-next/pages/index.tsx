@@ -1,8 +1,10 @@
+import { GetStaticProps, InferGetStaticPropsType } from "next";
 import Head from "next/head";
 import Link from "next/link";
+import { getPostMetadata } from "../backend";
 import Header from "../components/Header";
-import metadata from "../meta.json";
 import styles from "../styles/index.module.css";
+import { IPost } from "../types";
 
 function formatDateString(dateString: string) {
   const date = new Date(dateString);
@@ -12,7 +14,19 @@ function formatDateString(dateString: string) {
   return `${y}.${m}.${d}`;
 }
 
-export default function Home() {
+export const getStaticProps: GetStaticProps<{
+  postNames: string[];
+  posts: IPost[];
+}> = async (context) => {
+  const postMetadata = await getPostMetadata();
+  return {
+    props: postMetadata,
+  };
+};
+
+export default function Home({
+  posts,
+}: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <div>
       <Head>
@@ -21,8 +35,8 @@ export default function Home() {
         <link rel="icon" href="/logo.png" />
       </Head>
       <main className={styles.main}>
-        {Object.values(metadata).map(({ name, title, date, category }) => (
-          <div key={name} className={styles.post}>
+        {posts.map(({ name, title, date, category }) => (
+          <div key={title} className={styles.post}>
             <div>
               <h1>
                 <Link href={`/posts/${name}`}>{title} </Link>

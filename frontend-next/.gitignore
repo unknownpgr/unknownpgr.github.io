@@ -36,5 +36,4 @@ yarn-error.log*
 next-env.d.ts
 
 # Custom
-posts
-meta.json
+public/imgs
