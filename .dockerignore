@@ -1,5 +1,21 @@
+# Next
 /src/node_modules
+/src/.next/
+/src/out/
+
+# Yarn
+yarn-error.log*
+
+# Typescript
+/src/*.tsbuildinfo
+/src/next-env.d.ts
+
+# Blog
+/src/public/imgs/*
+
+# Others
 /posts
 /docs
 .devcontainer
 .vscode
+.dockerignore

@@ -5,9 +5,15 @@ RUN apt-get install python -y
 RUN curl https://bootstrap.pypa.io/get-pip.py | python3 - 
 RUN pip install Pillow
 
-COPY src /app
 WORKDIR /app
-RUN chmod 700 init.sh
+
+# Install packages first, to maximize cache usage.
+COPY src/package.json ./
+COPY src/yarn.lock ./
 RUN yarn
+
+# Copy other soruces
+COPY src .
+RUN chmod 700 init.sh
 
 ENTRYPOINT [ "/bin/bash", "init.sh" ]
