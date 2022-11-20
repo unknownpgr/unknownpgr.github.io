@@ -5,10 +5,9 @@ RUN apt-get install python -y
 RUN curl https://bootstrap.pypa.io/get-pip.py | python3 - 
 RUN pip install Pillow
 
+COPY src /app
 WORKDIR /app
-COPY ./backend/package.json /app/
-COPY ./backend/yarn.lock /app/
+RUN chmod 700 init.sh
 RUN yarn
-COPY ./backend /app
 
-ENTRYPOINT [ "node", "blog.js" ]
+ENTRYPOINT [ "/bin/bash", "init.sh" ]
