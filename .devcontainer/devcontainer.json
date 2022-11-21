@@ -1,5 +1,5 @@
 {
-  "name": "Node.js & TypeScript",
+  "name": "Blog",
   "image": "mcr.microsoft.com/devcontainers/typescript-node:18",
 
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
@@ -12,8 +12,8 @@
   "remoteUser": "node",
   "features": {
     "ghcr.io/devcontainers/features/git:1": {},
-	"ghcr.io/devcontainers/features/python:1": {},
-	"ghcr.io/devcontainers/features/docker-from-docker:1": {}
+    "ghcr.io/devcontainers/features/python:1": {},
+    "ghcr.io/devcontainers/features/docker-from-docker:1": {}
   },
   "extensions": ["mhutchie.git-graph", "esbenp.prettier-vscode"]
 }
