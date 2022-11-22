@@ -149,13 +149,17 @@ export function getPost(postName: string) {
   return postProcessDict[postName];
 }
 
-export async function getPostMetadata(): Promise<{
+export async function getPostsMetadata(): Promise<{
   postNames: string[];
   posts: IPost[];
 }> {
-  const postNames = (await fs.readdir("../posts")).filter(isValidPostName);
-  const posts = (
-    await Promise.all(postNames.map((postName) => getPost(postName)))
+  const _postNames = (await fs.readdir("../posts")).filter(isValidPostName);
+  const _posts = (
+    await Promise.all(_postNames.map((postName) => getPost(postName)))
   ).filter((post) => post) as IPost[];
+  const posts = _posts.sort((pa, pb) => {
+    return +new Date(pb.date) - +new Date(pa.date);
+  });
+  const postNames = _posts.map((post) => post.name);
   return { postNames, posts };
 }

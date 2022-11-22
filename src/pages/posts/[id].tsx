@@ -4,10 +4,10 @@ import styles from "../../styles/post.module.css";
 
 // Packages required from backend
 import { IPost } from "../../types";
-import { getPost, getPostMetadata } from "../../backend";
+import { getPost, getPostsMetadata } from "../../backend";
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const { postNames } = await getPostMetadata();
+  const { postNames } = await getPostsMetadata();
   return {
     paths: postNames.map((id) => ({ params: { id } })),
     fallback: false,

@@ -1,8 +1,7 @@
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import Head from "next/head";
 import Link from "next/link";
-import { getPostMetadata } from "../backend";
-import Header from "../components/Header";
+import { getPostsMetadata } from "../backend";
 import styles from "../styles/index.module.css";
 import { IPost } from "../types";
 
@@ -20,7 +19,7 @@ interface IHomeProps {
 }
 
 export const getStaticProps: GetStaticProps<IHomeProps> = async (context) => {
-  const postMetadata = await getPostMetadata();
+  const postMetadata = await getPostsMetadata();
   const posts = postMetadata.posts.map((post) => {
     const { html, ...others } = post;
     return others;
