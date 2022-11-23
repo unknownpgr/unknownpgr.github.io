@@ -6,7 +6,7 @@ import mj3 from "markdown-it-mathjax3";
 import path from "path";
 import htmlParser from "node-html-parser";
 import crypto from "crypto";
-import { IPost } from "../types";
+import { IPost, IPostMetadata } from "../types";
 
 const markdown = markdownIt({
   html: true,
@@ -41,8 +41,8 @@ function isValidPostName(str: string) {
 
 function normalizeDateString(date: string) {
   const dateObj = new Date(date);
-  if (!date || isNaN(+dateObj)) return new Date().toUTCString();
-  else return dateObj.toUTCString();
+  if (!date || isNaN(+dateObj)) return new Date().toISOString();
+  else return dateObj.toISOString();
 }
 
 function normalizeCategory(category: string) {
@@ -185,12 +185,17 @@ export function getPost(postName: string) {
 
 export async function getPostsMetadata(): Promise<{
   postNames: string[];
-  posts: IPost[];
+  posts: IPostMetadata[];
 }> {
   const _postNames = (await fs.readdir("../posts")).filter(isValidPostName);
   const _posts = (
-    await Promise.all(_postNames.map((postName) => getPost(postName)))
-  ).filter((post) => post) as IPost[];
+    (await Promise.all(_postNames.map((postName) => getPost(postName)))).filter(
+      (post) => post
+    ) as IPost[]
+  ).map((post) => {
+    const { html, ...metadata } = post;
+    return metadata;
+  }) as IPostMetadata[];
   const posts = _posts.sort((pa, pb) => {
     return +new Date(pb.date) - +new Date(pa.date);
   });

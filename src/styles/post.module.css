@@ -4,16 +4,22 @@
 }
 
 .main {
-  word-break: keep-all;
+  word-break: break-all;
 }
 
 .main p {
   line-height: 1.8rem;
 }
 
+.main li {
+  line-height: 1.8rem;
+}
+
 .main img {
-  width: 80%;
-  margin: 2rem 10%;
+  max-width: 80%;
+  min-width: 25%;
+  display: block;
+  margin: auto;
 }
 
 .main iframe {
@@ -22,6 +28,27 @@
   border: none;
 }
 
-.list {
-  line-height: 1.8rem;
+.main pre > code {
+  display: block;
+  overflow-x: auto;
+  padding: 0.5rem 0.775rem 0.5rem 0.775rem;
+}
+
+.main blockquote {
+  background-color: rgba(0, 0, 0, 0.075);
+  margin-left: 0;
+  margin-right: 0;
+  padding: 1rem;
+}
+
+.main blockquote p {
+  margin: 0;
+}
+
+.list,
+.listSelected {
+  margin-bottom: 0.5rem;
+}
+.listSelected {
+  font-weight: bold;
 }

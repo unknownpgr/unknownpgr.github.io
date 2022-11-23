@@ -3,7 +3,7 @@ import Head from "next/head";
 import Link from "next/link";
 import { getPostsMetadata } from "../backend";
 import styles from "../styles/index.module.css";
-import { IPost } from "../types";
+import { IPost, IPostMetadata } from "../types";
 
 function formatDateString(dateString: string) {
   const date = new Date(dateString);
@@ -15,16 +15,12 @@ function formatDateString(dateString: string) {
 
 interface IHomeProps {
   postNames: string[];
-  posts: Omit<IPost, "html">[];
+  posts: IPostMetadata[];
 }
 
 export const getStaticProps: GetStaticProps<IHomeProps> = async (context) => {
-  const postMetadata = await getPostsMetadata();
-  const posts = postMetadata.posts.map((post) => {
-    const { html, ...others } = post;
-    return others;
-  });
-  const props = { ...postMetadata, posts };
+  const posts = await getPostsMetadata();
+  const props = { ...posts };
   return {
     props,
   };
