@@ -7,7 +7,21 @@
   word-break: keep-all;
 }
 
+.main p {
+  line-height: 1.8rem;
+}
+
 .main img {
   width: 80%;
-  margin: 0 10%;
+  margin: 2rem 10%;
+}
+
+.main iframe {
+  height: 800px;
+  width: 100%;
+  border: none;
+}
+
+.list {
+  line-height: 1.8rem;
 }
