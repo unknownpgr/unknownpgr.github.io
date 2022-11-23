@@ -1,6 +1,7 @@
 {
-    "editor.formatOnSave": true,
-    "javascript.format.semicolons": "insert",
-    "javascript.preferences.quoteStyle": "double",
-    "typescript.preferences.quoteStyle": "double"
+  "editor.formatOnSave": true,
+  "javascript.format.semicolons": "insert",
+  "javascript.preferences.quoteStyle": "double",
+  "typescript.preferences.quoteStyle": "double",
+  "editor.wordWrap": "on"
 }
