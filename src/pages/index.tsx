@@ -44,7 +44,7 @@ export default function Home({
                 <Link href={`/posts/${name}`}>{title} </Link>
               </h1>
             </div>
-            <div>
+            <div className={styles.metadata}>
               {formatDateString(date)} #{category}
             </div>
           </div>

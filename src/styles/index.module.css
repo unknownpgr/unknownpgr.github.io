@@ -6,6 +6,10 @@
   margin-bottom: 0;
 }
 
+.metadata {
+  color: rgba(0, 0, 0, 0.4);
+}
+
 .post a::after {
   display: none;
 }
