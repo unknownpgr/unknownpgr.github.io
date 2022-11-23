@@ -143,10 +143,44 @@ async function processPost(postName: string): Promise<IPost | null> {
 const postProcessDict: { [key: string]: Promise<IPost | null> | undefined } =
   {};
 
+async function getCachePath(key: string) {
+  const CACHE_DIR = `.cache`;
+  try {
+    await fs.stat(CACHE_DIR);
+  } catch {
+    await fs.mkdir(CACHE_DIR);
+  }
+  const cahceName = crypto.createHash("md5").update(key).digest("hex");
+  const cachePath = path.join(CACHE_DIR, cahceName);
+  return cachePath;
+}
+
+async function readCache<T>(key: string): Promise<T | null> {
+  try {
+    const cachePath = await getCachePath(key);
+    const cacheContent = await fs.readFile(cachePath);
+    return JSON.parse(cacheContent.toString("utf-8"));
+  } catch {
+    return null;
+  }
+}
+
+async function writeCache<T>(key: string, value: T) {
+  const cachePath = await getCachePath(key);
+  const cacheContent = Buffer.from(JSON.stringify(value), "utf-8");
+  await fs.writeFile(cachePath, cacheContent);
+}
+
+async function cache<T>(key: string, onMiss: () => Promise<T>) {
+  const cache = await readCache<T>(key);
+  if (cache) return cache;
+  const content = await onMiss();
+  await writeCache<T>(key, content);
+  return content;
+}
+
 export function getPost(postName: string) {
-  if (!postProcessDict[postName])
-    postProcessDict[postName] = processPost(postName);
-  return postProcessDict[postName];
+  return cache(postName, () => processPost(postName));
 }
 
 export async function getPostsMetadata(): Promise<{
