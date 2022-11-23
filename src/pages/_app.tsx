@@ -12,6 +12,11 @@ export default function App({ Component, pageProps }: AppProps) {
         src="https://www.googletagmanager.com/gtag/js?id=G-VMWCS5PZY0"
       ></Script>
       <Script
+        async
+        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5695206410217978"
+        crossOrigin="anonymous"
+      ></Script>
+      <Script
         id="gtan-init"
         strategy="afterInteractive"
         dangerouslySetInnerHTML={{
