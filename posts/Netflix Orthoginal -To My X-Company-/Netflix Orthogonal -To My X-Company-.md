@@ -1,5 +1,5 @@
 ---
-title: '개발자가 마주치는 진짜 문제들[3]'
+title: 개발자가 마주치는 진짜 문제들[3]
 category: development
 date: 2022-01-02T00:00:00.000Z
 

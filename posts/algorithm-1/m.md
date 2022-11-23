@@ -1,5 +1,5 @@
 ---
-title: '알고리즘:N-queens problem'
+title: 알고리즘:N-queens problem
 category: algorithm
 date: 2021-01-17T17:26:17.050Z
 

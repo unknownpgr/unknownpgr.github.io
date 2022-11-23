@@ -1,5 +1,5 @@
 ---
-title: '쿠버네티스 클러스터 구축[2] - Lens'
+title: 쿠버네티스 클러스터 구축[2] - Lens
 category: kubernetes
 date: 2021-06-25T19:42:33.030Z
 

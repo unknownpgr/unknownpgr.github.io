@@ -1,5 +1,5 @@
 ---
-title: '라그랑주 역학[1] - 변분법'
+title: 라그랑주 역학[1] - 변분법
 category: math science
 date: 2020-10-22T22:30:26.341Z
 
@@ -187,4 +187,3 @@ $$
 ## 나무위키
 
 - [변분법](https://namu.wiki/w/%EB%B3%80%EB%B6%84%EB%B2%95#s-3)
-

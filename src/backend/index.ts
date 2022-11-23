@@ -54,7 +54,7 @@ function normalizeCategory(category: string) {
 function parseRawPostString(src: string) {
   const splitter = getNthIndexOf(src, "---", 2);
   const formatter = src.slice(0, splitter);
-  const md = src.slice(splitter + 3);
+  const md = src.slice(splitter + 3).trim();
   return [formatter, md];
 }
 
@@ -80,15 +80,6 @@ function parseFormatter(formatterStr: string): {
   return formatter;
 }
 
-// Parse raw string and return formatter, html.
-// Pure function
-function parsePost(rawStr: string) {
-  const [yamlStr, markdownStr] = parseRawPostString(rawStr);
-  const formatter = parseFormatter(yamlStr);
-  const html = markdown.render(markdownStr);
-  return { ...formatter, html };
-}
-
 async function processPost(postName: string): Promise<IPost | null> {
   try {
     console.log("Processing post ", postName);
@@ -96,7 +87,7 @@ async function processPost(postName: string): Promise<IPost | null> {
     const dir = `../posts/${postName}`;
     const files = await fs.readdir(dir);
 
-    // Find md file
+    // Find markdown file
     let mdFileName = null;
     for (const file of files) {
       if (file.endsWith(".md")) {
@@ -106,11 +97,26 @@ async function processPost(postName: string): Promise<IPost | null> {
     }
     if (!mdFileName) return null;
 
+    // Read markdown file
     const mdFilePath = path.join(dir, mdFileName);
-    const mdText = (await fs.readFile(mdFilePath)).toString("utf-8");
-    const post = parsePost(mdText);
+    const rawPostStr = (await fs.readFile(mdFilePath)).toString("utf-8");
 
-    const dom = htmlParser.parse(post.html);
+    // Parse markdown string
+    const [yamlStr, markdownStr] = parseRawPostString(rawPostStr);
+    const formatter = parseFormatter(yamlStr);
+
+    // Normalize formatter
+    const updatedPostStr = `---\n${yaml.stringify(
+      formatter
+    )}\n---\n\n${markdownStr}`;
+    await fs.writeFile(mdFilePath, updatedPostStr);
+
+    // Process image
+    try {
+      await fs.mkdir("./public/imgs");
+    } catch {}
+    const _html = markdown.render(markdownStr);
+    const dom = htmlParser.parse(_html);
     const imgs = dom.getElementsByTagName("img");
     await Promise.all(
       imgs.map(async (img) => {
@@ -131,17 +137,14 @@ async function processPost(postName: string): Promise<IPost | null> {
         img.setAttribute("src", newImageURL);
       })
     );
-    post.html = dom.toString();
+    const html = dom.toString();
 
-    return { ...post, name: postName };
+    return { ...formatter, html, name: postName };
   } catch (exception) {
     console.error(`[${postName}] ${exception}`);
     return null;
   }
 }
-
-const postProcessDict: { [key: string]: Promise<IPost | null> | undefined } =
-  {};
 
 async function getCachePath(key: string) {
   const CACHE_DIR = `.cache`;
