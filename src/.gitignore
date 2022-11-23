@@ -39,3 +39,4 @@ next-env.d.ts
 public/imgs
 public/robots.txt
 public/sitemap*
+/.cache
