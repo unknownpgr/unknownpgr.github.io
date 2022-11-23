@@ -19,3 +19,4 @@ yarn-error.log*
 .devcontainer
 .vscode
 .dockerignore
+/src/.cache
