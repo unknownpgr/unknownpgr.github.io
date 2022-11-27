@@ -6,7 +6,11 @@
   "features": {
     "ghcr.io/devcontainers/features/git:1": {},
     "ghcr.io/devcontainers/features/python:1": {},
-    "ghcr.io/devcontainers/features/docker-from-docker:1": {}
+    "ghcr.io/devcontainers/features/docker-in-docker:1": {}
   },
-  "extensions": ["mhutchie.git-graph", "esbenp.prettier-vscode"]
+  "extensions": [
+    "mhutchie.git-graph",
+    "esbenp.prettier-vscode",
+    "streetsidesoftware.code-spell-checker"
+  ]
 }
