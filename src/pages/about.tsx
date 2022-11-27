@@ -69,6 +69,14 @@ function AboutPage() {
       <ul>
         <ProjectGroup>Web</ProjectGroup>
         <ProjectItem
+          link="https://www.npmjs.com/package/@unknownpgr/git-key"
+          title="Git-Key"
+          descriptions={[
+            "An open source library for safely managing secrets with git.",
+            "My first open source library project.",
+          ]}
+        />
+        <ProjectItem
           link="https://github.com/unknownpgr/github-blog"
           title="깃허브 블로그"
           descriptions={[
