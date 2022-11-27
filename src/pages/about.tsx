@@ -159,7 +159,7 @@ function AboutPage() {
             "지금 보기에는 조악한 구현이지만, 고등학생 때 구현했다는 것에 의의를 두겠습니다.",
           ]}
         />
-        <ProjectGroup>Artifical Intelligence</ProjectGroup>
+        <ProjectGroup>Artificial Intelligence</ProjectGroup>
         <ProjectItem
           link="https://github.com/unknownpgr/face_recognize"
           title="Face Tracking"
@@ -197,7 +197,7 @@ function AboutPage() {
         />
       </ul>
       <h2>Work Experiences</h2>
-      <ul className={styles.splacedList}>
+      <ul className={styles.spacedList}>
         <li>Software Maestro 12기</li>
         <li>
           Undergraduate Research Intern, University of Seoul
@@ -216,12 +216,19 @@ function AboutPage() {
         <li>
           Teaching Assistant, University of Seoul
           <ul>
-            <li>C Programming and Practice, 2019 Winter Semister</li>
+            <li>C Programming and Practice, 2019 Winter Semester</li>
           </ul>
         </li>
       </ul>
       <h2>Honors / Awards</h2>
-      <ul className={styles.splacedList}>
+      <ul className={styles.spacedList}>
+        <li>
+          2022년 제 8회 육군창업경진대회 창의상
+          <ul>
+            <li>부동산 등기 자동 검증 솔루션</li>
+          </ul>
+        </li>
+        <li>2021년 소프트웨어 마에스트로 인증</li>
         <li>2020년 2학기 학업우수상</li>
         <li>
           서울시립대학교 2020년 X-TWICE 실전문제연구단 장려상
@@ -246,7 +253,7 @@ function AboutPage() {
         <li>학업우수장학(II) (2019년 2학기~2020년 2학기)</li>
       </ul>
       <h2>Publications</h2>
-      <ul className={styles.splacedList}>
+      <ul className={styles.spacedList}>
         <li>
           <strong>Gwon, J</strong>., Kwon, M., &amp; Jung, H. (2020, April).
           Analyzing Bias of Comments on Political News Articles to Facilitate

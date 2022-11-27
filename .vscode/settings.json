@@ -3,5 +3,6 @@
   "javascript.format.semicolons": "insert",
   "javascript.preferences.quoteStyle": "double",
   "typescript.preferences.quoteStyle": "double",
-  "editor.wordWrap": "on"
+  "editor.wordWrap": "on",
+  "cSpell.words": ["unknownpgr"]
 }
