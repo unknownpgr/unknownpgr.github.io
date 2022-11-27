@@ -1,1 +1,1 @@
-git clean -dx
+git clean -dxf
