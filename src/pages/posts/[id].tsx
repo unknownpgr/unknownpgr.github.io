@@ -1,5 +1,5 @@
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
-import React, { Suspense } from "react";
+import React from "react";
 import styles from "../../styles/post.module.css";
 
 // Packages required from backend
@@ -7,7 +7,7 @@ import { IPost, IPostMetadata } from "../../types";
 import { getPost, getPostsMetadata } from "../../backend";
 import Link from "next/link";
 
-function getPostsInSameCateogry(currentPost: IPost, metadata: IPostMetadata[]) {
+function getPostsInSameCategory(currentPost: IPost, metadata: IPostMetadata[]) {
   const { category } = currentPost;
   const posts = metadata.filter((post) => post.category === category);
   const postNames = posts.map((post) => post.name);
@@ -18,11 +18,11 @@ function getPostsInSameCateogry(currentPost: IPost, metadata: IPostMetadata[]) {
   let center = postIndex;
   if (center < 2) center = 2;
   if (center > posts.length - 3) center = posts.length - 3;
-  const subposts = [];
+  const subPosts = [];
   for (let i = -2; i < 3; i++) {
-    subposts.push(posts[center + i]);
+    subPosts.push(posts[center + i]);
   }
-  return subposts;
+  return subPosts;
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
@@ -57,7 +57,7 @@ export const getStaticProps: GetStaticProps<{
       },
     };
 
-  const postsInSameCategory = getPostsInSameCateogry(post, posts);
+  const postsInSameCategory = getPostsInSameCategory(post, posts);
 
   return {
     props: {
@@ -79,7 +79,7 @@ export default function Post({
         className={styles.main}
         dangerouslySetInnerHTML={{ __html: html }}
       ></main>
-      <h1>Posts in {category} cateogry</h1>
+      <h1>Posts in {category} category</h1>
       <ul>
         {postsInSameCategory.map(({ name, title }) => (
           <li
