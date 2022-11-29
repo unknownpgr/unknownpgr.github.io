@@ -320,3 +320,7 @@ category: this_is_category.
 ## 2022 / 11 / 21
 
 블로그를 완전히 Next.js 기반으로 포팅했다. 이제 이전에는 있었지만 지금은 없는 여러 기능을 구현하면 된다. 예컨대 날짜에 따른 포스트 정렬과 이전, 다음 포스트 보기 등이다.
+
+## 2022 / 11 / 28
+
+dev container에서 docker-from-docker를 docker-in-docker로 바꿨다. docker-in-docker에서는 docker-from-docker과는 다르게 컨테이너 내부의 volume을 사용할 수 있다. 따라서 dev container 내부와 외부에서 동일한 방식으로 빌드가 가능하다. docker-from-docker를 사용했을 때에는 dev container 내에서 빌드가 불가능했다.
