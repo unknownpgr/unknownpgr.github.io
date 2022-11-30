@@ -58,7 +58,8 @@ function AboutPage() {
       <ul>
         <li>Location : Korea / Seoul</li>
         <li>
-          Email : <Ank href="unknownpgr@gmail.com">unknownpgr@gmail.com</Ank>
+          Email :{" "}
+          <Ank href="mailto:unknownpgr@gmail.com">unknownpgr@gmail.com</Ank>
         </li>
         <li>
           GitHub :{" "}
