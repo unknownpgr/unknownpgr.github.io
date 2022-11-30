@@ -8,3 +8,8 @@ export interface IPostMetadata {
 export interface IPost extends IPostMetadata {
   html: string;
 }
+
+export interface ICategory {
+  name: string;
+  postsNumber: number;
+}

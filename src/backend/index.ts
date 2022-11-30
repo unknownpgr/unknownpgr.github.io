@@ -6,7 +6,7 @@ import mj3 from "markdown-it-mathjax3";
 import path from "path";
 import htmlParser from "node-html-parser";
 import crypto from "crypto";
-import { IPost, IPostMetadata } from "../types";
+import { ICategory, IPost, IPostMetadata } from "../types";
 
 const markdown = markdownIt({
   html: true,
@@ -24,7 +24,7 @@ const markdown = markdownIt({
 });
 markdown.use(mj3);
 
-// Find n-th appearence of pattern in string. index starts from 1.
+// Find n-th appearance of pattern in string. index starts from 1.
 function getNthIndexOf(str: string, pattern: string, n: number) {
   const l = str.length;
   let i = -1;
@@ -60,7 +60,7 @@ function parseRawPostString(src: string) {
 
 // Parse YAML formatter string into json object.
 // Automatically correct some data
-// Alomost pure function except `new Date()` use in code
+// Almost pure function except `new Date()` use in code
 function parseFormatter(formatterStr: string): {
   title: string;
   category: string;
@@ -153,8 +153,8 @@ async function getCachePath(key: string) {
   } catch {
     await fs.mkdir(CACHE_DIR);
   }
-  const cahceName = crypto.createHash("md5").update(key).digest("hex");
-  const cachePath = path.join(CACHE_DIR, cahceName);
+  const cacheName = crypto.createHash("md5").update(key).digest("hex");
+  const cachePath = path.join(CACHE_DIR, cacheName);
   return cachePath;
 }
 
@@ -189,8 +189,12 @@ export function getPost(postName: string) {
 export async function getPostsMetadata(): Promise<{
   postNames: string[];
   posts: IPostMetadata[];
+  categories: ICategory[];
 }> {
+  // Get post names of valid posts
   const _postNames = (await fs.readdir("../posts")).filter(isValidPostName);
+
+  // Parse posts
   const _posts = (
     (await Promise.all(_postNames.map((postName) => getPost(postName)))).filter(
       (post) => post
@@ -199,9 +203,25 @@ export async function getPostsMetadata(): Promise<{
     const { html, ...metadata } = post;
     return metadata;
   }) as IPostMetadata[];
+
+  // Sort by date
   const posts = _posts.sort((pa, pb) => {
     return +new Date(pb.date) - +new Date(pa.date);
   });
+
+  // Get sorted post name
   const postNames = _posts.map((post) => post.name);
-  return { postNames, posts };
+
+  // Get category
+  const _categories: { [k: string]: number } = {};
+  posts.forEach(({ category }) => {
+    if (_categories[category]) _categories[category] += 1;
+    else _categories[category] = 1;
+  });
+  const categories = Object.entries(_categories).map(([name, postsNumber]) => ({
+    name,
+    postsNumber,
+  }));
+
+  return { postNames, posts, categories };
 }

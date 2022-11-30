@@ -1,5 +1,5 @@
 import React, { PropsWithChildren } from "react";
-import Header from "./Header";
+import Header from "./Nav";
 import styles from "../styles/layout.module.css";
 import Footer from "./Footer";
 
