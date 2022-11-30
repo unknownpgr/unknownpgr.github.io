@@ -6,6 +6,7 @@ import styles from "../../styles/post.module.css";
 import { IPost, IPostMetadata } from "../../types";
 import { getPost, getPostsMetadata } from "../../backend";
 import Link from "next/link";
+import Head from "next/head";
 
 function getPostsInSameCategory(currentPost: IPost, metadata: IPostMetadata[]) {
   const { category } = currentPost;
@@ -73,23 +74,29 @@ export default function Post({
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const { title, category, date, html } = post;
   return (
-    <div>
-      <h1 className={styles.title}>{title}</h1>
-      <main
-        className={styles.main}
-        dangerouslySetInnerHTML={{ __html: html }}
-      ></main>
-      <h1>Posts in {category} category</h1>
-      <ul>
-        {postsInSameCategory.map(({ name, title }) => (
-          <li
-            key={name}
-            className={name === post.name ? styles.listSelected : styles.list}
-          >
-            <Link href={`/posts/${name}`}>{title}</Link>
-          </li>
-        ))}
-      </ul>
-    </div>
+    <>
+      <Head>
+        <title>{`Unknownpgr : ${title}`}</title>
+        <meta property="og:title" content={`Unknownpgr: ${title}`} />
+      </Head>
+      <div>
+        <h1 className={styles.title}>{title}</h1>
+        <main
+          className={styles.main}
+          dangerouslySetInnerHTML={{ __html: html }}
+        ></main>
+        <h1>Posts in {category} category</h1>
+        <ul>
+          {postsInSameCategory.map(({ name, title }) => (
+            <li
+              key={name}
+              className={name === post.name ? styles.listSelected : styles.list}
+            >
+              <Link href={`/posts/${name}`}>{title}</Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </>
   );
 }

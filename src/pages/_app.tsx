@@ -3,6 +3,7 @@ import "../styles/globals.css";
 import type { AppProps } from "next/app";
 import Layout from "../components/Layout";
 import Script from "next/script";
+import Head from "next/head";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -28,6 +29,14 @@ export default function App({ Component, pageProps }: AppProps) {
         `,
         }}
       ></Script>
+      <Head>
+        <title>Unknownpgr</title>
+        <meta name="description" content="Unknownpgr's Blog" />
+        <link rel="icon" href="/favicon.png" />
+        <meta property="og:title" content="Unknownpgr's Blog" />/
+        <meta property="og:url" content="https://unknownpgr.com" />
+        <meta property="og:image" content="/logo.png" />
+      </Head>
       <Component {...pageProps} />
     </Layout>
   );

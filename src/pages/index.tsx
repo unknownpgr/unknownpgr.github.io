@@ -1,5 +1,4 @@
 import { GetStaticProps, InferGetStaticPropsType } from "next";
-import Head from "next/head";
 import Link from "next/link";
 import { getPostsMetadata } from "../backend";
 import styles from "../styles/index.module.css";
@@ -31,11 +30,6 @@ export default function Home({
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <div>
-      <Head>
-        <title>UNKNOWN-PGR</title>
-        <meta name="description" content="Unknownpgrs' blog" />
-        <link rel="icon" href="/logo.png" />
-      </Head>
       <main className={styles.main}>
         {posts.map(({ name, title, date, category }) => (
           <div key={title} className={styles.post}>
