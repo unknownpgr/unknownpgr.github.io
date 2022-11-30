@@ -23,9 +23,10 @@
 }
 
 .main iframe {
-  height: 800px;
+  max-height: 800px;
   width: 100%;
   border: none;
+  margin: 1rem 0;
 }
 
 .main pre > code {
