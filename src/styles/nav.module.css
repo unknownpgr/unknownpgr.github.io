@@ -1,0 +1,20 @@
+.nav {
+  max-width: 50rem;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.logo {
+  font-weight: bold;
+  color: #000;
+  margin-right: 0.5rem;
+  font-size: 1.25rem;
+}
+
+.logo::after {
+  display: none;
+}
+
+.link {
+  margin: 0 0.5rem;
+}

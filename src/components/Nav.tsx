@@ -1,22 +1,22 @@
 import Link from "next/link";
 import React from "react";
-import styles from "../styles/header.module.css";
+import styles from "../styles/nav.module.css";
 
-export default function Header() {
+export default function Nav() {
   return (
     <nav className={styles.nav}>
-      <h1>[UNKNOWN-PGR]</h1>
-      <div>
-        <Link className={styles.link} href="/">
-          MAIN
-        </Link>
-        <Link className={styles.link} href="/about">
-          ABOUT
-        </Link>
-        <Link className={styles.link} href="/categories">
-          CATEGORIES
-        </Link>
-      </div>
+      <Link href="/" className={styles.logo}>
+        [UNKNOWN-PGR]
+      </Link>
+      <Link className={styles.link} href="/">
+        Home
+      </Link>
+      <Link className={styles.link} href="/categories">
+        Categories
+      </Link>
+      <Link className={styles.link} href="/about">
+        About
+      </Link>
     </nav>
   );
 }
