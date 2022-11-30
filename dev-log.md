@@ -269,3 +269,11 @@
 ## 2022 / 11 / 28
 
 dev container에서 docker-from-docker를 docker-in-docker로 바꿨다. docker-in-docker에서는 docker-from-docker과는 다르게 컨테이너 내부의 volume을 사용할 수 있다. 따라서 dev container 내부와 외부에서 동일한 방식으로 빌드가 가능하다. docker-from-docker를 사용했을 때에는 dev container 내에서 빌드가 불가능했다.
+
+## 2022 / 11 / 29
+
+Trailing slash로 인하여 페이지들이 다 깨졌다. 파일을 경로로 인식한 탓이다. URL이 못생겨서 마음에 들지는 않지만, trailing slash를 추가하도록 했다.
+
+## 2022 / 11 / 30
+
+블로그 README와 개발 일지를 분리했다. 블로그는 그것만으로 프레임워크로 사용할 수 있기를 바라기 때문이다. 브랜치도 분리하여 마스터에는 블로그 브랜치만 있도록 할까 싶다.
