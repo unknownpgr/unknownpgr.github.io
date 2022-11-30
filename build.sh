@@ -1,3 +1,4 @@
+# This script will build docker image for blog builder, and build blog from blog builder.
 DIR="$(dirname -- $0)"
 cd $DIR
 docker build -t blog .
