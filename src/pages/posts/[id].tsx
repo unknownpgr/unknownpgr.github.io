@@ -7,6 +7,7 @@ import { IPost, IPostMetadata } from "../../types";
 import { getPost, getPostsMetadata } from "../../backend";
 import Link from "next/link";
 import Head from "next/head";
+import Utterances from "../../components/Utterances";
 
 function getPostsInSameCategory(currentPost: IPost, metadata: IPostMetadata[]) {
   const { category } = currentPost;
@@ -72,7 +73,7 @@ export default function Post({
   post,
   postsInSameCategory,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
-  const { title, category, date, html } = post;
+  const { title, category, date, name, html } = post;
   return (
     <>
       <Head>
@@ -96,6 +97,7 @@ export default function Post({
             </li>
           ))}
         </ul>
+        <Utterances hash={name} />
       </div>
     </>
   );
