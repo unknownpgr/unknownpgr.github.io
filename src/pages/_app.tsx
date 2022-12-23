@@ -16,6 +16,9 @@ export default function App({ Component, pageProps }: AppProps) {
         async
         src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5695206410217978"
         crossOrigin="anonymous"
+        onError={(e) => {
+          console.error("Script failed to load", e);
+        }}
       ></Script>
       <Script
         id="gtag-init"
