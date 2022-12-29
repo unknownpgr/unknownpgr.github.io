@@ -2,7 +2,7 @@ import fs from "fs/promises";
 import yaml from "yaml";
 import markdownIt from "markdown-it";
 import hljs from "highlight.js";
-import mj3 from "markdown-it-mathjax3";
+import katex from "./katex-converter";
 import path from "path";
 import htmlParser from "node-html-parser";
 import crypto from "crypto";
@@ -22,7 +22,7 @@ const markdown = markdownIt({
     return ""; // use external default escaping
   },
 });
-markdown.use(mj3);
+markdown.use(katex);
 
 // Find n-th appearance of pattern in string. index starts from 1.
 function getNthIndexOf(str: string, pattern: string, n: number) {
