@@ -256,6 +256,44 @@ function AboutPage() {
       <h2>Publications</h2>
       <ul className={styles.spacedList}>
         <li>
+          Lee, J., Gwak, S., <strong>Gwon, J</strong>., Park, J., Eom, S., Hong,
+          S., ... & Jung, H. (2022). Exploring the community of older adult
+          viewers on YouTube. Universal Access in the Information Society, 1-12.
+          <ul>
+            <li>
+              <Ank href="https://link.springer.com/article/10.1007/s10209-022-00918-3">
+                https://link.springer.com/article/10.1007/s10209-022-00918-3
+              </Ank>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>Gwon, J</strong>., Jun, Y., & Yeom, C. (2022). Integration of
+          Dynamic Road Environmental Data for the Creation of Driving Simulator
+          Scenarios. Journal of the Korea Institute of Information and
+          Communication Engineering, 26(2), 278-287.
+          <ul>
+            <li>
+              <Ank href="https://koreascience.kr/article/JAKO202209833893350.view?orgId=anpor&hide=breadcrumb,journalinfo">
+                https://koreascience.kr/article/JAKO202209833893350.view?orgId=anpor&hide=breadcrumb,journalinfo
+              </Ank>
+            </li>
+          </ul>
+        </li>
+        <li>
+          Park, S., Jung, H., Choi, J. W., Park, J., Jun, J., Chun, M., & Jung,
+          H. (2021). Exploring the Experiences of Student Volunteer and Student
+          Volunteer Chair Communities at Academic Conferences. Proceedings of
+          the ACM on Human-Computer Interaction, 5(CSCW2), 1-23.
+          <ul>
+            <li>
+              <Ank href="https://dl.acm.org/doi/abs/10.1145/3479599">
+                https://dl.acm.org/doi/abs/10.1145/3479599
+              </Ank>
+            </li>
+          </ul>
+        </li>
+        <li>
           <strong>Gwon, J</strong>., Kwon, M., &amp; Jung, H. (2020, April).
           Analyzing Bias of Comments on Political News Articles to Facilitate
           Transparent Online Communities. In Proceedings of the 2020 Symposium

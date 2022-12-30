@@ -4,5 +4,13 @@
   "javascript.preferences.quoteStyle": "double",
   "typescript.preferences.quoteStyle": "double",
   "editor.wordWrap": "on",
-  "cSpell.words": ["gtag", "katex", "linkify", "mathjax", "unknownpgr"]
+  "cSpell.words": [
+    "gtag",
+    "katex",
+    "linkify",
+    "mathjax",
+    "Slurm",
+    "Traefik",
+    "unknownpgr"
+  ]
 }
