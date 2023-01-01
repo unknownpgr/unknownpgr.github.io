@@ -592,3 +592,8 @@ date:
 # Interesting Posts / Blogs
 
 - https://frogred8.github.io/docs/014_cache_line/
+- https://github.com/boostcamp-ai-tech-4/ai-tech-interview
+- https://github.com/JaeYeopHan/Interview_Question_for_Beginner
+- https://github.com/gyoogle/tech-interview-for-developer
+- https://github.com/ksundong/backend-interview-question
+- https://github.com/WooVictory/Ready-For-Tech-Interview
