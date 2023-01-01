@@ -58,7 +58,7 @@ date:
   - Union-Find
   - MST, Kruskal
   - Segment Tree
-  - Tri
+  - Trie
 
 # Interview Questions
 
