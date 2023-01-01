@@ -30,14 +30,16 @@ date:
 # Ability
 
 - **Backend**: Node.js(Express, Koa, Next.js), Python(FastAPI, Django), NginX
-- **DevOps**: AWS(EC2, S3, Route53, ELB, EKS), k3s, Grafana, Prometheus, Traefik, GitHub Actions
+- **DevOps**: AWS(EC2, S3, Route53, ELB, EKS), Docker, k3s, Grafana, Prometheus, Traefik, GitHub Actions
 - **Database**: MySQL, SQLite, Redis, MongoDB
-- **Frontend**: React, Next.js, Typescript, HTML5, CSS(SASS, CSS-module)
+- **Frontend**: React, Next.js, Typescript, HTML5, CSS(SASS, CSS-module), SEO(OgTag, Google Search Console), Analytics (Meta Pixel, Google GTag)
 - **Tools**: VSCode, Vim, Eclipse
 - **Collaboration**: Git, GitHub, GitLab, Slack
-- **Machine Learning**: Tensorflow, PyTorch, Slurm, MATLAB
+- **Machine Learning**: Tensorflow, Keras, PyTorch, Slurm, MATLAB
 - **Embedded / Hardware**: ARM(STM32Fxx), PCB Artwork basics(EasyEDA)
 - **Graphics**: WebGL, OpenCV(both C++ and Python)
+- **Robotics**: Motor control(PID), Rigid body dynamics(Lagrange dynamics)
+- **Language**: C, C++, C#, Python, Java, Javascript, Typescript
 
 # Coding Test / Algorithm
 
