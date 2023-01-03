@@ -128,11 +128,54 @@ date:
 ### Java
 
 - [x] ==와 equals의 차이점
+  - Java 기준, 전자는 메모리 주소를 비교한다. 후자는 오브젝트의 주소가 아닌 실제 값을 비교한다. 이때 비교가 어떻게 이루어지는지는 해당 클래스의 Equals 구현에 따라 다르다. 그러므로 전자는 논리적으로 Transitive하지만 후자는 그렇지 않을 수 있다. 즉, a.equals(b)이고 b.equals(c)이지만 a.equals(c)는 아닐 수 있다는 의미다.
+  - Primitive가 == 연산으로 비교가 가능한 이유는, 자바에서 상수는 Runtime Constant Pool에 전부 들어가고 Stack의 변수 선언부가 해당 Runtime Constant Pool의 주소값을 가지기 때문이다.
+    - 그런데 그러면 계산 결과로 나온 값은 ==로 비교할 수 없다는 의미인가?
 - [ ] Array, LinkedList, ArrayList의 차이점
-- [x] Call by value와 Call by reference의 차이점
+  - Array
+    - 물리 주소와 논리 주소가 동일하다.
+    - 그러므로 인덱스 연산자의 사용이 가능하다.
+    - 시간복잡도가 O(1)이다.
+    - 메모리 공간이 연속적으로 구성된다.
+    - 프로그래밍 언어에서 문법으로 지원한다.
+    - 크기는 고정적이다.
+  - List
+    - Collection Framework의, 순서가 있는 데이터의 집합을 나타내는 자료구조다. 저장 공간의 크기가 고정되지 않고 가변적이며 중간에 빈 공간이 허용되지 않는다.
+  - ArrayList
+    - 내부적으로 Array를 이용해 자료를 저장하는 자료구조다.
+    - 배열의 정적인 크기라는 한계점을 극복한다.
+    - 이론상 물리 공간과 논리 공간이 동일하지만 배열을 래핑하므로 인덱스 연산자를 직접 활용하지는 못한다.
+    - 배열의 크기가 커지면 내부적으로 새로운 배열을 만들어 복사한다.
+    - 시간복잡도는 그러므로 배열과 동일하다.
+  - LinkedList
+    - 양방향 연결 리스트를 구현한 구현체다.
+    - 그러므로 메모리 공간이 불연속적이다.
+    - 시간복잡도는 링크드리스트의 시간복잡도를 따른다.
+- [x] Call by value와 call by reference의 차이점
+  - Call by value는 함수를 호출할 때 파라매터가 복사된다. Call by reference는 오직 값의 참조만이 복사된다.
 - [x] 자바에서는 call by value와 reference중 어떤 것으로 호출하는가?
+  - Primitive는 call by value로, Object는 reference로 호출된다.
 - [ ] DAO DTO VO 차이
+  - DAO (Data Access Object)
+    - DB에 직접 접근하여 CRUD를 수행한다.
+    - Service와 DB를 연결한다.
+    - Repository package.
+  - DTO (Data Transfer Object)
+    - 데이터 계층 간 교환을 위한 객체다.
+    - getter/setter 로직을 가지지 않는다.
+    - DB에서 얻은 데이터를 Service나 Controller 등으로 보낼 때 사용한다.
+  - VO (Value Object)
+    - 값 자체를 표현하는 리터럴의 개념이다.
+    - attribute가 모두 같으면 같은 객체로 취급한다.
+    - Immutable이다.
+    - getter/setter 이외의 로직을 가져도 된다.
 - [ ] equals()와 hashCode()의 차이점
+  - hashCode
+    - 객체를 식별하는 하나의 정수를 반환한다.
+    - hashCode가 다르면 다른 오브젝트이지만, hashCode가 같다고 같은 오브젝트임이 보장되는 것은 아니다.
+  - equals
+    - hashCode를 사용하여 비교한 후, 값이 같은 경우 속성을 직접 비교한다.
+  - equals 내부에서 hashCode를 사용하므로 equals와 hashCode는 항상 같이 구현해야 한다. 하나만 구현하면 의도와 다르게 동작할 수 있다.
 
 ### FE
 
