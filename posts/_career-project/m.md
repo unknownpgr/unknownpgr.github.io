@@ -179,10 +179,28 @@ date:
 
 ### FE
 
-- [x] setTimeout(…, 0)의 실행 타이밍
-- [ ] 이벤트 위임이란?
 - [ ] 이벤트 루프란?
+  - 자바스크립트의 이벤트 루프 시스템은 다음과 같은 요소로 구성된다.
+    - Call stack
+    - Task Queue
+    - Microtask Queue
+    - Heap(for variables)
+  - 이는 다음과 같은 순서로 작동한다.
+    1. 콜스택을 실행한다.
+    2. 실행 중 Promise인 비동기작업이 발생하면 Microtask Queue에 집어넣는다.
+    3. Promise가 아닌 비동기작업이 발생하는 경우 Task Queue에 집어넣는다.
+    4. 콜스택이 비는 경우, Microtask Queue에서 하나를 pop하여 Call stack에 넣는다.
+    5. 콜스택이 비고 Microtask queue도 비는 경우 Task queue에서 하나를 pop하여 call stack에 넣는다.
+- [x] setTimeout(…, 0)의 실행 타이밍
+  - 위 이벤트루프의 동작 방식에 따라, 동기 콜스택이 비고 모든 마이크로태스크가 실행된 후에 동작한다.
+- [ ] 이벤트 위임이란?
+  - 공통 상위 노드를 가진 많은 요소에 동일한 이벤트를 설정해야 할 때, 각 요소에 이벤트를 직접 설정하는 것이 아니라 상위 노드에서 이벤트를 받아서 대신 제어하는 방식이다.
+  - HTML에서 이벤트가 캡쳐링 / 버블링 방식으로 동작하므로 가능하다.
+    - 캡쳐링 : 이벤트가 상위 요소에서 하위 요소로 전파 (잘 사용되지 않음)
+    - 버블링 : 이벤트가 다시 하위 요소에서 상위 요소로 전파
 - [ ] 일급함수란?
+  - A programming language is said to have First-class functions when functions in that language are treated like any other variable.
+  - To summarize, If a fucntion can be treated like a variable, it it first-class fucntion.
 - [ ] 호이스팅이란?
 - [ ] 클로저란?
 - [ ] 쿠키/세션 구분 설명
