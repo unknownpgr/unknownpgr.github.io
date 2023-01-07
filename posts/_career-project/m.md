@@ -223,10 +223,43 @@ date:
   - A programming language is said to have First-class functions when functions in that language are treated like any other variable.
   - To summarize, If a fucntion can be treated like a variable, it it first-class fucntion.
 - [ ] 호이스팅이란?
+  - 함수/전역 스코프를 실행하기 전에 변수를 선언하는 것.
+  - 함수, var로 선언한 변수는 hosting이 발생하지만 const나 let은 발생하지 않음. (temporal dead zones)
 - [ ] 클로저란?
+  - 함수 내부 스코프(lexical scope)의 변수를 함수 반환 후 외부에서 접근하는 것.
+  - 보통 고차함수 형식으로 사용하나 객체 기반으로도 불가능한 건 아님.
 - [ ] 쿠키/세션 구분 설명
+  - 쿠키 :
+    - 브라우저에서
+    - 같은 도메인 내에서
+    - 정해진 시간동안 보존되는
+    - 서버에 요청을 보낼 때 함께 전송되는
+    - 작은 데이터
+  - 세션 :
+    - 쿠키를 이용하여 구현되는 서버상의 Key-Value Store
+    - 또는 개념적으로 유저가 접속해있는 동안 유지되는 컨텍스트를 말하기도 하나, 질문의 의도는 이게 아니겠지.
 - [ ] Web Server & Web Application Server 구분 설명
+  - 사람들이 하도 섞어 써서, 완전히 깔끔하게 구분되는 개념은 아니다.
+  - Web Server
+    - 웹 서비스를 제공하는 H/W
+    - 혹은 Static File을 실행하고 application server을 호출하는 S/W
+  - Web Application Server
+    - Application (including business logic) 을 구현하는 어플리케이션 서버
+    - Web Server를 포함할 수도 있고 안 할 수도 있음
 - [ ] js에서 원시타입은 무엇이 있나?
+  - string
+  - number
+  - bigint
+  - boolean
+  - undefined
+  - symbol : 볼 일 없음
+  - null
+- undefined null 차이
+  - Undefined
+    - 변수가 선언되었지만 값이 할당되지 않은 상태
+  - Null
+    - 빈 오브젝트를 나타내는 특수한 타입
+    - Therefore `typeof null === 'object'`
 - [ ] this란?
 - [ ] prototype, prototype chaining이란?
 - [ ] 시멘틱 웹이란?
