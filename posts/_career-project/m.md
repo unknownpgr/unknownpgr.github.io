@@ -43,6 +43,27 @@ date:
 - **Robotics**: Motor control(PID), Rigid body dynamics(Lagrange dynamics)
 - **Language**: C, C++, C#, Python, Java, Javascript, Typescript
 
+## Challenging Experiences
+
+- 엄청 많은 API를 가진 서비스 (real-estate) 만들기.
+  - 노가다가 많았다. 이걸 혼자서 정리할 수 있도록 만드는 게 진짜 어려웠다.
+  - 방법은 계속 고민 중
+  - Typescript Compiler를 공부해서 어느정도 해결 방법을 찾는 중.
+  - Telefunc같은 걸 아예 만들 생각을 하는 중이다.
+    - Type resolver 직접 작성
+    - Recursive 한 타입때문에 고생
+      ```
+          class ObjectId extends mongodb.ObjectId {
+      _id: this;
+      }
+      ```
+    - Stack을 사용하여 간단하게 해결
+    - Resolver도 잘 작동함.
+    - Router 내에서 session 등 뭔가 접근할 필요가 있음
+      - 이 형식을 미리 만들어놓거나 any로 하면 Typescript가 무의미해짐
+      - Module Augmentation을 이용하여 해결
+        - iron-session이나 telefunc 등 다른 라이브러리들에서도 사용하는 방식임
+
 ## Coding Test / Algorithm
 
 - Definition and implementation of basic algorithms including
