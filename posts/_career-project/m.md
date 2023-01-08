@@ -261,9 +261,33 @@ date:
     - 빈 오브젝트를 나타내는 특수한 타입
     - Therefore `typeof null === 'object'`
 - [ ] this란?
+  - In JavaScript, the this keyword refers to an object. Which object depends on how this is being invoked (used or called). The this keyword refers to different objects depending on how it is used:
+    - In an object method, this refers to the object.
+    - Alone, this refers to the global object.
+    - In a function, this refers to the global object.
+    - In a function, in strict mode, this is undefined.
+    - In an event, this refers to the element that received the event.
+    - Methods like call(), apply(), and bind() can refer this to any object.
+  - What is bind?
+    - Bind takes a method to another mehod.
+    - Usually used to preserve `this` keyword.
 - [ ] prototype, prototype chaining이란?
+  - Prototypes are the mechanism by which JavaScript objects inherit features from one another.
+  - Prototype itself is also an object, so that it has its own prototype.
+  - This is called _prototype chain_ and it ends when prototype is `null`
+  - When property of an object is referenced,
+    - Runtime looks for property of object itself
+    - If can't find it there, looks in the prototype object
+      - Do this recursively.
 - [ ] 시멘틱 웹이란?
+  - 말 그대로 의미론적인 웹. HTML Tag에서 단순히 시각적 기능만을 부여하는 것이 아니라 그 태그가 가진 의미까지 분석할 수 있도록 하는 것.
+  - Semantic web의 좋은 예시는 header, footer, nav. (또는 button이나 a도 해당될 듯.)
+  - Semantic web의 반대되는 예시는 모든 태그를 div로 구현하는 것.
 - [ ] Unknown과 Any의 차이
+  - Semantically, both mean unknown type but act differently.
+  - `unknown` is a type-safe counterpart of `any`.
+    - Variable of `any` type can assign any type and be assigned to any type.
+    - Variable of `unknown` type cannot assign any type and cannot be assigned to any type.
 
 ### 삼성전자 2020년 상반기 DS 면접
 
