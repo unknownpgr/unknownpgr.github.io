@@ -354,13 +354,41 @@ date:
   - Reference
     - https://zdnet.co.kr/view/?no=00000039133853
 
-- [ ] 데이터베이스 무결성 3가지
-- [ ] 관계형dbms의 특징, 요즘 db 신기술에 뭐가있는지
+- [x] 데이터베이스 무결성 3가지
+  - Entity Integrity
+    - Table must have primary key
+    - Primary key must be nonnullable unique
+  - Referential Integrity
+    - Foreign Key must be null or valid primary key of referenced relation
+    - There must be an entity in referenced table for every foreign key
+  - Domain Integrity
+    - Value of entity should meet its constraint
+  - Null integrity
+    - A condition that some property of a table cannot be null.
+  - Unique integrity
+    - A condition that some property of a table should be unique in that table.
+  - Key integrity
+    - A table must have at least one key
+- [x] 관계형dbms의 특징
+
+  - Contrast to NoSQL - Schemaless DBMS, They have schema and all fields are (by definition) cannot be nested, and should not be nested.
+  - Table represent 'Relation' of elements in domains
+
+- [x] 요즘 db 신기술에 뭐가있는지
+  - 크게보면 DBMS 생태계 자체로는 Redis나 MongoDB 마냥 NoSQL이 등장했음
+  - 작게 보면 다양한 DBMS들이 등장하고 있는 듯
+  - DBMS말고 3 tier architecture의 repository 레이어 관점에서 볼 때, TypeORM이나 Prisma같은 새로운 형식의 ORM들이 등장 중.
 
 ### CJ 오쇼핑 2020년 상반기 1차면접 복기
 
-- [ ] 대규모 프로모션을 진행할때 고려해야할 사항, 대비방법(미리 대비, 실시간 대비)
-- [ ] 클라우드 네이티브 환경에 대한 특징
+- [x] 대규모 프로모션을 진행할때 고려해야할 사항, 대비방법(미리 대비, 실시간 대비)
+  - 대규모 프로모션을 진행하면 대단히 많은 트래픽이 한 번에 몰릴 것으로 예상
+  - 따라서 부하 테스트 등을 통해서 미리 로드를 측정해볼 필요가 있다,
+- [x] 클라우드 네이티브 환경에 대한 특징
+  - 쉽게 확장, 수축이 가능
+  - On-Demand로 원하는 만큼, 필요할 때에만 사용 가능
+  - 고가용성이 비교적 쉽게 보장됨
+  - 비용이 지속적으로 든다는 단점도 존재
 
 ### 직무면접
 
