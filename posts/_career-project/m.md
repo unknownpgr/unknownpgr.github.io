@@ -153,7 +153,7 @@ date:
   - Java 기준, 전자는 메모리 주소를 비교한다. 후자는 오브젝트의 주소가 아닌 실제 값을 비교한다. 이때 비교가 어떻게 이루어지는지는 해당 클래스의 Equals 구현에 따라 다르다. 그러므로 전자는 논리적으로 Transitive하지만 후자는 그렇지 않을 수 있다. 즉, a.equals(b)이고 b.equals(c)이지만 a.equals(c)는 아닐 수 있다는 의미다.
   - Primitive가 == 연산으로 비교가 가능한 이유는, 자바에서 상수는 Runtime Constant Pool에 전부 들어가고 Stack의 변수 선언부가 해당 Runtime Constant Pool의 주소값을 가지기 때문이다.
     - 그런데 그러면 계산 결과로 나온 값은 ==로 비교할 수 없다는 의미인가?
-- [ ] Array, LinkedList, ArrayList의 차이점
+- [x] Array, LinkedList, ArrayList의 차이점
   - Array
     - 물리 주소와 논리 주소가 동일하다.
     - 그러므로 인덱스 연산자의 사용이 가능하다.
@@ -177,7 +177,7 @@ date:
   - Call by value는 함수를 호출할 때 파라매터가 복사된다. Call by reference는 오직 값의 참조만이 복사된다.
 - [x] 자바에서는 call by value와 reference중 어떤 것으로 호출하는가?
   - Primitive는 call by value로, Object는 reference로 호출된다.
-- [ ] DAO DTO VO 차이
+- [x] DAO DTO VO 차이
   - DAO (Data Access Object)
     - DB에 직접 접근하여 CRUD를 수행한다.
     - Service와 DB를 연결한다.
@@ -191,7 +191,7 @@ date:
     - attribute가 모두 같으면 같은 객체로 취급한다.
     - Immutable이다.
     - getter/setter 이외의 로직을 가져도 된다.
-- [ ] equals()와 hashCode()의 차이점
+- [x] equals()와 hashCode()의 차이점
   - hashCode
     - 객체를 식별하는 하나의 정수를 반환한다.
     - hashCode가 다르면 다른 오브젝트이지만, hashCode가 같다고 같은 오브젝트임이 보장되는 것은 아니다.
@@ -201,7 +201,7 @@ date:
 
 ### FE
 
-- [ ] 이벤트 루프란?
+- [x] 이벤트 루프란?
   - 자바스크립트의 이벤트 루프 시스템은 다음과 같은 요소로 구성된다.
     - Call stack
     - Task Queue
@@ -215,21 +215,21 @@ date:
     5. 콜스택이 비고 Microtask queue도 비는 경우 Task queue에서 하나를 pop하여 call stack에 넣는다.
 - [x] setTimeout(…, 0)의 실행 타이밍
   - 위 이벤트루프의 동작 방식에 따라, 동기 콜스택이 비고 모든 마이크로태스크가 실행된 후에 동작한다.
-- [ ] 이벤트 위임이란?
+- [x] 이벤트 위임이란?
   - 공통 상위 노드를 가진 많은 요소에 동일한 이벤트를 설정해야 할 때, 각 요소에 이벤트를 직접 설정하는 것이 아니라 상위 노드에서 이벤트를 받아서 대신 제어하는 방식이다.
   - HTML에서 이벤트가 캡쳐링 / 버블링 방식으로 동작하므로 가능하다.
     - 캡쳐링 : 이벤트가 상위 요소에서 하위 요소로 전파 (잘 사용되지 않음)
     - 버블링 : 이벤트가 다시 하위 요소에서 상위 요소로 전파
-- [ ] 일급함수란?
+- [x] 일급함수란?
   - A programming language is said to have First-class functions when functions in that language are treated like any other variable.
   - To summarize, If a fucntion can be treated like a variable, it it first-class fucntion.
-- [ ] 호이스팅이란?
+- [x] 호이스팅이란?
   - 함수/전역 스코프를 실행하기 전에 변수를 선언하는 것.
   - 함수, var로 선언한 변수는 hosting이 발생하지만 const나 let은 발생하지 않음. (temporal dead zones)
-- [ ] 클로저란?
+- [x] 클로저란?
   - 함수 내부 스코프(lexical scope)의 변수를 함수 반환 후 외부에서 접근하는 것.
   - 보통 고차함수 형식으로 사용하나 객체 기반으로도 불가능한 건 아님.
-- [ ] 쿠키/세션 구분 설명
+- [x] 쿠키/세션 구분 설명
   - 쿠키 :
     - 브라우저에서
     - 같은 도메인 내에서
@@ -239,7 +239,7 @@ date:
   - 세션 :
     - 쿠키를 이용하여 구현되는 서버상의 Key-Value Store
     - 또는 개념적으로 유저가 접속해있는 동안 유지되는 컨텍스트를 말하기도 하나, 질문의 의도는 이게 아니겠지.
-- [ ] Web Server & Web Application Server 구분 설명
+- [x] Web Server & Web Application Server 구분 설명
   - 사람들이 하도 섞어 써서, 완전히 깔끔하게 구분되는 개념은 아니다.
   - Web Server
     - 웹 서비스를 제공하는 H/W
@@ -247,7 +247,7 @@ date:
   - Web Application Server
     - Application (including business logic) 을 구현하는 어플리케이션 서버
     - Web Server를 포함할 수도 있고 안 할 수도 있음
-- [ ] js에서 원시타입은 무엇이 있나?
+- [x] js에서 원시타입은 무엇이 있나?
   - string
   - number
   - bigint
@@ -261,7 +261,7 @@ date:
   - Null
     - 빈 오브젝트를 나타내는 특수한 타입
     - Therefore `typeof null === 'object'`
-- [ ] this란?
+- [x] this란?
   - In JavaScript, the this keyword refers to an object. Which object depends on how this is being invoked (used or called). The this keyword refers to different objects depending on how it is used:
     - In an object method, this refers to the object.
     - Alone, this refers to the global object.
@@ -272,7 +272,7 @@ date:
   - What is bind?
     - Bind takes a method to another mehod.
     - Usually used to preserve `this` keyword.
-- [ ] prototype, prototype chaining이란?
+- [x] prototype, prototype chaining이란?
   - Prototypes are the mechanism by which JavaScript objects inherit features from one another.
   - Prototype itself is also an object, so that it has its own prototype.
   - This is called _prototype chain_ and it ends when prototype is `null`
@@ -280,11 +280,11 @@ date:
     - Runtime looks for property of object itself
     - If can't find it there, looks in the prototype object
       - Do this recursively.
-- [ ] 시멘틱 웹이란?
+- [x] 시멘틱 웹이란?
   - 말 그대로 의미론적인 웹. HTML Tag에서 단순히 시각적 기능만을 부여하는 것이 아니라 그 태그가 가진 의미까지 분석할 수 있도록 하는 것.
   - Semantic web의 좋은 예시는 header, footer, nav. (또는 button이나 a도 해당될 듯.)
   - Semantic web의 반대되는 예시는 모든 태그를 div로 구현하는 것.
-- [ ] Unknown과 Any의 차이
+- [x] Unknown과 Any의 차이
   - Semantically, both mean unknown type but act differently.
   - `unknown` is a type-safe counterpart of `any`.
     - Variable of `any` type can assign any type and be assigned to any type.
@@ -301,11 +301,11 @@ date:
 
 ### 삼성전자 2020년 상반기 DS 면접
 
-- [ ] 퀵소트 응용방법에 대해 자세히 설명해달라
+- [x] 퀵소트 응용방법에 대해 자세히 설명해달라
   - What is quick sort?
     - Divide - and conqure 방식.
     - 중간값 찾기 등에 응용가능할 듯.
-- [ ] 스마트팩토리 플랫폼 개발할때 고가용성을 위해 어떤것이 필요한가?
+- [x] 스마트팩토리 플랫폼 개발할때 고가용성을 위해 어떤것이 필요한가?
 
   - 직접적인 해결책
     - 모니터링 세분화 및 경고 설정
