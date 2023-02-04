@@ -42,6 +42,7 @@ date:
 - **Graphics**: WebGL, OpenCV(both C++ and Python)
 - **Robotics**: Motor control(PID), Rigid body dynamics(Lagrange dynamics)
 - **Language**: C, C++, C#, Python, Java, Javascript, Typescript
+- **Blockchain**: Ethereum, Solidity, Truffle, Ganache, Web3.js
 
 ## Challenging Experiences
 
