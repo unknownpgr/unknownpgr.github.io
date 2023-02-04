@@ -290,6 +290,15 @@ date:
     - Variable of `any` type can assign any type and be assigned to any type.
     - Variable of `unknown` type cannot assign any type and cannot be assigned to any type.
 
+### Others
+
+- [ ] HTTP/2 원리
+- [ ] 디피-헬만 키 교환이란?
+- [ ] 블록체인이란?
+- [ ] RSA 원리
+- [ ] 솔리디티 버전별 차이
+- [ ] 비트코인 계정 생성 과정
+
 ### 삼성전자 2020년 상반기 DS 면접
 
 - [ ] 퀵소트 응용방법에 대해 자세히 설명해달라
