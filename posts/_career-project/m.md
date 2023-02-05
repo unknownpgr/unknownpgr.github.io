@@ -222,7 +222,7 @@ date:
     - 버블링 : 이벤트가 다시 하위 요소에서 상위 요소로 전파
 - [x] 일급함수란?
   - A programming language is said to have First-class functions when functions in that language are treated like any other variable.
-  - To summarize, If a fucntion can be treated like a variable, it it first-class fucntion.
+  - To summarize, If a function can be treated like a variable, it it first-class function.
 - [x] 호이스팅이란?
   - 함수/전역 스코프를 실행하기 전에 변수를 선언하는 것.
   - 함수, var로 선언한 변수는 hosting이 발생하지만 const나 let은 발생하지 않음. (temporal dead zones)
@@ -270,7 +270,7 @@ date:
     - In an event, this refers to the element that received the event.
     - Methods like call(), apply(), and bind() can refer this to any object.
   - What is bind?
-    - Bind takes a method to another mehod.
+    - Bind takes a method to another method.
     - Usually used to preserve `this` keyword.
 - [x] prototype, prototype chaining이란?
   - Prototypes are the mechanism by which JavaScript objects inherit features from one another.
@@ -369,14 +369,14 @@ date:
       - 다중화 - 일반적으로 99.98%까지 가용화 가능
     - 4단계
       - 재난 복구 시스템
-      - 재난에 대한 자동복구 == failver
+      - 재난에 대한 자동복구 == failover
   - Reference
     - https://zdnet.co.kr/view/?no=00000039133853
 
 - [x] 데이터베이스 무결성 3가지
   - Entity Integrity
     - Table must have primary key
-    - Primary key must be nonnullable unique
+    - Primary key must be non-nullable unique
   - Referential Integrity
     - Foreign Key must be null or valid primary key of referenced relation
     - There must be an entity in referenced table for every foreign key
@@ -390,7 +390,7 @@ date:
     - A table must have at least one key
 - [x] 관계형dbms의 특징
 
-  - Contrast to NoSQL - Schemaless DBMS, They have schema and all fields are (by definition) cannot be nested, and should not be nested.
+  - Contrast to NoSQL - Schema-less DBMS, They have schema and all fields are (by definition) cannot be nested, and should not be nested.
   - Table represent 'Relation' of elements in domains
 
 - [x] 요즘 db 신기술에 뭐가있는지
