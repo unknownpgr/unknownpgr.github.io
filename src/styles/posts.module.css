@@ -8,6 +8,7 @@
 
 .metadata {
   color: rgba(0, 0, 0, 0.4);
+  margin-top: 0.25rem;
 }
 
 .post a::after {
