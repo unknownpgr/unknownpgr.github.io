@@ -293,7 +293,26 @@ date:
 ### Others
 
 - [ ] HTTP/2 원리
+  - 구글에서 개발한 SPDY 프로토콜 기반
+  - HTTP/1.1 에서 성능 향상
+    - 멀티플렉싱
+      - Stream: Bidirectional stream of bytes that can carry more than one message
+      - Message: Sequence of frames
+      - Frame: Minimum communication unit
+      - Multiple stream on single TCP connection
+    - 헤더 압축
+    - 우선순위 지정
+    - 프로토콜 협상
+    - TLS 1.2+
+    - Resolves head-of-line blocking problem, partially, because TCP does not consider multiplexing of higher layer. Single loss packet at one stream will block all messages.
+- [ ] HTTP/3 원리
+  - QUIC over UDP
+  - QUIC includes TLS 1.3
+  - Resolves head-of-line blocking problem
 - [ ] 디피-헬만 키 교환이란?
+  - For generator $G$ of multiplicative group of order $P$ ($G$, $P$ is public), Alice and Bob select secret $a, b$ and exchange $G^a$ and $G^b$.
+  - Because there are no known method for calculating discrete logarithm, for large enough $P$, $a, b$ cannot be calculated.
+  - Then use $(G^a)^n=(G^b)^a$ as symmetric private key.
 - [ ] 블록체인이란?
 - [ ] RSA 원리
 - [ ] 솔리디티 버전별 차이
@@ -303,7 +322,7 @@ date:
 
 - [x] 퀵소트 응용방법에 대해 자세히 설명해달라
   - What is quick sort?
-    - Divide - and conqure 방식.
+    - Divide and conquer 방식.
     - 중간값 찾기 등에 응용가능할 듯.
 - [x] 스마트팩토리 플랫폼 개발할때 고가용성을 위해 어떤것이 필요한가?
 
