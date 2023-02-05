@@ -1,5 +1,5 @@
 .post {
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .post h1 {
@@ -8,7 +8,7 @@
 
 .metadata {
   color: rgba(0, 0, 0, 0.4);
-  margin-top: 0.25rem;
+  margin-top: 0.5rem;
 }
 
 .post a::after {
