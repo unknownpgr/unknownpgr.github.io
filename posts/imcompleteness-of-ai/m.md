@@ -1,7 +1,8 @@
 ---
-title: "State-Machine AI의 불완정성 - 왜 ChatGPT는 곱셈을 못 하는가?"
+title: State-Machine AI의 불완정성 - 왜 ChatGPT는 곱셈을 못 하는가?
 category: ai
-date:
+date: 2023-02-18T10:53:03.216Z
+
 ---
 
 최근 ChatGPT의 급부상과 함께 AI에 대한 기대감이 커지고 있습니다. AI는 이제 이론을 넘어 실제로 일상생활속에서 유용하게 사용되고 있습니다. 그러나 이번 글에서는 ChatGPT의 불완전성을 살펴보고, 이를 해결하기 위한 방안을 제시합니다.
