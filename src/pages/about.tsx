@@ -78,6 +78,14 @@ function AboutPage() {
           ]}
         />
         <ProjectItem
+          link="https://pabnft.com"
+          title="PAB-NFT"
+          descriptions={[
+            "Pixel Art Board (PAB) is a web3 project that allows users to create and trade NFTs.",
+            "Based on ERC-721, Solidity, Web3 and React.",
+          ]}
+        ></ProjectItem>
+        <ProjectItem
           link="https://github.com/unknownpgr/github-blog"
           title="깃허브 블로그"
           descriptions={[
