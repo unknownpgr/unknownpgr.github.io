@@ -8,7 +8,7 @@ git rebase master
 docker build -t blog .
 docker run --rm -v $(pwd)/posts:/posts -v $(pwd)/docs:/out blog
 
-chown -R $(id -u):$(id -g) docs
+sudo chown -R $(id -u):$(id -g) docs
 
 git add .
 git commit -m "Build blog"
