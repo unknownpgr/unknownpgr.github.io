@@ -182,7 +182,44 @@ async function cache<T>(key: string, onMiss: () => Promise<T>) {
   return content;
 }
 
-export function getPost(postName: string) {
+let isPreprocessing: Promise<boolean> | null = null;
+
+async function preprocess() {
+  if (isPreprocessing) return await isPreprocessing;
+
+  isPreprocessing = (async () => {
+    const postNames = (await fs.readdir("../posts")).filter(isValidPostName);
+
+    for (const postName of postNames) {
+      // If directory is empty, delete it.
+      const files = await fs.readdir(path.join("../posts", postName));
+      if (files.length === 0) {
+        console.log(`Deleting empty directory ${postName}`);
+        await fs.rmdir(path.join("../posts", postName));
+        continue;
+      }
+
+      // If directory name is not in correct format, rename it.
+      if (postName.match(/^\d{4}-\d{2}-\d{2}-/)) continue;
+      const post = await processPost(postName);
+      if (!post) continue;
+      const { date } = post;
+      const newPostName = `${date.substring(0, 10)}-${postName}`;
+      console.log(`Renaming ${postName} to ${newPostName}`);
+      // Move post directory
+      await fs.rename(
+        path.join("../posts", postName),
+        path.join("../posts", newPostName)
+      );
+    }
+    return true;
+  })();
+
+  return await isPreprocessing;
+}
+
+export async function getPost(postName: string) {
+  await preprocess();
   return cache(postName, () => processPost(postName));
 }
 
