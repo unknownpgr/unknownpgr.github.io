@@ -192,12 +192,14 @@ export async function getPostsMetadata(): Promise<{
   categories: ICategory[];
 }> {
   // Get post names of valid posts
-  const _postNames = (await fs.readdir("../posts")).filter(isValidPostName);
+  const postDirectories = (await fs.readdir("../posts")).filter(
+    isValidPostName
+  );
 
   // Parse posts
-  const _posts = (
-    (await Promise.all(_postNames.map((postName) => getPost(postName)))).filter(
-      (post) => post
+  const postMetadata = (
+    (await Promise.all(postDirectories.map(getPost))).filter(
+      (post) => !!post
     ) as IPost[]
   ).map((post) => {
     const { html, ...metadata } = post;
@@ -205,23 +207,25 @@ export async function getPostsMetadata(): Promise<{
   }) as IPostMetadata[];
 
   // Sort by date
-  const posts = _posts.sort((pa, pb) => {
+  const posts = postMetadata.sort((pa, pb) => {
     return +new Date(pb.date) - +new Date(pa.date);
   });
 
   // Get sorted post name
-  const postNames = _posts.map((post) => post.name);
+  const postNames = postMetadata.map((post) => post.name);
 
   // Get category
-  const _categories: { [k: string]: number } = {};
+  const categoryDict: { [k: string]: number } = {};
   posts.forEach(({ category }) => {
-    if (_categories[category]) _categories[category] += 1;
-    else _categories[category] = 1;
+    if (categoryDict[category]) categoryDict[category] += 1;
+    else categoryDict[category] = 1;
   });
-  const categories = Object.entries(_categories).map(([name, postsNumber]) => ({
-    name,
-    postsNumber,
-  }));
+  const categories = Object.entries(categoryDict).map(
+    ([name, postsNumber]) => ({
+      name,
+      postsNumber,
+    })
+  );
 
   return { postNames, posts, categories };
 }

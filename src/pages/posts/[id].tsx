@@ -28,7 +28,7 @@ function getPostsInSameCategory(currentPost: IPost, metadata: IPostMetadata[]) {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const { postNames, posts } = await getPostsMetadata();
+  const { postNames } = await getPostsMetadata();
   return {
     paths: postNames.map((id) => ({ params: { id } })),
     fallback: false,
