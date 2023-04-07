@@ -1,6 +1,8 @@
 ---
 title: Dependency inversion
-category: Development
+category: development
+date: 2023-04-07T14:12:02.717Z
+
 ---
 
 이번에 '클린 아키텍처' 책을 읽었습니다. 그러면서 의존성 역전이 왜 중요하고 어떤 목적을 가지는지 깨닫게 됐습니다. 그래서 이를 간단히 정리해두려고 합니다.
