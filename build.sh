@@ -1,7 +1,13 @@
 # This script will build docker image for blog builder, and build blog from blog builder.
+set -e
+
 ROOT="$(dirname -- $0)"
 cd $ROOT
 
+# If there is no build branch, create one.
+if ! git branch | grep -q build; then
+    git checkout -b build
+fi
 git checkout build
 git rebase master
 
