@@ -12,5 +12,7 @@ docker run --rm -it -v $(pwd)/posts:/posts -v $(pwd)/docs:/out blog
 
 sudo chown -R $(id -u):$(id -g) docs
 
+touch docs/.nojekyll
+
 git add docs/*
 git commit -m "Build blog"
