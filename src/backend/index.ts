@@ -7,6 +7,7 @@ import path from "path";
 import htmlParser from "node-html-parser";
 import crypto from "crypto";
 import { ICategory, IPost, IPostMetadata } from "../types";
+import { cache } from "./cachedTask";
 
 const markdown = markdownIt({
   html: true,
@@ -67,6 +68,11 @@ function parseFormatter(formatterStr: string): {
   date: string;
 } {
   const formatter = yaml.parse(formatterStr);
+
+  // Check if formatter is null
+  if (!formatter) {
+    throw new Error("YAML formatter is null.");
+  }
 
   // Check required properties
   if (!formatter["title"])
@@ -146,81 +152,38 @@ async function processPost(postName: string): Promise<IPost | null> {
   }
 }
 
-async function getCachePath(key: string) {
-  const CACHE_DIR = `.cache`;
-  try {
-    await fs.stat(CACHE_DIR);
-  } catch {
-    await fs.mkdir(CACHE_DIR);
-  }
-  const cacheName = crypto.createHash("md5").update(key).digest("hex");
-  const cachePath = path.join(CACHE_DIR, cacheName);
-  return cachePath;
-}
-
-async function readCache<T>(key: string): Promise<T | null> {
-  try {
-    const cachePath = await getCachePath(key);
-    const cacheContent = await fs.readFile(cachePath);
-    return JSON.parse(cacheContent.toString("utf-8"));
-  } catch {
+async function preprocess(postName: string) {
+  // If directory is empty, delete it.
+  const files = await fs.readdir(path.join("../posts", postName));
+  if (files.length === 0) {
+    console.log(`Deleting empty directory ${postName}`);
+    await fs.rmdir(path.join("../posts", postName));
     return null;
   }
-}
 
-async function writeCache<T>(key: string, value: T) {
-  const cachePath = await getCachePath(key);
-  const cacheContent = Buffer.from(JSON.stringify(value), "utf-8");
-  await fs.writeFile(cachePath, cacheContent);
-}
+  // If directory name is not in correct format, rename it.
+  if (postName.match(/^\d{4}-\d{2}-\d{2}-/)) return postName;
+  const post = await processPost(postName);
+  if (!post) return null;
+  const { date } = post;
+  const newPostName = `${date.substring(0, 10)}-${postName}`;
+  console.log(`Renaming ${postName} to ${newPostName}`);
+  // Move post directory
+  await fs.rename(
+    path.join("../posts", postName),
+    path.join("../posts", newPostName)
+  );
 
-async function cache<T>(key: string, onMiss: () => Promise<T>) {
-  const cache = await readCache<T>(key);
-  if (cache) return cache;
-  const content = await onMiss();
-  await writeCache<T>(key, content);
-  return content;
-}
-
-let isPreprocessing: Promise<boolean> | null = null;
-
-async function preprocess() {
-  if (isPreprocessing) return await isPreprocessing;
-
-  isPreprocessing = (async () => {
-    const postNames = (await fs.readdir("../posts")).filter(isValidPostName);
-
-    for (const postName of postNames) {
-      // If directory is empty, delete it.
-      const files = await fs.readdir(path.join("../posts", postName));
-      if (files.length === 0) {
-        console.log(`Deleting empty directory ${postName}`);
-        await fs.rmdir(path.join("../posts", postName));
-        continue;
-      }
-
-      // If directory name is not in correct format, rename it.
-      if (postName.match(/^\d{4}-\d{2}-\d{2}-/)) continue;
-      const post = await processPost(postName);
-      if (!post) continue;
-      const { date } = post;
-      const newPostName = `${date.substring(0, 10)}-${postName}`;
-      console.log(`Renaming ${postName} to ${newPostName}`);
-      // Move post directory
-      await fs.rename(
-        path.join("../posts", postName),
-        path.join("../posts", newPostName)
-      );
-    }
-    return true;
-  })();
-
-  return await isPreprocessing;
+  return newPostName;
 }
 
 export async function getPost(postName: string) {
-  await preprocess();
-  return cache(postName, () => processPost(postName));
+  const result = await cache(postName, async () => {
+    const preprocessedPostName = await preprocess(postName);
+    if (!preprocessedPostName) return null;
+    return processPost(preprocessedPostName);
+  });
+  return result;
 }
 
 export async function getPostsMetadata(): Promise<{
