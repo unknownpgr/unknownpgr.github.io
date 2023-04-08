@@ -1,4 +1,4 @@
-import { IPostMetadata } from "../types";
+import { PostMetadata } from "../types";
 import styles from "../styles/posts.module.css";
 import Link from "next/link";
 
@@ -10,7 +10,7 @@ function formatDateString(dateString: string) {
   return `${y}.${m}.${d}`;
 }
 
-export default function Posts({ posts }: { posts: IPostMetadata[] }) {
+export default function Posts({ posts }: { posts: PostMetadata[] }) {
   return (
     <div>
       {posts.map(({ name, title, date, category }) => (

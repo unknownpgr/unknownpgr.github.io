@@ -7,20 +7,10 @@ cd $ROOT
 rm -rf src/.cache
 rm -rf docs
 
-# If there is no build branch, create one.
-if ! git branch | grep -q build; then
-    git checkout -b build
-fi
-git checkout build
-git rebase master
-
 docker build -t blog .
-docker run --rm -v $(pwd)/posts:/posts -v $(pwd)/docs:/out blog
+docker run --rm -it -v $(pwd)/posts:/posts -v $(pwd)/docs:/out blog
 
 sudo chown -R $(id -u):$(id -g) docs
 
-git add .
+git add docs/*
 git commit -m "Build blog"
-git checkout master
-git merge build --no-ff -m "Merge build branch"
-git push origin master

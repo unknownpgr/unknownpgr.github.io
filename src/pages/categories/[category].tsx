@@ -46,7 +46,7 @@ export const getStaticProps: GetStaticProps<{
   };
 };
 
-export default function Category({
+export default function CategoryView({
   category,
   posts,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
