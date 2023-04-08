@@ -2,18 +2,16 @@ import { GetStaticProps, InferGetStaticPropsType } from "next";
 import { getPostsMetadata } from "../backend";
 import Posts from "../components/Posts";
 import styles from "../styles/index.module.css";
-import { IPostMetadata } from "../types";
+import { PostMetadata } from "../types";
 
 interface IHomeProps {
-  postNames: string[];
-  posts: IPostMetadata[];
+  posts: PostMetadata[];
 }
 
 export const getStaticProps: GetStaticProps<IHomeProps> = async () => {
   const posts = await getPostsMetadata();
-  const props = { ...posts };
   return {
-    props,
+    props: { posts },
   };
 };
 

@@ -3,13 +3,13 @@ import React from "react";
 import styles from "../../styles/post.module.css";
 
 // Packages required from backend
-import { IPost, IPostMetadata } from "../../types";
+import { Post, PostMetadata } from "../../types";
 import { getPost, getPostsMetadata } from "../../backend";
 import Link from "next/link";
 import Head from "next/head";
 import Utterances from "../../components/Utterances";
 
-function getPostsInSameCategory(currentPost: IPost, metadata: IPostMetadata[]) {
+function getPostsInSameCategory(currentPost: Post, metadata: PostMetadata[]) {
   const { category } = currentPost;
   const posts = metadata.filter((post) => post.category === category);
   const postNames = posts.map((post) => post.name);
@@ -28,7 +28,8 @@ function getPostsInSameCategory(currentPost: IPost, metadata: IPostMetadata[]) {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const { postNames } = await getPostsMetadata();
+  const posts = await getPostsMetadata();
+  const postNames = posts.map((post) => post.name);
   return {
     paths: postNames.map((id) => ({ params: { id } })),
     fallback: false,
@@ -36,8 +37,8 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 export const getStaticProps: GetStaticProps<{
-  post: IPost;
-  postsInSameCategory: IPostMetadata[];
+  post: Post;
+  postsInSameCategory: PostMetadata[];
 }> = async (context) => {
   const postName = context.params?.id;
   if (typeof postName !== "string")
@@ -49,7 +50,7 @@ export const getStaticProps: GetStaticProps<{
     };
 
   const post = await getPost(postName);
-  const { posts } = await getPostsMetadata();
+  const posts = await getPostsMetadata();
 
   if (!post)
     return {
@@ -69,7 +70,7 @@ export const getStaticProps: GetStaticProps<{
   };
 };
 
-export default function Post({
+export default function PostView({
   post,
   postsInSameCategory,
 }: InferGetStaticPropsType<typeof getStaticProps>) {

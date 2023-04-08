@@ -1,13 +1,22 @@
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import Link from "next/link";
 import { getPostsMetadata } from "../../backend";
-import { ICategory } from "../../types";
+import { Category } from "../../types";
 import styles from "../../styles/categories.module.css";
 
 export const getStaticProps: GetStaticProps<{
-  categories: ICategory[];
+  categories: Category[];
 }> = async () => {
-  const { categories } = await getPostsMetadata();
+  const posts = await getPostsMetadata();
+  const categories = posts.reduce((acc, post) => {
+    const { category } = post;
+    const categoryObject = acc.find((c) => c.name === category);
+    if (categoryObject) {
+      categoryObject.postsNumber++;
+      return acc;
+    }
+    return [...acc, { name: category, postsNumber: 1 }];
+  }, [] as Category[]);
   return { props: { categories } };
 };
 

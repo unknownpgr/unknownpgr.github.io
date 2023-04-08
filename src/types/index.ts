@@ -1,15 +1,15 @@
-export interface IPostMetadata {
+export interface PostMetadata {
   name: string;
   title: string;
   date: string;
   category: string;
 }
 
-export interface IPost extends IPostMetadata {
+export interface Post extends PostMetadata {
   html: string;
 }
 
-export interface ICategory {
+export interface Category {
   name: string;
   postsNumber: number;
 }

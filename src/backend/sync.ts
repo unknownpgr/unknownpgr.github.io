@@ -31,7 +31,7 @@ async function unlock(fp: fs.FileHandle, key: string) {
   }
 }
 
-export async function lockedTask(key: string, task: () => Promise<any>) {
+export async function lockedTask<T>(key: string, task: () => Promise<T>) {
   const fp = await lock(key);
   try {
     return await task();
