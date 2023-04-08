@@ -1,4 +1,5 @@
 import React, { ReactNode } from "react";
+
 import styles from "../styles/about.module.css";
 
 function Ank({ href, children }: { href: string; children: React.ReactNode }) {
@@ -68,6 +69,25 @@ function AboutPage() {
       </ul>
       <h2>Selected Projects</h2>
       <ul>
+        <ProjectGroup>Services</ProjectGroup>
+        <ProjectItem
+          link="https://the-form.io"
+          title="The Form"
+          descriptions={[
+            "더폼은 웹에서 간편하게 설문조사를 만들고, 응답을 수집할 수 있는 서비스입니다.",
+            "평균 1만, 최대 10만 정도의 MAU를 보유하고 있습니다.",
+            "CTO Role을 맡아서 서비스 전반을 관리하고 있습니다.",
+          ]}
+        ></ProjectItem>
+        <ProjectItem
+          link="https://real-estate.unknownpgr.com"
+          title="Real Estate Manager"
+          descriptions={[
+            "부동산 중개인(공인중개사)가 부동산 매물을 관리할 수 있는 웹 서비스입니다.",
+            "현재는 홍보 없이 beta 버전으로 운영 중이나, 회원 가입 및 서비스 사용은 가능합니다.",
+            "1인 개발 프로젝트로, 서비스 아키텍쳐 및 인프라 설계부터 개발, 배포까지 전반적으로 진행하고 있습니다.",
+          ]}
+        ></ProjectItem>
         <ProjectGroup>Web</ProjectGroup>
         <ProjectItem
           link="https://www.npmjs.com/package/@unknownpgr/git-key"
@@ -160,14 +180,6 @@ function AboutPage() {
             "추가로 JS 에서explicit Euler method를 사용하여 시뮬레이션을 만들어봤습니다.",
           ]}
         />
-        <ProjectItem
-          link="https://github.com/unknownpgr/fourier_transform"
-          title="이산 푸리에 변환"
-          descriptions={[
-            "주어진 곡선을 이산 푸리에 변환(DFT)을 이용하여 연속적인 곡선으로 변환해주는 C# 프로그램입니다.",
-            "지금 보기에는 조악한 구현이지만, 고등학생 때 구현했다는 것에 의의를 두겠습니다.",
-          ]}
-        />
         <ProjectGroup>Artificial Intelligence</ProjectGroup>
         <ProjectItem
           link="https://github.com/unknownpgr/face_recognize"
@@ -186,13 +198,6 @@ function AboutPage() {
           ]}
         />
         <ProjectItem
-          link="https://github.com/unknownpgr/boolean-bruteforece"
-          title="Boolean Bruteforce"
-          descriptions={[
-            "주어진 truth-table을 만족시키는 가장 짧은 단일 boolean expression을 찾는 C++ 프로그램입니다.",
-          ]}
-        />
-        <ProjectItem
           link="https://github.com/unknownpgr/fractal-js"
           title="Mandelbrot Set"
           descriptions={[
@@ -205,9 +210,25 @@ function AboutPage() {
           descriptions={["프랙탈의 한 종류인 dragon curve를 그려봤습니다."]}
         />
       </ul>
-      <h2>Work Experiences</h2>
+      <h2>Experiences</h2>
       <ul className={styles.spacedList}>
-        <li>Software Maestro 12기</li>
+        <li>
+          Software Maestro 12기
+          <ul>
+            <li>
+              <a href="https://the-form.io">The-Form</a>
+            </li>
+          </ul>
+        </li>
+        <li>
+          서울시립대학교 중앙동아리, 로봇연구회 ZETIN 회장
+          <ul>
+            <li>
+              <a href="https://zetin.uos.ac.kr">https://zetin.uos.ac.kr</a>
+            </li>
+            <li>2020년 12월 ~ 2021년 12월</li>
+          </ul>
+        </li>
         <li>
           Undergraduate Research Intern, University of Seoul
           <ul>
@@ -237,6 +258,7 @@ function AboutPage() {
             <li>부동산 등기 자동 검증 솔루션</li>
           </ul>
         </li>
+        <li>2022년 육군 정보통신학교 전술 C4I 교육과정 최우수 수료</li>
         <li>2021년 소프트웨어 마에스트로 인증</li>
         <li>2020년 2학기 학업우수상</li>
         <li>
@@ -284,19 +306,6 @@ function AboutPage() {
             <li>
               <Ank href="https://koreascience.kr/article/JAKO202209833893350.view?orgId=anpor&hide=breadcrumb,journalinfo">
                 https://koreascience.kr/article/JAKO202209833893350.view?orgId=anpor&hide=breadcrumb,journalinfo
-              </Ank>
-            </li>
-          </ul>
-        </li>
-        <li>
-          Park, S., Jung, H., Choi, J. W., Park, J., Jun, J., Chun, M., & Jung,
-          H. (2021). Exploring the Experiences of Student Volunteer and Student
-          Volunteer Chair Communities at Academic Conferences. Proceedings of
-          the ACM on Human-Computer Interaction, 5(CSCW2), 1-23.
-          <ul>
-            <li>
-              <Ank href="https://dl.acm.org/doi/abs/10.1145/3479599">
-                https://dl.acm.org/doi/abs/10.1145/3479599
               </Ank>
             </li>
           </ul>
