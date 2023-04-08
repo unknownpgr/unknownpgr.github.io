@@ -161,12 +161,20 @@ async function preprocess(postName: string) {
     return null;
   }
 
-  // If directory name is not in correct format, rename it.
-  if (postName.match(/^\d{4}-\d{2}-\d{2}-/)) return postName;
+  // Normalize post name
   const post = await processPost(postName);
   if (!post) return null;
+
   const { date } = post;
-  const newPostName = `${date.substring(0, 10)}-${postName}`;
+  let newPostName = postName;
+
+  if (!postName.startsWith(date.slice(0, 10))) {
+    newPostName = `${date.slice(0, 10)}-${postName}`;
+  }
+  newPostName = newPostName.replace(/[^a-zA-Z0-9-]/g, "-").replace(/-+/g, "-");
+
+  if (newPostName === postName) return postName;
+
   console.log(`Renaming ${postName} to ${newPostName}`);
   // Move post directory
   await fs.rename(
