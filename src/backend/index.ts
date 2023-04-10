@@ -115,7 +115,11 @@ async function processPosts() {
   return filtered;
 }
 
+let cache: NamedPost[] | null = null;
+
 async function getProcessedPosts() {
+  if (cache) return cache;
+
   return withLock(".lock", async () => {
     console.log("Processing posts...");
     const cacheDir = ".cache";
@@ -128,7 +132,6 @@ async function getProcessedPosts() {
 
     const cacheFile = "posts.json";
     const cachePath = path.join(cacheDir, cacheFile);
-    let cache = null;
     try {
       cache = JSON.parse(await fs.readFile(cachePath, "utf-8")) as NamedPost[];
     } catch (e) {
