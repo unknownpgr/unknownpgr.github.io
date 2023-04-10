@@ -52,7 +52,9 @@ export default function CategoryView({
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <div>
-      <i>Posts in {category}</i>
+      <div>
+        <i>Posts in {category}</i>
+      </div>
       <br></br>
       <Posts posts={posts}></Posts>
     </div>
