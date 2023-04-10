@@ -83,6 +83,11 @@ export default function PostView({
       </Head>
       <div>
         <h1 className={styles.title}>{title}</h1>
+        <div className={styles.info}>
+          <i>
+            {category} / {date}
+          </i>
+        </div>
         <main
           className={styles.main}
           dangerouslySetInnerHTML={{ __html: html }}

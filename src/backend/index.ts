@@ -117,6 +117,7 @@ async function processPosts() {
 
 async function getProcessedPosts() {
   return withLock(".lock", async () => {
+    console.log("Processing posts...");
     const cacheDir = ".cache";
     try {
       await fs.mkdir(cacheDir);
@@ -135,11 +136,16 @@ async function getProcessedPosts() {
       if (err.code !== "ENOENT") throw e;
     }
 
-    if (cache) return cache;
+    if (cache) {
+      console.log("Using cached posts...");
+      return cache;
+    }
 
+    console.log("Generating new cache...");
     cache = await processPosts();
     await fs.writeFile(cachePath, JSON.stringify(cache));
 
+    console.log("Done processing posts.");
     return cache;
   });
 }
