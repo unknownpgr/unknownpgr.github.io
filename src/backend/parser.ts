@@ -1,51 +1,14 @@
 import crypto from "crypto";
-import hljs from "highlight.js";
 import htmlParser from "node-html-parser";
-import katex from "./katex-converter";
-import markdownIt from "markdown-it";
 import path from "path";
 import yaml from "yaml";
-
-const markdown = markdownIt({
-  html: true,
-  langPrefix: "language-",
-  linkify: false,
-  typographer: false,
-  highlight: (str, lang) => {
-    if (lang && hljs.getLanguage(lang)) {
-      try {
-        return hljs.highlight(str, { language: lang }).value;
-      } catch (_) {}
-    }
-    return ""; // use external default escaping
-  },
-});
-markdown.use(katex);
-
-// Find n-th appearance of pattern in string. index starts from 1.
-function getNthIndexOf(str: string, pattern: string, n: number) {
-  const l = str.length;
-  let i = -1;
-  while (n-- && i++ < l) {
-    i = str.indexOf(pattern, i);
-    if (i < 0) break;
-  }
-  return i;
-}
-
-function normalizeDateString(date: string) {
-  const dateObj = new Date(date);
-  if (!date || isNaN(+dateObj)) return new Date().toISOString();
-  else return dateObj.toISOString();
-}
-
-function normalizeCategory(category: string) {
-  return category.replace(/( |\t|_|-)+/g, " ").toLowerCase();
-}
-
-function normalizePath(pathStr: string) {
-  return path.normalize(pathStr).replace(/\\/g, "/");
-}
+import {
+  getNthIndexOf,
+  normalizeCategory,
+  normalizeDateString,
+  normalizePath,
+  renderMarkdown,
+} from "./utils";
 
 // Split post into YAML formatter part and markdown part.
 // Pure function
@@ -83,12 +46,21 @@ function parseFormatter(formatterStr: string): {
   return formatter;
 }
 
+export interface Post {
+  imageMapping: Record<string, string>;
+  title: string;
+  date: string;
+  category: string;
+  html: string;
+  postStr: string;
+}
+
 export async function processPostBody(
   rawPostStr: string,
   files: {
     [key: string]: Buffer;
   }
-) {
+): Promise<Post> {
   // Parse markdown string
   const [yamlStr, markdownStr] = parseRawPostString(rawPostStr);
   const formatter = parseFormatter(yamlStr);
@@ -105,7 +77,7 @@ export async function processPostBody(
 
   // Create image mapping
   const fileMapping: Record<string, string> = {};
-  const html = markdown.render(markdownStr);
+  const html = renderMarkdown(markdownStr);
   const dom = htmlParser.parse(html);
 
   // ToDo: Update to find all tags with src attribute
