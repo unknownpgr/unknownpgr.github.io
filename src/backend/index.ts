@@ -33,7 +33,7 @@ async function buildFileMap(
 }
 
 // Read-only, non-pure function
-async function parsePost(postName: string): Promise<Omit<Post, "name"> | null> {
+async function parsePost(postName: string) {
   const postDir = path.join("../posts", postName);
   const files = await fs.readdir(postDir);
   const markdownFile = files.find((file) => file.endsWith(".md"));
@@ -43,7 +43,7 @@ async function parsePost(postName: string): Promise<Omit<Post, "name"> | null> {
   const markdownStr = await fs.readFile(markdownPath, "utf-8");
   const fileMap = await buildFileMap(postDir, postDir);
   const post = await processPostBody(markdownStr, fileMap);
-  return post;
+  return { ...post, markdownFile };
 }
 
 async function normalizePostName(postName: string, postDate: string) {
@@ -68,9 +68,15 @@ async function processPost(postName: string): Promise<Post | null> {
   const postDate = post.date;
   const updatedPostName = await normalizePostName(postName, postDate);
   if (!updatedPostName) return null;
-  if (updatedPostName !== postName) await fs.rename(postName, updatedPostName);
+  if (updatedPostName !== postName) {
+    const postPath = path.join("../posts", postName);
+    const updatedPostPath = path.join("../posts", updatedPostName);
+    await fs.rename(postPath, updatedPostPath);
+  }
 
   if (!post) return null;
+
+  // Copy images to public folder
   const mapping = post.imageMapping;
   await Promise.all(
     Object.entries(mapping).map(async ([key, value]) => {
@@ -80,6 +86,15 @@ async function processPost(postName: string): Promise<Post | null> {
       );
     })
   );
+
+  // Rewrite post body
+  const markdownFilePath = path.join(
+    "../posts",
+    updatedPostName,
+    post.markdownFile
+  );
+  fs.writeFile(markdownFilePath, post.postStr);
+
   return {
     ...post,
     name: updatedPostName,
