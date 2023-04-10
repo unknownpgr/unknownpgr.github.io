@@ -15,4 +15,3 @@ sudo chown -R $(id -u):$(id -g) docs
 touch docs/.nojekyll
 
 git add docs/*
-git commit -m "Build blog"
