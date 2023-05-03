@@ -96,6 +96,8 @@ date:
 - 평소부터 읽고 싶었던 엘런 소칼의 지적 사기를 훈련소에서 찾아 읽었다. 기대하던 것과 같이 아주 재미있었다.
 - 팔굽혀펴기를 스무 개는 어렵지 않게 할 수 있게 되었다. 원래는 다섯 개도 힘들었는데!
 - 클린 아키텍쳐를 읽고 아키텍쳐와 Dependency Inversion에 대한 깊은 이해를 얻었다.
+- 더폼과 real-estate를 완전히 갈아엎는 중.
+- 4~5월쯤 해서 서울대 연구실과도 약간씩 협업 중.
 
 ## Ability
 
@@ -114,6 +116,15 @@ date:
 - **Robotics**: Motor control(PID), Rigid body dynamics(Lagrange dynamics)
 - **Language**: C, C++, C#, Python, Java, Javascript, Typescript
 - **Blockchain**: Ethereum, Solidity, Truffle, Ganache, Web3.js
+
+## My Daily Project
+
+I'm a problem solver. I always solves problems of myself.
+
+- EC2 Controller WebUI
+- Diary
+- Memo Server
+- Http-Tunnelling
 
 ## Challenging Experiences
 
