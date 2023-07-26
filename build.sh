@@ -1,11 +1,14 @@
 # This script will build docker image for blog builder, and build blog from blog builder.
 set -e
 
+# Get sudo permission
+sudo echo "Get sudo permission"
+
 ROOT="$(dirname -- $0)"
 cd $ROOT
 
-rm -rf src/.cache
-rm -rf docs
+sudo rm -rf src/.cache
+sudo rm -rf docs
 
 docker build -t blog .
 docker run --rm -it -v $(pwd)/posts:/posts -v $(pwd)/docs:/out blog
