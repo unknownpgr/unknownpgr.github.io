@@ -81,10 +81,10 @@ $$ W^+ D= \mu\\(W^+ = (W^T W)^{-1} W^T)$$
 # Result
 - 원본 이미지
     
-    ![original](https://github.com/unknownpgr/ct-reconstruction/raw/main/test_resized.png)
+    ![original](./input.png)
 - 재구성된 이미지
     
-    ![reconstructed](https://github.com/unknownpgr/ct-reconstruction/raw/main/test_result.png)
+    ![reconstructed](./output.png)
 
 원본 이미지와 대단히 흡사한 이미지가 얻어진 것을 확인할 수 있습니다.
 
