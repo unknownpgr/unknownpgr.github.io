@@ -1,7 +1,7 @@
 ---
-title: 'CT Reconstruction'
+title: CT Reconstruction
 category: math/science
-date: 
+date: 2023-07-28T14:42:11.036Z
 
 ---
 
