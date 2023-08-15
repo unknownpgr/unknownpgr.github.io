@@ -128,6 +128,7 @@ function AboutPage() {
           descriptions={[
             "카메라 및 각종 센서가 장치된 임베디드 리눅스 기반의 차량을 자율주행시키는 대회에 참여하였습니다.",
             "임베디드시스템에서의 영상처리, 실시간 제어를 위한 최적화 등을 수행해볼 수 있는 기회였습니다.",
+            "영상 : https://youtu.be/6rkNeMgAsw8" 
           ]}
         />
         <ProjectItem
@@ -136,6 +137,7 @@ function AboutPage() {
           descriptions={[
             "라즈베리파이를 이용하여 바닥에 그려진 경로를 따라 주행하고, 자동으로 최단거리탐색을 수행하는 쓰레기통을 만들었습니다.",
             "Memory mapped IO, CPU affinity등 다양한 리눅스 커널 기능을 이용해본 프로젝트였습니다.",
+            "영상 목록: https://www.youtube.com/watch?v=60Z-cCqDNXo&list=PLwAlwbWmqPHFY4DxehJgRvK1k2sIkV5EB"
           ]}
         />
         <ProjectItem
@@ -153,6 +155,7 @@ function AboutPage() {
           descriptions={[
             "왜곡된 영상을 비스듬한 각도에서도 정상적으로 볼 수 있도록 프로젝션해주는 프로그램입니다.",
             "Python+OpenCV를 사용하여 구현하였으며, 2019년 셈틀제에서 5등상을 수상했습니다.",
+            "영상 : https://youtu.be/77tAkzMEDdw"
           ]}
         />
         <ProjectItem
@@ -162,6 +165,7 @@ function AboutPage() {
             "Reverse Projection-1을 움직이는 관찰자 입장에서도 사용할 수 있고, 3D 모델에 대해서도 적용할 수 있도록 확장한 것입니다.",
             "WebGL의 Shader를 직접 작성하고 사용해볼 수 있는 기회였습니다.",
             "2020년 셈틀제에서 2등상을 수상했습니다.",
+            "영상 : https://youtu.be/TkQpI9xZ_dk"
           ]}
         />
         <ProjectItem
