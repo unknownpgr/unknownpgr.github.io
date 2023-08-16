@@ -62,17 +62,20 @@ export const getStaticProps: GetStaticProps<{
     // Check if post with date prefix exists
     const postWithDatePrefix = posts.find((post) => post.name.endsWith(postName));
     if (postWithDatePrefix) {
-      post = await getPost(postWithDatePrefix.name);
+      return {
+        redirect: {
+          permanent: true,
+          destination: `/posts/${postWithDatePrefix.name}/`,
+        }
+      }
+    } else {
+      return {
+        redirect: {
+          permanent: false,
+          destination: "/",
+        },
+      };
     }
-  }
-
-  if (!post) {
-    return {
-      redirect: {
-        permanent: false,
-        destination: "/",
-      },
-    };
   }
 
   const postsInSameCategory = getPostsInSameCategory(post, posts);
