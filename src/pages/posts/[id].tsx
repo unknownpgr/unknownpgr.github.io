@@ -29,7 +29,13 @@ function getPostsInSameCategory(currentPost: Post, metadata: PostMetadata[]) {
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const posts = await getPostsMetadata();
-  const postNames = posts.map((post) => post.name);
+  const postNames = posts.map((post) => post.name).concat(posts.map(
+    (post) => {
+      // Remove date prefix (e.g. 2021-01-01-test-post ==> test-post)
+      const name = post.name.split("-").slice(3).join("-");
+      return name;
+    }
+  ));
   return {
     paths: postNames.map((id) => ({ params: { id } })),
     fallback: false,
@@ -49,16 +55,25 @@ export const getStaticProps: GetStaticProps<{
       },
     };
 
-  const post = await getPost(postName);
+  let post = await getPost(postName);
   const posts = await getPostsMetadata();
 
-  if (!post)
+  if (!post) {
+    // Check if post with date prefix exists
+    const postWithDatePrefix = posts.find((post) => post.name.endsWith(postName));
+    if (postWithDatePrefix) {
+      post = await getPost(postWithDatePrefix.name);
+    }
+  }
+
+  if (!post) {
     return {
       redirect: {
         permanent: false,
         destination: "/",
       },
     };
+  }
 
   const postsInSameCategory = getPostsInSameCategory(post, posts);
 
