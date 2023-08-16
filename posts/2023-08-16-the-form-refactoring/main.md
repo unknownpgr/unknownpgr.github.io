@@ -1,6 +1,8 @@
 ---
 title: The-Form Refactoring
 category: development
+date: 2023-08-16T14:17:01.499Z
+
 ---
 
 저는 더폼([The-Form](https://the-form.io))이라는 서비스를 운영 중입니다. 더폼은 2021년 소프트웨어 마에스트로 교육과정을 연수하며 만든 설문조사 플랫폼입니다.
