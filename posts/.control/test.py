@@ -17,58 +17,25 @@ def get_torque_by_velocity(velocity):
 
 
 def get_wheel_acceleration(v, v_, c, c_):
-    ar = (v_ * (1 - D * c) - v * D * c_) * v *(1 - D * c)
+    ar = (v_ * (1 - D * c) - v * D * c_) * v * (1 - D * c)
     al = (v_ * (1 + D * c) + v * D * c_) * v * (1 + D * c)
     return ar, al
 
-dt = 0.001
-t = 0
-a = 0.5
-v = 0.01
-x = 0
+'''
+동적 계획법을 사용하여 문제를 해결할 것이다.
+초기 위치와 속도로부터, 가능한 모든 경우의 수를 계산한다.
+'''
 
-t_list = []
-c_list = []
-a_list = []
-v_list = []
-x_list = []
+# (position, velocity)
+states = [[(0,0.1)]]
 
-ar_list = []
-al_list = []
+dx = 0.001
 
-ar_max_list = []
-al_max_list = []
+while True:
+    last_states = states[-1]
+    new_states = []
+    for state in last_states:
+        position, velocity = state
+        curvature = get_curvature_by_distance(position)
 
-while t < 20:
-    c = get_curvature_by_distance(x)
-
-    t_list.append(t)
-    a_list.append(a)
-    v_list.append(v)
-    x_list.append(x)
-    c_list.append(c)
-
-    dx = v * dt
-
-    c_next = get_curvature_by_distance(x + dx)
-    c_ = (c_next - c) / dx
-
-    ar, al = get_wheel_acceleration(v, v * a, c, c_)
-
-    ar_list.append(ar)
-    al_list.append(al)
-
-    ar_max_list.append(get_torque_by_velocity(v * (1 - D * c)))
-    al_max_list.append(get_torque_by_velocity(v * (1 + D * c)))
-
-    v += a * dt
-    x += dx
-    t += dt
-
-plt.plot(t_list, c_list, label='c')
-plt.plot(t_list, ar_list, label='ar')
-plt.plot(t_list, al_list, label='al')
-plt.plot(t_list, ar_max_list, label='ar_max')
-plt.plot(t_list, al_max_list, label='al_max')
-plt.legend()
-plt.savefig('test.png')
+        

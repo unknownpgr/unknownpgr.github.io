@@ -79,3 +79,11 @@ $$
 \left|a_l\right| &= \left|(v'(1+dr) + vdr')v(1+dr)\right| \leq kT(v)
 \end{align}
 $$
+
+이때 현재의 $v$, $r$이 주어졌을 때, 위 부등식을 만족하는 $v'$ 
+
+---
+
+$$
+-\frac{d\,v\left(x\right)\,\frac{\partial }{\partial x} r\left(x\right)-\frac{y\,{\mathrm{e}}^{u\,1{}\mathrm{i}}}{v\left(x\right)\,\left(d\,r\left(x\right)-1\right)}}{d\,r\left(x\right)-1}
+$$
