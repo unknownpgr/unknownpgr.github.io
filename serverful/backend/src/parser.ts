@@ -147,7 +147,7 @@ export class OnMemoryPostParser implements PostParser {
       markdownFilename: postFile,
       fixedMarkdown: `---\n${yaml
         .stringify(formatter)
-        .trim()}\n---\n${markdownStr}`,
+        .trim()}\n---\n\n${markdownStr}\n`,
     };
   }
 }

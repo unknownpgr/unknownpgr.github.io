@@ -1,6 +1,5 @@
 import fs from "fs/promises";
 import path from "path";
-import crypto from "crypto";
 import { OnMemoryPostParser } from "./parser";
 
 export interface PostMetadata {
@@ -29,19 +28,34 @@ export interface PostParser {
   parse(params: PostParserParams): Promise<PostParserResult>;
 }
 
+async function buildFileMap(
+  root: string,
+  relative: string
+): Promise<{ [key: string]: Buffer }> {
+  const fileMap: { [key: string]: Buffer } = {};
+  const files = await fs.readdir(root);
+  for (const file of files) {
+    const filePath = path.join(root, file);
+    const stat = await fs.stat(filePath);
+    if (stat.isDirectory()) {
+      const subFileMap = await buildFileMap(filePath, relative);
+      Object.assign(fileMap, subFileMap);
+    } else {
+      const relativePath = path.relative(relative, filePath);
+      fileMap[relativePath] = await fs.readFile(filePath);
+    }
+  }
+  return fileMap;
+}
+
 export class BlogService {
   // Initialization-related code
 
-  private cache: Record<
-    string,
-    { key: string; timestamp: number; post: PostData }
-  > = {};
-
-  private fileCache: Record<string, Buffer> = {};
+  private posts: Record<string, PostData> = {};
+  private files: Record<string, Buffer> = {};
 
   private constructor(
     private postDir: string,
-    private cacheLifetime: number = 1000 * 60 * 60 * 24, // 1 day
     private postParser: PostParser = new OnMemoryPostParser("/api/imgs/")
   ) {}
 
@@ -61,7 +75,7 @@ export class BlogService {
   }
 
   // Blog-related code
-  private async getPost(postId: string): Promise<PostData> {
+  private async loadPost(postId: string) {
     // Validate postId
     if (
       !postId ||
@@ -72,88 +86,31 @@ export class BlogService {
       throw new Error(`Invalid postId ${postId}`);
     }
 
-    async function buildFileMap(
-      root: string,
-      relative: string
-    ): Promise<{ [key: string]: Buffer }> {
-      const fileMap: { [key: string]: Buffer } = {};
-      const files = await fs.readdir(root);
-      for (const file of files) {
-        const filePath = path.join(root, file);
-        const stat = await fs.stat(filePath);
-        if (stat.isDirectory()) {
-          const subFileMap = await buildFileMap(filePath, relative);
-          Object.assign(fileMap, subFileMap);
-        } else {
-          const relativePath = path.relative(relative, filePath);
-          fileMap[relativePath] = await fs.readFile(filePath);
-        }
-      }
-      return fileMap;
-    }
-
     const postPath = path.join(this.postDir, postId);
     const files = await buildFileMap(postPath, postPath);
     const { postData, markdownFilename, fixedMarkdown } =
       await this.postParser.parse({ files });
 
+    // Update file mapping
+    Object.assign(this.files, postData.fileMapping);
+
+    // Update post data
+    this.posts[postId] = { ...postData, id: postId };
+
     // Update markdown
     const markdownPath = path.join(postPath, markdownFilename);
     await fs.writeFile(markdownPath, fixedMarkdown);
-
-    return {
-      ...postData,
-      id: postId,
-    };
   }
 
-  private async getCachedPost(postId: string): Promise<PostData> {
-    const cache = this.cache[postId];
-    if (cache) {
-      const now = Date.now();
-      if (now - cache.timestamp < this.cacheLifetime) {
-        return cache.post;
-      }
-    }
-
-    const hash = crypto.createHash("md5");
-
-    async function hashDirectory(directory: string) {
-      const files = await fs.readdir(directory);
-      files.sort();
-      for (const file of files) {
-        const filePath = path.join(directory, file);
-        const stat = await fs.stat(filePath);
-        if (stat.isDirectory()) {
-          await hashDirectory(filePath);
-        } else {
-          const content = await fs.readFile(filePath);
-          hash.update(content);
-        }
-      }
-    }
-
-    const postPath = path.join(this.postDir, postId);
-    await hashDirectory(postPath);
-    const digest = hash.digest("hex");
-
-    if (cache && cache.key === digest) {
-      cache.timestamp = Date.now();
-      return cache.post;
-    } else {
-      const post = await this.getPost(postId);
-      this.cache[postId] = {
-        key: digest,
-        timestamp: Date.now(),
-        post,
-      };
-      Object.assign(this.fileCache, post.fileMapping);
-      return post;
-    }
+  public clearLoadedPosts() {
+    this.posts = {};
   }
 
-  public setCacheLifetime(lifetime: number) {
-    this.cacheLifetime = lifetime;
+  public async getPost(postId: string): Promise<PostData> {
+    if (!this.posts[postId]) {
+      await this.loadPost(postId);
+    }
+    return this.posts[postId];
   }
 
   public async getPostMetadata(): Promise<PostMetadata[]> {
@@ -165,7 +122,7 @@ export class BlogService {
         )
         .map(async (postDir) => {
           try {
-            const post = await this.getCachedPost(postDir);
+            const post = await this.getPost(postDir);
             const metadata: PostMetadata = {
               id: post.id,
               title: post.title,
@@ -182,12 +139,8 @@ export class BlogService {
     return posts.filter((post): post is PostMetadata => post !== null);
   }
 
-  public async getPostData(postId: string): Promise<PostData> {
-    return await this.getCachedPost(postId);
-  }
-
   public async getImage(imageName: string): Promise<Buffer> {
-    const image = this.fileCache[imageName];
+    const image = this.files[imageName];
     if (!image) {
       throw new Error(`Image ${imageName} not found`);
     }

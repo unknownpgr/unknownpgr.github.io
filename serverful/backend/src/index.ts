@@ -21,7 +21,7 @@ async function main() {
   });
 
   router.get("/api/posts/:id", async (ctx) => {
-    const post = await blogService.getPostData(ctx.params.id);
+    const post = await blogService.getPost(ctx.params.id);
     ctx.body = post;
   });
 
