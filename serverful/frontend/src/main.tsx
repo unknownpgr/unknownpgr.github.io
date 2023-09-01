@@ -1,9 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements, useRouteError } from "react-router-dom"
-import App from './App.tsx'
+import App from './pages/main.tsx'
 import './index.css'
-import { Post } from "./Post.tsx"
+import { Post } from "./pages/post.tsx"
 
 function ErrorBoundary() {
   const error = useRouteError();

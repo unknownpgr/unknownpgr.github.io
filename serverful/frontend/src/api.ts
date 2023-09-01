@@ -1,4 +1,4 @@
-import { PostData, PostMetadata } from "./App";
+import { PostData, PostMetadata } from "./pages/main";
 
 export class ApiService {
   constructor(private baseUrl: string = "") {}

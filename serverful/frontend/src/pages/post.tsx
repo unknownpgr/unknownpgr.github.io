@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { PostData } from "./App";
-import { ApiService } from "./api";
+import { PostData } from "./main";
+import { ApiService } from "../api";
 import { useParams } from "react-router-dom";
 
 const api = new ApiService();
