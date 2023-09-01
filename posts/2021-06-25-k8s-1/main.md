@@ -1,8 +1,8 @@
 ---
 title: 쿠버네티스 클러스터 구축[1] - 가상 머신
-category: kubernetes
+tags:
+  - kubernetes
 date: 2021-06-25T17:10:36.838Z
-
 ---
 
 ![Vagrant logo](imgs/1500px-Vagrant-logo.png)

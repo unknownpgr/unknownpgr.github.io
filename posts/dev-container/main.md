@@ -1,6 +1,8 @@
 ---
 title: Dev container
-category: development
+tags:
+  - development
+date: 2023-09-01T13:53:39.184Z
 ---
 
 Dev container는 개발 환경을 표준화하여 개발 환경 설정에 드는 노력을 줄여 주는 도구입니다.

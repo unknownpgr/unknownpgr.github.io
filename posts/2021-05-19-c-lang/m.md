@@ -1,8 +1,8 @@
 ---
 title: C언어 선언과 정의, 매크로에 대한 정리
-category: programming language
+tags:
+  - programming language
 date: 2021-05-19T17:11:29.249Z
-
 ---
 
 C언어에 대한 몇 가지 헷갈리는 개념들을 정리해둡니다.

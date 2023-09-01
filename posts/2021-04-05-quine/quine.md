@@ -1,8 +1,8 @@
 ---
 title: 콰인(Quine)
-category: algorithm
+tags:
+  - algorithm
 date: 2021-04-05T21:27:20.117Z
-
 ---
 
 # 소개

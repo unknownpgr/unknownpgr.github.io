@@ -1,8 +1,8 @@
 ---
 title: 육군 창업 경진대회 출전
-category: army
+tags:
+  - army
 date: 2022-10-29T14:43:31.046Z
-
 ---
 
 ## 군생활을 낭비할 순 없다

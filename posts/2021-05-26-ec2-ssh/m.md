@@ -1,8 +1,8 @@
 ---
 title: EC2 인스턴스에 안전하게 VSCode SSH 연결하기
-category: cloud
+tags:
+  - cloud
 date: 2021-05-26T20:07:31.090Z
-
 ---
 
 이 글에서는 EC2 인스턴스에 안전하게 VSCode SSH를 연결하는 방법을 정리합니다.

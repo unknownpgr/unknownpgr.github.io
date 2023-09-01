@@ -1,8 +1,8 @@
 ---
 title: Git-Key, 오픈소스 프로젝트
-category: development
+tags:
+  - development
 date: 2022-11-28T13:25:30.725Z
-
 ---
 
 ![Logo](./git-key-logo.png)

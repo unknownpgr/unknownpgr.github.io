@@ -1,8 +1,8 @@
 ---
 title: 쿠버네티스 클러스터 구축[4] - WildCard TLS with Let'sEncrypt
-category: kubernetes
+tags:
+  - kubernetes
 date: 2021-09-05T00:03:01.289Z
-
 ---
 
 저번 포스팅에서 Traefik을 이용하여 일반(http) Ingress를 구축하는 과정을 정리습니다. 이번 포스팅에는 Cert Manager를 사용하여 자동으로 Widcard Domain에 대한 Certification을 생성하는 과정을 정리해보고자 합니다.

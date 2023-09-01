@@ -1,8 +1,8 @@
 ---
 title: RBAC 구현
-category: development
+tags:
+  - development
 date: 2021-12-02T17:45:23.057Z
-
 ---
 
 > 이 글은 [Role-Based Access Control](https://csrc.nist.gov/CSRC/media/Projects/Role-Based-Access-Control/documents/ferraiolo-kuhn-92.pdf) (1992)를 참고하여 작성하였습니다.

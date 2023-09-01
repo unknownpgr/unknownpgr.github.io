@@ -1,8 +1,8 @@
 ---
 title: 쿠버네티스 클러스터 구축[3] - Traefik
-category: kubernetes
+tags:
+  - kubernetes
 date: 2021-09-01T23:01:24.540Z
-
 ---
 
 ![7651.vertical - Copy.png-900x506x2](imgs/logo.png)

@@ -1,8 +1,8 @@
 ---
 title: 멱등성 (idempotent)에 대한 설명
-category: development
+tags:
+  - development
 date: 2021-07-19T05:36:15.583Z
-
 ---
 
 이번에 프로젝트를 진행하며 API관련 공부를 하다 보니 멱등성(idempotent)에 대해 명확하게 정리해둘 필요를 느꼈습니다.
