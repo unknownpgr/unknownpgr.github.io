@@ -4,7 +4,13 @@ import markdownIt from "markdown-it";
 import htmlParser from "node-html-parser";
 import path from "path";
 import yaml from "yaml";
-import { PostData, PostMetadata, PostParser, PostParserParams } from "./core";
+import {
+  PostData,
+  PostMetadata,
+  PostParser,
+  PostParserParams,
+  PostParserResult,
+} from "./core";
 import katex from "./katex-converter";
 
 interface PostFormatter {
@@ -35,13 +41,24 @@ function parseDateString(date: string) {
   else return dateObj.toISOString();
 }
 
-function parseTags(category: string): string[] {
-  return category
-    .replace(/\//g, ",")
-    .split(",")
-    .map((item) => item.trim())
-    .filter((item) => item !== "")
-    .map((item) => item.toLowerCase());
+function parseTags(tags: string): string[] {
+  // Check if tags is an array
+  if (Array.isArray(tags)) return tags.map((item) => item.toLowerCase());
+
+  // Check if tags is a string
+  if (typeof tags === "string")
+    return tags
+      .replace(/\//g, ",")
+      .split(",")
+      .map((item) => item.trim())
+      .filter((item) => item !== "")
+      .map((item) => item.toLowerCase());
+
+  // Check if tags is null
+  if (!tags) return [];
+
+  // Otherwise, throw an error
+  throw new Error("YAML formatter contains invalid 'tags' attribute.");
 }
 
 function parseFormatter(formatterStr: string): PostFormatter {
@@ -53,7 +70,9 @@ function parseFormatter(formatterStr: string): PostFormatter {
   }
 
   // Legacy support
-  rawFormatter["tags"] = rawFormatter["category"];
+  if (!rawFormatter["tags"]) {
+    rawFormatter["tags"] = rawFormatter["category"];
+  }
 
   // Check required properties
   if (!rawFormatter["title"])
@@ -63,7 +82,7 @@ function parseFormatter(formatterStr: string): PostFormatter {
 
   const formatter: PostFormatter = {
     title: rawFormatter.title,
-    tags: parseTags(rawFormatter.category),
+    tags: parseTags(rawFormatter.tags),
     date: parseDateString(rawFormatter.date),
   };
 
@@ -73,7 +92,7 @@ function parseFormatter(formatterStr: string): PostFormatter {
 export class OnMemoryPostParser implements PostParser {
   constructor(private fileMappingPrefix: string) {}
 
-  async parse({ files }: PostParserParams): Promise<PostData> {
+  async parse({ files }: PostParserParams): Promise<PostParserResult> {
     const fileNames = Object.keys(files).sort();
     const postFile = fileNames.find((fileName) => fileName.endsWith(".md"));
     if (!postFile) throw new Error("Markdown file not found.");
@@ -119,10 +138,16 @@ export class OnMemoryPostParser implements PostParser {
     );
 
     return {
-      ...formatter,
-      id: "",
-      fileMapping,
-      html: dom.toString(),
+      postData: {
+        ...formatter,
+        id: "",
+        fileMapping,
+        html: dom.toString(),
+      },
+      markdownFilename: postFile,
+      fixedMarkdown: `---\n${yaml
+        .stringify(formatter)
+        .trim()}\n---\n${markdownStr}`,
     };
   }
 }

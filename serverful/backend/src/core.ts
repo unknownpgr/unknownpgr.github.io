@@ -19,8 +19,14 @@ export interface PostParserParams {
   files: { [key: string]: Buffer };
 }
 
+export interface PostParserResult {
+  postData: PostData;
+  markdownFilename: string;
+  fixedMarkdown: string;
+}
+
 export interface PostParser {
-  parse(params: PostParserParams): Promise<PostData>;
+  parse(params: PostParserParams): Promise<PostParserResult>;
 }
 
 export class BlogService {
@@ -88,9 +94,15 @@ export class BlogService {
 
     const postPath = path.join(this.postDir, postId);
     const files = await buildFileMap(postPath, postPath);
-    const post = await this.postParser.parse({ files });
+    const { postData, markdownFilename, fixedMarkdown } =
+      await this.postParser.parse({ files });
+
+    // Update markdown
+    const markdownPath = path.join(postPath, markdownFilename);
+    await fs.writeFile(markdownPath, fixedMarkdown);
+
     return {
-      ...post,
+      ...postData,
       id: postId,
     };
   }
