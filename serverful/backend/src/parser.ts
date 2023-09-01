@@ -1,15 +1,17 @@
 import crypto from "crypto";
+import hljs from "highlight.js";
+import markdownIt from "markdown-it";
 import htmlParser from "node-html-parser";
 import path from "path";
 import yaml from "yaml";
-import hljs from "highlight.js";
-import katex from "./katex-converter";
-import markdownIt from "markdown-it";
-import fs from "fs/promises";
 import { PostData, PostMetadata, PostParser, PostParserParams } from "./core";
+import katex from "./katex-converter";
 
-const IMAGE_DIR = path.join("/", "tmp", "images");
-fs.mkdir(IMAGE_DIR, { recursive: true });
+interface PostFormatter {
+  title: string;
+  tags: string[];
+  date: string;
+}
 
 const markdown = markdownIt({
   html: true,
@@ -35,14 +37,14 @@ function parseDateString(date: string) {
 
 function parseTags(category: string): string[] {
   return category
-    .replace(/\/|/g, ",")
+    .replace(/\//g, ",")
     .split(",")
     .map((item) => item.trim())
     .filter((item) => item !== "")
     .map((item) => item.toLowerCase());
 }
 
-function parseFormatter(formatterStr: string): PostMetadata {
+function parseFormatter(formatterStr: string): PostFormatter {
   const rawFormatter = yaml.parse(formatterStr);
 
   // Check if formatter is null
@@ -59,8 +61,7 @@ function parseFormatter(formatterStr: string): PostMetadata {
   if (!rawFormatter["tags"])
     throw new Error("YAML formatter does not contain 'tags' attribute.");
 
-  const formatter: PostMetadata = {
-    id: "",
+  const formatter: PostFormatter = {
     title: rawFormatter.title,
     tags: parseTags(rawFormatter.category),
     date: parseDateString(rawFormatter.date),
@@ -119,6 +120,7 @@ export class OnMemoryPostParser implements PostParser {
 
     return {
       ...formatter,
+      id: "",
       fileMapping,
       html: dom.toString(),
     };
