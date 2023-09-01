@@ -8,6 +8,10 @@ export interface PostMetadata {
   tags: string[];
 }
 
+export interface PostData extends PostMetadata {
+  html: string;
+}
+
 const api = new ApiService();
 
 function App() {

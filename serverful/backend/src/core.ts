@@ -1,7 +1,7 @@
 import fs from "fs/promises";
 import path from "path";
-import { parsePost } from "./parser";
 import crypto from "crypto";
+import { OnMemoryPostParser } from "./parser";
 
 export interface PostMetadata {
   id: string;
@@ -12,6 +12,15 @@ export interface PostMetadata {
 
 export interface PostData extends PostMetadata {
   html: string;
+  fileMapping: Record<string, Buffer>;
+}
+
+export interface PostParserParams {
+  files: { [key: string]: Buffer };
+}
+
+export interface PostParser {
+  parse(params: PostParserParams): Promise<PostData>;
 }
 
 export class BlogService {
@@ -22,9 +31,12 @@ export class BlogService {
     { key: string; timestamp: number; post: PostData }
   > = {};
 
+  private fileCache: Record<string, Buffer> = {};
+
   private constructor(
     private postDir: string,
-    private cacheLifetime: number = 1000 * 60 * 5 // 5 minutes
+    private cacheLifetime: number = 1000 * 60 * 60 * 24, // 1 day
+    private postParser: PostParser = new OnMemoryPostParser("/api/imgs/")
   ) {}
 
   private async init() {
@@ -44,6 +56,16 @@ export class BlogService {
 
   // Blog-related code
   private async getPost(postId: string): Promise<PostData> {
+    // Validate postId
+    if (
+      !postId ||
+      typeof postId !== "string" ||
+      postId.startsWith("_") ||
+      postId.startsWith(".")
+    ) {
+      throw new Error(`Invalid postId ${postId}`);
+    }
+
     async function buildFileMap(
       root: string,
       relative: string
@@ -66,13 +88,10 @@ export class BlogService {
 
     const postPath = path.join(this.postDir, postId);
     const files = await buildFileMap(postPath, postPath);
-    const post = parsePost(files);
+    const post = await this.postParser.parse({ files });
     return {
+      ...post,
       id: postId,
-      title: post.formatter.title,
-      date: post.formatter.date,
-      tags: post.formatter.tags,
-      html: post.html,
     };
   }
 
@@ -116,6 +135,7 @@ export class BlogService {
         timestamp: Date.now(),
         post,
       };
+      Object.assign(this.fileCache, post.fileMapping);
       return post;
     }
   }
@@ -134,8 +154,13 @@ export class BlogService {
         .map(async (postDir) => {
           try {
             const post = await this.getCachedPost(postDir);
-            delete (post as any).html;
-            return post as PostMetadata;
+            const metadata: PostMetadata = {
+              id: post.id,
+              title: post.title,
+              date: post.date,
+              tags: post.tags,
+            };
+            return metadata;
           } catch (err) {
             console.error(err);
             return null;
@@ -143,5 +168,17 @@ export class BlogService {
         })
     );
     return posts.filter((post): post is PostMetadata => post !== null);
+  }
+
+  public async getPostData(postId: string): Promise<PostData> {
+    return await this.getCachedPost(postId);
+  }
+
+  public async getImage(imageName: string): Promise<Buffer> {
+    const image = this.fileCache[imageName];
+    if (!image) {
+      throw new Error(`Image ${imageName} not found`);
+    }
+    return image;
   }
 }

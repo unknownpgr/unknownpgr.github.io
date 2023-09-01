@@ -20,6 +20,16 @@ async function main() {
     ctx.body = posts;
   });
 
+  router.get("/api/posts/:id", async (ctx) => {
+    const post = await blogService.getPostData(ctx.params.id);
+    ctx.body = post;
+  });
+
+  router.get("/api/imgs/:id", async (ctx) => {
+    const img = await blogService.getImage(ctx.params.id);
+    ctx.body = img;
+  });
+
   const app = new koa();
   app.use(router.routes());
   app.listen(80, () => {

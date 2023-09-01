@@ -1,4 +1,4 @@
-import { PostMetadata } from "./App";
+import { PostData, PostMetadata } from "./App";
 
 export class ApiService {
   constructor(private baseUrl: string = "") {}
@@ -13,5 +13,9 @@ export class ApiService {
 
   public async getPosts(): Promise<PostMetadata[]> {
     return await this.request<PostMetadata[]>("/api/posts");
+  }
+
+  public async getPost(id: string): Promise<PostData> {
+    return await this.request<PostData>(`/api/posts/${id}`);
   }
 }

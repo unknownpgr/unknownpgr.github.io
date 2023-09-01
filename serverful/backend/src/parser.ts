@@ -5,6 +5,11 @@ import yaml from "yaml";
 import hljs from "highlight.js";
 import katex from "./katex-converter";
 import markdownIt from "markdown-it";
+import fs from "fs/promises";
+import { PostData, PostMetadata, PostParser, PostParserParams } from "./core";
+
+const IMAGE_DIR = path.join("/", "tmp", "images");
+fs.mkdir(IMAGE_DIR, { recursive: true });
 
 const markdown = markdownIt({
   html: true,
@@ -22,17 +27,6 @@ const markdown = markdownIt({
 });
 markdown.use(katex);
 
-export interface PostFormatter {
-  title: string;
-  tags: string[];
-  date: string;
-}
-
-export interface PostData {
-  formatter: PostFormatter;
-  html: string;
-}
-
 function parseDateString(date: string) {
   const dateObj = new Date(date);
   if (!date || isNaN(+dateObj)) return new Date().toISOString();
@@ -48,7 +42,7 @@ function parseTags(category: string): string[] {
     .map((item) => item.toLowerCase());
 }
 
-function parseFormatter(formatterStr: string): PostFormatter {
+function parseFormatter(formatterStr: string): PostMetadata {
   const rawFormatter = yaml.parse(formatterStr);
 
   // Check if formatter is null
@@ -65,7 +59,8 @@ function parseFormatter(formatterStr: string): PostFormatter {
   if (!rawFormatter["tags"])
     throw new Error("YAML formatter does not contain 'tags' attribute.");
 
-  const formatter: PostFormatter = {
+  const formatter: PostMetadata = {
+    id: "",
     title: rawFormatter.title,
     tags: parseTags(rawFormatter.category),
     date: parseDateString(rawFormatter.date),
@@ -74,19 +69,58 @@ function parseFormatter(formatterStr: string): PostFormatter {
   return formatter;
 }
 
-export function parsePost(files: { [key: string]: Buffer }): PostData {
-  const fileNames = Object.keys(files).sort();
-  const postFile = fileNames.find((fileName) => fileName.endsWith(".md"));
-  if (!postFile) throw new Error("Markdown file not found.");
-  const postStr = files[postFile].toString();
+export class OnMemoryPostParser implements PostParser {
+  constructor(private fileMappingPrefix: string) {}
 
-  const [, yamlStr, ...others] = postStr.split("---");
-  const markdownStr = others.join("---").trim();
-  const formatter = parseFormatter(yamlStr);
-  const html = markdown.render(markdownStr);
+  async parse({ files }: PostParserParams): Promise<PostData> {
+    const fileNames = Object.keys(files).sort();
+    const postFile = fileNames.find((fileName) => fileName.endsWith(".md"));
+    if (!postFile) throw new Error("Markdown file not found.");
+    const postStr = files[postFile].toString();
 
-  return {
-    formatter,
-    html,
-  };
+    const [, yamlStr, ...others] = postStr.split("---");
+    const markdownStr = others.join("---").trim();
+    const formatter = parseFormatter(yamlStr);
+    const html = markdown.render(markdownStr);
+
+    // File mapping
+    const fileMapping: Record<string, Buffer> = {};
+    const dom = htmlParser.parse(html);
+    const fileTags = dom.querySelectorAll("img");
+    await Promise.all(
+      fileTags.map(async (img) => {
+        const src = img.getAttribute("src");
+        if (!src) return;
+        // Check if file is local or remote
+        if (src.startsWith("http")) return;
+        // Check if file exists
+        const normalizedPath = path.normalize(src);
+        const imageFile = files[normalizedPath];
+        if (!imageFile) {
+          img.setAttribute("src", "404.png");
+          return;
+        }
+
+        // Create hash
+        const hash = crypto.createHash("md5");
+        hash.update(imageFile);
+        const hashStr = hash.digest("hex");
+
+        // Create new image path
+        const ext = path.extname(src);
+        const newImageFilename = `${hashStr}${ext}`;
+        const newImageURL = path.join(this.fileMappingPrefix, newImageFilename);
+
+        // Update image path
+        img.setAttribute("src", newImageURL);
+        fileMapping[newImageFilename] = imageFile;
+      })
+    );
+
+    return {
+      ...formatter,
+      fileMapping,
+      html: dom.toString(),
+    };
+  }
 }
