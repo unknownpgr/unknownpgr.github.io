@@ -63,8 +63,8 @@ function App() {
       <div className={style.scrollDown}>Scroll down to see my posts.</div>
       <h1 className={style.postsTitle}>Posts</h1>
       {posts.map((post) => (
-        <Link to={`/posts/${post.id}`}>
-          <div key={post.id} className={style.postItem}>
+        <Link key={post.id} to={`/posts/${post.id}`}>
+          <div className={style.postItem}>
             <span className={style.postItemTitle}>{post.title}</span>
             <span className={style.postItemDate}>{parseDate(post.date)}</span>
           </div>

@@ -53,9 +53,16 @@
 .content {
   line-height: 1.5rem;
   text-rendering: optimizeLegibility;
+  color: #ddd;
 }
 
-.content img {
+.content a {
+  word-break: break-all;
+}
+
+.content img,
+.content video,
+.content iframe {
   max-width: 80%;
   min-width: 25%;
   display: block;
