@@ -24,7 +24,7 @@ date: 2023-09-02T03:36:44.956Z
 
 - 더폼은 웹에서 간편하게 설문조사를 만들고, 응답을 수집할 수 있는 서비스입니다.
 - 평균 1만, 최대 10만 정도의 MAU를 보유하고 있습니다.
-- CTO Role을 맡아서 서비스 전반을 관리하고 있습니다.
+- Tech leader를 맡아 서비스 전반을 관리하고 있습니다.
 
 #### [Real Estate Manager](https://real-estate.unknownpgr.com)
 
