@@ -6,6 +6,7 @@ import mime from "mime-types";
 import dotenv from "dotenv";
 import crypto from "crypto";
 import auth from "koa-basic-auth";
+import logger from "koa-logger";
 dotenv.config();
 
 const POST_PATH = process.env.POST_PATH || path.join("/", "posts");
@@ -74,6 +75,7 @@ async function main() {
   });
 
   const app = new koa();
+  app.use(logger());
   app.use(publicRouter.routes());
   app.use(privateRouter.routes());
   app.listen(80, () => {
