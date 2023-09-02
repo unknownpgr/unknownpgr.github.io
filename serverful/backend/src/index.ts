@@ -2,6 +2,7 @@ import koa from "koa";
 import Router from "@koa/router";
 import { BlogService } from "./core";
 import path from "path";
+import mime from "mime-types";
 // import morgan from "morgan"
 
 const postPath = path.join(__dirname, "..", "..", "..", "posts");
@@ -16,18 +17,21 @@ async function main() {
   });
 
   router.get("/api/posts", async (ctx) => {
-    const posts = await blogService.getPostMetadata();
+    const posts = await blogService.getPostsMetadata();
     ctx.body = posts;
   });
 
   router.get("/api/posts/:id", async (ctx) => {
     const post = await blogService.getPost(ctx.params.id);
+    post.fileMapping = {};
     const adjustedPosts = await blogService.getAdjacentPosts(ctx.params.id);
     ctx.body = { post, adjustedPosts };
   });
 
   router.get("/api/imgs/:id", async (ctx) => {
     const img = await blogService.getImage(ctx.params.id);
+    const type = mime.lookup(ctx.params.id);
+    if (type) ctx.set("Content-Type", type);
     ctx.body = img;
   });
 
