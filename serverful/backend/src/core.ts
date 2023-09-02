@@ -102,6 +102,13 @@ export class BlogService {
     await fs.writeFile(markdownPath, fixedMarkdown);
   }
 
+  private async getPostIds(): Promise<string[]> {
+    const postIds = await fs.readdir(this.postDir);
+    return postIds.filter(
+      (postDir) => !postDir.startsWith("_") && !postDir.startsWith(".")
+    );
+  }
+
   public clearLoadedPosts() {
     this.posts = {};
   }
@@ -114,29 +121,29 @@ export class BlogService {
   }
 
   public async getPostMetadata(): Promise<PostMetadata[]> {
-    const postIds = await fs.readdir(this.postDir);
+    const postIds = await this.getPostIds();
     const posts: (PostMetadata | null)[] = await Promise.all(
-      postIds
-        .filter(
-          (postDir) => !postDir.startsWith("_") && !postDir.startsWith(".")
-        )
-        .map(async (postDir) => {
-          try {
-            const post = await this.getPost(postDir);
-            const metadata: PostMetadata = {
-              id: post.id,
-              title: post.title,
-              date: post.date,
-              tags: post.tags,
-            };
-            return metadata;
-          } catch (err) {
-            console.error(err);
-            return null;
-          }
-        })
+      postIds.map(async (postDir) => {
+        try {
+          const post = await this.getPost(postDir);
+          const metadata: PostMetadata = {
+            id: post.id,
+            title: post.title,
+            date: post.date,
+            tags: post.tags,
+          };
+          return metadata;
+        } catch (err) {
+          console.error(err);
+          return null;
+        }
+      })
     );
-    return posts.filter((post): post is PostMetadata => post !== null);
+    return posts
+      .filter((post): post is PostMetadata => post !== null)
+      .sort((a, b) => {
+        return new Date(b.date).getTime() - new Date(a.date).getTime();
+      });
   }
 
   public async getImage(imageName: string): Promise<Buffer> {
@@ -145,5 +152,19 @@ export class BlogService {
       throw new Error(`Image ${imageName} not found`);
     }
     return image;
+  }
+
+  public async getAdjacentPosts(postId: string): Promise<{
+    previous: PostMetadata | null;
+    next: PostMetadata | null;
+  }> {
+    const postIds = await this.getPostIds();
+    const sortedPostIds = postIds.sort().reverse();
+    const index = sortedPostIds.indexOf(postId);
+    const previousId = sortedPostIds[index + 1];
+    const nextId = sortedPostIds[index - 1];
+    const previous = previousId ? await this.getPost(previousId) : null;
+    const next = nextId ? await this.getPost(nextId) : null;
+    return { previous, next };
   }
 }

@@ -52,6 +52,7 @@
 
 .content {
   line-height: 1.5rem;
+  text-rendering: optimizeLegibility;
 }
 
 .content img {
@@ -78,4 +79,25 @@
 
 .content h4 {
   font-size: 1rem;
+}
+
+.content pre code {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  padding: 1rem;
+  background-color: #eee;
+  color: #000;
+}
+
+.nav {
+  margin-top: 2rem;
+}
+
+.next {
+  margin-top: 1rem;
+}
+
+.nav * {
+  color: #fff;
 }

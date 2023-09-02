@@ -1,10 +1,9 @@
-import { useEffect, useState } from "react";
-import { PostData } from "./main";
-import { ApiService } from "../api";
-import { Link, useParams } from "react-router-dom";
-import style from "./post.module.css";
 import { format } from "date-fns";
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import { ApiService, PostResponse } from "../api";
 import { Footer } from "../components/footer";
+import style from "./post.module.css";
 
 const api = new ApiService();
 
@@ -14,27 +13,31 @@ function formatDate(date: string) {
 }
 
 export function Post() {
-  const [post, setPost] = useState<PostData | null>(null);
+  const [response, setPost] = useState<PostResponse | null>(null);
   const postId = useParams<{ id: string }>().id;
 
   useEffect(() => {
-    if (!postId) {
-      return;
-    }
-    const fetchPost = async () => {
-      const post = await api.getPost(postId);
-      setPost(post);
-    };
-    fetchPost();
-  }, [postId]);
+    if (!postId) return;
+    const currentPostId = response?.post.id;
+    if (!currentPostId) {
+      const fetchPost = async () => {
+        const post = await api.getPost(postId);
+        setPost(post);
+      };
+      fetchPost();
+    } else if (currentPostId !== postId) setPost(null);
+  }, [postId, response]);
 
-  if (!post) {
+  if (!response) {
     return (
       <div className={style.loading}>
         <h1>Loading...</h1>
       </div>
     );
   }
+
+  const { post, adjustedPosts } = response;
+  const { previous, next } = adjustedPosts;
 
   return (
     <div className={style.container}>
@@ -48,6 +51,29 @@ export function Post() {
           className={style.content}
           dangerouslySetInnerHTML={{ __html: post.html }}
         />
+        <hr />
+        <div className={style.nav}>
+          {previous ? (
+            <div className={style.previous}>
+              <Link to={`/posts/${previous.id}`} className={style.previous}>
+                <span>Prev: </span>
+                <span>{previous.title}</span>
+              </Link>
+            </div>
+          ) : (
+            <div />
+          )}
+          {next ? (
+            <div className={style.next}>
+              <Link to={`/posts/${next.id}`} className={style.next}>
+                <span>Next: </span>
+                <span>{next.title}</span>
+              </Link>
+            </div>
+          ) : (
+            <div />
+          )}
+        </div>
       </div>
       <Footer />
     </div>

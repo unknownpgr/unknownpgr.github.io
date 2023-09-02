@@ -1,5 +1,13 @@
 import { PostData, PostMetadata } from "./pages/main";
 
+export interface PostResponse {
+  post: PostData;
+  adjustedPosts: {
+    previous: PostMetadata | null;
+    next: PostMetadata | null;
+  };
+}
+
 export class ApiService {
   constructor(private baseUrl: string = "") {}
 
@@ -15,7 +23,7 @@ export class ApiService {
     return await this.request<PostMetadata[]>("/api/posts");
   }
 
-  public async getPost(id: string): Promise<PostData> {
-    return await this.request<PostData>(`/api/posts/${id}`);
+  public async getPost(id: string): Promise<PostResponse> {
+    return await this.request<PostResponse>(`/api/posts/${id}`);
   }
 }

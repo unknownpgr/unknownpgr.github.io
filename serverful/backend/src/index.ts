@@ -22,7 +22,8 @@ async function main() {
 
   router.get("/api/posts/:id", async (ctx) => {
     const post = await blogService.getPost(ctx.params.id);
-    ctx.body = post;
+    const adjustedPosts = await blogService.getAdjacentPosts(ctx.params.id);
+    ctx.body = { post, adjustedPosts };
   });
 
   router.get("/api/imgs/:id", async (ctx) => {
