@@ -3,10 +3,11 @@ cd `dirname $0`
 set -e
 
 # Build images
+echo "Building images..."
 BACKEND_IMAGE=se.ction.link/blog-backend
-docker build -t $BACKEND_IMAGE:local backend
+docker build -t $BACKEND_IMAGE:local backend 2> /dev/null
 FRONTEND_IMAGE=se.ction.link/blog-frontend
-docker build -t $FRONTEND_IMAGE:local frontend
+docker build -t $FRONTEND_IMAGE:local frontend 2> /dev/null
 
 # Get image tags
 BACKEND_TAG=`echo $(docker inspect --format='{{.Id}}' $BACKEND_IMAGE:local) | md5sum | cut -c1-8`
@@ -23,8 +24,11 @@ export BACKEND_IMAGE=$BACKEND_IMAGE:$BACKEND_TAG
 export FRONTEND_IMAGE=$FRONTEND_IMAGE:$FRONTEND_TAG
 
 # Push images
-docker push $BACKEND_IMAGE
-docker push $FRONTEND_IMAGE
+echo "Pushing images..."
+docker push $BACKEND_IMAGE > /dev/null
+docker push $FRONTEND_IMAGE > /dev/null
 
 # Deploy
 cat kubernetes/resources.yaml | envsubst | kubectl apply -f -
+
+echo "Done!"
