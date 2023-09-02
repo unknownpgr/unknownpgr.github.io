@@ -86,20 +86,25 @@ export class BlogService {
       throw new Error(`Invalid postId ${postId}`);
     }
 
-    const postPath = path.join(this.postDir, postId);
-    const files = await buildFileMap(postPath, postPath);
-    const { postData, markdownFilename, fixedMarkdown } =
-      await this.postParser.parse({ files });
+    try {
+      const postPath = path.join(this.postDir, postId);
+      const files = await buildFileMap(postPath, postPath);
+      const { postData, markdownFilename, fixedMarkdown } =
+        await this.postParser.parse({ files });
 
-    // Update file mapping
-    Object.assign(this.files, postData.fileMapping);
+      // Update file mapping
+      Object.assign(this.files, postData.fileMapping);
 
-    // Update post data
-    this.posts[postId] = { ...postData, id: postId };
+      // Update post data
+      this.posts[postId] = { ...postData, id: postId };
 
-    // Update markdown
-    const markdownPath = path.join(postPath, markdownFilename);
-    await fs.writeFile(markdownPath, fixedMarkdown);
+      // Update markdown
+      const markdownPath = path.join(postPath, markdownFilename);
+      await fs.writeFile(markdownPath, fixedMarkdown);
+    } catch (error) {
+      console.error("Failed to load post " + postId);
+      console.error(error);
+    }
   }
 
   private async getPostIds(): Promise<string[]> {
