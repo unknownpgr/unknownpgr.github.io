@@ -1,6 +1,8 @@
 import fs from "fs/promises";
 import path from "path";
 import { OnMemoryPostParser } from "./parser";
+import { SitemapStream, streamToPromise } from "sitemap";
+import { createGzip } from "zlib";
 
 export interface PostMetadata {
   id: string;
@@ -171,5 +173,25 @@ export class BlogService {
     const previous = previousId ? await this.getPost(previousId) : null;
     const next = nextId ? await this.getPost(nextId) : null;
     return { previous, next };
+  }
+
+  public async getSitemap(): Promise<Buffer> {
+    const sitemapStream = new SitemapStream({
+      hostname: "https://unknownpgr.com/",
+    });
+    const pipeline = sitemapStream.pipe(createGzip());
+    sitemapStream.write({ url: `/`, changeFreq: "daily", priority: 0.1 });
+    const postIds = await this.getPostIds();
+    for (const postId of postIds) {
+      sitemapStream.write({
+        url: `/posts/${postId}`,
+        changeFreq: "monthly",
+        priority: 0.5,
+        lastmod: (await this.getPost(postId)).date,
+      });
+    }
+    sitemapStream.end();
+    const sitemap = await streamToPromise(pipeline);
+    return sitemap;
   }
 }

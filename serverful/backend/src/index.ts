@@ -31,6 +31,13 @@ async function main() {
     ctx.body = img;
   });
 
+  router.get("/api/sitemap.xml", async (ctx) => {
+    const sitemap = await blogService.getSitemap();
+    ctx.set("Content-Type", "application/xml");
+    ctx.set("Content-Encoding", "gzip");
+    ctx.body = sitemap;
+  });
+
   const app = new koa();
   app.use(router.routes());
   app.listen(80, () => {
