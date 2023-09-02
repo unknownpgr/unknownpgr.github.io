@@ -167,11 +167,11 @@ export class BlogService {
     previous: PostMetadata | null;
     next: PostMetadata | null;
   }> {
-    const postIds = await this.getPostIds();
-    const sortedPostIds = postIds.sort().reverse();
-    const index = sortedPostIds.indexOf(postId);
-    const previousId = sortedPostIds[index + 1];
-    const nextId = sortedPostIds[index - 1];
+    const postMetadata = await this.getPostsMetadata();
+    const postIds = postMetadata.map((post) => post.id);
+    const index = postIds.indexOf(postId);
+    const previousId = postIds[index + 1];
+    const nextId = postIds[index - 1];
     const previous = previousId ? await this.getPostMetadata(previousId) : null;
     const next = nextId ? await this.getPostMetadata(nextId) : null;
     return { previous, next };
