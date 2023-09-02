@@ -58,7 +58,7 @@ export class BlogService {
 
   private constructor(
     private postDir: string,
-    private postParser: PostParser = new OnMemoryPostParser("/api/imgs/")
+    private postParser: PostParser = new OnMemoryPostParser("/api/files/")
   ) {}
 
   private async init() {
@@ -157,12 +157,10 @@ export class BlogService {
       });
   }
 
-  public async getImage(imageName: string): Promise<Buffer> {
-    const image = this.files[imageName];
-    if (!image) {
-      throw new Error(`Image ${imageName} not found`);
-    }
-    return image;
+  public async getFile(fileName: string): Promise<Buffer> {
+    const file = this.files[fileName];
+    if (!file) throw new Error(`File ${fileName} not found`);
+    return file;
   }
 
   public async getAdjacentPosts(postId: string): Promise<{

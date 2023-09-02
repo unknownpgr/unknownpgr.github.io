@@ -4,13 +4,7 @@ import markdownIt from "markdown-it";
 import htmlParser from "node-html-parser";
 import path from "path";
 import yaml from "yaml";
-import {
-  PostData,
-  PostMetadata,
-  PostParser,
-  PostParserParams,
-  PostParserResult,
-} from "./core";
+import { PostParser, PostParserParams, PostParserResult } from "./core";
 import katex from "./katex-converter";
 
 interface PostFormatter {
@@ -106,34 +100,37 @@ export class OnMemoryPostParser implements PostParser {
     // File mapping
     const fileMapping: Record<string, Buffer> = {};
     const dom = htmlParser.parse(html);
-    const fileTags = dom.querySelectorAll("img");
+    const fileTags = [
+      ...dom.querySelectorAll("img"),
+      ...dom.querySelectorAll("video"),
+      ...dom.querySelectorAll("audio"),
+    ];
     await Promise.all(
-      fileTags.map(async (img) => {
-        const src = img.getAttribute("src");
+      fileTags.map(async (tag) => {
+        // Check if tag has src attribute and it is not a URL
+        const src = tag.getAttribute("src");
         if (!src) return;
-        // Check if file is local or remote
         if (src.startsWith("http")) return;
+
         // Check if file exists
         const normalizedPath = path.normalize(src);
-        const imageFile = files[normalizedPath];
-        if (!imageFile) {
-          img.setAttribute("src", "404.png");
+        const file = files[normalizedPath];
+        if (!file) {
+          tag.setAttribute("src", "404.png");
           return;
         }
 
-        // Create hash
+        // Create new file path from hash
         const hash = crypto.createHash("md5");
-        hash.update(imageFile);
+        hash.update(file);
         const hashStr = hash.digest("hex");
-
-        // Create new image path
         const ext = path.extname(src);
-        const newImageFilename = `${hashStr}${ext}`;
-        const newImageURL = path.join(this.fileMappingPrefix, newImageFilename);
+        const newFilename = `${hashStr}${ext}`;
+        const newFileURL = path.join(this.fileMappingPrefix, newFilename);
 
-        // Update image path
-        img.setAttribute("src", newImageURL);
-        fileMapping[newImageFilename] = imageFile;
+        // Update file path
+        tag.setAttribute("src", newFileURL);
+        fileMapping[newFilename] = file;
       })
     );
 

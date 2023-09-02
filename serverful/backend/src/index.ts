@@ -28,11 +28,11 @@ async function main() {
     ctx.body = { post, adjustedPosts };
   });
 
-  router.get("/api/imgs/:id", async (ctx) => {
-    const img = await blogService.getImage(ctx.params.id);
+  router.get("/api/files/:id", async (ctx) => {
+    const file = await blogService.getFile(ctx.params.id);
     const type = mime.lookup(ctx.params.id);
     if (type) ctx.set("Content-Type", type);
-    ctx.body = img;
+    ctx.body = file;
   });
 
   router.get("/api/sitemap.xml", async (ctx) => {
