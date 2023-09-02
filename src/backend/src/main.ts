@@ -3,49 +3,83 @@ import Router from "@koa/router";
 import { BlogService } from "./core";
 import path from "path";
 import mime from "mime-types";
-// import morgan from "morgan"
+import dotenv from "dotenv";
+import crypto from "crypto";
+import auth from "koa-basic-auth";
+dotenv.config();
 
-const postPath = path.join(__dirname, "..", "..", "..", "posts");
+const POST_PATH = process.env.POST_PATH || path.join("/", "posts");
+const ADMIN_USERNAME = process.env.ADMIN_USERNAME || "admin";
+const ADMIN_PASSWORD =
+  process.env.ADMIN_PASSWORD || crypto.randomBytes(16).toString("hex");
 
 async function main() {
-  const blogService = await BlogService.create(postPath);
+  const blogService = await BlogService.create(POST_PATH);
 
-  const router = new Router();
+  const publicRouter = new Router();
 
-  router.get("/api", async (ctx) => {
+  publicRouter.get("/api", async (ctx) => {
     ctx.body = "Hello World";
   });
 
-  router.get("/api/posts", async (ctx) => {
+  publicRouter.get("/api/posts", async (ctx) => {
     const posts = await blogService.getPostsMetadata();
     ctx.body = posts;
   });
 
-  router.get("/api/posts/:id", async (ctx) => {
+  publicRouter.get("/api/posts/:id", async (ctx) => {
     const post = await blogService.getPost(ctx.params.id);
     post.fileMapping = {};
     const adjustedPosts = await blogService.getAdjacentPosts(ctx.params.id);
     ctx.body = { post, adjustedPosts };
   });
 
-  router.get("/api/files/:id", async (ctx) => {
+  publicRouter.get("/api/files/:id", async (ctx) => {
     const file = await blogService.getFile(ctx.params.id);
     const type = mime.lookup(ctx.params.id);
     if (type) ctx.set("Content-Type", type);
     ctx.body = file;
   });
 
-  router.get("/api/sitemap.xml", async (ctx) => {
+  publicRouter.get("/api/sitemap.xml", async (ctx) => {
     const sitemap = await blogService.getSitemap();
     ctx.set("Content-Type", "application/xml");
     ctx.set("Content-Encoding", "gzip");
     ctx.body = sitemap;
   });
 
+  const privateRouter = new Router();
+
+  privateRouter.use(async (ctx, next) => {
+    try {
+      await next();
+    } catch (err: any) {
+      if (err.status === 401) {
+        ctx.status = 401;
+        ctx.set("WWW-Authenticate", "Basic");
+        ctx.body = "Unauthorized";
+      } else throw err;
+    }
+  });
+
+  privateRouter.use(auth({ name: ADMIN_USERNAME, pass: ADMIN_PASSWORD }));
+
+  privateRouter.get("/api/login", async (ctx) => {
+    ctx.body = "Login successful";
+  });
+
+  privateRouter.get("/api/cache-clear", async (ctx) => {
+    blogService.clearLoadedPosts();
+    ctx.body = "Cache cleared";
+  });
+
   const app = new koa();
-  app.use(router.routes());
+  app.use(publicRouter.routes());
+  app.use(privateRouter.routes());
   app.listen(80, () => {
     console.log("Listening on port 80");
+    console.log(`Admin username: ${ADMIN_USERNAME}`);
+    console.log(`Admin password: ${ADMIN_PASSWORD}`);
   });
 }
 
