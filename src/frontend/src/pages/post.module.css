@@ -51,7 +51,7 @@
 }
 
 .content {
-  line-height: 1.5rem;
+  line-height: 1.8rem;
   text-rendering: optimizeLegibility;
   color: #ddd;
 }
@@ -95,6 +95,10 @@
   padding: 1rem;
   background-color: #eee;
   color: #000;
+}
+
+.content p {
+  overflow-x: scroll;
 }
 
 .nav {
