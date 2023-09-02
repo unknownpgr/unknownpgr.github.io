@@ -5,13 +5,18 @@
   "remoteUser": "node",
   "features": {
     "ghcr.io/devcontainers/features/git:1": {},
-    "ghcr.io/devcontainers/features/python:1": {},
-    "ghcr.io/devcontainers/features/docker-in-docker:1": {}
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+    "ghcr.io/gickis/devcontainer-features/kubeseal:1": {},
+    "ghcr.io/devcontainers-contrib/features/kubectl-asdf:2": {}
   },
-  "extensions": [
-    "mhutchie.git-graph",
-    "esbenp.prettier-vscode",
-    "streetsidesoftware.code-spell-checker",
-    "GitHub.copilot"
-  ]
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "streetsidesoftware.code-spell-checker",
+        "mhutchie.git-graph",
+        "esbenp.prettier-vscode",
+        "GitHub.copilot"
+      ]
+    }
+  }
 }

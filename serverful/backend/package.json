@@ -1,10 +1,10 @@
 {
   "name": "blog-backend",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "main.js",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon src/index.ts",
+    "dev": "nodemon src/main.ts",
     "build": "tsc"
   },
   "devDependencies": {
