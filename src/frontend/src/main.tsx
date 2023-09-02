@@ -10,11 +10,13 @@ import App from "./pages/main.tsx";
 import "./index.css";
 import { Post } from "./pages/post.tsx";
 import { ErrorPage } from "./pages/error.tsx";
+import { Tools } from "./pages/tools.tsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements([
     <Route path="/" element={<App />} ErrorBoundary={ErrorPage} />,
     <Route path="/posts/:id" element={<Post />} />,
+    <Route path="/tools" element={<Tools />} />,
   ])
 );
 
