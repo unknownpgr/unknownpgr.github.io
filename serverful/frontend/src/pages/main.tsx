@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { ApiService } from "../api";
 import style from "./main.module.css";
+import { Link } from "react-router-dom";
+import { Footer } from "../components/footer";
 
 export interface PostMetadata {
   id: string;
@@ -61,14 +63,14 @@ function App() {
       <div className={style.scrollDown}>Scroll down to see my posts.</div>
       <h1 className={style.postsTitle}>Posts</h1>
       {posts.map((post) => (
-        <a href={`/posts/${post.id}`}>
+        <Link to={`/posts/${post.id}`}>
           <div key={post.id} className={style.postItem}>
             <span className={style.postItemTitle}>{post.title}</span>
             <span className={style.postItemDate}>{parseDate(post.date)}</span>
           </div>
-        </a>
+        </Link>
       ))}
-      <footer className={style.footer}>© 2023 Copyright : Unknownpgr</footer>
+      <Footer />
       <nav className={style.nav}>
         <div className={style.navButtons}>
           <button onClick={handleHomeClick}>Home</button>
