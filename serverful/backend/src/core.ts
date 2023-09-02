@@ -127,19 +127,23 @@ export class BlogService {
     return this.posts[postId];
   }
 
-  public async getPostMetadata(): Promise<PostMetadata[]> {
+  public async getPostMetadata(postId: string): Promise<PostMetadata> {
+    const post = await this.getPost(postId);
+    const metadata: PostMetadata = {
+      id: post.id,
+      title: post.title,
+      date: post.date,
+      tags: post.tags,
+    };
+    return metadata;
+  }
+
+  public async getPostsMetadata(): Promise<PostMetadata[]> {
     const postIds = await this.getPostIds();
     const posts: (PostMetadata | null)[] = await Promise.all(
       postIds.map(async (postDir) => {
         try {
-          const post = await this.getPost(postDir);
-          const metadata: PostMetadata = {
-            id: post.id,
-            title: post.title,
-            date: post.date,
-            tags: post.tags,
-          };
-          return metadata;
+          return await this.getPostMetadata(postDir);
         } catch (err) {
           console.error(err);
           return null;
@@ -170,8 +174,8 @@ export class BlogService {
     const index = sortedPostIds.indexOf(postId);
     const previousId = sortedPostIds[index + 1];
     const nextId = sortedPostIds[index - 1];
-    const previous = previousId ? await this.getPost(previousId) : null;
-    const next = nextId ? await this.getPost(nextId) : null;
+    const previous = previousId ? await this.getPostMetadata(previousId) : null;
+    const next = nextId ? await this.getPostMetadata(nextId) : null;
     return { previous, next };
   }
 
