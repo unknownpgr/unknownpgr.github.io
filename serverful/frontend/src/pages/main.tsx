@@ -52,12 +52,12 @@ function App() {
 
         <p className={style.description}>
           I'm currently studying computer science at{" "}
-          <a href="https://uos.ac.kr/">University of Seoul</a>, and working as a
-          CTO at <a href="https://the-form.io">The Form</a>.
-          <p>
-            I'm interested in web development, embedded systems, and machine
-            learning.
-          </p>
+          <a href="https://uos.ac.kr/">University of Seoul</a>,
+          <br />
+          and working as a CTO at <a href="https://the-form.io">The Form</a>.
+          <br />
+          I'm interested in web development, embedded systems, and machine
+          learning.
         </p>
       </div>
       <div className={style.scrollDown}>Scroll down to see my posts.</div>
