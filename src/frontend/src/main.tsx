@@ -5,27 +5,15 @@ import {
   RouterProvider,
   createBrowserRouter,
   createRoutesFromElements,
-  useRouteError,
 } from "react-router-dom";
 import App from "./pages/main.tsx";
 import "./index.css";
 import { Post } from "./pages/post.tsx";
-
-function ErrorBoundary() {
-  const error = useRouteError();
-  console.log(error);
-  const message = error instanceof Error ? error.message : "Nah";
-  return (
-    <div>
-      <h1>Something went wrong</h1>
-      <p>{message}</p>
-    </div>
-  );
-}
+import { ErrorPage } from "./pages/error.tsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements([
-    <Route path="/" element={<App />} ErrorBoundary={ErrorBoundary} />,
+    <Route path="/" element={<App />} ErrorBoundary={ErrorPage} />,
     <Route path="/posts/:id" element={<Post />} />,
   ])
 );
