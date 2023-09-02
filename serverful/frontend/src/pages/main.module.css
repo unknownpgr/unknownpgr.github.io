@@ -28,7 +28,8 @@
 
   color: #fff;
   cursor: pointer;
-  padding: 1rem;
+  padding: 1rem 0;
+  margin-left: 1.5rem;
   font-size: 1rem;
 }
 

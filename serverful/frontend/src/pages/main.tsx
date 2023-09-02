@@ -74,6 +74,9 @@ function App() {
       <nav className={style.nav}>
         <div className={style.navButtons}>
           <button onClick={handleHomeClick}>Home</button>
+          <Link to="/posts/about">
+            <button>About</button>
+          </Link>
         </div>
         <div className={style.gradient}></div>
       </nav>
