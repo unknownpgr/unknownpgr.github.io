@@ -182,15 +182,17 @@ export class BlogService {
       hostname: "https://unknownpgr.com/",
     });
     const pipeline = sitemapStream.pipe(createGzip());
-    sitemapStream.write({ url: `/`, changeFreq: "daily", priority: 0.1 });
+    sitemapStream.write({ url: `/`, changeFreq: "daily", priority: 1 });
     const postIds = await this.getPostIds();
     for (const postId of postIds) {
-      sitemapStream.write({
-        url: `/posts/${postId}`,
-        changeFreq: "monthly",
-        priority: 0.5,
-        lastmod: (await this.getPost(postId)).date,
-      });
+      try {
+        sitemapStream.write({
+          url: `/posts/${postId}`,
+          changeFreq: "monthly",
+          priority: 0.5,
+          lastmod: (await this.getPost(postId)).date,
+        });
+      } catch {}
     }
     sitemapStream.end();
     const sitemap = await streamToPromise(pipeline);
