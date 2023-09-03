@@ -1,0 +1,165 @@
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: local-storage
+  namespace: blog
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: WaitForFirstConsumer
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: blog-pv
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-storage
+  local:
+    path: /home/unknownpgr/dev/blog/posts
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - unknownpgr
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: blog-pvc
+  namespace: blog
+spec:
+  storageClassName: local-storage
+  volumeName: blog-pv
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: blog-backend
+  namespace: blog
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: blog-backend
+  template:
+    metadata:
+      labels:
+        app: blog-backend
+    spec:
+      containers:
+        - name: blog-backend
+          image: $BACKEND_IMAGE
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: blog-volume
+              mountPath: /posts
+      volumes:
+        - name: blog-volume
+          persistentVolumeClaim:
+            claimName: blog-pvc
+      imagePullSecrets:
+        - name: registry-credit
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: blog-frontend
+  namespace: blog
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: blog-frontend
+  template:
+    metadata:
+      labels:
+        app: blog-frontend
+    spec:
+      containers:
+        - name: blog-frontend
+          image: $FRONTEND_IMAGE
+          ports:
+            - containerPort: 80
+      imagePullSecrets:
+        - name: registry-credit
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: blog-backend
+  namespace: blog
+spec:
+  selector:
+    app: blog-backend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: blog-frontend
+  namespace: blog
+spec:
+  selector:
+    app: blog-frontend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: blog
+  namespace: blog
+  annotations:
+    kubernetes.io/ingress.class: traefik
+spec:
+  rules:
+    - host: unknownpgr.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: blog-frontend
+                port:
+                  number: 80
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: blog-backend
+                port:
+                  number: 80
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  creationTimestamp: null
+  name: registry-credit
+  namespace: blog
+spec:
+  encryptedData:
+    .dockerconfigjson: AgBFVBuYsfsES0+4afMVnCxXdtgNwX9KfkOVdlY1Hh+vEoZpCeJtfk4ROFRLv7t7L0wgAASxU61scsECQjYMNxzr/EJdsz+jIETVco89kXKHHjMQU4sxwod5+ePpJH2JU2+cS/QdcWHXWu2YDoFxX+wDTXZEHDoRaZV9BuVnj7VAj45ZP+F/71g3DT99QkcpqswVGfsHvA4UkCq6aa9PPkUhbtUcgctCj8bmrn/t5CMuFfyTwTgXJuQO830gt1jogTnxsbMNspOYJIfUAfA+rlBxMuOLix0G4vgwx677iwRNVruc/G6hx6NHtq/tZziJVUUsTdvqLsGIyvbdB/ISQfq+OgqND09eKBc81IaOOlJMeX9GxbDEHlv2ck5qRJLNRK2A/zTn7hkUUsLHEiTdmgGvNg8gU/1ZaLVcZl98Ax9MdItSUuIeR4f2At4pmfchVCQqTsC9kN/s0W9swjtfOB2p9CAkOCwQ2CH7B3a5TDurIiSvtMfDHLlGBlm0d1L9+B5A6kQw+G1yJwUEkHRIdvZ+Olq6igJyGThJVZfoaDC79fj2HAKBcnftzlSWb6Gu72+AIk7Alz1ewtoRFBH68MQ298Gqn13ad2PyzCrhhwgu4UMe1squZgx6Frs8RZxP4KS8BISUXB7sEqjwkJUdMftO+wzxlf2JdD1rD7FxEDu2H3KXGdEqHNsEh24FvrHXxKhY66fCZFfLMfTJ54hg3UCpc8tRcxttb3qgDcgMRtHLDR3FwWLc7CBsSSAzOtwgryzjAjMOD85Gs414Q/uBg+OtbztJrTCmbUolRl6VXcafcmc0qz4aR1SOI2N5DaeWPMTigUcEust58a+zHdlhjhC8OR0z66n+3QtohQRde8fWTiW7FtZw3gQT
+  template:
+    metadata:
+      creationTimestamp: null
+      name: registry-credit
+      namespace: blog
+    type: kubernetes.io/dockerconfigjson
