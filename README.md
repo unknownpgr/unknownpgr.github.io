@@ -1,7 +1,7 @@
 # @unknownpgr/github-blog
 
 <p align="center">
-<img width="80%" src="./docs/logo.png"/>
+<img width="80%" src="./src/frontend/public/logo.png"/>
 </p>
 
 - Blog : https://unknownpgr.com/
