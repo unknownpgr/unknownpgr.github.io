@@ -6,15 +6,38 @@ date: 2023-09-02T03:36:44.956Z
 ---
 
 항상 새로운 분야에 도전합니다.
-컴퓨터를 다른 분야에 적용해 새로운 가치를 이끌어내는 것이 제 목표입니다.
+컴퓨터를 다른 분야에 적용해 새로운 가치를 이끌어내는 것이 목표입니다.
 웹, 임베디드, 그래픽스, 머신러닝, 수치해석 등 다양한 분야를 폭넓게 공부해보고 있습니다.
 그 중에서도 웹과 임베디드를 주로 공부하고 있습니다.
+
+프로그래머란 컴퓨터를 사용해 문제를 해결하는 사람이라고 생각합니다. 따라서 문제를 정확히 인식하고 문제에 대한 논리적인 해결책을 설계하며 이를 실제로 구현하는 일련의 과정을 중요하게 생각합니다. 그래서 기술에 대한 심도 있는 이해를 추구하지만 특정 언어나 프레임워크에 매이지 않으며 주어진 상황에 따라 적절히 도구로서 선택할 수 있는 능력을 기르려고 노력합니다.
+
+코드를 작성할 때는 클린한 아키텍쳐를 위해 관심사를 분리하며 의존성을 철저히 관리합니다. 최대한 가독성 및 재사용성이 높은 코드를 작성하려고 노력합니다. 이를 위해서 객체지향이나 함수형, 데이터지향 등 다양한 방법론을 필요에 따라 사용합니다.
 
 ## Contact
 
 - Location : Korea / Seoul
 - Email : [unknownpgr@gmail.com](mailto:unknownpgr@gmail.com)
 - GitHub : [github.com/unknownpgr](https://github.com/unknownpgr)
+
+## Ability
+
+- **Backend**: Node.js(Express, Koa, Next.js), Python(FastAPI), NginX, OpenAPI
+- **Frontend**: React, Typescript, HTML5, CSS(SASS, CSS-module), SEO, Chrome DevTools, Lighthouse
+- **Testing**: Jest, Playwright
+- **DevOps**: AWS(EC2, S3, Route53, ELB, EKS), Container(Docker), Kubernetes, Grafana, Prometheus, Traefik, GitHub Actions, Treafik, Sealed-Secret, ArgoCD
+- **Database**: MySQL, SQLite, Redis, MongoDB
+- **Machine Learning**: Tensorflow, PyTorch, Slurm, MATLAB, OpenCV(both C++ and Python)
+- **Graphics**: WebGL
+- **Embedded / Hardware**: ARM(STM32Fxx), PCB Artwork basics
+  - [PCB Sample1](https://oshwlab.com/unknownpgr/zetin_linetracer)
+  - [PCB Sample2](https://oshwlab.com/unknownpgr/unknownpgr-pcb-linetracer-sensorboard)
+  - [PCB Sample3](https://oshwlab.com/unknownpgr/unknownpgr-pcb-nucleo-f401)
+- **Robotics**: Motor control(PID), Rigid body dynamics(Lagrange dynamics)
+- **Blockchain**: Ethereum, Solidity, Truffle, Ganache, Web3.js
+- **Language**: C, C++, C#, Python, Java, Typescript
+- **Tools**: VSCode, Vim, Eclipse
+- **Collaboration**: Git / GitHub, Slack
 
 ## Selected Projects
 
@@ -104,7 +127,8 @@ date: 2023-09-02T03:36:44.956Z
 #### [Face Tracking](https://github.com/unknownpgr/face_recognize)
 
 - OpenFace 라이브러리 및 SVM을 이용하여 얼굴 인식과 트래킹을 수행하도록 구현해봤습니다.
-- Fun projects
+
+### Fun projects
 
 #### [t-png](https://github.com/unknownpgr/t-png)
 
