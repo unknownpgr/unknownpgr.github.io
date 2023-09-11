@@ -1,13 +1,13 @@
 {
   "name": "Blog",
   "image": "mcr.microsoft.com/devcontainers/typescript-node:18",
-  "postCreateCommand": "cd src && yarn",
   "remoteUser": "node",
   "features": {
     "ghcr.io/devcontainers/features/git:1": {},
     "ghcr.io/devcontainers/features/docker-in-docker:2": {},
     "ghcr.io/gickis/devcontainer-features/kubeseal:1": {},
-    "ghcr.io/devcontainers-contrib/features/kubectl-asdf:2": {}
+    "ghcr.io/devcontainers-contrib/features/kubectl-asdf:2": {},
+    "ghcr.io/devcontainers/features/python:1": {}
   },
   "customizations": {
     "vscode": {

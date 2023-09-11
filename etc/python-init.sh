@@ -1,0 +1,1 @@
+pip install scipy Pillow requests matplotlib scikit-learn seaborn

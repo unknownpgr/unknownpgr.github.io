@@ -5,6 +5,7 @@
   "typescript.preferences.quoteStyle": "double",
   "editor.wordWrap": "on",
   "cSpell.words": [
+    "argmax",
     "CSSOM",
     "gtag",
     "Jdbc",
