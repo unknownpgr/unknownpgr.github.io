@@ -101,6 +101,12 @@
   overflow-x: scroll;
 }
 
+.content blockquote {
+  border: 1px solid #aaa;
+  padding: 0 1rem;
+  margin: 1rem 0;
+}
+
 .nav {
   margin-top: 2rem;
 }
