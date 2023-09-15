@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ApiService } from "../api";
 import style from "./main.module.css";
 import { Link } from "react-router-dom";
@@ -25,23 +25,46 @@ function parseDate(date: string) {
 
 const api = new ApiService();
 
+let previousScroll = 0;
+let postsCache: PostMetadata[] = [];
+
 function App() {
-  const [posts, setPosts] = useState<PostMetadata[]>([]);
+  const [posts, setPosts] = useState<PostMetadata[]>(postsCache);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    function restoreScroll() {
+      if (!containerRef.current) return;
+      containerRef.current.scrollTop = previousScroll;
+    }
+    restoreScroll();
+
     const fetchPosts = async () => {
       const posts = await api.getPosts();
+      postsCache = posts;
       setPosts(posts);
     };
+
     fetchPosts();
   }, []);
 
   function handleHomeClick() {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    if (!containerRef.current) return;
+    containerRef.current.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function handleScrollChange() {
+    if (!containerRef.current) return;
+    const currentScroll = containerRef.current.scrollTop || 0;
+    previousScroll = currentScroll;
   }
 
   return (
-    <div className={style.container}>
+    <div
+      className={style.container}
+      ref={containerRef}
+      onScroll={handleScrollChange}
+    >
       <div className={style.titleBox}>
         <p className={style.title}>
           Hi,
@@ -54,7 +77,8 @@ function App() {
           I'm currently studying computer science at{" "}
           <a href="https://uos.ac.kr/">University of Seoul</a>,
           <br />
-          and working as a tech lead at <a href="https://the-form.io">The Form</a>.
+          and working as a tech lead at{" "}
+          <a href="https://the-form.io">The Form</a>.
           <br />
           I'm interested in web development, embedded systems, and machine
           learning.
