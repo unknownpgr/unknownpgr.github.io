@@ -128,6 +128,7 @@ metadata:
   namespace: blog
   annotations:
     kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/router.middlewares: blog-blog-redirectscheme@kubernetescrd
 spec:
   rules:
     - host: unknownpgr.com
@@ -147,6 +148,34 @@ spec:
                 name: blog-backend
                 port:
                   number: 80
+    - host: www.unknownpgr.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: blog-frontend
+                port:
+                  number: 80
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: blog-backend
+                port:
+                  number: 80
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: blog-redirectscheme
+  namespace: blog
+spec:
+  redirectScheme:
+    scheme: https
+    permanent: true
+
 ---
 apiVersion: bitnami.com/v1alpha1
 kind: SealedSecret
