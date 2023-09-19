@@ -77,7 +77,6 @@ export function Dashboard() {
         <Login onLoggedIn={setAuthString} />
       </div>
       <div hidden={authString === ""}>
-        <p>Dashboard</p>
         <div>
           <button onClick={handleClearPostCache}>Clear post cache</button>
         </div>

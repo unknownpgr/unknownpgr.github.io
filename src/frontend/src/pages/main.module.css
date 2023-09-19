@@ -22,14 +22,11 @@
 }
 
 .nav button {
-  background: none;
-  border: none;
   outline: none;
   color: #fff;
   cursor: pointer;
   padding: 1rem 0;
   margin-left: 1.5rem;
-  font-size: 1rem;
 }
 
 .gradient {

@@ -24,7 +24,18 @@ body,
 button {
   cursor: pointer;
   color: inherit;
+  background: none;
+  border: none;
   font-family: "Noto Serif KR", serif;
+  padding: 0;
+  font-size: 1rem;
+}
+
+input {
+  border: none;
+  outline: none;
+  background: none;
+  color: inherit;
 }
 
 code {
