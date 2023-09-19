@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200;300;400;500;600;700;900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200;300;400;500;600;700;900&display=swap");
 
 html,
 body,
@@ -7,7 +7,9 @@ body,
   height: 100%;
   margin: 0;
   padding: 0;
-  font-family: 'Noto Serif KR', serif;
+  font-family: "Noto Serif KR", serif;
+  background-color: #222;
+  color: #fff;
 }
 
 * {
@@ -19,9 +21,10 @@ body,
   display: none;
 }
 
-button{
+button {
   cursor: pointer;
-  font-family: 'Noto Serif KR', serif;
+  color: inherit;
+  font-family: "Noto Serif KR", serif;
 }
 
 code {
