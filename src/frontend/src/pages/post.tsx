@@ -4,6 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import { ApiService, PostResponse } from "../api";
 import { Footer } from "../components/footer";
 import style from "./post.module.css";
+import { Helmet } from "react-helmet";
 
 const api = new ApiService();
 
@@ -38,44 +39,57 @@ export function Post() {
 
   const { post, adjustedPosts } = response;
   const { previous, next } = adjustedPosts;
+  const url = location.protocol + "//" + location.host + "/posts/" + post.id;
+  const title = "Unknownpgr - " + post.title;
 
   return (
-    <div className={style.container}>
-      <Link to="/">
-        <header className={style.header}>Unknownpgr</header>
-      </Link>
-      <div className={style.post}>
-        <h1 className={style.title}>{post.title}</h1>
-        <p className={style.date}>{formatDate(post.date)}</p>
-        <div
-          className={style.content}
-          dangerouslySetInnerHTML={{ __html: post.html }}
-        />
-        <hr />
-        <div className={style.nav}>
-          {previous ? (
-            <div className={style.previous}>
-              <Link to={`/posts/${previous.id}`} className={style.previous}>
-                <span>Prev: </span>
-                <span>{previous.title}</span>
-              </Link>
-            </div>
-          ) : (
-            <div />
-          )}
-          {next ? (
-            <div className={style.next}>
-              <Link to={`/posts/${next.id}`} className={style.next}>
-                <span>Next: </span>
-                <span>{next.title}</span>
-              </Link>
-            </div>
-          ) : (
-            <div />
-          )}
+    <>
+      <Helmet>
+        {/* Canonical */}
+        <link rel="canonical" href={url} />
+        {/* Title */}
+        <title>{title}</title>
+        {/* Open Graph */}
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content={title} />
+      </Helmet>
+      <div className={style.container}>
+        <Link to="/">
+          <header className={style.header}>Unknownpgr</header>
+        </Link>
+        <div className={style.post}>
+          <h1 className={style.title}>{post.title}</h1>
+          <p className={style.date}>{formatDate(post.date)}</p>
+          <div
+            className={style.content}
+            dangerouslySetInnerHTML={{ __html: post.html }}
+          />
+          <hr />
+          <div className={style.nav}>
+            {previous ? (
+              <div className={style.previous}>
+                <Link to={`/posts/${previous.id}`} className={style.previous}>
+                  <span>Prev: </span>
+                  <span>{previous.title}</span>
+                </Link>
+              </div>
+            ) : (
+              <div />
+            )}
+            {next ? (
+              <div className={style.next}>
+                <Link to={`/posts/${next.id}`} className={style.next}>
+                  <span>Next: </span>
+                  <span>{next.title}</span>
+                </Link>
+              </div>
+            ) : (
+              <div />
+            )}
+          </div>
         </div>
+        <Footer />
       </div>
-      <Footer />
-    </div>
+    </>
   );
 }
