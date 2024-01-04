@@ -1,0 +1,19 @@
+cd `dirname $0`
+KUBECONFIG=`pwd`/kubeconfig
+cd ../src
+
+
+set -e
+shopt -s expand_aliases
+alias build='curl -sSL l.ist.sh/b | node - build'
+
+# Build images
+echo "Building images..."
+REGISTRY=harbor.unknownpgr.com/blog
+export BACKEND_IMAGE=`build backend $REGISTRY/blog-backend`
+export FRONTEND_IMAGE=`build frontend $REGISTRY/blog-frontend`
+
+# Deploy
+cat kubernetes/resources.yaml | envsubst | kubectl apply --kubeconfig $KUBECONFIG -f -
+
+echo "Done!"
