@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Particle Filter Simulation</title>
+    <style>
+      .container {
+        max-width: 1024px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+
+      .row {
+        display: flex;
+      }
+
+      canvas {
+        background-color: #f8f8f8;
+        /* cursor: none; */
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Particle Filter Simulation</h1>
+      <canvas id="simulationCanvas" width="500" height="700"></canvas>
+    </div>
+    <script>
+      const canvas = document.getElementById("simulationCanvas");
+      const ctx = canvas.getContext("2d");
+
+      const W = 10;
+      const H = 10;
+      const SCALE = 50; // Scale to draw on canvas
+      const N = 100;
+      const errorStd = 2 / 1.96; // 95% confidence interva
+
+      const landmarks = [
+        { x: 1, y: 1 },
+        { x: 3, y: 8 },
+        { x: 9, y: 1 },
+      ];
+
+      class Agent {
+        constructor(x, y) {
+          this.setLoc(x, y);
+          this.w = 1;
+        }
+
+        setLoc(x, y) {
+          this.loc = { x: x, y: y };
+        }
+
+        doAction(dx, dy) {
+          this.loc.x += dx;
+          this.loc.y += dy;
+        }
+
+        simulateMeasure() {
+          return landmarks.map((landmark) => {
+            const dx = landmark.x - this.loc.x;
+            const dy = landmark.y - this.loc.y;
+            return Math.sqrt(dx * dx + dy * dy);
+          });
+        }
+
+        empiricalMeasure() {
+          return this.simulateMeasure().map((dist) => {
+            return dist + normalRandom() * errorStd;
+          });
+        }
+
+        likelihood(dist) {
+          const x = this.loc.x;
+          const y = this.loc.y;
+          if (x < 0 || y < 0 || x > W || y > H) {
+            return 0;
+          }
+          const diff = this.simulateMeasure().map((d, i) => d - dist[i]);
+          const likelihood = diff.map((d) => normPdf(d, 0, errorStd));
+          return likelihood.reduce((acc, l) => acc * l, 1);
+        }
+      }
+
+      function visualize(ps, agent, errors) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Draw boundary
+        ctx.beginPath();
+        ctx.rect(0, 0, W * SCALE, H * SCALE);
+        ctx.strokeStyle = "black";
+        ctx.stroke();
+
+        // Draw landmarks
+        landmarks.forEach((landmark) => {
+          ctx.beginPath();
+          ctx.arc(landmark.x * SCALE, landmark.y * SCALE, 5, 0, 2 * Math.PI);
+          ctx.fillStyle = "black";
+          ctx.fill();
+        });
+
+        // Draw particles
+        ps.forEach((p) => {
+          ctx.beginPath();
+          ctx.arc(
+            p.loc.x * SCALE,
+            p.loc.y * SCALE,
+            Math.max(p.w * 2 * N, 1),
+            0,
+            2 * Math.PI
+          );
+          ctx.fillStyle = "rgba(0, 0, 255, 0.5)";
+          ctx.fill();
+        });
+
+        // Draw agent
+        ctx.beginPath();
+        ctx.arc(agent.loc.x * SCALE, agent.loc.y * SCALE, 5, 0, 2 * Math.PI);
+        ctx.fillStyle = "red";
+        ctx.fill();
+
+        // Draw mean
+        const mean = ps.reduce(
+          (acc, p) => {
+            acc.x += p.loc.x * p.w;
+            acc.y += p.loc.y * p.w;
+            return acc;
+          },
+          { x: 0, y: 0 }
+        );
+        ctx.beginPath();
+        ctx.arc(mean.x * SCALE, mean.y * SCALE, 3, 0, 2 * Math.PI);
+        ctx.fillStyle = "white";
+        ctx.fill();
+
+        // Draw line
+        ctx.beginPath();
+        ctx.moveTo(agent.loc.x * SCALE, agent.loc.y * SCALE);
+        ctx.lineTo(mean.x * SCALE, mean.y * SCALE);
+        ctx.strokeStyle = "green";
+        ctx.stroke();
+
+        ctx.font = "20px Arial";
+        ctx.fillStyle = "black";
+        ctx.fillText(
+          `Error: ${errors[errors.length - 1][1].toFixed(2)}m`,
+          10,
+          530
+        );
+
+        // Draw errors
+        ctx.beginPath();
+        const lastTime = errors[errors.length - 1][0];
+        ctx.moveTo(0, 700);
+        errors.forEach((e) => {
+          const x = (1 + (e[0] - lastTime) / 1000) * 500;
+          const y = 700 - e[1] * SCALE;
+          ctx.lineTo(x, y);
+        });
+        ctx.strokeStyle = "red";
+        ctx.stroke();
+      }
+
+      function resampling(ps) {
+        const weightSum = ps.reduce((acc, p) => acc + p.w, 0);
+        const weightStack = ps.reduce(
+          (acc, p) => [
+            ...acc,
+            acc.length > 0 ? acc[acc.length - 1] + p.w : p.w,
+          ],
+          []
+        );
+        const newParticles = [];
+        for (let i = 0; i < N; i++) {
+          const random = Math.random() * weightSum;
+          const found = weightStack.findIndex((w) => w > random);
+          if (found !== -1) {
+            const newParticle = new Agent(ps[found].loc.x, ps[found].loc.y);
+            newParticle.w = 1 / N;
+            newParticles.push(newParticle);
+          } else {
+            console.log("not found");
+          }
+        }
+        return newParticles;
+      }
+
+      function normPdf(x, mean, std) {
+        const factor = 1 / (std * Math.sqrt(2 * Math.PI));
+        const exponent = -((x - mean) ** 2) / (2 * std * std);
+        return factor * Math.exp(exponent);
+      }
+
+      function normalRandom() {
+        // Box-Muller transform
+        let u = 0,
+          v = 0;
+        while (u === 0) u = Math.random();
+        while (v === 0) v = Math.random();
+        return Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
+      }
+
+      // Initialize particles and agent
+      let agent = new Agent(2, 5);
+      let ps = Array.from(
+        { length: N },
+        () => new Agent(Math.random() * W, Math.random() * H)
+      );
+
+      let mouseX = 100;
+      let mouseY = 100;
+      document.addEventListener("mousemove", (event) => {
+        const rect = canvas.getBoundingClientRect();
+        mouseX = event.clientX - rect.left;
+        mouseY = event.clientY - rect.top;
+        if (mouseX < 5) mouseX = 5;
+        if (mouseY < 5) mouseY = 5;
+        if (mouseX > W * SCALE - 5) mouseX = W * SCALE - 5;
+        if (mouseY > H * SCALE - 5) mouseY = H * SCALE - 5;
+      });
+
+      let errors = [];
+
+      // Simulation loop
+      function simulationStep() {
+        const t = Date.now();
+
+        // Measure distances
+        const measure = agent.empiricalMeasure();
+
+        // Update weights
+        const ws = ps.map((p) => p.likelihood(measure));
+        ps.forEach((p, i) => (p.w *= ws[i]));
+        const wsSum = ps.reduce((acc, p) => acc + p.w, 0);
+
+        // Normalize weights
+        if (wsSum > 0) ps.forEach((p) => (p.w /= wsSum));
+        else ps.forEach((p) => (p.w = 1 / N));
+
+        // Calculate errors
+        const mean = ps.reduce(
+          (acc, p) => {
+            acc.x += p.loc.x * p.w;
+            acc.y += p.loc.y * p.w;
+            return acc;
+          },
+          { x: 0, y: 0 }
+        );
+        const error = Math.sqrt(
+          (agent.loc.x - mean.x) ** 2 + (agent.loc.y - mean.y) ** 2
+        );
+        errors.push([t, error]);
+        while (errors[errors.length - 1][0] - errors[0][0] > 1100) {
+          errors.shift();
+        }
+
+        // Visualize
+        visualize(ps, agent, errors);
+
+        // Conditional resample
+        const neff = 1 / ps.reduce((acc, p) => acc + p.w * p.w, 0);
+        if (wsSum === 0) {
+          ps = Array.from(
+            { length: N },
+            () => new Agent(Math.random() * W, Math.random() * H)
+          );
+        } else if (neff < N * 0.5) {
+          ps = resampling(ps);
+          const noises = Array.from({ length: N }, () => ({
+            x: normalRandom() * 0.25,
+            y: normalRandom() * 0.25,
+          }));
+          ps.forEach((p, i) => p.doAction(noises[i].x, noises[i].y));
+        }
+
+        // Get mouse cursor position
+        agent.setLoc(mouseX / SCALE, mouseY / SCALE);
+
+        setTimeout(simulationStep, 100);
+      }
+
+      simulationStep(0);
+    </script>
+  </body>
+</html>
