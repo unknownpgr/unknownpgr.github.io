@@ -228,13 +228,13 @@
         const measure = agent.empiricalMeasure();
 
         // Update weights
-        const ws = ps.map((p) => p.likelihood(measure));
-        ps.forEach((p, i) => (p.w *= ws[i]));
-        const wsSum = ps.reduce((acc, p) => acc + p.w, 0);
+        const likelihood = ps.map((p) => p.likelihood(measure));
+        ps.forEach((p, i) => (p.w *= likelihood[i]));
 
         // Normalize weights
+        const wsSum = ps.reduce((acc, p) => acc + p.w, 0);
         if (wsSum > 0) ps.forEach((p) => (p.w /= wsSum));
-        else ps.forEach((p) => (p.w = 1 / N));
+        else ps.forEach((p) => (p.w = 1 / N)); // If all weights are zero, reset to uniform.
 
         // Calculate errors
         const mean = ps.reduce(
@@ -256,20 +256,23 @@
         // Visualize
         visualize(ps, agent, errors);
 
-        // Conditional resample
-        const neff = 1 / ps.reduce((acc, p) => acc + p.w * p.w, 0);
         if (wsSum === 0) {
+          // If all weights are zero, reset to uniform.
           ps = Array.from(
             { length: N },
             () => new Agent(Math.random() * W, Math.random() * H)
           );
-        } else if (neff < N * 0.5) {
-          ps = resampling(ps);
-          const noises = Array.from({ length: N }, () => ({
-            x: normalRandom() * 0.25,
-            y: normalRandom() * 0.25,
-          }));
-          ps.forEach((p, i) => p.doAction(noises[i].x, noises[i].y));
+        } else {
+          // Conditional resample
+          const nEff = 1 / ps.reduce((acc, p) => acc + p.w * p.w, 0);
+          if (nEff < N * 0.5) {
+            ps = resampling(ps);
+            const noises = Array.from({ length: N }, () => ({
+              x: normalRandom() * 0.25,
+              y: normalRandom() * 0.25,
+            }));
+            ps.forEach((p, i) => p.doAction(noises[i].x, noises[i].y));
+          }
         }
 
         // Get mouse cursor position
