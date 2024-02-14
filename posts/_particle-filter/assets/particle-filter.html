@@ -32,7 +32,7 @@
       const H = 10;
       const SCALE = 50; // Scale to draw on canvas
       const N = 100;
-      const errorStd = 2 / 1.96; // 95% confidence interva
+      const errorStd = 1 / 1.96; // 95% confidence interva
 
       const landmarks = [
         { x: 1, y: 1 },
@@ -227,6 +227,13 @@
         // Measure distances
         const measure = agent.empiricalMeasure();
 
+        // Predict with system model
+        const action = Array.from({ length: N }, () => ({
+          x: normalRandom() * 0.1,
+          y: normalRandom() * 0.1,
+        }));
+        ps.forEach((p, i) => p.doAction(action[i].x, action[i].y));
+
         // Update weights
         const likelihood = ps.map((p) => p.likelihood(measure));
         ps.forEach((p, i) => (p.w *= likelihood[i]));
@@ -265,20 +272,16 @@
         } else {
           // Conditional resample
           const nEff = 1 / ps.reduce((acc, p) => acc + p.w * p.w, 0);
-          if (nEff < N * 0.5) {
+          if (nEff < N * 0.25) {
             ps = resampling(ps);
-            const noises = Array.from({ length: N }, () => ({
-              x: normalRandom() * 0.25,
-              y: normalRandom() * 0.25,
-            }));
-            ps.forEach((p, i) => p.doAction(noises[i].x, noises[i].y));
           }
         }
 
         // Get mouse cursor position
         agent.setLoc(mouseX / SCALE, mouseY / SCALE);
 
-        setTimeout(simulationStep, 100);
+        // setTimeout(simulationStep, 50);
+        requestAnimationFrame(simulationStep);
       }
 
       simulationStep(0);
