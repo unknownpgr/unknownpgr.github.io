@@ -523,4 +523,19 @@ for t in range(1, T):
 
 ## 구현
 
+아래는 마우스 위치를 추종하도록 간단한 파티클 필터를 구현한 시뮬레이션이다.
+
 <iframe src="./assets/particle-filter.html"></iframe>
+
+위 시뮬레이션에서 빨간색 점은 마우스의 현재 위치를 나타내며, 검은 점은 위치가 알려진 랜드마크를 나타낸다. 시뮬레이션 공간은 각 변이 10m인 정사각형 모양이다. 매 타임스텝마다 현재 마우스 위치로부터 랜드마크까지의 거리가 측정되는데, 이 측정은 95% 신뢰구간이 1m인 정규분포 노이즈를 포함한다. 파티클 필터는 100개의 입자를 사용하여 이 측정값으로부터 마우스의 위치를 추정한다. 추정값은 하얀색 점으로 표시된다. 리샘플링 방법으로는 다항 리샘플링을 사용하며 $N_\text{eff} < N_{\text{th}}=0.5N$ 이하이면 재샘플링한다. 으로 설정되어 있다. 시스템 모델은 적당한 정규분포를 사용하였다. 타임스텝은 `requestAnimationFrame`을 사용하여 보는 사람의 환경에 따라 다를 수 있다.
+
+이 예제는 파티클 필터의 동작 모습을 시각적으로 보여주기 위한 것으로 실용적으로 사용하는 것보다 훨씬 나쁜 값들을 사용하였다. 일반적으로는 1000개 이상의 입자가 사용되며, 시뮬레이션 주기도 60~100Hz 이상으로 훨씬 빠르다. 랜드마크 개수도 보통은 4개 이상을 사용하며 센서의 오차도 훨씬 작다. 또한 시스템 모델 역시 유저 입력이나 현재 상태를 반영하는 훨씬 정교한 모델이 사용된다.
+
+## 참고문헌
+
+- Elfring J, Torta E, van de Molengraft R. Particle Filters: A Hands-On Tutorial. Sensors (Basel). 2021 Jan 9;21(2):438. doi: 10.3390/s21020438. PMID: 33435468; PMCID: PMC7826670.
+- https://en.wikipedia.org/wiki/Particle_filter
+- M. S. Arulampalam, S. Maskell, N. Gordon and T. Clapp, "A tutorial on particle filters for online nonlinear/non-Gaussian Bayesian tracking," in IEEE Transactions on Signal Processing, vol. 50, no. 2, pp. 174-188, Feb. 2002, doi: 10.1109/78.978374.
+- Doucet, Arnaud, Simon Godsill, and Christophe Andrieu, 'On Sequential Monte Carlo Sampling Methods for Bayesian Filtering', in Andrew C Harvey, and Tommaso Proietti (eds), Readings In Unobserved Components Models (Oxford, 2005; online edn, Oxford Academic, 31 Oct. 2023), https://doi.org/10.1093/oso/9780199278657.003.0022, accessed 14 Feb. 2024.
+- https://en.wikipedia.org/wiki/Importance_sampling
+- Bergman, N. (1999). Recursive Bayesian Estimation : Navigation and Tracking Applications (PhD dissertation, Linköping University). Retrieved from https://urn.kb.se/resolve?urn=urn:nbn:se:liu:diva-98184
