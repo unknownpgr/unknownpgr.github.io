@@ -440,8 +440,83 @@ $$
 
 이것이 파티클 필터의 가장 기초적인 업데이트 공식이며, 이것을 Sequential Importance Sampling(SIS)라고 한다.
 
-이때 $r_t^{(i)}(x_t^{(i)})$를 적절히 $p(x_t^{(i)} | x_{t-1}^{(i)})$로 선택하면 식이 다음과 같이 간단해진다.
+그리고 일반적으로는 계산량을 줄이기 위해 $r_t^{(i)}(x_t^{(i)})$를 적절히 $p(x_t^{(i)} | x_{t-1}^{(i)})$로 선택한다. 그러면 식이 아래와 같이 간단해진다.
 
 $$
 w_t^{(i)} \propto p(z_t | x_{t}^{(i)}) w_{t-1}^{(i)}
 $$
+
+SIS에 기반한 파티클 필터의 전체 로직을 pseudocode로 나타내면 다음과 같다.
+
+```python
+xs = sample_from_prior()
+ws = [1.0] * n_particles
+
+for t in range(1, T):
+    # Observation
+    z = observe()
+
+    for i in range(n_particles):
+        # Prediction
+        xs[i] = transition(xs[i])
+        # Update
+        ws[i] *= likelihood(z, xs[i])
+
+    # Normalize
+    ws_sum = sum(ws)
+    for i in range(n_particles):
+        ws[i] /= ws_sum
+```
+
+## 재샘플링(Resampling)
+
+그런데 위 방법을 그대로 사용하면 몇 스텝만에 중요도가 낮은 입자들은 계속 중요도가 낮아져 0에 수렴하고 하나의 입자에 모든 중요도가 몰리게 된다. 이를 퇴화(degeneracy)라고 한다. 퇴화가 발생하면 계산량의 대부분이 불필요한 계산에 소모될 뿐만 아니라 입자가 확률분포를 근사하지 못하고 하나의 점만을 나타내게 되면서 필터의 성능이 크게 저하된다. 이에 따라 필터가 퇴화되었을 경우 중요도가 높은 입자들을 복제하고 중요도가 낮은 입자들을 제거하는 재샘플링(resampling)이 필요하다. 이것은 확률분포상 0에 가까워 무의미한 부분에는 샘플 개수를 줄이고 중요한 부분은 조밀하게 샘플링하는 것으로 해석할 수 있다. 재샘플링을 수행하는 것은 중요도 샘플링으로 나타낸 확률분포에서 경험적 샘플링 (empirical sampling)을 수행하는 것으로 해석할 수 있다. 그러므로 이것은 나타내고자 하는 확률분포를 변화시키지 않는다.
+
+재샘플링에는 일반적으로 다음 방법들이 사용된다.
+
+- 다항 재샘플링(Multinomial Resampling): 중요도에 비례하여 입자를 무작위로 샘플링
+- 시스템 재샘플링(Systematic Resampling): 중요도에 따라 균일한 간격으로 샘플링
+- 계층적 재샘플링(Stratified Resampling): 중요도에 따라 계층을 나누어 각 계층에서 균일하게 샘플링
+- 잔차 재샘플링(Residual Resampling): 가중치에 비례하여 샘플링을 수행하고 남은 가중치를 사용하여 추가 샘플링을 수행
+
+다양한 재샘플링 방법이 있으나 일반적으로 비슷한 성능을 보이며 다항 재샘플링이 가장 많이 사용된다.
+
+재샘플링은 중요도가 높은 입자를 높은 입자를 그대로 복제하기 때문에 재샘플링 직후에는 똑같은 입자가 여러 개 생긴다. 그러나 바로 다음 스텝에서 예측 단계의 importance sampling이 (위 pseudo-code에서 `transition` 함수) 확률적인 과정이기 때문에 이를 거치며 서로 달라진다.
+
+재샘플링을 수행하는 시점 역시 다양하다. 가장 간단하게는 매 스텝마다 재샘플링을 수행할 수 있으며, 실제로도 많이 사용된다. 그러나 그 경우 계산량이 많아지는데다 확률분포가 높은 쪽에 모든 입자가 모여 필터의 표현력이 떨어질 수 있다. 따라서 매 스텝이 아닌 특정 간격으로 재샘플링을 수행하게 되는데, 일반적으로 필터가 일정 수준 이하로 퇴화되었을 때 재샘플링을 수행하는 방법이 많이 사용된다.
+
+필터의 퇴화 수준을 판단하는 데는 유효 표본 크기 (effective sample size)가 주로 사용된다.
+
+$$
+N_{\text{eff}} = \frac{1}{\sum_{i=1}^n (w_t^{(i)})^2}
+$$
+
+이것은 실제로는 이상적인 몬테 카를로 샘플링과의 분산 차이를 이용해서 얻어지는 수식이다. 그러나 직관적으로 하나의 샘플만이 가중치를 가지고 나머지가 0이라면 이 값은 1이 되고, 반대로 모든 샘플이 $1/n$의 가중치를 가지면 이 값은 $n$이 된다는 것을 알 수 있다. 따라서 이 값이 특정 문턱값 $N_{\text{th}}$보다 작아지면 필터가 퇴화된 것으로 판단할 수 있다.
+
+이를 반영하여 pseudocode를 수정하면 다음과 같다.
+
+```python
+xs = sample_from_prior()
+ws = [1.0] * n_particles
+
+for t in range(1, T):
+    # Observation
+    z = observe()
+
+    for i in range(n_particles):
+        # Prediction
+        xs[i] = transition(xs[i])
+        # Update
+        ws[i] *= likelihood(z, xs[i])
+
+    # Normalize
+    ws_sum = sum(ws)
+    for i in range(n_particles):
+        ws[i] /= ws_sum
+
+    # Resampling
+    if effective_sample_size(ws) < N_th:
+        xs, ws = resample(xs, ws)
+```
+
+이것이 일반적인 파티클 필터의 구현이다.
