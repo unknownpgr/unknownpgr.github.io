@@ -4,7 +4,8 @@
     <title>Particle Filter Simulation</title>
     <style>
       .container {
-        max-width: 1024px;
+        width: 100%;
+        text-align: center;
         margin: 0 auto;
         padding: 2rem;
       }
@@ -32,7 +33,7 @@
       const H = 10;
       const SCALE = 50; // Scale to draw on canvas
       const N = 100;
-      const errorStd = 1 / 1.96; // 95% confidence interva
+      const errorStd = 1 / 1.96; // 95% confidence interval
 
       const landmarks = [
         { x: 1, y: 1 },
