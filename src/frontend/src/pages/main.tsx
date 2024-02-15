@@ -46,11 +46,15 @@ function createIndexString(
     return 2;
   }
 
+  const diff = 15;
+  if (name.length > Math.min(stringLength - diff, stringLength * 0.7)) {
+    name = name.slice(0, stringLength - 3 - diff) + "...";
+  }
+
   let nameLength = 0;
   for (let i = 0; i < name.length; i++) {
     const width = getWidth(name.charAt(i));
     nameLength += width;
-    console.log(name.charAt(i), name.charCodeAt(i).toString(16), width);
   }
 
   let dots = "  ";
@@ -70,6 +74,7 @@ let postsCache: PostMetadata[] = [];
 function App() {
   const [posts, setPosts] = useState<PostMetadata[]>(postsCache);
   const containerRef = useRef<HTMLDivElement>(null);
+  const [pageWidth, setPageWidth] = useState(window.innerWidth);
 
   useEffect(() => {
     function restoreScroll() {
@@ -85,6 +90,15 @@ function App() {
     };
 
     fetchPosts();
+
+    function handleResize() {
+      setPageWidth(window.innerWidth);
+    }
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
   }, []);
 
   function handleScrollChange() {
@@ -125,7 +139,11 @@ function App() {
         {posts.map((post) => (
           <div>
             <Link key={post.id} to={`/posts/${post.id}`}>
-              {createIndexString(post.title, parseDate(post.date))}
+              {createIndexString(
+                post.title,
+                parseDate(post.date),
+                Math.min(80, pageWidth / 10)
+              )}
             </Link>
             <br />
             <br />
