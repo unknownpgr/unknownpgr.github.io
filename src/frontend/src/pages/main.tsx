@@ -23,6 +23,45 @@ function parseDate(date: string) {
   return `${y}-${m}-${d}`;
 }
 
+function createIndexString(
+  name: string,
+  date: string,
+  stringLength: number = 80
+) {
+  function getWidth(char: string) {
+    const code = char.charCodeAt(0);
+    // Escape characters like 0xe9(é)
+    if (code >= 0x80 && code <= 0x9f) return 1;
+    if (code >= 0xa1 && code <= 0xdf) return 1;
+    if (code >= 0xe0 && code <= 0xff) return 1;
+    // Normal characters
+    if (code >= 0x20 && code <= 0x7e) return 1;
+    if (code >= 0xff00 && code <= 0xffef) return 2;
+    // For emojis, only check the first character.
+    if (code == 0xd83d) return 1;
+    if (code >= 0xdc00 && code <= 0xdfff) return 0;
+    // Escape zero-width characters.
+    if (code >= 0x200b && code <= 0x200f) return 0;
+
+    return 2;
+  }
+
+  let nameLength = 0;
+  for (let i = 0; i < name.length; i++) {
+    const width = getWidth(name.charAt(i));
+    nameLength += width;
+    console.log(name.charAt(i), name.charCodeAt(i).toString(16), width);
+  }
+
+  let dots = "  ";
+  for (let i = 0; i < stringLength - nameLength; i++) {
+    dots += ".";
+  }
+  dots += "  ";
+
+  return `${name}${dots}${date}`;
+}
+
 const api = new ApiService();
 
 let previousScroll = 0;
@@ -48,11 +87,6 @@ function App() {
     fetchPosts();
   }, []);
 
-  function handleHomeClick() {
-    if (!containerRef.current) return;
-    containerRef.current.scrollTo({ top: 0, behavior: "smooth" });
-  }
-
   function handleScrollChange() {
     if (!containerRef.current) return;
     const currentScroll = containerRef.current.scrollTop || 0;
@@ -63,8 +97,7 @@ function App() {
     <div
       className={style.container}
       ref={containerRef}
-      onScroll={handleScrollChange}
-    >
+      onScroll={handleScrollChange}>
       <div className={style.titleBox}>
         <p className={style.title}>
           Hi,
@@ -72,7 +105,6 @@ function App() {
           I'm Unknownpgr,
           <br />A software engineer who loves to build things.
         </p>
-
         <p className={style.description}>
           I'm currently studying computer science at{" "}
           <a href="https://uos.ac.kr/">University of Seoul</a>,
@@ -82,28 +114,25 @@ function App() {
           <br />
           I'm interested in web development, embedded systems, and machine
           learning.
+          <br />
+          Click <Link to="/posts/about">here</Link> to learn more about me.
         </p>
       </div>
       <div className={style.scrollDown}>Scroll down to see my posts.</div>
-      <h1 className={style.postsTitle}>Posts</h1>
-      {posts.map((post) => (
-        <Link key={post.id} to={`/posts/${post.id}`}>
-          <div className={style.postItem}>
-            <span className={style.postItemTitle}>{post.title}</span>
-            <span className={style.postItemDate}>{parseDate(post.date)}</span>
+      <div className={style.posts}>
+        <h1>Posts</h1>
+        <br />
+        {posts.map((post) => (
+          <div>
+            <Link key={post.id} to={`/posts/${post.id}`}>
+              {createIndexString(post.title, parseDate(post.date))}
+            </Link>
+            <br />
+            <br />
           </div>
-        </Link>
-      ))}
+        ))}
+      </div>
       <Footer />
-      <nav className={style.nav}>
-        <div className={style.navButtons}>
-          <button onClick={handleHomeClick}>Home</button>
-          <Link to="/posts/about">
-            <button>About</button>
-          </Link>
-        </div>
-        <div className={style.gradient}></div>
-      </nav>
     </div>
   );
 }

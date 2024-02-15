@@ -7,36 +7,12 @@
 
 .container a {
   text-decoration: none;
-  color: #aaa;
-}
-
-.nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-}
-
-.navButtons {
-  background-color: #222;
-}
-
-.nav button {
-  outline: none;
-  color: #fff;
-  cursor: pointer;
-  padding: 1rem 0;
-  margin-left: 1.5rem;
-}
-
-.gradient {
-  width: 100%;
-  height: 4rem;
-  background: linear-gradient(180deg, #222, #00000000);
+  color: inherit;
+  color: #888;
 }
 
 .titleBox {
-  max-width: 800px;
+  width: fit-content;
   margin: 0 auto;
   padding: 0 1rem;
   height: 100%;
@@ -46,12 +22,11 @@
 }
 
 .title {
-  font-size: 2rem;
+  font-size: 1.5rem;
   margin: 1rem 0;
 }
 
 .description {
-  font-size: 1.2rem;
   margin: 1rem 0;
 }
 
@@ -60,36 +35,15 @@
   top: calc(100% - 4rem);
   left: 50%;
   transform: translateX(-50%);
-  font-size: 1rem;
 }
 
-.postsTitle {
-  font-size: 2rem;
-  margin: 3rem 0;
+.posts {
+  max-width: 800px;
+  margin: 0 auto;
   text-align: center;
 }
 
-.postItem {
-  width: 100%;
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 1rem;
-  color: #fff;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-}
-
-.postItemTitle {
-  width: 0;
-  flex-grow: 1;
-  padding-right: 1rem;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.postItemDate {
-  color: #aaa;
-  font-size: 0.8rem;
+.posts a {
+  color: inherit;
+  white-space: pre-wrap;
 }

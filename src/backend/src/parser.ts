@@ -104,6 +104,12 @@ export class OnMemoryPostParser implements PostParser {
       ...dom.querySelectorAll("img"),
       ...dom.querySelectorAll("video"),
       ...dom.querySelectorAll("audio"),
+      ...dom.querySelectorAll("source"),
+      ...dom.querySelectorAll("track"),
+      ...dom.querySelectorAll("a"),
+      ...dom.querySelectorAll("link"),
+      ...dom.querySelectorAll("script"),
+      ...dom.querySelectorAll("iframe"),
     ];
     await Promise.all(
       fileTags.map(async (tag) => {

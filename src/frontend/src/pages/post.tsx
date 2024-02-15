@@ -54,8 +54,11 @@ export function Post() {
         <meta property="og:title" content={title} />
       </Helmet>
       <div className={style.container}>
+        <br />
+        <br />
+        <br />
         <Link to="/">
-          <header className={style.header}>Unknownpgr</header>
+          <header className={style.header}>UNKNOWNPGR</header>
         </Link>
         <div className={style.post}>
           <h1 className={style.title}>{post.title}</h1>
@@ -64,7 +67,11 @@ export function Post() {
             className={style.content}
             dangerouslySetInnerHTML={{ __html: post.html }}
           />
-          <hr />
+          <br />
+          <div className={style.separator}>
+            - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+            -
+          </div>
           <div className={style.nav}>
             {previous ? (
               <div className={style.previous}>

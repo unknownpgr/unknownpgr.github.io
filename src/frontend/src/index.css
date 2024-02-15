@@ -1,4 +1,11 @@
-@import url("https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200;300;400;500;600;700;900&display=swap");
+@font-face {
+  font-family: "Gulim";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@1.0/ChosunGu.woff")
+    format("woff");
+  src: url("/gulimche.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
 
 html,
 body,
@@ -7,9 +14,7 @@ body,
   height: 100%;
   margin: 0;
   padding: 0;
-  font-family: "Noto Serif KR", serif;
-  background-color: #222;
-  color: #fff;
+  font-family: "Gulim", serif;
 }
 
 * {
@@ -26,7 +31,7 @@ button {
   color: inherit;
   background: none;
   border: none;
-  font-family: "Noto Serif KR", serif;
+  font-family: "Gulim", serif;
   padding: 0;
   font-size: 1rem;
 }
@@ -40,24 +45,52 @@ input {
 
 code {
   font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
-    "Courier New", "Noto Sans KR", monospace, sans-serif;
+    "Courier New", "Gulim", monospace, sans-serif;
   max-width: 100%;
 }
 
-@media (max-width: 480px) {
+html {
+  font-size: 16px;
+}
+
+/* width < 1440px */
+@media (max-width: 1440px) {
   html {
     font-size: 14px;
   }
 }
 
-@media (min-width: 480px) {
+/* width < 1200px */
+@media (max-width: 1200px) {
   html {
-    font-size: 15px;
+    font-size: 13px;
   }
 }
 
-@media (min-width: 768px) {
+/* width < 1024px */
+@media (max-width: 1024px) {
   html {
-    font-size: 16px;
+    font-size: 12px;
+  }
+}
+
+/* width < 768px */
+@media (max-width: 768px) {
+  html {
+    font-size: 11px;
+  }
+}
+
+/* width < 480px */
+@media (max-width: 480px) {
+  html {
+    font-size: 10px;
+  }
+}
+
+/* print */
+@media print {
+  html {
+    font-size: 10px;
   }
 }
