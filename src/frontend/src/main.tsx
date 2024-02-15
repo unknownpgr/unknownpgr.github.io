@@ -22,11 +22,5 @@ const router = createBrowserRouter(
 );
 
 const root = document.getElementById("root")!;
-function handleResize() {
-  if (!root) return;
-  root.style.height = `${window.innerHeight}px`;
-}
-window.addEventListener("resize", handleResize);
-handleResize();
 
 ReactDOM.createRoot(root).render(<RouterProvider router={router} />);
