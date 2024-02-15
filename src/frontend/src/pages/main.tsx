@@ -46,16 +46,19 @@ function createIndexString(
     return 2;
   }
 
-  const diff = 15;
-  if (name.length > Math.min(stringLength - diff, stringLength * 0.7)) {
-    name = name.slice(0, stringLength - 3 - diff) + "...";
+  function getLength(str: string) {
+    let length = 0;
+    for (let i = 0; i < str.length; i++) {
+      const width = getWidth(str.charAt(i));
+      length += width;
+    }
+    return length;
   }
 
-  let nameLength = 0;
-  for (let i = 0; i < name.length; i++) {
-    const width = getWidth(name.charAt(i));
-    nameLength += width;
+  while (getLength(name) > stringLength - 3) {
+    name = name.slice(0, -1);
   }
+  const nameLength = getLength(name);
 
   let dots = "  ";
   for (let i = 0; i < stringLength - nameLength; i++) {
@@ -137,12 +140,12 @@ function App() {
         <h1>Posts</h1>
         <br />
         {posts.map((post) => (
-          <div>
-            <Link key={post.id} to={`/posts/${post.id}`}>
+          <div key={post.id}>
+            <Link to={`/posts/${post.id}`}>
               {createIndexString(
                 post.title,
                 parseDate(post.date),
-                Math.min(80, pageWidth / 10)
+                Math.min(80, pageWidth * 0.125)
               )}
             </Link>
             <br />
