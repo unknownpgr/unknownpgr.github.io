@@ -123,8 +123,6 @@ export class BlogService {
   public async getPost(postId: string): Promise<PostData> {
     if (!this.posts[postId]) {
       await this.loadPost(postId);
-    } else {
-      this.loadPost(postId);
     }
     return this.posts[postId];
   }
