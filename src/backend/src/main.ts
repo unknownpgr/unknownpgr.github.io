@@ -24,15 +24,13 @@ async function main() {
   });
 
   publicRouter.get("/api/posts", async (ctx) => {
-    const posts = await blogService.getPostsMetadata();
+    const posts = await blogService.getPostList();
     ctx.body = posts;
   });
 
   publicRouter.get("/api/posts/:id", async (ctx) => {
     const post = await blogService.getPost(ctx.params.id);
-    post.fileMapping = {};
-    const adjustedPosts = await blogService.getAdjacentPosts(ctx.params.id);
-    ctx.body = { post, adjustedPosts };
+    ctx.body = post;
   });
 
   publicRouter.get("/api/files/:id", async (ctx) => {
@@ -70,7 +68,6 @@ async function main() {
   });
 
   privateRouter.get("/api/cache-clear", async (ctx) => {
-    blogService.clearLoadedPosts();
     ctx.body = "Cache cleared";
   });
 

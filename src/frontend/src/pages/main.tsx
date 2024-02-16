@@ -3,17 +3,7 @@ import { ApiService } from "../api";
 import style from "./main.module.css";
 import { Link } from "react-router-dom";
 import { Footer } from "../components/footer";
-
-export interface PostMetadata {
-  id: string;
-  title: string;
-  date: string;
-  tags: string[];
-}
-
-export interface PostData extends PostMetadata {
-  html: string;
-}
+import { PostSummary } from "../model";
 
 function parseDate(date: string) {
   const dt = new Date(date);
@@ -71,10 +61,10 @@ function createIndexString(
 
 const api = new ApiService();
 
-let postsCache: PostMetadata[] = [];
+let postsCache: PostSummary[] = [];
 
 function App() {
-  const [posts, setPosts] = useState<PostMetadata[]>(postsCache);
+  const [posts, setPosts] = useState<PostSummary[]>(postsCache);
   const [pageWidth, setPageWidth] = useState(window.innerWidth);
   const titleBoxRef = useRef<HTMLDivElement>(null);
 

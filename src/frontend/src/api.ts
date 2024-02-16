@@ -1,12 +1,4 @@
-import { PostData, PostMetadata } from "./pages/main";
-
-export interface PostResponse {
-  post: PostData;
-  adjustedPosts: {
-    previous: PostMetadata | null;
-    next: PostMetadata | null;
-  };
-}
+import { Post, PostSummary } from "./model";
 
 export class ApiService {
   constructor(private baseUrl: string = "") {}
@@ -19,11 +11,11 @@ export class ApiService {
     return res.json();
   }
 
-  public async getPosts(): Promise<PostMetadata[]> {
-    return await this.request<PostMetadata[]>("/api/posts");
+  public async getPosts(): Promise<PostSummary[]> {
+    return await this.request<PostSummary[]>("/api/posts");
   }
 
-  public async getPost(id: string): Promise<PostResponse> {
-    return await this.request<PostResponse>(`/api/posts/${id}`);
+  public async getPost(id: string): Promise<Post> {
+    return await this.request<Post>(`/api/posts/${id}`);
   }
 }

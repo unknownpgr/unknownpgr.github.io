@@ -4,7 +4,7 @@ import markdownIt from "markdown-it";
 import htmlParser from "node-html-parser";
 import path from "path";
 import yaml from "yaml";
-import { PostParser, PostParserParams, PostParserResult } from "./core";
+import { PostParser, PostParserParam, PostParserResult } from "./core/model";
 import katex from "./katex-converter";
 
 interface PostFormatter {
@@ -86,7 +86,7 @@ function parseFormatter(formatterStr: string): PostFormatter {
 export class OnMemoryPostParser implements PostParser {
   constructor(private fileMappingPrefix: string) {}
 
-  async parse({ files }: PostParserParams): Promise<PostParserResult> {
+  async parse({ files }: PostParserParam): Promise<PostParserResult> {
     const fileNames = Object.keys(files).sort();
     const postFile = fileNames.find((fileName) => fileName.endsWith(".md"));
     if (!postFile) throw new Error("Markdown file not found.");
@@ -117,6 +117,7 @@ export class OnMemoryPostParser implements PostParser {
         const src = tag.getAttribute("src");
         if (!src) return;
         if (src.startsWith("http")) return;
+        if (src.startsWith("//")) return;
 
         // Check if file exists
         const normalizedPath = path.normalize(src);
@@ -141,14 +142,11 @@ export class OnMemoryPostParser implements PostParser {
     );
 
     return {
-      postData: {
-        ...formatter,
-        id: "",
-        fileMapping,
-        html: dom.toString(),
-      },
+      ...formatter,
+      files: fileMapping,
+      html: dom.toString(),
       markdownFilename: postFile,
-      fixedMarkdown: `---\n${yaml
+      updatedMarkdown: `---\n${yaml
         .stringify(formatter)
         .trim()}\n---\n\n${markdownStr}\n`,
     };

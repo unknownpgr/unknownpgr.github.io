@@ -1,10 +1,11 @@
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { ApiService, PostResponse } from "../api";
+import { ApiService } from "../api";
 import { Footer } from "../components/footer";
 import style from "./post.module.css";
 import { Helmet } from "react-helmet";
+import { Post } from "../model";
 
 const api = new ApiService();
 
@@ -13,23 +14,20 @@ function formatDate(date: string) {
   return format(d, "yyyy-MM-dd HH:mm:ss");
 }
 
-export function Post() {
-  const [response, setPost] = useState<PostResponse | null>(null);
-  const postId = useParams<{ id: string }>().id;
+export function PostView() {
+  const { id: postId } = useParams();
+  const [post, setPost] = useState<Post | null>(null);
 
   useEffect(() => {
     if (!postId) return;
-    const currentPostId = response?.post.id;
-    if (!currentPostId) {
-      const fetchPost = async () => {
-        const post = await api.getPost(postId);
-        setPost(post);
-      };
-      fetchPost();
-    } else if (currentPostId !== postId) setPost(null);
-  }, [postId, response]);
+    const fetchPost = async () => {
+      const post = await api.getPost(postId);
+      setPost(post);
+    };
+    fetchPost();
+  }, [postId]);
 
-  if (!response) {
+  if (!post) {
     return (
       <div className={style.loading}>
         <h1>Loading...</h1>
@@ -37,8 +35,7 @@ export function Post() {
     );
   }
 
-  const { post, adjustedPosts } = response;
-  const { previous, next } = adjustedPosts;
+  const { previous, next } = post.adjacentPosts;
   const url = location.protocol + "//" + location.host + "/posts/" + post.id;
   const title = "Unknownpgr - " + post.title;
 
