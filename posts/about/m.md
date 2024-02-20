@@ -5,6 +5,15 @@ tags:
 date: 2023-09-02T03:36:44.956Z
 ---
 
+## Contact
+
+- Location : Korea / Seoul
+- Email : [unknownpgr@gmail.com](mailto:unknownpgr@gmail.com)
+- GitHub : [github.com/unknownpgr](https://github.com/unknownpgr)
+- LinkedIn : [linkedin.com/in/joonho-gwon](https://www.linkedin.com/in/joonho-gwon)
+
+## Objective
+
 항상 새로운 분야에 도전합니다.
 컴퓨터를 다른 분야에 적용해 새로운 가치를 이끌어내는 것이 목표입니다.
 웹, 임베디드, 그래픽스, 머신러닝, 수치해석 등 다양한 분야를 폭넓게 공부해보고 있습니다.
@@ -14,18 +23,63 @@ date: 2023-09-02T03:36:44.956Z
 
 코드를 작성할 때는 클린한 아키텍쳐를 위해 관심사를 분리하며 의존성을 철저히 관리합니다. 최대한 가독성 및 재사용성이 높은 코드를 작성하려고 노력합니다. 이를 위해서 객체지향이나 함수형, 데이터지향 등 다양한 방법론을 필요에 따라 사용합니다.
 
-## Contact
+## Education
 
-- Location : Korea / Seoul
-- Email : [unknownpgr@gmail.com](mailto:unknownpgr@gmail.com)
-- GitHub : [github.com/unknownpgr](https://github.com/unknownpgr)
+**University of Seoul**
 
-## Ability
+- Bachelor of Engineering, Computer Science, 2026.09
+- Relevant Coursework: Embedded Systems, Machine Learning, Computer Vision
 
-- **Backend**: Node.js(Express, Koa, Next.js), Python(FastAPI), NginX, OpenAPI
+## Experiences
+
+- **NAVER LABS**
+
+  - Software Engineer Intern, October 2023 - April 2024
+  - Developed the software build and distribution pipeline for NAVER LABS' ALT-B autonomous driving vehicle and the Road View car.
+
+- **Republic of Korea Army**
+
+  - Tactical C4I Operations/Maintenance, April 2022 - October 2023
+  - Managed and maintained military networking systems, ensuring operational readiness and security.
+
+- **The-Form**
+
+  - Tech Lead, February 2021 - Present
+  - As the Tech Lead, I oversaw and managed the technical aspects of the project, implementing a scalable structure based on clean architecture. The-Form has achieved over 10,000 MAUs (Monthly Active Users).
+
+- **Software Maestro 12th**
+
+  - Participant (Excellent Graduate), February 2021 - December 2021
+  - Founded The-Form, a survey platform considering user needs, during a national education program aimed at nurturing software entrepreneurs.
+
+- **ZETIN Robotics Club, University of Seoul**
+
+  - President, December 2020 - December 2021
+  - [zetin.uos.ac.kr](https://zetin.uos.ac.kr)
+  - Led the robotics club, overseeing its operations and designed and conducted an educational program covering everything from the basics of robotics to algorithms.
+
+- **Human-Centered Artificial Intelligence Lab (HCAIL)**
+
+  - Undergraduate Research Intern, University of Seoul, October 2019 - February 2021
+  - Supervisor: Prof. Hyunggu Jung
+  - Contributed to various projects on human-computer interaction and published a paper at Asian CHI 2020 as an undergraduate researcher.
+
+- **International School of Urban Sciences**
+
+  - Undergraduate Research Intern, University of Seoul, March 2020 - March 2022
+  - Supervisor: Prof. Chun Ho Yeom
+  - As an undergraduate researcher, developed and managed a system for measuring highway soil conditions and collecting and analyzing road information.
+
+- **C Programming and Practice, 2019 Winter Semester**
+  - Teaching Assistant, University of Seoul, December 2019 - January 2020
+  - Conducted programming labs for students.
+
+## Skills
+
+- **Backend**: Node.js(Express, Koa, Next.js), Python(FastAPI), NGINX, OpenAPI
 - **Frontend**: React, Typescript, HTML5, CSS(SASS, CSS-module), SEO, Chrome DevTools, Lighthouse
 - **Testing**: Jest, Playwright
-- **DevOps**: AWS(EC2, S3, Route53, ELB, EKS), Container(Docker), Kubernetes, Grafana, Prometheus, Traefik, GitHub Actions, Treafik, Sealed-Secret, ArgoCD
+- **DevOps**: AWS(EC2, S3, Route53, ELB, EKS), Container(Docker), Kubernetes, Grafana, Prometheus, Traefik, GitHub Actions, Treafik, Sealed-Secret
 - **Database**: MySQL, SQLite, Redis, MongoDB
 - **Machine Learning**: Tensorflow, PyTorch, Slurm, MATLAB, OpenCV(both C++ and Python)
 - **Graphics**: WebGL
@@ -35,9 +89,12 @@ date: 2023-09-02T03:36:44.956Z
   - [PCB Sample3](https://oshwlab.com/unknownpgr/unknownpgr-pcb-nucleo-f401)
 - **Robotics**: Motor control(PID), Rigid body dynamics(Lagrange dynamics)
 - **Blockchain**: Ethereum, Solidity, Truffle, Ganache, Web3.js
-- **Language**: C, C++, C#, Python, Java, Typescript
+- **Language**: C, C++, C#, Python, Java(Kotlin), Typescript
 - **Tools**: VSCode, Vim, Eclipse
 - **Collaboration**: Git / GitHub, Slack
+- **Security**: JWT, OAuth
+- **Architecture Design**: Clean Architecture, RESTful API, Knowledge of Microservices, DDD(Domain Driven Design)
+- **Software Development Process**: Agile, Scrum
 
 ## Selected Projects
 
@@ -143,65 +200,23 @@ date: 2023-09-02T03:36:44.956Z
 
 - 프랙탈의 한 종류인 dragon curve를 그려봤습니다.
 
-## Experiences
+## Awards and Honors
 
-- NAVER LABS
-
-  - Software Engineer Intern, 2023년 10월 - 2024년 4월
-  - NAVER LABS에서 ALT-B 자율주행차량 및 로드뷰 차량의 소프트웨어 빌드-배포 파이프라인을 구축하였습니다.
-
-- Software Maestro 12th
-
-  - 우수 수료자, 2021년 2월-2021년 12월
-  - 소프트웨어 분야 창업가를 양성하는 국가 주도 교육과정에서 유저의 니즈를 고려한 설문조사 플랫폼(The-Form)을 창업했습니다.
-
-- The-Form
-
-  - Tech Lead, 2021년 2월-현재
-  - 테크 리드로서 프로젝트의 기술적인 측면을 총괄하여 관리하였으며, 클린 아키텍처를 기반으로 확장성 있는 구조를 구현했습니다. 현재 더폼은 MAU 1만 이상을 달성하고 있습니다.
-
-- 서울시립대학교 중앙동아리, 로봇연구회 ZETIN 회장
-
-  - [zetin.uos.ac.kr](https://zetin.uos.ac.kr)
-  - 2020년 12월 - 2021년 12월
-  - 로봇 동아리의 회장으로서 동아리의 운영을 총괄했으며, 로봇의 기초부터 알고리즘까지 전체를 다루는 교육과정을 설계하고 교육을 진행했습니다.
-
-- Undergraduate Research Intern, University of Seoul
-
-  - 2019년 10월 - 2021년 2월
-  - Human-Centered Artificial Intelligence Lab(HCAIL)
-  - Supervisor: Prof. Hyunggu Jung
-  - 학부연구생으로서 인간-컴퓨터 상호작용에 대한 다양한 프로젝트에 기여하였으며 1개의 논문을 Asian CHI 2020에 게재하였습니다.
-
-- Undergraduate Research Intern, University of Seoul
-
-  - 2020년 3월 - 2022년 3월
-  - International School of Urban Sciences
-  - Supervisor: Prof. Chun Ho Yeom
-  - 학부연구생으로서 고속도로 토질 측정 및 도로 정보 수집-분석 시스템을 구축하고 관리하였습니다.
-
-- Teaching Assistant, University of Seoul
-  - 2019년 12월 - 2020년 1월
-  - C Programming and Practice, 2019 Winter Semester
-  - 학생들의 프로그래밍 실습을 진행하였습니다.
-
-## Honors / Awards
-
-- 2022년 제 8회 육군창업경진대회 창의상
-  - 부동산 등기 자동 검증 솔루션
-- 2022년 육군 정보통신학교 전술 C4I 교육과정 최우수 수료
-- 2021년 소프트웨어 마에스트로 인증
-- 2020년 2학기 학업우수상
-- 서울시립대학교 2020년 X-TWICE 실전문제연구단 장려상
-  - 딥러닝 기반 연관논문 추천시스템 개발 및 평가
-- 서울시립대학교 2020년 셈틀제 2등
-- 서울시립대학교 2019년 셈틀제 5등
-- 성균관대학교 2019 전국 대학생 자율주행차 융합설계 경진대회 최우수상(주행 부문)
-- 서울시립대학교 2019 제3회 컴퓨터알고리즘 프로그래밍 경진대회 장려상
-- 서울시립대학교 2019 제22회 전국 라인트레이서 로봇 경연대회 장려상
-- 입학우수장학 (2019년 1학기)
-- 국가장학 I (2019년 1학기~2020년 2학기)
-- 학업우수장학(II) (2019년 2학기~2020년 2학기)
+- Creativity Award at the 8th Army Startup Competition, 2022 (2022년 제 8회 육군창업경진대회 창의상)
+  - Real Estate Registration Automatic Verification Solution (부동산 등기 자동 검증 솔루션)
+- Top Graduate of the Army Signal School Tactical C4I Course, 2022 (2022년 육군 정보통신학교 전술 C4I 교육과정 최우수 수료)
+- Software Maestro Certification, 2021 (2021년 소프트웨어 마에스트로 인증)
+- Academic Excellence Award, Second Semester 2020 (2020년 2학기 학업우수상)
+- Encouragement Award in X-TWICE Practical Problem Research Group, University of Seoul, 2020 (서울시립대학교 2020년 X-TWICE 실전문제연구단 장려상)
+  - Development and Evaluation of a Deep Learning-Based Related Papers Recommendation System (딥러닝 기반 연관논문 추천시스템 개발 및 평가)
+- Second Place in Semtle Challenge, University of Seoul, 2020 (서울시립대학교 2020년 셈틀제 2등)
+- Fifth Place in Semtle Challenge, University of Seoul, 2019 (서울시립대학교 2019년 셈틀제 5등)
+- Best Award (Driving Category) in the National University Students Autonomous Vehicle Design Competition, Sungkyunkwan University, 2019 (성균관대학교 2019 전국 대학생 자율주행차 융합설계 경진대회 최우수상(주행 부문))
+- Encouragement Award in the 3rd Computer Algorithm Programming Contest, University of Seoul, 2019 (서울시립대학교 2019 제3회 컴퓨터알고리즘 프로그래밍 경진대회 장려상)
+- Encouragement Award in the 22nd National Line Tracer Robot Competition, University of Seoul, 2019 (서울시립대학교 2019 제22회 전국 라인트레이서 로봇 경연대회 장려상)
+- Entrance Excellence Scholarship, First Semester 2019 (입학우수장학 (2019년 1학기))
+- National Scholarship I, From First Semester 2019 to Second Semester 2020 (국가장학 I (2019년 1학기~2020년 2학기))
+- Academic Excellence Scholarship II, From Second Semester 2019 to Second Semester 2020 (학업우수장학(II) (2019년 2학기~2020년 2학기))
 
 ## Publications
 
