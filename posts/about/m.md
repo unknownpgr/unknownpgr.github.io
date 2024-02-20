@@ -45,7 +45,7 @@ date: 2023-09-02T03:36:44.956Z
 - **The-Form**
 
   - Tech Lead, February 2021 - Present
-  - As the Tech Lead, I oversaw and managed the technical aspects of the project, implementing a scalable structure based on clean architecture. The-Form has achieved over 10,000 MAUs (Monthly Active Users).
+  - As the Tech Lead, managed the technical aspects of the project, implementing a scalable structure based on clean architecture. The-Form has achieved over 10,000 MAUs (Monthly Active Users).
 
 - **Software Maestro 12th**
 
@@ -56,7 +56,7 @@ date: 2023-09-02T03:36:44.956Z
 
   - President, December 2020 - December 2021
   - [zetin.uos.ac.kr](https://zetin.uos.ac.kr)
-  - Led the robotics club, overseeing its operations and designed and conducted an educational program covering everything from the basics of robotics to algorithms.
+  - Led the robotics club, overseeing its operations and designed and conducted an educational program covering the basics of robotics from hardware design to algorithms.
 
 - **Human-Centered Artificial Intelligence Lab (HCAIL)**
 
@@ -68,11 +68,11 @@ date: 2023-09-02T03:36:44.956Z
 
   - Undergraduate Research Intern, University of Seoul, March 2020 - March 2022
   - Supervisor: Prof. Chun Ho Yeom
-  - As an undergraduate researcher, developed and managed a system for measuring highway soil conditions and collecting and analyzing road information.
+  - Developed and managed a system for measuring highway soil conditions and collecting and analyzing road information.
 
 - **C Programming and Practice, 2019 Winter Semester**
   - Teaching Assistant, University of Seoul, December 2019 - January 2020
-  - Conducted programming labs for students.
+  - Provided programming education to undergraduate students, enhancing their programming skills and understanding of C language fundamentals.
 
 ## Skills
 
