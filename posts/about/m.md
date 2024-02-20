@@ -145,19 +145,45 @@ date: 2023-09-02T03:36:44.956Z
 
 ## Experiences
 
-- Software Maestro 12기
-  - The-Form
+- NAVER LABS
+
+  - Software Engineer Intern, 2023년 10월 - 2024년 4월
+  - NAVER LABS에서 ALT-B 자율주행차량 및 로드뷰 차량의 소프트웨어 빌드-배포 파이프라인을 구축하였습니다.
+
+- Software Maestro 12th
+
+  - 우수 수료자, 2021년 2월-2021년 12월
+  - 소프트웨어 분야 창업가를 양성하는 국가 주도 교육과정에서 유저의 니즈를 고려한 설문조사 플랫폼(The-Form)을 창업했습니다.
+
+- The-Form
+
+  - Tech Lead, 2021년 2월-현재
+  - 테크 리드로서 프로젝트의 기술적인 측면을 총괄하여 관리하였으며, 클린 아키텍처를 기반으로 확장성 있는 구조를 구현했습니다. 현재 더폼은 MAU 1만 이상을 달성하고 있습니다.
+
 - 서울시립대학교 중앙동아리, 로봇연구회 ZETIN 회장
+
   - [zetin.uos.ac.kr](https://zetin.uos.ac.kr)
-  - 2020년 12월 ~ 2021년 12월
+  - 2020년 12월 - 2021년 12월
+  - 로봇 동아리의 회장으로서 동아리의 운영을 총괄했으며, 로봇의 기초부터 알고리즘까지 전체를 다루는 교육과정을 설계하고 교육을 진행했습니다.
+
 - Undergraduate Research Intern, University of Seoul
+
+  - 2019년 10월 - 2021년 2월
   - Human-Centered Artificial Intelligence Lab(HCAIL)
   - Supervisor: Prof. Hyunggu Jung
+  - 학부연구생으로서 인간-컴퓨터 상호작용에 대한 다양한 프로젝트에 기여하였으며 1개의 논문을 Asian CHI 2020에 게재하였습니다.
+
 - Undergraduate Research Intern, University of Seoul
+
+  - 2020년 3월 - 2022년 3월
   - International School of Urban Sciences
   - Supervisor: Prof. Chun Ho Yeom
+  - 학부연구생으로서 고속도로 토질 측정 및 도로 정보 수집-분석 시스템을 구축하고 관리하였습니다.
+
 - Teaching Assistant, University of Seoul
+  - 2019년 12월 - 2020년 1월
   - C Programming and Practice, 2019 Winter Semester
+  - 학생들의 프로그래밍 실습을 진행하였습니다.
 
 ## Honors / Awards
 
