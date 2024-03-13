@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {{head}}
+    <!-- Katex -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css"
+      integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X"
+      crossorigin="anonymous"
+    />
+    <!-- HighlightJS -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script>
+      hljs.highlightAll();
+    </script>
+    <!-- End HighlightJS -->
+    <style>
+      code {
+        font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+          "Courier New", "Gulim", monospace, sans-serif;
+        max-width: 100%;
+      }
+
+      img,
+      video,
+      audio,
+      canvas,
+      svg {
+        max-width: 80%;
+        min-width: 25%;
+        display: block;
+        margin: 1rem auto;
+      }
+
+      iframe {
+        width: 100%;
+        min-height: 500px;
+        display: block;
+        margin: 1rem auto;
+        border: none;
+      }
+
+      .content pre code {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+        padding: 1rem;
+        border: 1px solid #aaa;
+      }
+
+      .content p {
+        overflow-x: scroll;
+      }
+
+      .content blockquote {
+        border: 1px solid #aaa;
+        padding: 0 1rem;
+        margin: 1rem 0;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript
+      ><iframe
+        src="https://www.googletagmanager.com/ns.html?id=GTM-5TZKBNR5"
+        height="0"
+        width="0"
+        style="display: none; visibility: hidden"
+      ></iframe
+    ></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    <div class="container">
+      <a href="/">Unknownpgr</a>
+      <h1>{{title}}</h1>
+      <p>{{date}}</p>
+      <div class="content">{{content}}</div>
+    </div>
+  </body>
+</html>

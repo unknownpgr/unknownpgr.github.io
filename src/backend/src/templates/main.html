@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {{head}}
+  </head>
+  <style>
+    .intro {
+      width: fit-content;
+      height: 100dvh;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .title {
+      text-align: center;
+    }
+
+    .list div {
+      text-align: center;
+    }
+
+    .list a {
+      color: black;
+    }
+  </style>
+  <body>
+    <div class="container">
+      <div class="intro">
+        <div>Hi,</div>
+        <div>I'm Unknownpgr,</div>
+        <div>A software engineer who loves to build things.</div>
+        <br />
+        <div>
+          I'm currently studying computer science at
+          <a href="https://uos.ac.kr/">University of Seoul</a>,
+        </div>
+        <div>
+          and working as a tech lead at
+          <a href="https://the-form.io">The Form</a>.
+        </div>
+        <div>
+          I'm interested in web development, embedded systems, and machine
+          learning.
+        </div>
+        <div>
+          Click <a href="/posts/about/index.html">here</a> to learn more about
+          me.
+        </div>
+        <br />
+        <div>Scroll down to see my posts.</div>
+      </div>
+      <h1 class="title">Posts</h1>
+      <br />
+      <div class="list">{{postList}}</div>
+    </div>
+  </body>
+</html>

@@ -5,6 +5,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "nodemon src/main.ts",
+    "run": "node dist/main.js",
     "build": "tsc"
   },
   "devDependencies": {
