@@ -9,6 +9,8 @@ import {
   VersionedPost,
 } from "./core/model";
 
+// File IO
+
 async function readFile(filePath: string): Promise<File> {
   const data = await fs.readFile(filePath);
   const name = path.basename(filePath);
@@ -42,6 +44,8 @@ async function write(dir: Directory, root: string): Promise<void> {
     })
   );
 }
+
+// Formatting
 
 function formatDate(date: string, time: boolean = true) {
   const p = (s: number) => s.toString().padStart(2, "0");
@@ -103,12 +107,6 @@ function createIndexString(
   return `${name}${dots}${date}`;
 }
 
-function getVersions(post: Post[]): string[] {
-  const versions: Set<string> = new Set();
-  post.forEach((p) => p.versions.forEach((v) => versions.add(v.version)));
-  return Array.from(versions);
-}
-
 function getAdjacentPosts(posts: VersionedPost[], id: string) {
   const post = posts.find((p) => p.id === id);
   if (!post) return { prev: null, next: null };
@@ -129,13 +127,42 @@ function url(post: VersionedPost) {
   return `/posts/${post.id}/${name(post.version)}`;
 }
 
-const HOST = "http://localhost:57303";
+function expandLanguage(lang: string) {
+  if (lang === "ko") return "Korean";
+  if (lang === "en") return "English";
+  throw new Error(`Unknown language: ${lang}`);
+}
+
+function language(target: string, current: string) {
+  if (target === current) return `<span>${expandLanguage(target)}</span>`;
+  return `<span><a href="./${name(target)}">${expandLanguage(
+    target
+  )}</a></span>`;
+}
+
+export interface BlogTemplate {
+  renderMain(data: Record<string, string>): string;
+  renderPost(data: Record<string, string>): string;
+}
 
 export class BlogApplication {
+  private readonly postPath: string;
+  private readonly outputPath: string;
+  private readonly host: string;
+
   constructor(
     private readonly blogService: BlogService,
-    private readonly postPath: string = "../../posts"
-  ) {}
+    private readonly template: BlogTemplate,
+    {
+      postPath = "../../posts",
+      outputDir = "../../output",
+      host = "https://localhost:8000",
+    }
+  ) {
+    this.postPath = path.resolve(postPath);
+    this.outputPath = path.resolve(outputDir);
+    this.host = host;
+  }
 
   private async fixPost(postPath: string): Promise<void> {
     const postDir = await readDir(postPath);
@@ -159,15 +186,15 @@ export class BlogApplication {
     );
   }
 
-  private async getSitemap(posts: Post[]): Promise<Buffer> {
+  private async getSitemap(posts: VersionedPost[]): Promise<Buffer> {
     const sitemapStream = new SitemapStream({
-      hostname: HOST,
+      hostname: this.host,
     });
     sitemapStream.write({ url: `/`, changeFreq: "daily", priority: 1 });
     for (const post of posts) {
       try {
         sitemapStream.write({
-          url: `/posts/${post.id}/index.html`,
+          url: url(post),
           changeFreq: "monthly",
           priority: 0.5,
           lastmod: post.date,
@@ -179,21 +206,11 @@ export class BlogApplication {
     return sitemap;
   }
 
-  private async getVersionedMainHtml(
+  private compileVersionedMainHtml(
     posts: VersionedPost[],
-    version: string
-  ): Promise<File> {
-    // Load templates
-    const mainTemplate = await fs.readFile(__dirname + "/templates/main.html", {
-      encoding: "utf-8",
-    });
-    const head = await fs.readFile(__dirname + "/templates/head.html", {
-      encoding: "utf-8",
-    });
-    const footer = await fs.readFile(__dirname + "/templates/footer.html", {
-      encoding: "utf-8",
-    });
-
+    version: string,
+    availableVersions: string[]
+  ): File {
     // Build post list
     const postListHtml = posts
       .sort((a, b) => {
@@ -210,36 +227,34 @@ export class BlogApplication {
       })
       .join("");
 
-    // Build main html
-    const mainHtml = mainTemplate
-      .replaceAll("{{head}}", head)
-      .replaceAll("{{footer}}", footer)
-      .replaceAll("{{postList}}", postListHtml)
-      .replaceAll("{{url}}", HOST)
-      .replaceAll("{{title}}", "Unknownpgr's Blog");
+    // Build version list
+    const languageListHtml = availableVersions
+      .map((v) => language(v, version))
+      .join(", ");
 
+    // Build main html
+    const mainHtml = this.template.renderMain({
+      head: "",
+      footer: "",
+      postList: postListHtml,
+      languages: languageListHtml,
+      url: "/",
+      host: this.host,
+      title: "Unknownpgr's Blog",
+    });
     return { name: name(version), data: Buffer.from(mainHtml) };
   }
 
-  private async compileVersionedPosts(
-    posts: VersionedPost[],
-    version: string
-  ): Promise<Directory> {
-    const postTemplate = await fs.readFile(__dirname + "/templates/post.html", {
-      encoding: "utf-8",
-    });
-    const head = await fs.readFile(__dirname + "/templates/head.html", {
-      encoding: "utf-8",
-    });
-    const footer = await fs.readFile(__dirname + "/templates/footer.html", {
-      encoding: "utf-8",
-    });
-
+  private compileVersionedPosts(posts: VersionedPost[]): Directory {
     const postsDir: Directory = {
       name: "posts",
       children: [],
     };
     posts.forEach((post) => {
+      const languageListHtml = post.availableVersions
+        .map((v) => language(v, post.version))
+        .join(", ");
+
       const { prev, next } = getAdjacentPosts(posts, post.id);
 
       const prevTag =
@@ -247,20 +262,20 @@ export class BlogApplication {
       const nextTag =
         next && `<div><a href="${url(next)}">Next: ${next.title}</a></div>`;
 
-      const postHtml = postTemplate
-        .replaceAll("{{head}}", head)
-        .replaceAll("{{footer}}", footer)
-        .replaceAll("{{title}}", post.title)
-        .replaceAll("{{date}}", formatDate(post.date))
-        .replaceAll("{{content}}", post.html)
-        .replaceAll("{{url}}", `${HOST}/posts/${post.id}/index.html`)
-        .replaceAll("{{prev}}", prevTag || "")
-        .replaceAll("{{next}}", nextTag || "");
-      // .replaceAll(/<!--[\s\S]*?-->/g, "")
-      // .replaceAll(/\s+/g, " ");
+      const postHtml = this.template.renderPost({
+        title: post.title,
+        date: formatDate(post.date),
+        languages: languageListHtml,
+        content: post.html,
+        url: url(post),
+        host: this.host,
+        prev: prevTag || "",
+        next: nextTag || "",
+      });
+
       const postDir: Directory = {
         name: post.id,
-        children: [{ name: name(version), data: Buffer.from(postHtml) }],
+        children: [{ name: name(post.version), data: Buffer.from(postHtml) }],
       };
       postsDir.children.push(postDir);
     });
@@ -290,72 +305,73 @@ export class BlogApplication {
     );
 
     // Add all non-post files
-    {
-      const postsDir: Directory = {
-        name: "posts",
-        children: [],
-      };
-      posts.forEach((post) => postsDir.children.push(post.files));
+    const postsDir: Directory = {
+      name: "posts",
+      children: [],
+    };
+    posts.forEach((post) => postsDir.children.push(post.files));
+    output.children.push(postsDir);
+
+    // Convert posts to versioned posts
+    const versionedPosts: VersionedPost[] = posts
+      .map(({ id, date, tags, versions }) =>
+        versions.map(({ html, md, title, version }) => ({
+          id,
+          title,
+          date,
+          tags,
+          html,
+          md,
+          version,
+          availableVersions: versions.map((v) => v.version),
+        }))
+      )
+      .flat();
+
+    // Group versioned posts by version
+    const versions: Record<string, VersionedPost[]> = {};
+    versionedPosts.forEach((post) => {
+      if (!versions[post.version]) versions[post.version] = [];
+      versions[post.version].push(post);
+    });
+
+    // Compile versioned posts
+    const availableVersions = Object.keys(versions);
+    for (const version in versions) {
+      const posts = versions[version];
+      const mainHtml = this.compileVersionedMainHtml(
+        posts,
+        version,
+        availableVersions
+      );
+      const postsDir = this.compileVersionedPosts(posts);
+      output.children.push(mainHtml);
       output.children.push(postsDir);
     }
 
-    // Add versioned main html
-    const versions = getVersions(posts);
-    await Promise.all(
-      versions.map(async (version) => {
-        // Filter posts by version
-        const versionedPosts = posts
-          .map((post) => {
-            const versionedData = post.versions.find(
-              (v) => v.version === version
-            );
-            if (!versionedData) return null;
-            const versionedPost: VersionedPost = {
-              id: post.id,
-              title: versionedData.title,
-              date: post.date,
-              html: versionedData.html,
-              md: versionedData.md,
-              tags: post.tags,
-              version,
-            };
-            return versionedPost;
-          })
-          .filter((p) => p !== null) as VersionedPost[];
-
-        // Add versioned main html
-        const mainHtml = await this.getVersionedMainHtml(
-          versionedPosts,
-          version
-        );
-        output.children.push(mainHtml);
-
-        // Compile versioned posts
-        const versionedDir = await this.compileVersionedPosts(
-          versionedPosts,
-          version
-        );
-        output.children.push(versionedDir);
-      })
-    );
-
+    // Add public files
     const publicFiles = await readDir(__dirname + "/public");
     output.children.push(...publicFiles.children);
 
-    const sitemap = await this.getSitemap(posts);
+    // Add sitemap
+    const sitemap = await this.getSitemap(versionedPosts);
     output.children.push({ name: "sitemap.xml", data: sitemap });
 
-    const root = path.resolve("../../");
-    const outputDir = path.join(root, "output");
-    if (await fs.stat(outputDir).catch(() => null)) {
+    // Delete old output
+    if (await fs.stat(this.outputPath).catch(() => null)) {
+      const files = await fs.readdir(this.outputPath);
       await Promise.all(
-        (
-          await fs.readdir(outputDir)
-        ).map((child) =>
-          fs.rm(path.join(outputDir, child), { recursive: true, force: true })
+        files.map((child) =>
+          fs.rm(path.join(this.outputPath, child), {
+            recursive: true,
+            force: true,
+          })
         )
       );
     }
+
+    // Write new output
+    const root = path.dirname(this.outputPath);
     await write(output, root);
   }
 }

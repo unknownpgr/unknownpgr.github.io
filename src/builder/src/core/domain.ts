@@ -96,7 +96,7 @@ export class BlogServiceImpl implements BlogService {
       date,
       tags,
       versions: versionedData,
-      supportedVersions,
+      availableVersions: supportedVersions,
       files,
     };
   }
