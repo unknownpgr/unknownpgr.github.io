@@ -103,6 +103,16 @@ function createIndexString(
   return `${name}${dots}${date}`;
 }
 
+function getAdjacentPosts(posts: Post[], id: string) {
+  const post = posts.find((p) => p.id === id);
+  if (!post) return { prev: null, next: null };
+  const index = posts.indexOf(post);
+  return {
+    prev: index > 0 ? posts[index - 1] : null,
+    next: index < posts.length - 1 ? posts[index + 1] : null,
+  };
+}
+
 class BlogApplication {
   constructor(
     private readonly blogService: BlogService,
@@ -185,6 +195,9 @@ class BlogApplication {
     const head = await fs.readFile(__dirname + "/templates/head.html", {
       encoding: "utf-8",
     });
+    const footer = await fs.readFile(__dirname + "/templates/footer.html", {
+      encoding: "utf-8",
+    });
 
     const postListHtml = posts
       .sort((a, b) => {
@@ -207,6 +220,7 @@ class BlogApplication {
 
     const mainHtml = mainTemplate
       .replaceAll("{{head}}", head)
+      .replaceAll("{{footer}}", footer)
       .replaceAll("{{postList}}", postListHtml)
       .replaceAll("{{url}}", HOST)
       .replaceAll("{{title}}", "Unknownpgr's Blog");
@@ -222,12 +236,24 @@ class BlogApplication {
       );
       if (!mainVersion) return;
 
+      const { prev, next } = getAdjacentPosts(posts, post.id);
+
+      const prevTag =
+        prev &&
+        `<div><a href="/posts/${prev.id}/index.html">Prev: ${prev.versions[0].title}</a></div>`;
+      const nextTag =
+        next &&
+        `<div><a href="/posts/${next.id}/index.html">Next: ${next.versions[0].title}</a></div>`;
+
       const postHtml = postTemplate
         .replaceAll("{{head}}", head)
+        .replaceAll("{{footer}}", footer)
         .replaceAll("{{title}}", mainVersion.title)
         .replaceAll("{{date}}", formatDate(post.date))
         .replaceAll("{{content}}", mainVersion.html)
-        .replaceAll("{{url}}", `${HOST}/posts/${post.id}/index.html`);
+        .replaceAll("{{url}}", `${HOST}/posts/${post.id}/index.html`)
+        .replaceAll("{{prev}}", prevTag || "")
+        .replaceAll("{{next}}", nextTag || "");
       // .replaceAll(/<!--[\s\S]*?-->/g, "")
       // .replaceAll(/\s+/g, " ");
       const postDir: Directory = {
