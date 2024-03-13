@@ -22,6 +22,10 @@ function cloneDirectory(dir: Directory): Directory {
   };
 }
 
+function getVersionFromName(name: string) {
+  return name.split(".")[0];
+}
+
 export class BlogServiceImpl implements BlogService {
   constructor(private postParser: PostParser) {}
 
@@ -49,47 +53,50 @@ export class BlogServiceImpl implements BlogService {
     const files = cloneDirectory(postDir);
 
     // Find markdown files
-    const mdFiles = files.children.filter((child) => {
-      if ("children" in child) return false;
-      return child.name.endsWith(".md");
-    }) as File[];
-    if (mdFiles.length === 0) throw new Error("No markdown file found");
+    const mdFiles: File[] = [];
+    const others: (File | Directory)[] = [];
+    files.children.forEach((child) => {
+      if ("children" in child) others.push(child);
+      else if (child.name.endsWith(".md")) mdFiles.push(child);
+      else others.push(child);
+    });
+    files.children = others;
 
     // Create version and replace md files to html
-    const versions: PostVersionedData[] = [];
+    const versionedData: PostVersionedData[] = [];
     let tags: string[] = [];
     let date: string = "";
     mdFiles.forEach((mdFile) => {
       const md = mdFile.data.toString();
       const parsed = this.postParser.parse(md);
-      versions.push({
-        version: mdFile.name,
+      versionedData.push({
+        version: getVersionFromName(mdFile.name),
         title: parsed.title,
         md: md,
         html: parsed.html,
       });
+
+      // Set tags
       if (tags.length === 0) tags = parsed.tags;
       else if (tags.join(",") !== parsed.tags.join(","))
         throw new Error("Tags are different between versions");
+
+      // Set date
       if (!parsed.date) throw new Error(`Date is not found in ${mdFile.name}`);
       if (date === "") date = parsed.date;
       else if (date !== parsed.date)
         throw new Error("Date is different between versions");
-      mdFile.name = mdFile.name.replace(/\.md$/, ".html");
-      mdFile.data = Buffer.from(parsed.html);
     });
 
-    let mainVersion = versions.find((version) =>
-      version.version.includes("ko")
-    );
-    if (!mainVersion) mainVersion = versions[0];
+    // Get supported versions
+    const supportedVersions = versionedData.map((d) => d.version).sort();
 
     return {
       id: postDir.name,
       date,
       tags,
-      versions,
-      mainVersion: mainVersion.version,
+      versions: versionedData,
+      supportedVersions,
       files,
     };
   }

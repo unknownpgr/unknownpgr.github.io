@@ -4,9 +4,8 @@
   "main": "main.js",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon src/main.ts",
-    "run": "node dist/main.js",
-    "build": "tsc"
+    "start": "node dist/main.js",
+    "build": "tsc && cp -r src/public src/templates dist/"
   },
   "devDependencies": {
     "@types/katex": "^0.16.2",

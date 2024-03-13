@@ -44,8 +44,18 @@ export interface Post {
   date: string;
   tags: string[];
   versions: PostVersionedData[];
-  mainVersion: string;
+  supportedVersions: string[];
   files: Directory;
+}
+
+export interface VersionedPost {
+  id: string;
+  version: string;
+  title: string;
+  date: string;
+  tags: string[];
+  html: string;
+  md: string;
 }
 
 export interface Fix {
