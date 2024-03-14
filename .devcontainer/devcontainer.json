@@ -18,5 +18,8 @@
         "GitHub.copilot"
       ]
     }
+  },
+  "remoteEnv": {
+    "PATH": "${containerEnv:PATH}:${containerWorkspaceFolder}/scripts"
   }
 }

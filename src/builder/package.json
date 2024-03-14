@@ -4,7 +4,7 @@
   "main": "main.js",
   "license": "MIT",
   "scripts": {
-    "start": "node dist/main.js",
+    "update": "node dist/main.js",
     "build": "rm -rf dist && tsc && cp -r src/public src/templates dist/"
   },
   "devDependencies": {
