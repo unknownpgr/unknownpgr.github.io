@@ -8,6 +8,7 @@ import {
   Post,
   VersionedPost,
 } from "./core/model";
+import { minify } from "html-minifier";
 
 // File IO
 
@@ -43,6 +44,34 @@ async function write(dir: Directory, root: string): Promise<void> {
       await fs.writeFile(filePath, child.data);
     })
   );
+}
+
+function minifyDir(dir: Directory): void {
+  for (const child of dir.children) {
+    // Check if child is a directory
+    if ("children" in child) {
+      minifyDir(child);
+      continue;
+    }
+
+    // Check if file is html or css
+    if (!child.name.endsWith(".html") && !child.name.endsWith(".css")) {
+      continue;
+    }
+
+    // Minify
+    const data = child.data.toString();
+    const minified = minify(data, {
+      collapseWhitespace: true,
+      conservativeCollapse: true,
+      removeComments: true,
+      minifyCSS: true,
+      collapseBooleanAttributes: true,
+      collapseInlineTagWhitespace: true,
+      minifyJS: true,
+    });
+    child.data = Buffer.from(minified);
+  }
 }
 
 // Formatting
@@ -250,35 +279,41 @@ export class BlogApplication {
       name: "posts",
       children: [],
     };
-    posts.forEach((post) => {
-      const languageListHtml = post.availableVersions
-        .map((v) => language(v, post.version))
-        .join(", ");
+    posts
+      .sort((a, b) => {
+        if (a.date < b.date) return 1;
+        if (a.date > b.date) return -1;
+        return 0;
+      })
+      .forEach((post) => {
+        const languageListHtml = post.availableVersions
+          .map((v) => language(v, post.version))
+          .join(", ");
 
-      const { prev, next } = getAdjacentPosts(posts, post.id);
+        const { prev, next } = getAdjacentPosts(posts, post.id);
 
-      const prevTag =
-        prev && `<div><a href="${url(prev)}">Prev: ${prev.title}</a></div>`;
-      const nextTag =
-        next && `<div><a href="${url(next)}">Next: ${next.title}</a></div>`;
+        const prevTag =
+          prev && `<div><a href="${url(prev)}">Prev: ${prev.title}</a></div>`;
+        const nextTag =
+          next && `<div><a href="${url(next)}">Next: ${next.title}</a></div>`;
 
-      const postHtml = this.template.renderPost({
-        title: post.title,
-        date: formatDate(post.date),
-        languages: languageListHtml,
-        content: post.html,
-        url: url(post),
-        host: this.host,
-        prev: prevTag || "",
-        next: nextTag || "",
+        const postHtml = this.template.renderPost({
+          title: post.title,
+          date: formatDate(post.date),
+          languages: languageListHtml,
+          content: post.html,
+          url: url(post),
+          host: this.host,
+          prev: prevTag || "",
+          next: nextTag || "",
+        });
+
+        const postDir: Directory = {
+          name: post.id,
+          children: [{ name: name(post.version), data: Buffer.from(postHtml) }],
+        };
+        postsDir.children.push(postDir);
       });
-
-      const postDir: Directory = {
-        name: post.id,
-        children: [{ name: name(post.version), data: Buffer.from(postHtml) }],
-      };
-      postsDir.children.push(postDir);
-    });
 
     return postsDir;
   }
@@ -369,6 +404,9 @@ export class BlogApplication {
         )
       );
     }
+
+    // Minify
+    minifyDir(output);
 
     // Write new output
     const root = path.dirname(this.outputPath);
