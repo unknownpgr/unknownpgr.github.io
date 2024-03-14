@@ -18,7 +18,7 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   storageClassName: local-storage
   local:
-    path: /home/unknownpgr/dev/blog/posts
+    path: /home/unknownpgr/dev/blog/static
   nodeAffinity:
     required:
       nodeSelectorTerms:
@@ -45,77 +45,39 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: blog-backend
+  name: blog
   namespace: blog
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: blog-backend
+      app: blog
   template:
     metadata:
       labels:
-        app: blog-backend
+        app: blog
     spec:
       containers:
-        - name: blog-backend
-          image: $BACKEND_IMAGE
+        - name: blog
+          image: nginx:alpine
           ports:
             - containerPort: 80
           volumeMounts:
             - name: blog-volume
-              mountPath: /posts
+              mountPath: /usr/share/nginx/html
       volumes:
         - name: blog-volume
           persistentVolumeClaim:
             claimName: blog-pvc
-      imagePullSecrets:
-        - name: registry-credit
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: blog-frontend
-  namespace: blog
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: blog-frontend
-  template:
-    metadata:
-      labels:
-        app: blog-frontend
-    spec:
-      containers:
-        - name: blog-frontend
-          image: $FRONTEND_IMAGE
-          ports:
-            - containerPort: 80
-      imagePullSecrets:
-        - name: registry-credit
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: blog-backend
+  name: blog
   namespace: blog
 spec:
   selector:
-    app: blog-backend
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 80
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: blog-frontend
-  namespace: blog
-spec:
-  selector:
-    app: blog-frontend
+    app: blog
   ports:
     - protocol: TCP
       port: 80
@@ -138,14 +100,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: blog-frontend
-                port:
-                  number: 80
-          - path: /api
-            pathType: Prefix
-            backend:
-              service:
-                name: blog-backend
+                name: blog
                 port:
                   number: 80
     - host: www.unknownpgr.com
@@ -155,14 +110,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: blog-frontend
-                port:
-                  number: 80
-          - path: /api
-            pathType: Prefix
-            backend:
-              service:
-                name: blog-backend
+                name: blog
                 port:
                   number: 80
 ---
@@ -175,20 +123,3 @@ spec:
   redirectScheme:
     scheme: https
     permanent: true
-
----
-apiVersion: bitnami.com/v1alpha1
-kind: SealedSecret
-metadata:
-  creationTimestamp: null
-  name: registry-credit
-  namespace: blog
-spec:
-  encryptedData:
-    .dockerconfigjson: AgCrc3kQlXjcPqVMv0/AhbaJhVsxzCF0qGE8L16q1q6WCCobUj8P/Y/OimQVjfAhgcungC9Rv7Gd6SXTXgo00hEfdLfJgNsg9GxGa+AwTHl/v/vTu7tLcwtKlsAFi/WJ4DlR16/TZlaE0/MTIYuLDjEiQbvXqiZIHTF4hxRINGmPrQsQ/65YcQpYeGZ2/0rA04UwXxQwe9v4UdT7f+tQCzLrMk0AzqBSN+SkpRSolet8mOY5FfmCQj2z09W45IF433fhbAYRG7MiB/cNtBwPfqgE57/3wq++ho5onJtg9zcinLVWhvX1yTl9aLnkvD6DanH0BXyFscGfQQhSZYrYhP2EXnFfEKUQbIWEAOfY7ooCwgHYsApHkwvJsqKK5ZI4wXQm2h1rCQGzUN3g9P9EB/+/1e3fhVArdw0A7uOtwWfurKAYSYEv8un/eMru1ORM3CMK+8P5Iso/NfNxTJHYPJ0gPUFAV2rgS8zmd4p0Xde1PBtqj84cSs34uoc/KnOVF31a4CXDObt5pQID068kB8lDh749hvLz9mmpGgWiq3rucOQuqC//Soz8mxZw70mDM9E8qPDCiq9yezlgkA9O/bPlCPGa2/y4hH4I66A32wzKJEiUuXuzKsvLwRl5JxDZRnXPrFiWmTP7X05Hgh64TkSZSWI0lm/1rogdU/NxoGfaSocUPI+1uXB9kDj4b8pM09buQuY+reUzt/5sMmj2YzkmC7mv/ExBguhHQ8opzd/4aBNxiUVL2ED+qNPZse0vK1qFQrm17kOULs/batzNCGFfy72Xk3EE/h7rcso8yx8/NOwVHB5qXeBV+bm4k/PFyeBZMVXZpTJNs1SQwaOGD5MNEZKarSOdhLziRUxECiIpuGtik9ZAn6Kxw0BNQtcFYIM=
-  template:
-    metadata:
-      creationTimestamp: null
-      name: registry-credit
-      namespace: blog
-    type: kubernetes.io/dockerconfigjson
