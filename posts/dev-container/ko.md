@@ -21,7 +21,7 @@ VSCode의 확장 프로그램을 통해 편리하게 사용할 수 있습니다.
   "name": "my-dev-container",
   "image": "mcr.microsoft.com/devcontainers/typescript-node:16-bullseye",
   "features": {
-    "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {}
   },
   "customizations": {
     "vscode": {
@@ -38,7 +38,12 @@ VSCode의 확장 프로그램을 통해 편리하게 사용할 수 있습니다.
   },
   "postCreateCommand": "scripts/init.sh",
   "remoteEnv": {
-    "PATH": "${containerEnv:PATH}:/workspaces/PROJECT_NAME/scripts"
+    "PATH": "${containerEnv:PATH}:/${containerWorkspaceFolder}/scripts"
   }
 }
 ```
+
+More details about Dev container can be found in following links.
+
+- [VSCode Dev container](https://code.visualstudio.com/docs/remote/containers)
+- [Dev container json reference](https://containers.dev/implementors/json_reference/)
