@@ -27,52 +27,53 @@ date: 2023-09-02T03:36:44.956Z
 
 **University of Seoul**
 
-- Bachelor of Engineering, Computer Science, 2026.09
-- Relevant Coursework: Embedded Systems, Machine Learning, Computer Vision
+- 공학 학사, 컴퓨터 과학, 2026.09 졸업 예정
+- Relevant Coursework: 임베디드 시스템, 리눅스 프로그래밍, 선형대수, 수치해석, 컴퓨터 그래픽스
 
 ## Experiences
 
 - **NAVER LABS**
 
-  - Software Engineer Intern, October 2023 - April 2024
-  - Developed the software build and distribution pipeline for NAVER LABS' ALT-B autonomous driving vehicle and the Road View car.
+  - 소프트웨어 엔지니어 인턴십, 2023.10 - April 2024.04
+  - 네이버랩스의 자율주행차 ALT-B와 로드뷰 차량을 위한 소프트웨어 빌드 및 배포 파이프라인을 개발했습니다.
 
 - **Republic of Korea Army**
 
-  - Tactical C4I Operations/Maintenance, April 2022 - October 2023
-  - Managed and maintained military networking systems, ensuring operational readiness and security.
+  - 전술 C4I 운영/정비, 2022.04 - 2023.10
+  - 군사 네트워킹 시스템을 관리 및 유지보수하여 작전 준비 및 보안을 유지했습니다.
 
 - **The-Form**
 
-  - Tech Lead, February 2021 - Present
-  - As the Tech Lead, managed the technical aspects of the project, implementing a scalable structure based on clean architecture. The-Form has achieved over 10,000 MAUs (Monthly Active Users).
+  - 더폼, 테크 리드, 2021.02 - 현재
+  - 테크 리드로서 프로젝트의 기술적 측면을 관리하고, 클린 아키텍쳐 기반의 확장 가능한 구조를 구현했습니다. 더폼은 1만 명 이상의 MAU를 보유하고 있습니다.
 
 - **Software Maestro 12th**
 
-  - Participant (Excellent Graduate), February 2021 - December 2021
-  - Founded The-Form, a survey platform considering user needs, during a national education program aimed at nurturing software entrepreneurs.
+  - 소프트웨어 마에스트로 12기 연수생 (우수 연수생 선정), 2021.02 - 2021.12
+  - 소프트웨어 창업가 양성을 위한 국가 교육 프로그램 소프트웨어 마에스트로에서 사용자 요구사항을 고려한 설문조사 플랫폼인 더폼을 설립했습니다.
 
 - **ZETIN Robotics Club, University of Seoul**
 
-  - President, December 2020 - December 2021
+  - 서울시립대학교 ZETIN 로봇동아리 회장, 2020.12 - 2021.12
   - [zetin.uos.ac.kr](https://zetin.uos.ac.kr)
-  - Led the robotics club, overseeing its operations and designed and conducted an educational program covering the basics of robotics from hardware design to algorithms.
+  - 로봇동아리를 이끌며 운영을 감독하고, 하드웨어 설계부터 알고리즘까지 로봇 공학의 기초를 다루는 교육 프로그램을 설계 및 진행했습니다.
 
 - **Human-Centered Artificial Intelligence Lab (HCAIL)**
 
-  - Undergraduate Research Intern, University of Seoul, October 2019 - February 2021
-  - Supervisor: Prof. Hyunggu Jung
-  - Contributed to various projects on human-computer interaction and published a paper at Asian CHI 2020 as an undergraduate researcher.
+  - 서울시립대학교 인간중심인공지능연구실 학부연구인턴, 2019.10 - 2021.02
+  - 지도교수: 정형구 교수님
+  - 인간-컴퓨터 상호작용에 관한 다양한 프로젝트에 기여하고, 학부연구생으로서 Asian CHI 2020에 논문을 발표했습니다.
 
 - **International School of Urban Sciences**
 
-  - Undergraduate Research Intern, University of Seoul, March 2020 - March 2022
-  - Supervisor: Prof. Chun Ho Yeom
-  - Developed and managed a system for measuring highway soil conditions and collecting and analyzing road information.
+  - 서울시립대학교 국제도시과학대학원 학부연구인턴, 2020.03 - 2022.03
+  - 지도교수: 염춘호 교수님
+  - 고속도로 토공 다짐도 측정 및 교통사고 예방을 위한 도로 정보 수집 및 분석을 위한 시스템을 개발 및 관리했습니다.
 
 - **C Programming and Practice, 2019 Winter Semester**
-  - Teaching Assistant, University of Seoul, December 2019 - January 2020
-  - Provided programming education to undergraduate students, enhancing their programming skills and understanding of C language fundamentals.
+
+  - 서울시립대학교 C프로그래밍 및 실습, 2019 겨울학기
+  - 프로그래밍 교육 및 실습을 진행하며 C언어 기초를 이해시키고 프로그래밍 능력을 향상시켰습니다.
 
 ## Skills
 
@@ -117,12 +118,16 @@ date: 2023-09-02T03:36:44.956Z
 #### [Git-Key](https://www.npmjs.com/package/@unknownpgr/git-key)
 
 - An open source library for safely managing secrets with git.
+- ko) Git으로 시크릿 정보를 안전하게 관리할 수 있는 오픈소스 라이브러리입니다.
 - My first open source library project.
+- ko) 제가 처음으로 오픈소스 라이브러리를 만들어본 프로젝트입니다.
 
 #### [PAB-NFT](https://pabnft.com/)
 
 - Pixel Art Board (PAB) is a web3 project that allows users to create and trade NFTs.
+- ko) Pixel Art Board (PAB)는 사용자가 NFT를 만들고 거래할 수 있는 웹3 프로젝트입니다.
 - Based on ERC-721, Solidity, Web3 and React.
+- ko) ERC-721, Solidity, Web3, React를 기반으로 만들었습니다.
 
 #### [깃허브 블로그](https://github.com/unknownpgr/github-blog)
 

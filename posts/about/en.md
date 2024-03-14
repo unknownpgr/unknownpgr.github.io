@@ -14,86 +14,84 @@ date: 2023-09-02T03:36:44.956Z
 
 ## Objective
 
-I always challenge myself to new fields.
-My goal is to apply computers to other fields and create new value.
-I am studying a wide range of fields, including web, embedded, graphics, machine learning, and numerical analysis.
-Among them, I mainly study web and embedded systems.
+I always challenge new fields. My goal is to apply computers to different fields and create new value. I have been broadly studying various fields including web, embedded, graphics, machine learning, and numerical analysis. Among these, I mainly study web and embedded.
 
-I think a programmer is someone who solves problems using computers. Therefore, I think it is important to accurately recognize the problem, design a logical solution to the problem, and implement it. Therefore, I pursue a deep understanding of technology, but I do not adhere to specific languages or frameworks, and I strive to develop the ability to choose the right tool as a tool depending on the given situation.
+I believe that a programmer is someone who solves problems using a computer. Therefore, I think it is important to accurately recognize problems, design logical solutions to these problems, and implement them. Hence, while I pursue a deep understanding of technology, I do not limit myself to specific languages or frameworks, and I strive to develop the ability to choose them appropriately as tools according to the given situation.
 
-When writing code, I separate concerns for clean architecture and manage dependencies thoroughly. I strive to write code that is as readable and reusable as possible. To this end, I use various methodologies such as object-oriented, functional, and data-oriented as needed.
+When writing code, I separate concerns for a clean architecture and manage dependencies strictly. I strive to write code that is as readable and reusable as possible. To this end, I use various methodologies including object-oriented, functional, and data-oriented programming as needed.
 
 ## Education
 
 **University of Seoul**
 
-- Bachelor of Engineering, Computer Science, 2026.09
-- Relevant Coursework: Embedded Systems, Machine Learning, Computer Vision
+- Bachelor of Engineering, Computer Science, expected graduation September 2026
+- Relevant Coursework: Embedded Systems, Linux Programming, Linear Algebra, Numerical Analysis, Computer Graphics
 
 ## Experiences
 
 - **NAVER LABS**
 
-  - Software Engineer Intern, October 2023 - April 2024
-  - Developed the software build and distribution pipeline for NAVER LABS' ALT-B autonomous driving vehicle and the Road View car.
+  - Software Engineer Internship, October 2023 - April 2024
+  - Developed the software build and deployment pipeline for NAVER LABS' autonomous vehicle ALT-B and the Road View vehicle.
 
 - **Republic of Korea Army**
 
-  - Tactical C4I Operations/Maintenance, April 2022 - October 2023
-  - Managed and maintained military networking systems, ensuring operational readiness and security.
+  - Tactical C4I Operation/Maintenance, April 2022 - October 2023
+  - Managed and maintained military networking systems to maintain operational readiness and security.
 
 - **The-Form**
 
   - Tech Lead, February 2021 - Present
-  - As the Tech Lead, managed the technical aspects of the project, implementing a scalable structure based on clean architecture. The-Form has achieved over 10,000 MAUs (Monthly Active Users).
+  - As a tech lead, managed the technical aspects of projects and implemented scalable structures based on clean architecture. The-Form has over 10,000 MAU.
 
 - **Software Maestro 12th**
 
   - Participant (Excellent Graduate), February 2021 - December 2021
-  - Founded The-Form, a survey platform considering user needs, during a national education program aimed at nurturing software entrepreneurs.
+  - Established The-Form, a survey platform considering user requirements, in the national education program Software Maestro for nurturing software entrepreneurs.
 
 - **ZETIN Robotics Club, University of Seoul**
 
   - President, December 2020 - December 2021
   - [zetin.uos.ac.kr](https://zetin.uos.ac.kr)
-  - Led the robotics club, overseeing its operations and designed and conducted an educational program covering the basics of robotics from hardware design to algorithms.
+  - Led the robotics club, overseeing its operations, and designed and conducted educational programs covering basics from hardware design to algorithms.
 
 - **Human-Centered Artificial Intelligence Lab (HCAIL)**
 
   - Undergraduate Research Intern, University of Seoul, October 2019 - February 2021
-  - Supervisor: Prof. Hyunggu Jung
-  - Contributed to various projects on human-computer interaction and published a paper at Asian CHI 2020 as an undergraduate researcher.
+  - Advisor: Prof. Hyunggu Jung
+  - Contributed to various projects on human-computer interaction and published a paper as an undergraduate researcher at Asian CHI 2020.
 
 - **International School of Urban Sciences**
 
   - Undergraduate Research Intern, University of Seoul, March 2020 - March 2022
-  - Supervisor: Prof. Chun Ho Yeom
-  - Developed and managed a system for measuring highway soil conditions and collecting and analyzing road information.
+  - Advisor: Prof. Chun Ho Yeom
+  - Developed and managed a system for measuring compaction of highway earthworks and collecting and analyzing road information to prevent traffic accidents.
 
 - **C Programming and Practice, 2019 Winter Semester**
+
   - Teaching Assistant, University of Seoul, December 2019 - January 2020
-  - Provided programming education to undergraduate students, enhancing their programming skills and understanding of C language fundamentals.
+  - Provided programming education for undergraduate students, enhancing their programming skills and understanding of C language fundamentals.
 
 ## Skills
 
-- **Backend**: Node.js(Express, Koa, Next.js), Python(FastAPI), NGINX, OpenAPI
-- **Frontend**: React, Typescript, HTML5, CSS(SASS, CSS-module), SEO, Chrome DevTools, Lighthouse
+- **Backend**: Node.js (Express, Koa, Next.js), Python (FastAPI), NGINX, OpenAPI
+- **Frontend**: React, Typescript, HTML5, CSS (SASS, CSS-module), SEO, Chrome DevTools, Lighthouse
 - **Testing**: Jest, Playwright
-- **DevOps**: AWS(EC2, S3, Route53, ELB, EKS), Container(Docker), Kubernetes, Grafana, Prometheus, Traefik, GitHub Actions, Treafik, Sealed-Secret
+- **DevOps**: AWS (EC2, S3, Route53, ELB, EKS), Container (Docker), Kubernetes, Grafana, Prometheus, Traefik, GitHub Actions, Treafik, Sealed-Secret
 - **Database**: MySQL, SQLite, Redis, MongoDB
-- **Machine Learning**: Tensorflow, PyTorch, Slurm, MATLAB, OpenCV(both C++ and Python)
+- **Machine Learning**: Tensorflow, PyTorch, Slurm, MATLAB, OpenCV (both C++ and Python)
 - **Graphics**: WebGL
-- **Embedded / Hardware**: ARM(STM32Fxx), PCB Artwork basics
+- **Embedded / Hardware**: ARM (STM32Fxx), PCB Artwork basics
   - [PCB Sample1](https://oshwlab.com/unknownpgr/zetin_linetracer)
   - [PCB Sample2](https://oshwlab.com/unknownpgr/unknownpgr-pcb-linetracer-sensorboard)
   - [PCB Sample3](https://oshwlab.com/unknownpgr/unknownpgr-pcb-nucleo-f401)
-- **Robotics**: Motor control(PID), Rigid body dynamics(Lagrange dynamics)
+- **Robotics**: Motor control (PID), Rigid body dynamics (Lagrange dynamics)
 - **Blockchain**: Ethereum, Solidity, Truffle, Ganache, Web3.js
-- **Language**: C, C++, C#, Python, Java(Kotlin), Typescript
+- **Language**: C, C++, C#, Python, Java (Kotlin), Typescript
 - **Tools**: VSCode, Vim, Eclipse
 - **Collaboration**: Git / GitHub, Slack
 - **Security**: JWT, OAuth
-- **Architecture Design**: Clean Architecture, RESTful API, Knowledge of Microservices, DDD(Domain Driven Design)
+- **Architecture Design**: Clean Architecture, RESTful API, Knowledge of Microservices, DDD (Domain Driven Design)
 - **Software Development Process**: Agile, Scrum
 
 ## Selected Projects
@@ -102,121 +100,122 @@ When writing code, I separate concerns for clean architecture and manage depende
 
 #### [The Form](https://the-form.io)
 
-- 더폼은 웹에서 간편하게 설문조사를 만들고, 응답을 수집할 수 있는 서비스입니다.
-- 평균 1만, 최대 10만 정도의 MAU를 보유하고 있습니다.
-- Tech leader를 맡아 서비스 전반을 관리하고 있습니다.
+- The Form is a service that allows you to easily create surveys on the web and collect responses.
+- It has an average of 10,000 and a maximum of 100,000 MAU.
+- Currently managing the entire service as the tech leader.
 
 #### [Real Estate Manager](https://real-estate.unknownpgr.com)
 
-- 부동산 중개인(공인중개사)가 부동산 매물을 관리할 수 있는 웹 서비스입니다.
-- 현재는 홍보 없이 beta 버전으로 운영 중이나, 회원 가입 및 서비스 사용은 가능합니다.
-- 1인 개발 프로젝트로, 서비스 아키텍쳐 및 인프라 설계부터 개발, 배포까지 전반적으로 진행하고 있습니다.
+- A web service that allows real estate agents to manage their property listings.
+- Currently operating in beta version without promotion, but registration and service use are possible.
+- This is a one-person-development project, and I am in charge of the overall development from service architecture and infrastructure design to development and deployment.
 
 ### Web
 
 #### [Git-Key](https://www.npmjs.com/package/@unknownpgr/git-key)
 
 - An open source library for safely managing secrets with git.
-- My first open source library project.
+- This is the first open source library project I have created.
 
 #### [PAB-NFT](https://pabnft.com/)
 
 - Pixel Art Board (PAB) is a web3 project that allows users to create and trade NFTs.
-- Based on ERC-721, Solidity, Web3 and React.
+- Based on ERC-721, Solidity, Web3, and React.
 
-#### [깃허브 블로그](https://github.com/unknownpgr/github-blog)
+#### [GitHub Blog](https://github.com/unknownpgr/github-blog)
 
-- Jekyll, Hexo 등 기존에 있는 프레임워크를 사용하지 않고 바닥에서부터 블로그를 만들어봤습니다.
-- React / SCSS 등 UI 프레임워크, GitHub Action을 사용한 간단한 CI/CD 등 웹 개발을 위한 기초 기술들을 많이 사용해봤습니다.
+- Created this from scratch without using existing frameworks like Jekyll or Hexo.
+- Used many basic technologies for web development, including React / SCSS for UI framework, and simple CI/CD with GitHub Actions.
 
-#### [토공 다짐도 자동화시스템](https://github.com/unknownpgr/uos-urban-road)
+#### [Automated Compaction Measurement System for Earthworks](https://github.com/unknownpgr/uos-urban-road)
 
-- 서울시립대학교 국제도시과학대학원에서 학생연구원으로서 진행한 프로젝트입니다.
-- 현장에서 사용하는 장비에서 서버로 데이터 전송, 서버에서 DB에 데이터 저장 및 웹 페이지를 통한 시각화까지 구현했습니다.
+- A project conducted as a student researcher at the International School of Urban Sciences, Seoul City University.
+- Implemented data transfer from on-site equipment to server, data storage in DB from server, and visualization through web pages.
 
 ### Embedded
 
-#### [임베디드소프트웨어 경진대회](https://github.com/shythm/eswcontest-car)
+#### [Embedded Software Contest](https://github.com/shythm/eswcontest-car)
 
-- 카메라 및 각종 센서가 장치된 임베디드 리눅스 기반의 차량을 자율주행시키는 대회에 참여하였습니다.
-- 임베디드시스템에서의 영상처리, 실시간 제어를 위한 최적화 등을 수행해볼 수 있는 기회였습니다.
+- Participated in a competition to autonomously drive a vehicle based on embedded Linux equipped with cameras and various sensors.
+- It was an opportunity to perform image processing on embedded systems and optimization for real-time control.
   - [video](https://youtu.be/6rkNeMgAsw8)
 
-#### [자율주행 쓰레기통(?)](https://github.com/unknownpgr/trashcan)
+#### [Autonomous Trash Can](https://github.com/unknownpgr/trashcan)
 
-- 라즈베리파이를 이용하여 바닥에 그려진 경로를 따라 주행하고, 자동으로 최단거리탐색을 수행하는 쓰레기통을 만들었습니다.
-- Memory mapped IO, CPU affinity등 다양한 리눅스 커널 기능을 이용해본 프로젝트였습니다.
+- Created a trash can that follows a path drawn on the floor and automatically performs shortest path search using Raspberry Pi.
+- This project utilized various Linux kernel features including Memory mapped IO, CPU affinity.
   - [video list](https://www.youtube.com/watch?v=60Z-cCqDNXo&list=PLwAlwbWmqPHFY4DxehJgRvK1k2sIkV5EB)
 
-#### [라인트레이서](https://github.com/unknownpgr/zetin-linetracer-custom)
+#### [Line Tracer](https://github.com/unknownpgr/zetin-linetracer-custom)
 
-- 로봇 동아리 ZETIN에서 STM32F407 MCU를 사용하여 라인트레이서를 제작하였습니다.
-- Interrupt, Register 등 임베디드시스템에 대한 근본적인 이해를 할 수 있도록 해 준 프로젝트였습니다.
+- Developed a line tracer robot using STM32F407 MCU in ZETIN robotics club.
+- The project facilitated a fundamental understanding of embedded systems, including Interrupts, Registers.
 
 ### Graphics
 
 #### [Reverse Projection-1](https://github.com/unknownpgr/auto-projection-matching)
 
-- 왜곡된 영상을 비스듬한 각도에서도 정상적으로 볼 수 있도록 프로젝션해주는 프로그램입니다.
-- Python+OpenCV를 사용하여 구현하였으며, 2019년 셈틀제에서 5등상을 수상했습니다.
+- A program that projects distorted images correctly from slanted angles.
+- Implemented using Python+OpenCV and won 5th place in the Semtle Challenge 2019.
   - [video](https://youtu.be/77tAkzMEDdw)
 
 #### [Reverse Projection-2](https://github.com/unknownpgr/auto-projection-matching-2)
 
-- Reverse Projection-1을 움직이는 관찰자 입장에서도 사용할 수 있고, 3D 모델에 대해서도 적용할 수 있도록 확장한 것입니다.
-- WebGL의 Shader를 직접 작성하고 사용해볼 수 있는 기회였습니다.
-- 2020년 셈틀제에서 2등상을 수상했습니다.
+- An extension of Reverse Projection-1 that can be used from the perspective of a moving observer and applied to 3D models.
+- It was an opportunity to write and use WebGL Shaders.
+- Won 2nd place in the Semtle Challenge 2020.
   - [video](https://youtu.be/TkQpI9xZ_dk)
 
-#### [도로 시뮬레이터](https://github.com/unknownpgr/road-simulator)
+#### [Road Simulator](https://github.com/unknownpgr/road-simulator)
 
-- 임베디드 경진대회에서 머신러닝을 통한 차선 인식을 구현하고자, 데이터셋 생성 목적으로 도로 시뮬레이터를 만들었습니다.
+- Created a road simulator to generate a dataset for lane detection model training.
+- Used in an embedded software contest.
 
-### Numerical analysis
+### Numerical Analysis
 
-#### [라그랑주 역학 시뮬레이터](https://github.com/unknownpgr/lagrangian-mechanics)
+#### [Lagrangian Mechanics Simulator](https://github.com/unknownpgr/lagrangian-mechanics)
 
-- 어떤 역학계의 운동에너지와 위치에너지로부터 라그랑지안을 계산하고, 각 일반화 좌표에 대해 푸는 MATLAB 스크립트입니다.
-- 추가로 JS 에서explicit Euler method를 사용하여 시뮬레이션을 만들어봤습니다.
+- A MATLAB script that calculates the Lagrangian from the kinetic and potential energy of a mechanical system and solves for each generalized coordinate.
+- Additionally, created a simulation using explicit Euler method in JS.
 
 ### Artificial Intelligence
 
 #### [Face Tracking](https://github.com/unknownpgr/face_recognize)
 
-- OpenFace 라이브러리 및 SVM을 이용하여 얼굴 인식과 트래킹을 수행하도록 구현해봤습니다.
+- Implemented face recognition and tracking program using the OpenFace library and SVM.
 
-### Fun projects
+### Fun Projects
 
 #### [t-png](https://github.com/unknownpgr/t-png)
 
-- 배경색에 따라 서로 다른 이미지로 보이는 png이미지를 자동 생성하는 python/js 스크립트입니다.
-- PseudoInverse 등 선형대수 연산을 사용했습니다.
+- A Python/JS script that automatically generates PNG images that appear differently depending on the background color.
+- Used linear algebra operations including PseudoInverse.
 
 #### [Mandelbrot Set](https://github.com/unknownpgr/fractal-js)
 
-- 프랙탈의 한 종류인 Mandelbrot Set을 순수 js와 WebGL을 사용하여 그려봤습니다.
+- Implemented the Mandelbrot Set generator, a type of fractal, using pure JS and WebGL.
 
 #### [Dragon Curve](https://github.com/unknownpgr/dragon-curve)
 
-- 프랙탈의 한 종류인 dragon curve를 그려봤습니다.
+- Implemented the dragon curve generator, a type of fractal.
 
 ## Awards and Honors
 
-- Creativity Award at the 8th Army Startup Competition, 2022 (2022년 제 8회 육군창업경진대회 창의상)
-  - Real Estate Registration Automatic Verification Solution (부동산 등기 자동 검증 솔루션)
-- Top Graduate of the Army Signal School Tactical C4I Course, 2022 (2022년 육군 정보통신학교 전술 C4I 교육과정 최우수 수료)
-- Software Maestro Certification, 2021 (2021년 소프트웨어 마에스트로 인증)
-- Academic Excellence Award, Second Semester 2020 (2020년 2학기 학업우수상)
-- Encouragement Award in X-TWICE Practical Problem Research Group, University of Seoul, 2020 (서울시립대학교 2020년 X-TWICE 실전문제연구단 장려상)
-  - Development and Evaluation of a Deep Learning-Based Related Papers Recommendation System (딥러닝 기반 연관논문 추천시스템 개발 및 평가)
-- Second Place in Semtle Challenge, University of Seoul, 2020 (서울시립대학교 2020년 셈틀제 2등)
-- Fifth Place in Semtle Challenge, University of Seoul, 2019 (서울시립대학교 2019년 셈틀제 5등)
-- Best Award (Driving Category) in the National University Students Autonomous Vehicle Design Competition, Sungkyunkwan University, 2019 (성균관대학교 2019 전국 대학생 자율주행차 융합설계 경진대회 최우수상(주행 부문))
-- Encouragement Award in the 3rd Computer Algorithm Programming Contest, University of Seoul, 2019 (서울시립대학교 2019 제3회 컴퓨터알고리즘 프로그래밍 경진대회 장려상)
-- Encouragement Award in the 22nd National Line Tracer Robot Competition, University of Seoul, 2019 (서울시립대학교 2019 제22회 전국 라인트레이서 로봇 경연대회 장려상)
-- Entrance Excellence Scholarship, First Semester 2019 (입학우수장학 (2019년 1학기))
-- National Scholarship I, From First Semester 2019 to Second Semester 2020 (국가장학 I (2019년 1학기~2020년 2학기))
-- Academic Excellence Scholarship II, From Second Semester 2019 to Second Semester 2020 (학업우수장학(II) (2019년 2학기~2020년 2학기))
+- Creativity Award at the 8th Army Startup Competition, 2022
+  - Real Estate Registration Automatic Verification Solution
+- Top Graduate of the Army Signal School Tactical C4I Course, 2022
+- Software Maestro Certification, 2021
+- Academic Excellence Award, Second Semester 2020
+- Encouragement Award in X-TWICE Practical Problem Research Group, University of Seoul, 2020
+  - Development and Evaluation of a Deep Learning-Based Related Papers Recommendation System
+- Second Place in Semtle Challenge, University of Seoul, 2020
+- Fifth Place in Semtle Challenge, University of Seoul, 2019
+- Best Award (Driving Category) in the National University Students Autonomous Vehicle Design Competition, Sungkyunkwan University, 2019
+- Encouragement Award in the 3rd Computer Algorithm Programming Contest, University of Seoul, 2019
+- Encouragement Award in the 22nd National Line Tracer Robot Competition, University of Seoul, 2019
+- Entrance Excellence Scholarship, First Semester 2019
+- National Scholarship I, From First Semester 2019 to Second Semester 2020
+- Academic Excellence Scholarship II, From Second Semester 2019 to Second Semester 2020
 
 ## Publications
 
