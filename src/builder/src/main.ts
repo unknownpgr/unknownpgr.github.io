@@ -7,7 +7,10 @@ async function main() {
   const parser = new OnMemoryPostParser();
   const blogService = new BlogServiceImpl(parser);
   const template = new BlogTemplateImpl();
-  const app = new BlogApplication(blogService, template, {});
+  const app = new BlogApplication(blogService, template, {
+    host: "https://unknownpgr.com",
+    outputDir: "../../static",
+  });
 
   await app.fixAllPosts();
   await app.compilePosts();

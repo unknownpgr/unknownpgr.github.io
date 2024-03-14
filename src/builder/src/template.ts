@@ -5,6 +5,7 @@ import { BlogTemplate } from "./application";
 export class BlogTemplateImpl implements BlogTemplate {
   private readonly mainTemplate: string;
   private readonly postTemplate: string;
+
   private readonly head: string;
   private readonly footer: string;
 
@@ -30,18 +31,24 @@ export class BlogTemplateImpl implements BlogTemplate {
     template: string,
     data: { [key: string]: string }
   ): string {
-    return template.replace(/{{(.*?)}}/g, (_, key) => data[key] || "");
+    let result = template;
+    for (const key in data) {
+      result = result.replace(new RegExp(`{{${key}}}`, "g"), data[key]);
+    }
+    return result;
   }
 
   private renderDefault(
     template: string,
     data: { [key: string]: string }
   ): string {
-    return BlogTemplateImpl.render(template, {
-      ...data,
+    let result = template;
+    result = BlogTemplateImpl.render(result, {
       head: this.head,
       footer: this.footer,
     });
+    result = BlogTemplateImpl.render(result, data);
+    return result;
   }
 
   public renderMain(data: { [key: string]: string }): string {
