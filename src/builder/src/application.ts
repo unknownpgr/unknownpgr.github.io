@@ -285,7 +285,7 @@ export class BlogApplication {
 
   public async compilePosts(): Promise<void> {
     const output: Directory = {
-      name: "output",
+      name: path.basename(this.outputPath),
       children: [],
     };
 
