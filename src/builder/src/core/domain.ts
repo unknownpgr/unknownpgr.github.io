@@ -79,13 +79,14 @@ export class BlogServiceImpl implements BlogService {
       // Set tags
       if (tags.length === 0) tags = parsed.tags;
       else if (tags.join(",") !== parsed.tags.join(","))
-        throw new Error("Tags are different between versions");
+        throw new Error(`Tags are different between versions: ${postDir.name}`);
 
       // Set date
-      if (!parsed.date) throw new Error(`Date is not found in ${mdFile.name}`);
+      if (!parsed.date)
+        throw new Error(`Date is not found in ${postDir.name}/${mdFile.name}`);
       if (date === "") date = parsed.date;
       else if (date !== parsed.date)
-        throw new Error("Date is different between versions");
+        throw new Error(`Date is different between versions: ${postDir.name}`);
     });
 
     // Get supported versions
