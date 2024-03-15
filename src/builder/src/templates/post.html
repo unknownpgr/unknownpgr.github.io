@@ -45,6 +45,10 @@
         border: none;
       }
 
+      .title {
+        word-break: keep-all;
+      }
+
       .content pre code {
         display: block;
         width: 100%;
@@ -84,8 +88,8 @@
     ></noscript>
     <!-- End Google Tag Manager (noscript) -->
     <div class="container">
-      <a href="/">Unknownpgr</a>
-      <h1>{{title}}</h1>
+      <a href="{{home}}">Unknownpgr</a>
+      <h1 class="title">{{title}}</h1>
       <p>{{date}} | {{languages}}</p>
       <div class="content">{{content}}</div>
       <br />

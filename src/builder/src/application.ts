@@ -298,6 +298,7 @@ export class BlogApplication {
           next && `<div><a href="${url(next)}">Next: ${next.title}</a></div>`;
 
         const postHtml = this.template.renderPost({
+          home: "/" + name(post.version),
           title: post.title,
           date: formatDate(post.date),
           languages: languageListHtml,
