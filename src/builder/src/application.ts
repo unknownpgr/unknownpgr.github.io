@@ -90,52 +90,6 @@ function formatDate(date: string, time: boolean = true) {
   return `${Y}-${M}-${D} ${h}:${m}:${s}`;
 }
 
-function createIndexString(
-  name: string,
-  date: string,
-  stringLength: number = 80
-) {
-  function getWidth(char: string) {
-    const code = char.charCodeAt(0);
-    // Escape characters like 0xe9(é)
-    if (code >= 0x80 && code <= 0x9f) return 1;
-    if (code >= 0xa1 && code <= 0xdf) return 1;
-    if (code >= 0xe0 && code <= 0xff) return 1;
-    // Normal characters
-    if (code >= 0x20 && code <= 0x7e) return 1;
-    if (code >= 0xff00 && code <= 0xffef) return 2;
-    // For emojis, only check the first character.
-    if (code == 0xd83d) return 1;
-    if (code >= 0xdc00 && code <= 0xdfff) return 0;
-    // Escape zero-width characters.
-    if (code >= 0x200b && code <= 0x200f) return 0;
-
-    return 2;
-  }
-
-  function getLength(str: string) {
-    let length = 0;
-    for (let i = 0; i < str.length; i++) {
-      const width = getWidth(str.charAt(i));
-      length += width;
-    }
-    return length;
-  }
-
-  while (getLength(name) > stringLength - 3) {
-    name = name.slice(0, -1);
-  }
-  const nameLength = getLength(name);
-
-  let dots = "  ";
-  for (let i = 0; i < stringLength - nameLength; i++) {
-    dots += ".";
-  }
-  dots += "  ";
-
-  return `${name}${dots}${date}`;
-}
-
 function getAdjacentPosts(posts: VersionedPost[], id: string) {
   const post = posts.find((p) => p.id === id);
   if (!post) return { prev: null, next: null };
@@ -248,11 +202,9 @@ export class BlogApplication {
         return 0;
       })
       .map((post) => {
-        return `<div><a href="${url(post)}">${createIndexString(
-          post.title,
-          formatDate(post.date, false),
-          60
-        )}</a></div></br>`;
+        return `<div><a href="${url(post)}"><span>${
+          post.title
+        }</span><span>${formatDate(post.date, false)}</span></a></div></br>`;
       })
       .join("");
 
