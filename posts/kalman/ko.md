@@ -520,3 +520,10 @@ $$
 ## Conclusion
 
 이 글에서는 베이즈 필터로부터 곧바로 칼만 필터를 유도하고 이것이 일반적으로 사용되는 칼만 필터와 동등함을 보였다. 이를 통해 칼만 필터를 베이즈 필터의 모수적 근사로 이해할 수 있었다.
+
+## References
+
+- [Wikipedia: Kalman Filter](https://en.wikipedia.org/wiki/Kalman_filter)
+- [Wikipedia: Woodbury matrix identity](https://en.wikipedia.org/wiki/Woodbury_matrix_identity)
+- [Wikipedia: Multivariate normal distribution](https://en.wikipedia.org/wiki/Multivariate_normal_distribution)
+- [R. Gurajala, P. B. Choppala, J. S. Meka and P. D. Teal, "Derivation of the Kalman filter in a Bayesian filtering perspective," 2021 2nd International Conference on Range Technology (ICORT), Chandipur, Balasore, India, 2021, pp. 1-5, doi: 10.1109/ICORT52730.2021.9581918.](https://ieeexplore.ieee.org/document/9581918)
