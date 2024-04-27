@@ -74,7 +74,7 @@ x &\sim N(\mu, \Sigma) \Longleftrightarrow
 \end{align*}
 $$
 
-### Properties
+### Properties of Multivariate Normal Distribution
 
 두 번째 정의를 사용하면 여러 증명을 좀 더 편하게 할 수 있으므로 이를 사용할 것이다. 두 번째 정의를 사용할 때는 공분산 행렬 $\Sigma$와 $A$의 관계가 중요하다. 먼저 공분산의 정의는 다음과 같다.
 
@@ -182,65 +182,92 @@ $$
 
 $$
 \begin{align*}
-x_t &= A x_{t-1} + B u_t + \epsilon_t \\
-z_t &= C x_t + \delta_t
+x_t &= F_t x_{t-1} + B_t u_t + \epsilon_t \\
+z_t &= H_t x_t + \delta_t
 \end{align*}
 $$
 
-여기서, $x_t$는 상태 벡터, $z_t$는 측정 벡터, $u_t$는 제어 입력 벡터, $\epsilon_t$는 상태 노이즈, $\delta_t$는 측정 노이즈이며, 상태 노이즈와 측정 노이즈는 각각 다음과 같은 확률분포를 따른다고 가정한다.
+여기서 각 변수의 의미는 다음과 같다.
+
+- $x_t$: 상태 벡터
+- $z_t$: 측정 벡터
+- $u_t$: 제어 입력 벡터
+- $\epsilon_t$: 상태 노이즈
+- $\delta_t$: 측정 노이즈
+- $F_t$: 상태 전이 행렬
+- $B_t$: 제어 입력 행렬
+- $H_t$: 측정 행렬
+
+또한 상태 노이즈와 측정 노이즈는 다음과 같이 가우시안 분포를 따른다.
 
 $$
 \begin{align*}
-\epsilon_t &\sim N(0, Q) \\
-\delta_t &\sim N(0, R)
+\epsilon_t &\sim N(0, Q_t) \\
+\delta_t &\sim N(0, R_t)
 \end{align*}
 $$
 
-이것은 상태 노이즈와 측정 노이즈가 서로, 그리고 상태에 대해 독립이며 시간에 따라 변하지 않는다는 것을 가정한 것이다. 또한 이러한 시스템에서 $x_t$는 가우시안 분포를 따르게 되는데, 이것은 가우시안 분포의 선형 결합은 여전히 가우시안 분포가 되기 때문이다. 이때 $x_t$의 평균과 분산을 각각 $\mu_t$와 $\Sigma_t$라 하자. 그러면 $x_t$의 확률분포는 다음과 같이 주어진다.
+이제 이것을 이용하여 베이즈 필터에서 칼만 필터를 유도한다. 칼만 필터에서는 확률분포가 multivariate normal distribution을 따른다고 가정하므로 평균과 공분산 행렬만으로 확률분포를 결정할 수 있다. 따라서 칼만 필터는 상태의 평균 $\mu$와 공분산 $\Sigma$를 추정한다.
 
-$$
-x_t \sim N(\mu_t, \Sigma_t)
-$$
+- 예측 단계에서는 현재 상태의 추정치 $\mu_{t-1|t-1}$와 $\Sigma_{t-1|t-1}$을 이용하여 다음 상태의 추정치 $\mu_{t|t-1}$와 $\Sigma_{t|t-1}$를 계산한다.
+- 업데이트 단계에서는 측정값 $z_t$를 이용하여 현재 상태의 추정치 $\mu_{t|t}$와 $\Sigma_{t|t}$를 계산한다.
 
-이제 이것을 이용하여 베이즈 필터에서 칼만 필터를 유도한다. 앞서 보았듯 베이즈 필터는 상태 예측과 측정 업데이트 두 단계로 이루어진다. 상태 예측 단계에서는 현재 상태의 추정치 $\mu_{t-1}$와 $\Sigma_{t-1}$을 이용하여 다음 상태의 추정치 $\mu_t$와 $\Sigma_t$를 계산한다. 측정 업데이트 단계에서는 측정값 $z_t$를 이용하여 상태의 추정치 $\mu_t$와 $\Sigma_t$를 업데이트한다.
+### Prediction Step
 
-먼저 상태 예측 단계는 다음과 같이 주어진다.
+먼저 베이즈 필터의 상태 예측 단계는 다음과 같이 주어진다.
 
 $$
 p(x_t | z_{1:t-1}) = \int p(x_t | x_{t-1}) p(x_{t-1} | z_{1:t-1}) dx_{t-1}
 $$
 
-그러나 이때 $p(x_t | x_{t-1})$와 $p(x_{t-1} | z_{1:t-1})$가 가우시안 분포를 따르므로 이 적분은 다음과 같이 간단하게 계산할 수 있다.
+그러나 이때 $p(x_t | x_{t-1})$와 $p(x_{t-1} | z_{1:t-1})$가 가우시안 분포를 따르므로 이 적분은 다음과 같이 간단하게 계산된다.
 
 $$
 \begin{align*}
-x_t &\sim N(\mu_t, \Sigma_t) \\
-\mu_t &= A \mu_{t-1} + B u_t \\
-\Sigma_t &= A \Sigma_{t-1} A^T + Q
+x_{t|t-1} &\sim N(\mu_{t|t-1}, \Sigma_{t|t-1}) \\
+\mu_{t|t-1} &= F \mu_{t-1|t-1} + B u_{t} \\
+\Sigma_{t|t-1} &= F \Sigma_{t-1|t-1} F^T + Q
 \end{align*}
 $$
 
-먼저 평균은 다음과 같이 기댓값 연산 $E[x]$가 선형성을 가지는 것으로부터 간단히 구할 수 있다.
+증명은 다음과 같다. 먼저 평균은 같이 기댓값 연산 $E[x]$가 선형성을 가지는 것으로부터 간단히 구할 수 있다.
 
 $$
 \begin{align*}
-\mu_t = E[x_t] &= E[A x_{t-1} + B u_t + \epsilon_t] \\
-&= A E[x_{t-1}] + B u_t + E[\epsilon_t] \\
-&= A \mu_{t-1} + B u_t
+\mu_{t|t-1} = E[x_{t|t-1}] &= E[F_t x_{t-1|t-1} + B_t u_t + \epsilon_t] \\
+&= F_t E[x_{t-1|t-1}] + B_t u_t + E[\epsilon_t] \\
+&= F_t \mu_{t-1|t-1} + B_t u_t
 \end{align*}
 $$
 
-공분산은 약간 더 복잡하기는 하지만, 정의에 따라 어렵지 않게 유도된다.
+공분산 역시 정의에 따라 어렵지 않게 유도된다. 계산이 복잡하므로 증명에서 시간을 나타내는 아래첨자는 생략하고 다음과 같이 표기한다.
 
 $$
 \begin{align*}
-\Sigma_t = E[(x_t - \mu_t)(x_t - \mu_t)^T] &= E[(A x_{t-1} + B u_t + \epsilon_t - A \mu_{t-1} - B u_t)(A x_{t-1} + B u_t + \epsilon_t - A \mu_{t-1} - B u_t)^T] \\
-&= E[(A (x_{t-1} - \mu_{t-1}) + \epsilon_t)(A (x_{t-1} - \mu_{t-1}) + \epsilon_t)^T] \\
-&= E[A (x_{t-1} - \mu_{t-1})(x_{t-1} - \mu_{t-1})^T A^T + A (x_{t-1} - \mu_{t-1}) \epsilon_t^T + \epsilon_t (x_{t-1} - \mu_{t-1})^T A^T + \epsilon_t \epsilon_t^T] \\
-&= A E[(x_{t-1} - \mu_{t-1})(x_{t-1} - \mu_{t-1})^T] A^T + E[\epsilon_t \epsilon_t^T] \\
-&= A \Sigma_{t-1} A^T + Q
+\Sigma_{t|t-1} &= \hat\Sigma &
+\Sigma_{t-1|t-1} &= \Sigma\\
+\mu_{t|t-1} &= \hat\mu &
+\mu_{t-1|t-1} &= \mu\\
+x_{t|t-1} &= \hat x &
+x_{t-1|t-1} &= x\\
+\epsilon_t &= \epsilon
 \end{align*}
 $$
+
+그러면 다음과 같이 주어진다.
+
+$$
+\begin{align*}
+\hat\Sigma &= E[(\hat x - \hat\mu)(\hat x - \hat\mu)^T] \\
+&= E[(F x + B u + \epsilon - F \mu - B u)^T (F x + B u + \epsilon - F \mu - B u)] \\
+&= E[(F (x - \mu) + \epsilon)(F (x - \mu) + \epsilon)^T] \\
+&= E[F (x - \mu)(x - \mu)^T F^T + F (x - \mu) \epsilon^T + \epsilon (x - \mu)^T F^T + \epsilon \epsilon^T] \\
+&= F E[(x - \mu)(x - \mu)^T] F^T + E[\epsilon \epsilon^T] \\
+&= F \Sigma F^T + Q
+\end{align*}
+$$
+
+### Update Step
 
 이제 측정 업데이트 단계를 살펴보자. 측정 업데이트 단계는 다음과 같이 주어진다.
 
@@ -248,60 +275,188 @@ $$
 p(x_t | z_{1:t}) = \frac{p(z_t | x_t) p(x_t | z_{1:t-1})}{\int p(z_t | x_t) p(x_t | z_{1:t-1}) dx_t}
 $$
 
-이 식은 분모와 분자가 모두 지수에 행렬이 들어간 어려운 식이다. 그러나 이 식의 분모는 상수이며, 이 식의 분자는 $x_t$에 대하여 $\exp(-x_t^2)$꼴이 된다. 그러므로 이러한 확률분포는 가우시안 분포가 된다.
+이 식은 계산하기 대단히 어렵다. 그러나 실제로는 아래와 같이 위 식이 가우시안 분포임을 보일 수 있다. 이에 따라 이 식은 전부 계산할 필요가 없고 오직 평균과 분산만을 조사하면 된다.
 
-가우시안 분포는 평균과 분산만으로 결정되므로, 이 식을 전부 계산할 필요 없이 오직 평균과 분산만 계산하면 된다.
+1. 이 식의 분모는 $x_t$에 대하여 상수다.
+2. 이 식의 분자는 $x_t$에 대하여 $\exp(-x_tTAx_t)$꼴이 된다. 그러므로 그 적분이 1이기만 하면 이 분포는 가우시안 분포가 된다.
+3. 이 식은 분모가 $x_t$에 대하여 분자를 적분한 형태다. 그러므로 이 식을 $x_t$에 대해 적분하면 분명히 1이 된다.
+4. 가우시안 분포는 평균과 분산만으로 결정되므로, 이 식을 전부 계산할 필요 없이 오직 평균과 분산만 계산하면 된다.
 
----
-
-이제 측정 업데이트 단계를 살펴보자. 측정 업데이트 단계는 다음과 같이 주어진다.
-
-$$
-p(x_t | z_{1:t}) = \frac{p(z_t | x_t) p(x_t | z_{1:t-1})}{\int p(z_t | x_t) p(x_t | z_{1:t-1}) dx_t}
-$$
-
-분모의 값은 $p(z_t|z_{1:t-1})$이며 이것은 다음과 같다.
+먼저 사전확률분포와 측정 모델의 확률밀도함수는 다음과 같다.
 
 $$
 \begin{align*}
-p(z_t | z_{1:t-1}) &= \int p(z_t | x_t) p(x_t | z_{1:t-1}) dx_t \\
-&= N(z_t|C \mu_t, C \Sigma_t C^T + R)
+p(x_t | z_{1:t-1}) &= \frac{1}{(2\pi)^{n/2}|\Sigma_{t|t-1}|^{1/2}} \exp\left(-\frac{1}{2} (x_t - \mu_{t|t-1})^T \Sigma_{t|t-1}^{-1} (x_t - \mu_{t|t-1})\right) \\
+p(z_t | x_t) &= \frac{1}{(2\pi)^{m/2}|R_t|^{1/2}} \exp\left(-\frac{1}{2} (z_t - H_t x_t)^T R_t^{-1} (z_t - H_t x_t)\right)
 \end{align*}
 $$
 
-이것을 확률밀도함수 식으로 전개하면
-
-$$
-\begin{align*}
-p(z_t | z_{1:t-1}) &= \frac{1}{(2\pi)^{n/2}|C \Sigma_t C^T + R|^{1/2}} \exp\left(-\frac{1}{2} (z_t - C \mu_t)^T (C \Sigma_t C^T + R)^{-1} (z_t - C \mu_t)\right)\\
-% 전개
-&= \frac{1}{(2\pi)^{n/2}|C \Sigma_t C^T + R|^{1/2}} \exp\left(-\frac{1}{2} \left(z_t^T (C \Sigma_t C^T + R)^{-1} z_t - 2 z_t^T (C \Sigma_t C^T + R)^{-1} C \mu_t + \mu_t^T C^T (C \Sigma_t C^T + R)^{-1} C \mu_t\right)\right)\\
- \end{align*}
-$$
-
----
-
-이때 $p(z_t | x_t)$와 $p(x_t | z_{1:t-1})$은 각각 다음과 같다.
-
-$$
-\begin{align*}
-p(z_t | x_t) &= N(C x_t, R) = \frac{1}{(2\pi)^{n/2}|R|^{1/2}} \exp\left(-\frac{1}{2} (z_t - C x_t)^T R^{-1} (z_t - C x_t)\right) \\
-p(x_t | z_{1:t-1}) &= N(\mu_t, \Sigma_t) = \frac{1}{(2\pi)^{n/2}|\Sigma_t|^{1/2}} \exp\left(-\frac{1}{2} (x_t - \mu_t)^T \Sigma_t^{-1} (x_t - \mu_t)\right)
-\end{align*}
-$$
-
-그러므로 그 곱은 다음과 같이 주어진다.
+그러므로 이들의 곱은 다음과 같다.
 
 $$
 \begin{align*}
 p(z_t | x_t) p(x_t | z_{1:t-1})
-&= \frac{1}{(2\pi)^n |\Sigma_t|^{1/2} |R|^{1/2}} \exp\left(-\frac{1}{2} \left((z_t - C x_t)^T R^{-1} (z_t - C x_t) + (x_t - \mu_t)^T \Sigma_t^{-1} (x_t - \mu_t)\right)\right) \\
+&= \frac{1}{(2\pi)^{n/2}|\Sigma_{t|t-1}|^{1/2} (2\pi)^{m/2}|R_t|^{1/2}} \exp\left(-\frac{1}{2} \left((x_t - \mu_{t|t-1})^T \Sigma_{t|t-1}^{-1} (x_t - \mu_{t|t-1}) + (z_t - H_t x_t)^T R_t^{-1} (z_t - H_t x_t)\right)\right) \\
 % 전개
-&= \frac{1}{(2\pi)^n |\Sigma_t|^{1/2} |R|^{1/2}} \exp\left(-\frac{1}{2} \left(z_t^T R^{-1} z_t - 2 z_t^T R^{-1} C x_t + x_t^T C^T R^{-1} C x_t + x_t^T \Sigma_t^{-1} x_t - 2 x_t^T \Sigma_t^{-1} \mu_t + \mu_t^T \Sigma_t^{-1} \mu_t\right)\right)\\
+&= \frac{1}{(2\pi)^{n/2}|\Sigma_{t|t-1}|^{1/2} (2\pi)^{m/2}|R_t|^{1/2}} \exp\left(-\frac{1}{2} \left(x_t^T \Sigma_{t|t-1}^{-1} x_t - 2 x_t^T \Sigma_{t|t-1}^{-1} \mu_{t|t-1} + \mu_{t|t-1}^T \Sigma_{t|t-1}^{-1} \mu_{t|t-1} + z_t^T R_t^{-1} z_t - 2 z_t^T R_t^{-1} H_t x_t + x_t^T H_t^T R_t^{-1} H_t x_t\right)\right)\\
 % x에 대한 항들을 모아서 정리
-&= \frac{1}{(2\pi)^n |\Sigma_t|^{1/2} |R|^{1/2}} \exp\left(-\frac{1}{2} \left(x_t^T (C^T R^{-1} C + \Sigma_t^{-1}) x_t - 2 x_t^T (\Sigma_t^{-1} \mu_t + C^T R^{-1} z_t) + z_t^T R^{-1} z_t + \mu_t^T \Sigma_t^{-1} \mu_t\right)\right)\\
-
+&= \frac{1}{(2\pi)^{n/2}|\Sigma_{t|t-1}|^{1/2} (2\pi)^{m/2}|R_t|^{1/2}} \exp\left(-\frac{1}{2} \left(x_t^T (\Sigma_{t|t-1}^{-1} + H_t^T R_t^{-1} H_t) x_t - 2 x_t^T (\Sigma_{t|t-1}^{-1} \mu_{t|t-1} + H_t^T R_t^{-1} z_t) + z_t^T R_t^{-1} z_t + \mu_{t|t-1}^T \Sigma_{t|t-1}^{-1} \mu_{t|t-1}\right)\right)\\
 \end{align*}
 $$
 
-==> 이러한 유도가 일반적인 유도와 같음은 Woodbury matrix identity를 사용하여 증명할 수 있다.
+> 이때 일부 $x_t$에 대한 항들이 $x_t^T$에 대한 항으로 바뀌었는데, 이는 그 항들이 스칼라이므로 전치해도 변하지 않기 때문이다.
+
+이제 이것을 전개된 가우시안 분포의 확률밀도함수와 비교함으로써 위 확률밀도로부터 평균과 표준편차를 구할 수 있다. 평균이 $m$이고 공분산행렬이 $P$인 가우시안 분포의 확률밀도함수는 다음과 같다.
+
+$$
+\begin{align*}
+p(x) &= \frac{1}{(2\pi)^{n/2}|P|^{1/2}} \exp\left(-\frac{1}{2} (x - m)^T P^{-1} (x - m)\right) \\
+&= \frac{1}{(2\pi)^{n/2}|P|^{1/2}} \exp\left(-\frac{1}{2} \left(x^T P^{-1} x - 2 x^T P^{-1} m + m^T P^{-1} m\right)\right)
+\end{align*}
+$$
+
+이로부터 $x^T(\bullet)x$의 계수의 역행렬이 공분산이 되고, $-2x^T(\bullet)$의 계수의 왼쪽에 공분산을 곱하면 평균이 된다는 것을 알 수 있다. 이로부터 처음 식의 공분산은 다음과 같다.
+
+$$
+\Sigma_{t|t} = (\Sigma_{t|t-1}^{-1} + H_t^T R_t^{-1} H_t)^{-1}
+$$
+
+또한 평균은 다음과 같다.
+
+$$
+\mu_{t|t} = \Sigma_{t|t} (\Sigma_{t|t-1}^{-1} \mu_{t|t-1} + H_t^T R_t^{-1} z_t)
+$$
+
+즉, 사후확률분포는 다음과 같이 주어진다.
+
+$$
+\begin{align*}
+x_{t|t} &\sim N(\mu_{t|t}, \Sigma_{t|t}) \\
+\mu_{t|t} &= \Sigma_{t|t} (\Sigma_{t|t-1}^{-1} \mu_{t|t-1} + H_t^T R_t^{-1} z_t) \\
+\Sigma_{t|t} &= (\Sigma_{t|t-1}^{-1} + H_t^T R_t^{-1} H_t)^{-1}\\
+\end{align*}
+$$
+
+### Summary
+
+이제 update step과 prediction step을 종합하여 칼만 필터를 정리하면 다음과 같다.
+
+$$
+\begin{align*}
+\text{Prediction Step} \\
+\mu_{t|t-1} &= F \mu_{t-1|t-1} + B u_t \\
+\Sigma_{t|t-1} &= F \Sigma_{t-1|t-1} F^T + Q \\
+\text{Update Step} \\
+\mu_{t|t} &= \Sigma_{t|t} (\Sigma_{t|t-1}^{-1} \mu_{t|t-1} + H_t^T R_t^{-1} z_t) \\
+\Sigma_{t|t} &= (\Sigma_{t|t-1}^{-1} + H_t^T R_t^{-1} H_t)^{-1}\\
+\end{align*}
+$$
+
+### Comparison with General Form
+
+그런데 이 글에서 구한 식은 일반적으로 설명한 칼만 필터의 식과 다르다. 심지어 이 식에서는 Kalman Gain조차 찾을 수 없다. 실제로 위키피디아의 칼만 필터 항목을 보면 prediction step과 update step은 다음과 같아서, (기호 표기법이 약간 다르기는 하지만) prediction step은 이 글에서 유도한 것과 똑같은 반면 update step은 단계도 더 많을 뿐더러 식 형태 자체가 완전히 다르다.
+
+$$
+\begin{align*}
+\text{Prediction Step} \\
+\hat{\mathbf{X}}_{k|k-1} &= \mathbf{F}_k \hat{\mathbf{X}}_{k-1|k-1} + \mathbf{B}_k \mathbf{u}_{k-1}\\
+\mathbf{P}_{k|k-1} &= \mathbf{F}_k \mathbf{P}_{k-1|k-1} \mathbf{F}_k^\top + \mathbf{Q}_{k-1}\\
+\text{Update Step} \\
+\tilde{\mathbf{y}}_k &= \mathbf{z}_k - \mathbf{H}_k\hat{\mathbf{x}}_{k|k-1} \\
+\mathbf{S}_k &= \mathbf{H}_k \mathbf{P}_{k|k-1} \mathbf{H}_k^\top + \mathbf{R}_k \\
+\mathbf{K}_k &= \mathbf{P}_{k|k-1} \mathbf{H}_k^\top \mathbf{S}_k^{-1} \\
+\hat{\mathbf{x}}_{k|k} &= \hat{\mathbf{x}}_{k|k-1} + \mathbf{K}_k\tilde{\mathbf{y}}_k \\
+\mathbf{P}_{k|k} &= (\mathbf{I} - \mathbf{K}_k \mathbf{H}_k) \mathbf{P}_{k|k-1} \\
+\end{align*}
+$$
+
+그러나 다음과 같이 update step또한 동일한 식의 다른 형태임을 보일 수 있다.
+
+먼저 공분산이 같음을 보이기 위해 일반적인 형식의 update step에서 Kalman Gain을 포함하여 공분산행렬을 전개하면 아래와 같다.
+
+$$
+\begin{align*}
+\mathbf{P}_{k|k} &= \mathbf{P}_{k|k-1} - \mathbf{P}_{k|k-1} \mathbf{H}_k^\top (\mathbf{H}_k \mathbf{P}_{k|k-1} \mathbf{H}_k^\top + \mathbf{R}_k)^{-1} \mathbf{H}_k \mathbf{P}_{k|k-1} \\
+\end{align*}
+$$
+
+다음으로 이 글에서 유도한 update step의 공분산행렬에 Woddbury matrix identity를 적용할 것이다. Woodbury matrix identity는 다음과 같은 항등식이다.
+
+$$
+(A + UCV)^{-1} = A^{-1} - A^{-1} U (C^{-1} + V A^{-1} U)^{-1} V A^{-1}
+$$
+
+여기서
+
+$$
+\begin{align*}
+A &= \Sigma_{t|t-1}^{-1} \\
+U &= H_t^T \\
+C &= R_t^{-1} \\
+V &= H_t
+\end{align*}
+$$
+
+라고 두면
+
+$$
+(\Sigma_{t|t-1}^{-1} + H_t^T R_t^{-1} H_t)^{-1}
+= \Sigma_{t|t-1} - \Sigma_{t|t-1} H_t^T (R_t + H_t \Sigma_{t|t-1} H_t^T)^{-1} H_t \Sigma_{t|t-1}
+$$
+
+가 되어서 이는 위의 update step의 공분산행렬과 같음을 알 수 있다.
+
+같은 방법으로 평균도 다음과 같이 같음을 보일 수 있다. 위와 동일하게 일반적인 형식의 update step에서 평균을 전개하면 다음과 같다.
+
+$$
+\begin{align*}
+\hat{\mathbf{x}}_{k|k} &= \hat{\mathbf{x}}_{k|k-1} + \mathbf{P}_{k|k-1} \mathbf{H}_k^\top (\mathbf{H}_k \mathbf{P}_{k|k-1} \mathbf{H}_k^\top + \mathbf{R}_k)^{-1} \tilde{\mathbf{y}}_k \\
+&= \hat{\mathbf{x}}_{k|k-1} + \mathbf{P}_{k|k-1} \mathbf{H}_k^\top (\mathbf{H}_k \mathbf{P}_{k|k-1} \mathbf{H}_k^\top + \mathbf{R}_k)^{-1} (\mathbf{z}_k - \mathbf{H}_k\hat{\mathbf{x}}_{k|k-1}) \\
+&= \hat{\mathbf{x}}_{k|k-1} + \mathbf{P}_{k|k-1} \mathbf{H}_k^\top (\mathbf{H}_k \mathbf{P}_{k|k-1}
+\mathbf{H}_k^\top + \mathbf{R}_k)^{-1} \mathbf{z}_k - \mathbf{P}_{k|k-1} \mathbf{H}_k^\top (\mathbf{H}_k \mathbf{P}_{k|k-1} \mathbf{H}_k^\top + \mathbf{R}_k)^{-1} \mathbf{H}_k\hat{\mathbf{x}}_{k|k-1} \\
+\end{align*}
+$$
+
+다음으로 이 글에서 유도한 update step의 평균에 앞서 유도한 공분산행렬의 결과를 대입하면 다음과 같다.
+
+$$
+\begin{align*}
+\mu_{t|t} &= \Sigma_{t|t} (\Sigma_{t|t-1}^{-1} \mu_{t|t-1} + H_t^T R_t^{-1} z_t) \\
+&= (\Sigma_{t|t-1} - \Sigma_{t|t-1} H_t^T (R_t + H_t \Sigma_{t|t-1} H_t^T)^{-1} H_t \Sigma_{t|t-1}) (\Sigma_{t|t-1}^{-1} \mu_{t|t-1} + H_t^T R_t^{-1} z_t) \\
+&= \mu_{t|t-1} + \Sigma_{t|t-1} H_t^T R_t^{-1} z_t - \Sigma_{t|t-1} H_t^T (R_t + H_t \Sigma_{t|t-1} H_t^T)^{-1} H_t \mu_{t|t-1} - \Sigma_{t|t-1} H_t^T (R_t + H_t \Sigma_{t|t-1} H_t^T)^{-1} H_t \Sigma_{t|t-1}H_t^T R_t^{-1} z_t \\
+
+&= \mu_{t|t-1}
++ \Sigma_{t|t-1} H_t^T(R_t^{-1} - (R_t + H_t \Sigma_{t|t-1} H_t^T)^{-1} H_t \Sigma_{t|t-1}H_t^T R_t^{-1}) z_t
+- \Sigma_{t|t-1} H_t^T (R_t + H_t \Sigma_{t|t-1} H_t^T)^{-1} H_t \mu_{t|t-1}
+\end{align*}
+$$
+
+이때 두 번째 항의 괄호 안의 부분은 다음과 같이 정리된다.
+
+$$
+\begin{align*}
+& R_t^{-1} - (R_t + H_t \Sigma_{t|t-1} H_t^T)^{-1} H_t \Sigma_{t|t-1}H_t^T R_t^{-1} \\
+&= (I - (R_t + H_t \Sigma_{t|t-1} H_t^T)^{-1} H_t \Sigma_{t|t-1}H_t^T) R_t^{-1} \\
+&= (I - (R_t + H_t \Sigma_{t|t-1} H_t^T)^{-1} H_t \Sigma_{t|t-1}H_t^T - (R_t + H_t \Sigma_{t|t-1} H_t^T)^{-1} R_t + (R_t + H_t \Sigma_{t|t-1} H_t^T)^{-1} R_t ) R_t^{-1} \\
+&= (I - (R_t + H_t \Sigma_{t|t-1} H_t^T)^{-1}(R_t + H_t \Sigma_{t|t-1} H_t^T) + (R_t + H_t \Sigma_{t|t-1} H_t^T)^{-1} R_t ) R_t^{-1} \\
+&= (I - I + (R_t + H_t \Sigma_{t|t-1} H_t^T)^{-1} R_t ) R_t^{-1} \\
+&= (R_t + H_t \Sigma_{t|t-1} H_t^T)^{-1} R_t R_t^{-1} \\
+&= (R_t + H_t \Sigma_{t|t-1} H_t^T)^{-1}
+\end{align*}
+$$
+
+이것을 다시 원래 식에 대입하면 다음과 같다.
+
+$$
+\begin{align*}
+\mu_{t|t} &= \mu_{t|t-1}
++ \Sigma_{t|t-1} H_t^T(R_t + H_t \Sigma_{t|t-1} H_t^T)^{-1} z_t
+- \Sigma_{t|t-1} H_t^T (R_t + H_t \Sigma_{t|t-1} H_t^T)^{-1} H_t \mu_{t|t-1} \\
+\end{align*}
+$$
+
+이것은 앞서 얻은 일반적인 형식의 update step의 평균과 같다. 따라서 이 글에서 유도한 방식과 일반적인 방식, 즉 칼만 게인을 사용하는 방식은 정확히 같음을 알 수 있다.
+
+## Conclusion
+
+이 글에서는 베이즈 필터로부터 곧바로 칼만 필터를 유도하고 이것이 일반적으로 사용되는 칼만 필터와 동등함을 보였다. 이를 통해 칼만 필터를 베이즈 필터의 모수적 근사로 이해할 수 있었다.

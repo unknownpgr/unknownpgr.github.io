@@ -12,5 +12,47 @@ R:=m \times m\\
 $$
 
 $$
-E[(x - \mu)(x - \mu)^{T}]
+- x_{t-1}^{T} Q_{t}^{-1} F_{t} x_{t-1}
++ x_{t-1}^{T} Q_{t}^{-1} x_{t-1}
++ x_{t-1}^{T} \Sigma_{t}^{-1} x_{t-1}
++ x_{t-1}^{T} F_{t}^{T} Q_{t}^{-1} F_{t} x_{t-1}
+- x_{t-1}^{T} F_{t}^{T} Q_{t}^{-1} x_{t-1}
+
+- x_{t-1}^{T} \Sigma_{t}^{-1} \mu_{t}
++ x_{t-1}^{T} F_{t}^{T} Q_{t}^{-1} B_{t} u_{t}
+- x_{t-1}^{T} Q_{t}^{-1} B_{t} u_{t}
+
+- \mu_{t}^{T} \Sigma_{t}^{-1} x_{t-1}
++ u_{t}^{T} B_{t}^{T} Q_{t}^{-1} F_{t} x_{t-1}
+- u_{t}^{T} B_{t}^{T} Q_{t}^{-1} x_{t-1}
+
++ \mu_{t}^{T} \Sigma_{t}^{-1} \mu_{t}
++ u_{t}^{T} B_{t}^{T} Q_{t}^{-1} B_{t} u_{t}
 $$
+
+$$
+- x_{t-1}^{T}\left(
+  Q_{t}^{-1} F_{t}
+  + Q_{t}^{-1}
+  + \Sigma_{t}^{-1}
+  + F_{t}^{T} Q_{t}^{-1} F_{t}
+  - F_{t}^{T} Q_{t}^{-1}
+\right) x_{t-1}
+
+- x_{t-1}^{T}\left(
+  \Sigma_{t}^{-1} \mu_{t}
+  - F_{t}^{T} Q_{t}^{-1} B_{t} u_{t}
+  + Q_{t}^{-1} B_{t} u_{t}
+\right)
+
+- \left(
+  \mu_{t}^{T} \Sigma_{t}^{-1}
+  - u_{t}^{T} B_{t}^{T} Q_{t}^{-1} F_{t}
+  + u_{t}^{T} B_{t}^{T} Q_{t}^{-1}
+\right) x_{t-1}
+
++ \mu_{t}^{T} \Sigma_{t}^{-1} \mu_{t}
++ u_{t}^{T} B_{t}^{T} Q_{t}^{-1} B_{t} u_{t}
+$$
+
+// Group by x\_{t-1}
