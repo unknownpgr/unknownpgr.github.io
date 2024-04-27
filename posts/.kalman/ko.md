@@ -1,10 +1,10 @@
 ---
-title: ""
-category:
+title: "베이즈 필터와 칼만 필터"
+category: math
 date:
 ---
 
-칼만 필터는 측정값을 통해 시스템의 상태를 추정하는 확률론적 방법이다. 칼만 필터를 설명하는 방법은 여러가지가 있다. 예를 들어 칼만 필터를 확장된 state observer로 해석하거나 low-pass filter와 high-pass filter의 결합으로 보기도 한다. 그러나 이 글에서는 가장 근본적이라고 생각되는 베이즈 필터의 근사로 칼만 필터를 설명하고자 한다.
+칼만 필터는 측정값을 통해 시스템의 상태를 추정하는 확률론적 방법이다. 칼만 필터를 설명하는 방법은 여러가지가 있다. 예를 들어 칼만 필터를 state observer로 해석하거나 low-pass filter와 high-pass filter의 결합으로 보기도 한다. 그러나 이 글에서는 가장 근본적이라고 생각되는 베이즈 필터의 근사로 칼만 필터를 설명하고자 한다.
 
 ## Multivariate Normal Distribution
 
@@ -12,7 +12,7 @@ date:
 
 ### Normal Distribution
 
-먼저 1차원 normal distribution은 다음과 같이 주어진다.
+먼저 1차원 normal distribution의 확률밀도함수는 다음과 같이 정의된다.
 
 $$
 x \sim N(\mu, \sigma^2) \Longleftrightarrow p(x) = \frac{1}{\sqrt{2\pi}\sigma} \exp\left(-\frac{1}{2}\left(\frac{x - \mu}{\sigma}\right)^2\right)
@@ -44,26 +44,76 @@ $$
 \int \exp(-ax^2) dx = \sqrt{\frac{\pi}{a}}
 $$
 
-이 방법으로 적분을 풀면 다음과 같이 된다. 실제로는 이 계산을 하려면 지수 내부의 제곱을 전개해야 하는데, 이때 항이 많아 직접 계산하기가 매우 힘들기 때문에 `sympy`를 사용하여 계산했다.
+이 방법으로 적분을 풀면 다음과 같이 된다.
 
 $$
-\frac{1}{2 \sqrt{\pi} \sqrt{\sigma_{1}^{2} + \sigma_{2}^{2}}}\sqrt{2} \exp\left(\frac{- \mu_{1}^{2} \sigma_{2}^{2} + \sigma_{1}^{2} \left(- \mu_{2}^{2} + 2 \mu_{2} x - x^{2}\right) + \frac{\left(\mu_{1} \sigma_{2}^{2} - \mu_{2} \sigma_{1}^{2} + \sigma_{1}^{2} x\right)^{2}}{\sigma_{1}^{2} + \sigma_{2}^{2}}}{2 \sigma_{1}^{2} \sigma_{2}^{2}}\right)
+\frac{1}{2 \sqrt{\pi} \sqrt{\sigma_1^2 + \sigma_2^2}}\sqrt{2} \exp\left(\frac{- \mu_1^2 \sigma_2^2 + \sigma_1^2 \left(- \mu_2^2 + 2 \mu_2 x - x^2\right) + \frac{\left(\mu_1 \sigma_2^2 - \mu_2 \sigma_1^2 + \sigma_1^2 x\right)^2}{\sigma_1^2 + \sigma_2^2}}{2 \sigma_1^2 \sigma_2^2}\right)
 $$
 
 이때 지수 부분을 $x$에 대하여 잘 인수분해하면 아래와 같이 정리된다.
 
 $$
-\frac{1}{\sqrt{2\pi} \sqrt{\sigma_{1}^{2} + \sigma_{2}^{2}}}
-\exp\left(- \frac{\left(x-(\mu_{1} + \mu_{2}) \right)^{2}}{2 (\sigma_{1}^{2} +  \sigma_{2}^{2})}\right)
+\begin{align*}
+& \frac{- \mu_1^2 \sigma_2^2 + \sigma_1^2 \left(- \mu_2^2 + 2 \mu_2 x - x^2\right) + \frac{\left(\mu_1 \sigma_2^2 - \mu_2 \sigma_1^2 + \sigma_1^2 x\right)^2}{\sigma_1^2 + \sigma_2^2}}{2 \sigma_1^2 \sigma_2^2}\\
+
+&=\frac{1}{\sigma_1^2 + \sigma_2^2}\left(
+  - \frac{\mu_1^2(\sigma_1^2 + \sigma_2^2)}{\sigma_1^2}
+  + \frac{\left(- \mu_2^2 + 2 \mu_2 x - x^2\right)(\sigma_1^2 + \sigma_2^2)}{\sigma_2^2}
+  + \frac{\left(\mu_1 \sigma_2^2 - \mu_2 \sigma_1^2 + \sigma_1^2 x\right)^2}{\sigma_1^2\sigma_2^2}
+\right)\\
+
+&=\frac{1}{\sigma_1^2 + \sigma_2^2}\left(
+  - \mu_1^2
+  - \frac{\mu_1^2\sigma_2^2}{\sigma_1^2}
+  - \frac{\mu_2^2\sigma_1^2}{\sigma_2^2}
+  - \mu_2^2
+  + \frac{2 \mu_2 x \sigma_1^2}{\sigma_2^2}
+  + 2 \mu_2 x
+  - \frac{x^2\sigma_1^2}{\sigma_2^2}
+  - x^2
+  + \frac{\mu_1^2\sigma_2^2}{\sigma_1^2}
+  + \frac{\mu_2^2\sigma_1^2}{\sigma_2^2}
+  + \frac{x^2\sigma_1^2}{\sigma_2^2}
+  - 2 \mu_1 \mu_2
+  + 2 \mu_1 x
+  - \frac{2 \mu_2 x \sigma_1^2}{\sigma_2^2}
+\right)\\
+
+
+&=\frac{1}{\sigma_1^2 + \sigma_2^2}\left(
+  - \mu_1^2
+  - \mu_2^2
+  + 2 \mu_2 x
+  - x^2
+  - 2 \mu_1 \mu_2
+  + 2 \mu_1 x
+\right)\\
+
+&=-\frac{1}{\sigma_1^2 + \sigma_2^2}\left(
+  (\mu_1 + \mu_2)^2
+  - 2 (\mu_1+\mu_2) x
+  + x^2
+\right)\\
+
+&=-\frac{(x- (\mu_1 + \mu_2))^2}{\sigma_1^2 + \sigma_2^2}\\
+
+\end{align*}
 $$
 
-이것은 정규분포의 정의에 따라 평균이 $\mu_1 + \mu_2$이고 분산이 $\sigma_1^2 + \sigma_2^2$인 정규분포가 된다.
+이를 원래 식에 다시 대입하면 다음을 얻는다.
+
+$$
+\frac{1}{\sqrt{2\pi} \sqrt{\sigma_1^2 + \sigma_2^2}}
+\exp\left(- \frac{\left(x-(\mu_1 + \mu_2) \right)^2}{2 (\sigma_1^2 +  \sigma_2^2)}\right)
+$$
+
+이것은 정규분포의 정의에 따라 평균이 $\mu_1 + \mu_2$이고 분산이 $\sigma_1^2 + \sigma_2^2$인 정규분포다.
 
 ### Definition of Multivariate Normal Distribution
 
-먼저 multivariate normal distribution은 다양한 정의를 가지고 있다. 이중 가장 일반적인 정의는 각 원소의 임의의 선형 결합이 정규분포가 되는 확률분포로 정의하는 것이다. 즉, $x \in \mathbb{R}^n$이 multivariate normal distribution을 따른다는 것은 임의의 벡터 $a \in \mathbb{R}^n$에 대하여 $a^T x$가 normal distribution을 따른다는 것이다. 이것은 기하학적으로는 $n$차원 분포의 임의의 단면이 정규분포가 된다는 것으로 이해할 수 있다.
+Multivariate normal distribution은 다양한 정의를 가지고 있다. 이중 가장 일반적인 정의는 각 원소의 임의의 선형 결합이 정규분포가 되는 확률분포로 정의하는 것이다. 즉, 확률변수 $x \in \mathbb{R}^n$이 multivariate normal distribution을 따른다는 것은 임의의 벡터 $a \in \mathbb{R}^n$에 대하여 $a^T x$가 normal distribution을 따른다는 것이다.
 
-이것과 동치인 다른 정의는 multivariate normal distribution을 서로 독립인 $n$개의 1차원 standard normal distribution의 선형 결합으로 간주하는 것이다. 즉, $x \in \mathbb{R}^n$이 multivariate normal distribution을 따른다는 것은 $k$개의 독립인 1차원 standard normal distribution $x_1, x_2, \ldots, x_k$로 이루어진 벡터 $z \in \mathbb{R}^k$에 대하여 $x = A z + \mu$로 표현할 수 있다는 것이다. 이때 $A$는 $n \times k$ 행렬이며, $\mu$는 $n$차원 벡터이다.
+이것과 동치인 다른 정의는 multivariate normal distribution을 서로 독립인 $n$개의 1차원 standard normal distribution의 선형 결합으로 간주하는 것이다. 즉, $k$개의 독립인 1차원 standard normal distribution $x_1, x_2, \ldots, x_k$로 이루어진 벡터 $z \in \mathbb{R}^k$에 대하여 행렬 $A$와 벡터 $\mu$가 존재해서 $x = A z + \mu$로 표현할 수 있다는 것이다. 이때 $A$는 $n \times k$ 행렬이며, $\mu$는 $n$차원 벡터이다.
 
 이것을 수식으로 표현하면 다음과 같다.
 
@@ -76,13 +126,15 @@ $$
 
 ### Properties of Multivariate Normal Distribution
 
-두 번째 정의를 사용하면 여러 증명을 좀 더 편하게 할 수 있으므로 이를 사용할 것이다. 두 번째 정의를 사용할 때는 공분산 행렬 $\Sigma$와 $A$의 관계가 중요하다. 먼저 공분산의 정의는 다음과 같다.
+두 번째 정의를 사용하면 여러 증명을 좀 더 편하게 할 수 있으므로 이를 사용할 것이다. 두 번째 정의를 사용할 때는 공분산 행렬 $\Sigma$와 $A$의 관계가 중요하다. 먼저 확률변수 $x$의 평균이 $\mu$라고할 때 공분산의 정의는 다음과 같다.
 
 $$
 \Sigma = E[(x - \mu)(x - \mu)^T]
 $$
 
-이것은 공분산 행렬의 $i$행 $j$열 원소가 $i$번째 원소와 $j$번째 원소의 공분산임을 의미한다. 이제 $x = A z + \mu$를 여기에 대입하여 공분산 행렬을 계산하면 다음과 같다.
+이것은 공분산 행렬의 $i$행 $j$열 원소가 $i$번째 원소와 $j$번째 원소의 공분산임을 의미한다.
+
+이제 $x = A z + \mu$를 여기에 대입하여 공분산 행렬을 계산하면 다음과 같다.
 
 $$
 \begin{align*}
@@ -94,17 +146,21 @@ $$
 \end{align*}
 $$
 
-이로부터 이 공분산 행렬은 반드시 역행렬을 가짐을 보일 수 있다.
-이러한 행렬은 양의 정부호(positive definite) 행렬이 되는데, 양의 정부호란 임의의 영벡터가 아닌 벡터 $x \in \mathbb{R}^n$에 대하여 $x^T \Sigma x \gt 0$이 성립하는 것을 의미한다. 이는 다음과 같이 쉽게 보일 수 있다.
+이러한 공분산 행렬은 양의 정부호(positive definite) 행렬이 된다. 양의 정부호란 임의의 영벡터가 아닌 벡터 $x \in \mathbb{R}^n$에 대하여 $x^T \Sigma x \gt 0$이 성립하는 것을 의미한다. 이는 다음과 같이 쉽게 보일 수 있다.
 
 $$
 x^T \Sigma x = x^T A A^T x = (A^T x)^T (A^T x) = \|A^T x\|^2 \gt 0
 $$
 
-$A^T x \neq 0$라는 것은 $A$의 열벡터가 선형독립이라는 것과 동치이다. 따라서 양의 정부호 행렬은 full rank이며 역행렬을 가진다.
-따라서 임의의 multivariate normal distribution의 공분산 행렬은 반드시 양의 정부호 대칭 행렬이 되며, 따라서 반드시 역행렬을 가진다.
+> 한 가지 예외 사항은 어떤 원소의 분산이 0인 경우이다. 이러한 경우를 퇴화(degenerate)라고 하며, 이 경우 공분산 행렬은 역행렬을 가지지 않는다. 이런 경우 marginalization 등을 통해 그 원소를 제거한 후 계산해야 한다. 그러나 이것은 특수한 경우이므로 여기서는 다루지 않는다.
 
-> 한 가지 예외 사항은 어떤 원소의 분산이 0인 경우이다. 이러한 경우를 퇴화(degenerate)라고 하며, 이 경우 공분산 행렬은 역행렬을 가지지 않는다. 그러나 이것은 특수한 경우이므로 여기서는 다루지 않는다.
+이로부터 이 공분산 행렬은 반드시 역행렬을 가짐을 보일 수 있다.
+
+- 임의의 $x$에 대하여 $A^T x \neq 0$라는 것은 $A$의 열벡터가 선형독립이라는 것과 동치이다.
+- 따라서 양의 정부호 행렬은 full rank이며 역행렬을 가진다.
+- 따라서 임의의 multivariate normal distribution의 공분산 행렬은 반드시 역행렬을 가진다.
+
+### Probability Density Function of Multivariate Normal Distribution
 
 다음으로 이로부터 multivariate normal distribution의 확률밀도함수를 구할 수 있다. 먼저 서로 독립이고 각각의 확률밀도함수가 표준 정규분포인 $n$차원 확률변수 $z$를 생각하자. $z$의 확률밀도함수는 단순히 각 원소의 확률밀도함수의 곱이므로 다음과 같다.
 
@@ -155,13 +211,15 @@ $$
 p(z) = \frac{1}{(2\pi)^{n/2}|\Sigma|^{1/2}} \exp\left(-\frac{1}{2} (z - \mu)^T \Sigma^{-1} (z - \mu)\right)
 $$
 
-여기서 $\det(A)=\det(\Sigma^{1/2})$임은 다음과 같이 보일 수 있다.
+여기서 $|\det(A)|=|\det(\Sigma)|^{1/2}$임은 다음과 같이 보일 수 있다.
 
 $$
 \begin{align*}
-\det(A)&=\det(A^T)\\
-\det(AB) &= \det(A)\det(B)\\
-\therefore |\det(\Sigma)| &= |\det(A A^T)| = |\det(A)|^2\\
+|\det(\Sigma)| &= |\det(A A^T)| = |\det(A)\det(A^T)| \\
+&\because \det(AB) = \det(A)\det(B)\\
+&=|\det(A)\det(A)| = |\det(A)|^2\\
+&\because \det(A)=\det(A^T)\\
+\therefore |\det(A)|^2&=|\det(\Sigma)| \\
 \therefore |\det(A)| &= |\det(\Sigma)|^{1/2}
 \end{align*}
 $$
@@ -178,7 +236,7 @@ p(x_t | z_{1:t-1}) &= \int p(x_t | x_{t-1}) p(x_{t-1} | z_{1:t-1}) dx_{t-1}
 \end{align*}
 $$
 
-베이즈 필터는 시스템 모델과 관측 모델이 주어질 때 이로부터 상태를 추론하는 방법으로 이것은 수학적으로 최적의 추론을 제공한다. 그러나 베이즈 필터는 두 개의 적분으로 이루어져 있는데 임의의 확률분포에 대해 이 적분을 쉽게 계산할 수 있는 방법은 없다. 따라서 이 수식을 수학적으로 그대로 풀어서 사용하는 것은 불가능하고, 이를 풀 수 있는 형태로 근사하여야 한다. 파티클 필터는 저번 포스트에서 다뤘듯 베이즈 필터의 비모수적인 근사이며 따라서 확률분포와 모델에 대한 가정을 하지 않는다. 칼만 필터는 베이즈 필터의 모수적 근사로 시스템 모델과 측정 모델을 다음과 같이 선형 가우시안으로 가정한다.
+베이즈 필터는 시스템 모델과 관측 모델이 주어질 때 관측값으로부터 상태를 추론하는 방법으로, 은닉 마르코프 체인으로 표현되는 시스템에 대해 수학적으로 최적의 추론을 제공한다. 그러나 베이즈 필터는 두 개의 적분으로 이루어져 있는데 임의의 확률분포에 대해 이 적분을 쉽게 계산할 수 있는 방법은 없다. 따라서 이 수식을 그대로 풀어서 사용하는 것은 불가능하고, 다른 형태로 근사하여 풀어야만 한다. 저번 글에서 다뤘듯 파티클 필터는 베이즈 필터의 비모수적인 근사이며 따라서 확률분포와 모델에 대한 가정을 하지 않는다. 이 글에서 다루는 칼만 필터는 베이즈 필터의 모수적 근사로 시스템 모델과 측정 모델을 다음과 같이 선형 가우시안으로 가정한다.
 
 $$
 \begin{align*}
@@ -207,7 +265,7 @@ $$
 \end{align*}
 $$
 
-이제 이것을 이용하여 베이즈 필터에서 칼만 필터를 유도한다. 칼만 필터에서는 확률분포가 multivariate normal distribution을 따른다고 가정하므로 평균과 공분산 행렬만으로 확률분포를 결정할 수 있다. 따라서 칼만 필터는 상태의 평균 $\mu$와 공분산 $\Sigma$를 추정한다.
+이제 이것을 이용하여 베이즈 필터에서 칼만 필터를 유도한다. 칼만 필터에서는 확률분포가 multivariate normal distribution을 따른다고 가정하므로 평균과 공분산 행렬만으로 확률분포를 결정할 수 있다. 따라서 칼만 필터는 다음과 같이 상태의 평균 $\mu$와 공분산 $\Sigma$를 추정한다.
 
 - 예측 단계에서는 현재 상태의 추정치 $\mu_{t-1|t-1}$와 $\Sigma_{t-1|t-1}$을 이용하여 다음 상태의 추정치 $\mu_{t|t-1}$와 $\Sigma_{t|t-1}$를 계산한다.
 - 업데이트 단계에서는 측정값 $z_t$를 이용하여 현재 상태의 추정치 $\mu_{t|t}$와 $\Sigma_{t|t}$를 계산한다.
@@ -240,7 +298,7 @@ $$
 \end{align*}
 $$
 
-공분산 역시 정의에 따라 어렵지 않게 유도된다. 계산이 복잡하므로 증명에서 시간을 나타내는 아래첨자는 생략하고 다음과 같이 표기한다.
+공분산 역시 정의에 따라 어렵지 않게 유도된다. 계산이 복잡하므로 증명에서 시간을 나타내는 아래첨자는 잠시 생략하고 다음과 같이 표기한다.
 
 $$
 \begin{align*}
@@ -254,7 +312,7 @@ x_{t-1|t-1} &= x\\
 \end{align*}
 $$
 
-그러면 다음과 같이 주어진다.
+그러면 다음과 같이 공분산을 계산할 수 있다.
 
 $$
 \begin{align*}
@@ -275,12 +333,13 @@ $$
 p(x_t | z_{1:t}) = \frac{p(z_t | x_t) p(x_t | z_{1:t-1})}{\int p(z_t | x_t) p(x_t | z_{1:t-1}) dx_t}
 $$
 
-이 식은 계산하기 대단히 어렵다. 그러나 실제로는 아래와 같이 위 식이 가우시안 분포임을 보일 수 있다. 이에 따라 이 식은 전부 계산할 필요가 없고 오직 평균과 분산만을 조사하면 된다.
+이 식은 계산하기 대단히 어렵다. 그러나 실제로는 아래와 같이 위 식이 가우시안 분포임을 보일 수 있다.
 
 1. 이 식의 분모는 $x_t$에 대하여 상수다.
-2. 이 식의 분자는 $x_t$에 대하여 $\exp(-x_tTAx_t)$꼴이 된다. 그러므로 그 적분이 1이기만 하면 이 분포는 가우시안 분포가 된다.
-3. 이 식은 분모가 $x_t$에 대하여 분자를 적분한 형태다. 그러므로 이 식을 $x_t$에 대해 적분하면 분명히 1이 된다.
-4. 가우시안 분포는 평균과 분산만으로 결정되므로, 이 식을 전부 계산할 필요 없이 오직 평균과 분산만 계산하면 된다.
+2. 이 식의 분자는 실제로 전개해보면 $x_t$에 대하여 $\exp(-x_tTAx_t)$꼴이 된다. 그러므로 그 적분이 1이기만 하면 이 분포는 가우시안 분포가 된다.
+3. 이 식은 분모가 $x_t$에 대하여 분자를 적분한 형태다. 그러므로 이 식을 $x_t$에 대해 적분하면 반드시 1이 된다.
+
+이에 따라 이 식은 전부 계산할 필요가 없고 오직 평균과 분산만을 조사하면 된다.
 
 먼저 사전확률분포와 측정 모델의 확률밀도함수는 다음과 같다.
 
@@ -306,7 +365,7 @@ $$
 
 > 이때 일부 $x_t$에 대한 항들이 $x_t^T$에 대한 항으로 바뀌었는데, 이는 그 항들이 스칼라이므로 전치해도 변하지 않기 때문이다.
 
-이제 이것을 전개된 가우시안 분포의 확률밀도함수와 비교함으로써 위 확률밀도로부터 평균과 표준편차를 구할 수 있다. 평균이 $m$이고 공분산행렬이 $P$인 가우시안 분포의 확률밀도함수는 다음과 같다.
+이제 이것을 전개된 가우시안 분포의 확률밀도함수와 비교함으로써 위 확률밀도로부터 평균과 표준편차를 구할 수 있다. 평균이 $m$이고 공분산행렬이 $P$인 가우시안 분포의 확률밀도함수를 전개해보면 다음과 같다.
 
 $$
 \begin{align*}
@@ -315,7 +374,7 @@ p(x) &= \frac{1}{(2\pi)^{n/2}|P|^{1/2}} \exp\left(-\frac{1}{2} (x - m)^T P^{-1} 
 \end{align*}
 $$
 
-이로부터 $x^T(\bullet)x$의 계수의 역행렬이 공분산이 되고, $-2x^T(\bullet)$의 계수의 왼쪽에 공분산을 곱하면 평균이 된다는 것을 알 수 있다. 이로부터 처음 식의 공분산은 다음과 같다.
+이로부터 $x^T(\bullet)x$의 계수의 역행렬이 공분산이 되고, $-2x^T(\bullet)$의 계수의 왼쪽에 공분산을 곱하면 평균이 된다는 것을 알 수 있다. 이로부터 처음 식의 공분산은 다음과 같으며
 
 $$
 \Sigma_{t|t} = (\Sigma_{t|t-1}^{-1} + H_t^T R_t^{-1} H_t)^{-1}
@@ -344,8 +403,8 @@ $$
 $$
 \begin{align*}
 \text{Prediction Step} \\
-\mu_{t|t-1} &= F \mu_{t-1|t-1} + B u_t \\
-\Sigma_{t|t-1} &= F \Sigma_{t-1|t-1} F^T + Q \\
+\mu_{t|t-1} &= F_t \mu_{t-1|t-1} + B_t u_t \\
+\Sigma_{t|t-1} &= F_t \Sigma_{t-1|t-1} F_t^T + Q_t \\
 \text{Update Step} \\
 \mu_{t|t} &= \Sigma_{t|t} (\Sigma_{t|t-1}^{-1} \mu_{t|t-1} + H_t^T R_t^{-1} z_t) \\
 \Sigma_{t|t} &= (\Sigma_{t|t-1}^{-1} + H_t^T R_t^{-1} H_t)^{-1}\\
