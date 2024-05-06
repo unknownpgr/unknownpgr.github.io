@@ -88,15 +88,22 @@ export function WebGLComputationUI() {
     <div className="container mx-auto p-4 flex flex-col items-center">
       <h1 className="text-2xl">WebGL Example</h1>
       <p>
-        This example uses WebGL to compute the Julia set. The state variable
-        controls the imaginary part of the complex number. The canvas resolution
-        is 1024x1024=1,048,576 pixels and for each pixel it performs 100
-        iterations of the Julia set algorithm. Therefore the total number of
-        iterations is at least 104,857,600. I tweaked the WebGL so that it can
-        be used for general purpose computation.
+        This is an example of WebGL computation acceleration. WebGL is a
+        technology for rendering 2D and 3D graphics in a web browser, but
+        because of its parallel processing capability, it can be used for
+        general purpose computation. I developed a simple library to perform
+        general purpose computation using WebGL. This example demonstrates the
+        performance of WebGL computation by computing the Julia set.
+      </p>
+      <br />
+      <p>
+        The state variable controls the imaginary part of the complex number.
+        The canvas resolution is 1024 x 1024 = 1,048,576 pixels and for each
+        pixel it performs 100 iterations of the Julia set algorithm. Therefore
+        the total number of iterations is at least 104,857,600.
       </p>
       <input
-        className="w-64"
+        className="w-64 mt-4"
         type="range"
         min={-1}
         max={1}
@@ -105,7 +112,9 @@ export function WebGLComputationUI() {
         onChange={(e) => setState(parseFloat(e.target.value))}
       />
       <div>Current FPS: {fps}</div>
-      <canvas ref={ref} width={1024} height={1024} />
+      <div className="mt-4 max-w-full overflow-x-auto">
+        <canvas ref={ref} width={1024} height={1024} />
+      </div>
     </div>
   );
 }
