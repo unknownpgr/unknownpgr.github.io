@@ -10,6 +10,9 @@ function App() {
         <li className="py-2 underline">
           <Link to="./webgl">WebGL Computation Acceleration Example</Link>
         </li>
+        <li className="py-2 underline">
+          <Link to="./webgpu">WebGPU Example</Link>
+        </li>
       </ul>
     </div>
   );
