@@ -52,8 +52,9 @@ date:
 - 세미나 진행, 대회 출전, 자율주행, 캘리브레이션 알고리즘 연구, 코드 개선 등을 진행했다.
 - 이때 라그랑주 역학도 독학했던 듯하다. 미분방정식 풀면서 자연스럽게 라플라스 변환을 이해했던 듯하다.
 - 홀로노믹 시스템과 constraint에 대한 이해도 늘었다.
-- 자율주행모형차 대회는 특히 흥미로웠다.
 - 자율주행 쓰레기통을 만들었다! ㅎㅎ...
+  - 나름대로 CPU isolation과 core affinity 기능을 사용, us 단위 정밀한 시간 제어를 했다.
+  - 이때 state-machine 기반의 multi-tasking loop를 구성했는데 이게 생각보다 잘 돼서 놀랐다.
 - 1학년 10월부터 HCAIL연구실에 다녔다.
 - 2학년, 그러니까 20년 4월쯤에 작은 숏페이퍼도 하나 냈다.
 - 셈틀제같은 거 하면서 상도 탔다. 19년, 20년에 순서대로 나가서 5등, 2등 했던 듯하다.
@@ -69,6 +70,14 @@ date:
   - 나중에 시간 되면 고주파나 아트웍같은 것도 해볼 만할 듯.
 - Computer Graphics 들으면서 GPU Pipeline에 대한 이해가 향상됨.
   - WebGL도 써 봤다!
+- 2학년 말에는 임베디드소프트웨어경진대회의 자율주행차 부문을 나갔다.
+  - 이때 소프트웨어 공학적인 아키텍쳐를 처음으로 제대로 도입해봤다.
+  - 이때는 아키텍쳐에 대해 잘 알지 못했지만 나중에 생각하고 보니 DIP가 잘 이루어진 좋은 아키텍쳐였다.
+  - 다만 Dev container 등 개발환경 일원화에 더 신경쓰지 못한 점은 아쉽다.
+  - bigLITTLE이 상당히 예측하기 어렵게 동작한다는 것을 알아냈다. 대회 나갈 때 CPU Governer를 풀면 성능이 더 향상된다는 걸 알았다.
+  - 640x480x3 카메라를 80x1x1, 극단적으로 거의 10bit를 보고 주행하게 만드는 기적의 알고리즘을 만들었다.
+  - 그때는 추상적으로 정확도를 대충 포기하되 확률 프로세스를 도입하고 루프 속도를 늘린다 라고 생각했는데, 나중에 이것이 일종의 베이즈 필터임을 알게 됐다.
+  - 차선의 경우 state space가 무척 좁았기 때문에 가능한 일이었다.
 - 3학년 때는 소마 진행 - 이게 더폼 프로젝트
 - 그러면서 동아리 회장과 총무를 동시에 했음
 - 일주일에 한 개씩 세미나 찍고, 개발 하고, 오프라인 행사 주최하고, 로봇 PCB 설계하고, 예산 맞추고, 회비 걷고, 그 와중에 학기 초에는 인원 양성도 함.
@@ -98,10 +107,45 @@ date:
 - 클린 아키텍쳐를 읽고 아키텍쳐와 Dependency Inversion에 대한 깊은 이해를 얻었다.
 - 더폼과 real-estate를 완전히 갈아엎는 중.
 - 4~5월쯤 해서 서울대 연구실과도 약간씩 협업 중.
+  - 연구실과의 협업은 중간에 보류하고 그만뒀다.
+  - 군인인 상태에서 참여할 수 있는 복잡도가 아니었기 때문이며 IT Tech 중심의 서비스가 될 것 같지 않았기 때문이다.
+  - 그리고 백엔드 및 리드 개발자가 연구자였는데, 이 경우 테크 중심 프로덕트 구성이 힘들기 때문이기도 했다.
+  - 실제 프로덕트 개발이면 사실상 Co-Founder의 위치가 되는데 거기에 대한 고려가 부족하고 이미 지분 분할이 끝났던 것도 한 몫 했다.
+- 이후에는 9월쯤 해서 인턴을 해보고자 취직 준비를 열심히 했다.
+- 10월 10일, 전역 당일에 네이버 랩스 2차 면접을 봤다. 적어도 4시간은 본 듯한데 길고 힘들었다.
+- 네이버에서는 여러가지 작업을 했는데 상세하게는 적을 수 없지만 대략 다음과 같은 것들을 했다.
+  - ALT-B 관련 OS 작업
+  - 로깅 시스템
+  - 빌드 / OTA 시스템 (즉 CI/CD)
+  - 테스트 시스템 프로토타이핑 (실제 적용되지는 않음)
+- 네이버 다니면서 베이즈 필터에 대해 공부를 많이 했다.
+  - 처음에는 파티클 필터를 공부했다가 이로부터 베이즈 필터를 이해하다 보니 칼만 필터가 베이즈 필터의 모수적 근사임일거라고 생각하게 되었다.
+  - 인터넷에 여기에 대한 확실한 증명이 없었다는 것이 놀랍다. 그래서 이것을 직접 보였다.
+     - 처음에는 행렬 방정식의 모양이 너무나 달라서 의심스러웠다. 혹시 칼만 필터와 베이즈 필터가 무관한 거면 어쩌지 싶었다.
+     - 그런데 몇 개의 무작위 행렬을 만들어서 대입해본 결과 두 식이 같음을 알게 됐다.
+     - 이후에는 ChatGPT와 함께 다양한 행렬 항등식을 탐험하다 Woodbury Matrix Identity를 발견했다. 이게 결국 답이었다.
+- 이후 3월인가 4월 랩스 끝날 때쯤 술먹다가 그래픽스 이야기 하다 NCSoft에 초대받았다.
+- 5월부터 8월까지 NC에 가서 그래픽스 작업을 했다.
+  - 주 작업은 프론트엔드 구조의 완전한 리팩토링과 - 거의 처음부터 새로 짰다 - 3D 브러시 작업이었다.
+  - 연산량이 무척 많아 WebGL, WebGPU, WebAssembly 세 가지 기술을 이용해봤는데 WebGPU가 가장 쓸만해서 그걸 사용했다.
+  - WebGPU는 general computation을 지원하지 않으므로 Frame buffer에 float 형태로 데이터를 반환하는 신기한 기법을 이용했는데 이게 잘 돼서 오히려 놀랐다.
+  - 이때 렌더링 파이프라인에 대한 이해도가 높아졌다.
+  - 아키텍쳐를 엄청 봤다. 그래픽스는 연산량이 무척 높은 작업이므로 클린 아키텍쳐만을 주장하다가는 성능이 떨어지기 마련이다.
+    - 그래서 금방 완벽한 클린 아키텍쳐는 포기하고, Three.js같은 라이브러리를 코어에 그냥 집어넣기로 했다.
+    - 그런데 막상 포기하고 작업하다 보니 어느샌가 Three.js가 코어에서 전혀 발견되지 않는 신기한 현상이 발생했다. Three.js보다 더 성능이 좋은 방법을 계속 찾다보니 자연스럽게 Three.js 디커플링이 이루어진 것. 흥미로웠다.
+- 8월 중순에는 유럽에 갔다. 나폴리, 소살리토, 폼페이, 로마, 피렌체, 밀라노, 마드리드, 바로셀로나를 둘러보고 귀국했다. 유럽의 문화와 생활 양상에 대해 더 잘 알게 됐다.
+- 9월에는 학교에 복학했다.
+- 복학하고 나서는 이것저것 많은 작은 프로젝트들을 진행해봤다.
+  - Inverted Pendulum. 친구 프로젝트를 도와주다가 얼떨결에 성공시켰다.
+    - 특히 게인 튜닝에 있어 몇 가지 rough한 가설을 세우고 튜닝했는데 무척 잘 돼서 좀 신기했다.
+    - 이 가설이란 inverted pole의 현재 위치를 offset에 PD제어를 하면 발산을 막을 수 있다는 것이었는데 대충 찍었지만 잘 동작해서 신기했다.
+  - 자율주행 고정익 드론 설계 및 제작. 저비용으로 자율주행 드론을, Clean-Architecture + Open-Source로 설계 및 제작하는 것이 목표다. 진행 중. (2024/11 기준)
+  - Modem. 신호처리에 대해 이론만 알지 실전을 해본 것이 전혀 없어서 실제로 시도해봤다. FIR 디지털 필터 및 8b10b 인코딩을 구현해서 맥북 내장 마이크와 스마트폰 스피커를 통해 근거리에서(<30cm) 1kbps 대역폭을 가지는 모뎀을 구현했다.
+  - 자율주행차. 다른 팀에서 하는 자율주행차 프로젝트에서 이것저것 고생하고 있기에 가서 약간 도와줬다. Adaptive AutoSAR 구조에 대해 잘 알게 됐다. EM과 SM, Function group, Function group state, AA 등에 대한 이해를 할 수 있었다. 다만 아무리 생각해도 SOME/IP를 포함한 그 모든 구현이 그냥 lightweight kubernetes 하나면 끝날 일인데, 왜 Reinvent the wheel을 하고 있는지 잘 이해되지 않았다.
 
 ## Ability
 
-- **Backend**: Node.js(Express, Koa, Next.js), Python(FastAPI, Django), NginX
+- **Backend**: Node.js(Express, Koa, Next.js), Python(FastAPI, Django), NginX, Java(Spring Boot)
 - **DevOps**: AWS(EC2, S3, Route53, ELB, EKS), Docker, k3s, Grafana, Prometheus, Traefik, GitHub Actions
 - **Database**: MySQL, SQLite, Redis, MongoDB
 - **Frontend**: React, Next.js, Typescript, HTML5, CSS(SASS, CSS-module), SEO(OgTag, Google Search Console), Analytics (Meta Pixel, Google GTag)
@@ -113,7 +157,7 @@ date:
   - https://oshwlab.com/unknownpgr/unknownpgr-pcb-linetracer-sensorboard
   - https://oshwlab.com/unknownpgr/unknownpgr-pcb-nucleo-f401
 - **Graphics**: WebGL, OpenCV(both C++ and Python)
-- **Robotics**: Motor control(PID), Rigid body dynamics(Lagrange dynamics)
+- **Robotics**: Motor control(PID), Rigid body dynamics(Lagrange dynamics), Filter(Kalman, Particle), ROS, Adaptive AutoSAR
 - **Language**: C, C++, C#, Python, Java, Javascript, Typescript
 - **Blockchain**: Ethereum, Solidity, Truffle, Ganache, Web3.js
 

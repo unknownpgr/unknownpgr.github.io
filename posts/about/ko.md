@@ -32,6 +32,11 @@ date: 2023-09-02T03:36:44.956Z
 
 ## Experiences
 
+- **NCSoft**
+
+  - 소프트웨어 엔지니어, 2024.05 - 2024.08
+  - 사내 Generative AI 툴 개발에서 3D brush 개발 및 diffusion model MLOps 파이프라인을 개발했습니다.
+
 - **NAVER LABS**
 
   - 소프트웨어 엔지니어 인턴십, 2023.10 - April 2024.04
