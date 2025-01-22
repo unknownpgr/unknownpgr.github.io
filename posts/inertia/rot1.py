@@ -13,7 +13,7 @@ def log(message):
     print(f"[{last_time - start_time:.2f}s (+{elapsed_time:.2f}s)] {message}\n", flush=True)
 
 
-print("Starting...")
+log("Starting...")
 
 # Define the time variable
 t = sp.symbols("t")
@@ -42,24 +42,27 @@ def substitute_all_variables(expr):
 
 
 # Define the rotation matrix of
-R_x = sp.Matrix([[1, 0, 0], [0, sp.cos(phi), -sp.sin(phi)], [0, sp.sin(phi), sp.cos(phi)]])
-R_y = sp.Matrix([[sp.cos(theta), 0, sp.sin(theta)], [0, 1, 0], [-sp.sin(theta), 0, sp.cos(theta)]])
-R_z = sp.Matrix([[sp.cos(psi), -sp.sin(psi), 0], [sp.sin(psi), sp.cos(psi), 0], [0, 0, 1]])
+R_x = sp.Matrix([[1, 0, 0], [0, sp.cos(phi), -sp.sin(phi)],
+                [0, sp.sin(phi), sp.cos(phi)]])
+R_y = sp.Matrix([[sp.cos(theta), 0, sp.sin(theta)], [
+                0, 1, 0], [-sp.sin(theta), 0, sp.cos(theta)]])
+R_z = sp.Matrix([[sp.cos(psi), -sp.sin(psi), 0],
+                [sp.sin(psi), sp.cos(psi), 0], [0, 0, 1]])
 
 # Define the rotation matrix
 R = R_z * R_y * R_x
 
 # Define the position of the point in the body frame
-dx = sp.symbols("dx")
-dy = sp.symbols("dy")
-dz = sp.symbols("dz")
+l_x = sp.symbols("l_x")
+l_y = sp.symbols("l_y")
+l_z = sp.symbols("l_z")
 rs = [
-    sp.Matrix([dx, 0, 0]),
-    sp.Matrix([0, dy, 0]),
-    sp.Matrix([0, 0, dz]),
-    sp.Matrix([-dx, 0, 0]),
-    sp.Matrix([0, -dy, 0]),
-    sp.Matrix([0, 0, -dz]),
+    sp.Matrix([l_x, 0, 0]),
+    sp.Matrix([0, l_y, 0]),
+    sp.Matrix([0, 0, l_z]),
+    sp.Matrix([-l_x, 0, 0]),
+    sp.Matrix([0, -l_y, 0]),
+    sp.Matrix([0, 0, -l_z]),
 ]
 
 
@@ -81,6 +84,8 @@ for v in v_world:
 E_k = simplify(E_k)
 log("Kinetic energy expression calculated.")
 print(substitute_all_variables(E_k))
+log("Latex:")
+print(sp.latex(E_k))
 
 
 def euler_lagrange(e, q):
@@ -102,7 +107,8 @@ system_eq = [euler_lagrange(E_k, q) for q in [phi, theta, psi]]
 log("System of equations calculated.")
 
 # Solve the system of equations
-solution = sp.solve(system_eq, [phi.diff(t, t), theta.diff(t, t), psi.diff(t, t)])
+solution = sp.solve(system_eq, [phi.diff(
+    t, t), theta.diff(t, t), psi.diff(t, t)])
 
 # Print the solution
 for key, value in solution.items():

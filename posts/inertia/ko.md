@@ -1,7 +1,8 @@
 ---
-title: "Inertia Tensor"
-category: physics
-date:
+title: Inertia Tensor
+tags:
+  - physics
+date: 2025-01-22T09:28:40.446Z
 ---
 
 # Inertia Tensor
@@ -194,74 +195,88 @@ $$
 
 이때 여러 입자로 이루어진 물체의 관성 텐서는 각 입자의 관성 텐서의 합이고 부등식은 합에 대해 유지되므로 전체 관성 텐서에서도 이러한 성질이 성립한다. 따라서 위 방법으로 물체의 관성 텐서를 모델링할 수 있다.
 
+아래는 이를 시각화한 것이다.
+
+<iframe src="./sim.html"></iframe>
+
+위 시뮬레이션은 화면이 작은 경우 제대로 보이지 않을 수 있으므로 [이 링크](./sim.html)를 클릭하여 전체화면으로 보는 것을 권장한다.
+
 ## System
 
-다음으로 라그랑주 역학을 이용하여 시스템 함수를 얻었다.
+다음으로 이에 기반한 외력이 없는 상황에서의 물체의 회전을 라그랑주 역학으로 모델링하고자 시도했다. 처음에 이를 시도할 때에는 라그랑주 역학 부분은 무척 간단하게 해결될 것이라 생각했는데 실제로 해 보니 그렇지 않았다.
 
-임의의 물체에 대하여 그 질량중심의 위치가 $p$로 주어지고 회전이 행렬 $R$로 주어진다고 하자. $p$와 $R$은 시간에 대한 함수다. 그리고 이 물체를 각 입자의 질량중심에 대한 상대적 위치가 $r_i$로 주어진다고 하자. 입자계는 구속되어있으므로 이는 상수다. 이때 물체의 운동에너지는 다음과 같이 주어진다.
+먼저 물체의 일반화 좌표를 정의해야 하는데 이를 위해 오일러 각을 사용했다. 일반적인 상황에서는 물체의 좌표 역시 필요하나 우리가 정의한 시스템에서는 물체를 이루는 점의 위치를 질량중심으로 하였기 때문에 외력이 없는 한 물체 질량중심의 위치는 변하지 않기 때문이다.
 
-$$
-T = \frac{1}{2} \sum_i m_i \left( \dot{p} + \dot{R} r_i \right)^T \left( \dot{p} + \dot{R} r_i \right)
-$$
+다음으로 라그랑지언을 구해야 하는데, 중력을 포함한 외력이 없으므로 퍼텐셜은 없다. 그러므로 라그랑지언은 곧 운동에너지가 된다.
 
-위치에너지를 고려하지 않기로 하면 이는 라그랑지언과 같다. 그러므로 이를 오일러-라그랑주 방정식에 대입하면 다음을 얻는다.
+이때 계의 운동에너지는 다음과 같이 주어진다.
 
 $$
-\begin{aligned}
-\frac{d}{dt} \left( \frac{\partial T}{\partial \dot{p}} \right) - \frac{\partial T}{\partial p} &= 0 \\
-\frac{d}{dt} \left( \frac{\partial T}{\partial \dot{R}} \right) - \frac{\partial T}{\partial R} &= 0
-\end{aligned}
+T = \frac{1}{2} \sum_i m_i v_i^2 = \frac{1}{2} \sum_i m_i \dot{r}_i^2
 $$
 
-이때 이 시스템은 외력과 퍼텐셜이 없다. 그러므로 시간에 따른 질량중심의 이계 변화를 나타내는 첫 번째 식의 해는 자명하게 $\ddot{p} = 0$이다. 따라서 두 번째 식만 고려하면 된다. 그리고 두 번째 식에서 라그랑지언은 $R$에 대한 식이 아니므로 그 두 번째 항은 또한 0이다. 그러므로 다음을 얻는다.
+이 식은 크게 복잡하지 않다. 그런데 여기서 $r_i$는 물체의 위치 벡터이므로 곧 물체의 기존 위치 $r_i^0$와 회전 행렬 $R$의 곱으로 주어진다.
+
+그런데 회전 행렬은 또한 다음과 같다.
 
 $$
-\frac{d}{dt} \left( \frac{\partial T}{\partial \dot{R}} \right) = 0
+R = \begin{bmatrix}
+\cos\theta & -\sin\theta & 0 \\
+\sin\theta & \cos\theta & 0 \\
+0 & 0 & 1
+\end{bmatrix}
+\begin{bmatrix}
+\cos\phi & 0 & \sin\phi \\
+0 & 1 & 0 \\
+-\sin\phi & 0 & \cos\phi
+\end{bmatrix}
+\begin{bmatrix}
+1 & 0 & 0 \\
+0 & \cos\psi & -\sin\psi \\
+0 & \sin\psi & \cos\psi
+\end{bmatrix}
 $$
 
-이를 풀기 위하여 라그랑지언을 전개하면 다음과 같다.
+이것을 모두 이용하여 라그랑지언을 구하면 다음과 같다. 식이 무척 복잡하고 실수할 여지가 많기 때문에 `sympy` 라이브러리를 이용하여 계산했다. 질량을 포함한 비례 상수는 무시하였다.
 
 $$
-\begin{aligned}
-T &= \frac{1}{2} \sum_i m_i \left( \dot{p} + \dot{R} r_i \right)^T \left( \dot{p} + \dot{R} r_i \right) \\
-&= \frac{1}{2} \sum_i m_i \left( \dot{p}^T \dot{p} + \dot{p}^T \dot{R} r_i + r_i^T \dot{R}^T \dot{p} + r_i^T \dot{R}^T \dot{R} r_i \right) \\
-&= \frac{1}{2} \sum_i m_i \left( \dot{p}^T \dot{p} + 2 \dot{p}^T \dot{R} r_i + r_i^T \dot{R}^T \dot{R} r_i \right) \\
-\end{aligned}
+\begin{align*}
+L&\propto\\
+
+&+l_{x}^{2} \left(\cos^{2}{\left(\theta{\left(t \right)} \right)} \left(\frac{d}{d t} \psi{\left(t \right)}\right)^{2}
++ \left(\frac{d}{d t} \theta{\left(t \right)}\right)^{2}\right) \\
+&+ l_{y}^{2} \left(\sin^{2}{\left(\phi{\left(t \right)} \right)} \sin^{2}{\left(\theta{\left(t \right)} \right)} \left(\frac{d}{d t} \psi{\left(t \right)}\right)^{2} - \sin^{2}{\left(\phi{\left(t \right)} \right)} \left(\frac{d}{d t} \psi{\left(t \right)}\right)^{2} + \sin^{2}{\left(\phi{\left(t \right)} \right)} \left(\frac{d}{d t} \theta{\left(t \right)}\right)^{2} - 2 \sin{\left(\phi{\left(t \right)} \right)} \cos{\left(\phi{\left(t \right)} \right)} \cos{\left(\theta{\left(t \right)} \right)} \frac{d}{d t} \psi{\left(t \right)} \frac{d}{d t} \theta{\left(t \right)} - 2 \sin{\left(\theta{\left(t \right)} \right)} \frac{d}{d t} \phi{\left(t \right)} \frac{d}{d t} \psi{\left(t \right)} + \left(\frac{d}{d t} \phi{\left(t \right)}\right)^{2} + \left(\frac{d}{d t} \psi{\left(t \right)}\right)^{2}\right) \\
+&+ l_{z}^{2} \cdot \left(2 \sin{\left(\phi{\left(t \right)} \right)} \cos{\left(\phi{\left(t \right)} \right)} \cos{\left(\theta{\left(t \right)} \right)} \frac{d}{d t} \psi{\left(t \right)} \frac{d}{d t} \theta{\left(t \right)} - 2 \sin{\left(\theta{\left(t \right)} \right)} \frac{d}{d t} \phi{\left(t \right)} \frac{d}{d t} \psi{\left(t \right)} - \cos^{2}{\left(\phi{\left(t \right)} \right)} \cos^{2}{\left(\theta{\left(t \right)} \right)} \left(\frac{d}{d t} \psi{\left(t \right)}\right)^{2} + \cos^{2}{\left(\phi{\left(t \right)} \right)} \left(\frac{d}{d t} \theta{\left(t \right)}\right)^{2} + \left(\frac{d}{d t} \phi{\left(t \right)}\right)^{2} + \left(\frac{d}{d t} \psi{\left(t \right)}\right)^{2}\right)
+
+\end{align*}
 $$
 
-이 시스템의 각 점질량이 동일하며 0이 아닌 것을 고려하면 질량 $m$은 소거할 수 있다. 1/2 역시 단순 상수이므로 소거하고 라그랑지언에 대입하면 다음을 얻는다.
+이제 일반화 좌표 $\theta, \phi, \psi$에 대하여 다음 오일러-라그랑주 방정식을 연립하여 풀면 된다.
 
 $$
-\frac{d}{dt} \frac{\partial}{\partial \dot{R}} \left(
-\sum_i \dot{p}^T \dot{p} +
-2  \dot{p}^T \dot{R}\sum_i r_i +
-\sum_i r_i^T \dot{R}^T \dot{R} r_i
-\right) = 0
+\frac{d}{dt} \left(\frac{\partial L}{\partial \dot{q}_i}\right) - \frac{\partial L}{\partial q_i} = 0
 $$
 
-위 식에서 첫 번째 항은 $\dot{R}$에 대하여 상수이므로 소거된다. 또한 두 번째 항에서 $r_i$는 질량중심을 기준으로 한 좌표계임을 고려, $\sum_i r_i = 0$이므로 이 또한 소거된다. 따라서 다음을 얻는다. (일반적인 시스템에서 이는 0이 아니지만 이 시스템에서는 모든 점질량이 동일한 시스템이므로 그 위치의 합은 0이다.)
+그런데 이것을 계산하였더니 식을 정리하고 푸는 데 5분 이상이 소요되며 그 결과 역시 텍스트로 식을 저장한 것만 수 킬로바이트나 되었다. 그래서 블로그 포스트에 그것을 넣기는 어렵고 대신 다음 텍스트 파일을 첨부한다.
 
-$$
-\frac{d}{dt} \frac{\partial}{\partial \dot{R}} \left(
-\sum_i r_i^T \dot{R}^T \dot{R} r_i
-\right) = 0
-$$
+- [라그랑지안 계산 결과](./log.txt)
 
-위 식에서 먼저 $\dot{R}$에 대한 편미분을 계산하면
+이것은 다음과 같은 코드로 계산하였다.
 
-$$
-\begin{aligned}
-\frac{\partial}{\partial \dot{R}} \left(
-\sum_i r_i^T \dot{R}^T \dot{R} r_i
-\right) &= \dot{R} \sum_i r_i r_i^T + \sum_i r_i r_i^T \dot{R}
-\end{aligned}
-$$
+- [라그랑지안 및 시스템 방정식 계산 코드](./rot1.py)
 
-이로부터 다음을 얻는다.
+이후 이것이 실제로 시스템을 모델링하는 데 사용될 수 있는지 알아보기 위해 간단한 시스템을 만들어 중간축 정리를 시험해보았다. 아래는 그 영상이다.
 
-$$
-\begin{aligned}
-\ddot{R}
-\sum_i \left( r_i r_i^T \right) + \sum_i \left( r_i r_i^T \right) \ddot{R} &= 0 \\
-\end{aligned}
-$$
+<video src="./rot.mov" controls>
+  Your browser does not support the video tag.
+</video>
+
+영상에서 후반으로 갈수록 약간씩 속도가 빨라지는데, 이것은 수치적인 오류로 인한 것으로 생각된다.
+
+이 영상은 다음과 같은 코드로 만들어졌다.
+
+- [시스템 시뮬레이션 코드](./rot2.py)
+
+## Conclusion
+
+물체의 회전에 대해 공부했다. 적어도 모든 강체는 6개의 대칭적인 질량점의 조합으로 모델링 될 수 있음을 보였고, 이것을 시각화하여 직관과 일치하는지 확인했다. 또한 이러한 시스템이 주어졌을 때 라그랑주 역학을 사용하여 그 시스템 방정식을 얻어낼 수 있음을 보였다.
