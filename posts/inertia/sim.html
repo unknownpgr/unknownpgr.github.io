@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Inertia</title>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three/examples/jsm/"
+        }
+      }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/14.0.1/math.min.js"></script>
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: sans-serif;
+      }
+
+      .container {
+        margin: 0 auto;
+        max-width: 100%;
+        overflow-x: hidden;
+        padding: 2rem;
+      }
+
+      .row {
+        overflow: hidden;
+        display: flex;
+        gap: 1rem;
+      }
+
+      .canvasFrame {
+        width: 0;
+        overflow: hidden;
+        flex-grow: 1;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Inertia tensor calculation</h1>
+      <div>
+        <p>
+          On the left, you can draw a 2D shape. Left click to draw a line, and
+          right click to fill the area. The color of the shape represents the
+          height of the shape.
+        </p>
+        <p>
+          On the right, you can see the 3D shape of the drawn shape. you can
+          zoom in and out by scrolling, rotate by dragging, and pan by holding
+          the right mouse button.
+        </p>
+        <p>
+          The sphere and red line represents the particle model of the object.
+        </p>
+      </div>
+      <div class="row">
+        <div class="canvasFrame">
+          <canvas id="cnv" style="width: 100%"></canvas>
+        </div>
+        <div class="canvasFrame">
+          <canvas id="cnv3d"></canvas>
+        </div>
+      </div>
+      <button id="clearButton">Clear</button>
+      <div id="log"></div>
+    </div>
+    <script type="module">
+      // Physics
+
+      function getInertiaTensor(grid) {
+        const width = grid.length;
+        const height = grid[0].length;
+        const depth = Math.max(...grid.flat());
+        const volume = grid.flat().reduce((acc, value) => acc + value, 0);
+        if (volume < 2) return null;
+        const mass = volume;
+        const centerOfMass = [0, 0, 0];
+        for (let x = 0; x < width; x++) {
+          for (let y = 0; y < height; y++) {
+            for (let z = 0; z < grid[x][y]; z++) {
+              centerOfMass[0] += x;
+              centerOfMass[1] += y;
+              centerOfMass[2] += z;
+            }
+          }
+        }
+
+        centerOfMass[0] /= volume;
+        centerOfMass[1] /= volume;
+        centerOfMass[2] /= volume;
+        const inertiaTensor = [
+          [0, 0, 0],
+          [0, 0, 0],
+          [0, 0, 0],
+        ];
+        for (let x = 0; x < width; x++) {
+          for (let y = 0; y < height; y++) {
+            for (let z = 0; z < grid[x][y]; z++) {
+              const dx = x - centerOfMass[0];
+              const dy = y - centerOfMass[1];
+              const dz = z - centerOfMass[2];
+              inertiaTensor[0][0] += dy * dy + dz * dz;
+              inertiaTensor[1][1] += dx * dx + dz * dz;
+              inertiaTensor[2][2] += dx * dx + dy * dy;
+              inertiaTensor[0][1] -= dx * dy;
+              inertiaTensor[0][2] -= dx * dz;
+              inertiaTensor[1][2] -= dy * dz;
+            }
+          }
+        }
+        inertiaTensor[1][0] = inertiaTensor[0][1];
+        inertiaTensor[2][0] = inertiaTensor[0][2];
+        inertiaTensor[2][1] = inertiaTensor[1][2];
+        return {
+          volume,
+          mass,
+          centerOfMass,
+          inertiaTensor,
+        };
+      }
+
+      function getEigenvector(matrix) {
+        const { eigenvectors } = math.eigs(matrix);
+        return eigenvectors.map(({ value, vector }) => ({
+          eigenvalue: value,
+          eigenvector: vector,
+        }));
+      }
+
+      function getParticleModel(eigenvectors, mass) {
+        const [Ix, Iy, Iz] = eigenvectors.map(({ eigenvalue }) => eigenvalue);
+        const a = 3 / (mass * 2);
+        const dx = Math.sqrt(a * (-Ix + Iy + Iz));
+        const dy = Math.sqrt(a * (+Ix - Iy + Iz));
+        const dz = Math.sqrt(a * (+Ix + Iy - Iz));
+        return [dx, dy, dz];
+      }
+
+      // 3D rendering
+      import * as THREE from "three";
+      import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+      import { LineGeometry } from "three/addons/lines/LineGeometry.js";
+      import { LineMaterial } from "three/addons/lines/LineMaterial.js";
+
+      // Set up the scene
+      const scene = new THREE.Scene();
+
+      // Set up the camera
+      const cnv3d = document.getElementById("cnv3d");
+      const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+      scene.background = new THREE.Color(0xffffff);
+      const updateCamera = () => {
+        cnv3d.style.width = "100%";
+        cnv3d.width = cnv3d.height = cnv3d.offsetWidth;
+        cnv3d.style.height = cnv3d.offsetWidth + "px";
+        camera.aspect = 1;
+        camera.updateProjectionMatrix();
+      };
+      window.addEventListener("resize", updateCamera);
+      updateCamera();
+
+      // Set up the renderer
+      const renderer = new THREE.WebGLRenderer({ canvas: cnv3d });
+      renderer.setSize(cnv3d.width, cnv3d.height);
+
+      // Add helpers
+      const axesHelper = new THREE.AxesHelper(5);
+      scene.add(axesHelper);
+
+      const gridHelper = new THREE.GridHelper(100, 100);
+      scene.add(gridHelper);
+
+      // Setup the orbit controls
+      const orbitControls = new OrbitControls(camera, cnv3d);
+      orbitControls.enableDamping = true;
+      orbitControls.dampingFactor = 0.25;
+      const animate = () => {
+        orbitControls.update();
+        renderer.render(scene, camera);
+        requestAnimationFrame(animate);
+      };
+      animate();
+
+      // Add lights
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
+      scene.add(ambientLight);
+
+      const directionalLight = new THREE.DirectionalLight(0xaaaaaa, 1);
+      directionalLight.position.set(10, 15, 20);
+      directionalLight.target.position.set(0, 0, 0);
+      scene.add(directionalLight);
+
+      // Set the camera position
+      camera.position.y = 20;
+      camera.position.z = 20;
+      camera.lookAt(0, 0, 0);
+
+      // 2D rendering
+
+      const cnv = document.getElementById("cnv");
+      const clearButton = document.getElementById("clearButton");
+      const log = document.getElementById("log");
+      const ctx = cnv.getContext("2d");
+
+      let scale = 1;
+      const width = 40;
+      const height = 40;
+
+      let isDrawing = false;
+
+      const grid = new Array(width)
+        .fill(0)
+        .map(() => new Array(height).fill(0));
+      let currentGrid = new Array(width)
+        .fill(0)
+        .map(() => new Array(height).fill(0));
+
+      const objects = [];
+
+      const value = (x, y, z) => {
+        if (x < 0 || x >= width || y < 0 || y >= height || z < 0) return false;
+        const valueXY = grid[x][y] + currentGrid[x][y];
+        return z < valueXY;
+      };
+
+      const isVoxelInside = (x, y, z) => {
+        // If this is true, this voxel is inside the object, so we don't need to draw it.
+        if (x === 0 || x === width - 1) return true;
+        if (y === 0 || y === height - 1) return true;
+        if (z === 0) return true;
+        if (!value(x, y, z + 1)) return true;
+        if (!value(x + 1, y, z)) return true;
+        if (!value(x - 1, y, z)) return true;
+        if (!value(x, y + 1, z)) return true;
+        if (!value(x, y - 1, z)) return true;
+        return false;
+      };
+
+      const isFaceVisible = (x, y, z, d) => {
+        switch (d) {
+          case "x":
+            {
+              return value(x, y, z) ^ value(x - 1, y, z);
+            }
+            break;
+          case "y":
+            {
+              return value(x, y, z) ^ value(x, y - 1, z);
+            }
+            break;
+          case "z":
+            {
+              return value(x, y, z) ^ value(x, y, z - 1);
+            }
+            break;
+          default:
+            throw new Error(`Invalid direction: ${d}`);
+        }
+      };
+
+      const indices = [0, 1, 2, 0, 2, 3];
+      const xPlaneGeometry = new THREE.BufferGeometry();
+      const yPlaneGeometry = new THREE.BufferGeometry();
+      const zPlaneGeometry = new THREE.BufferGeometry();
+      const material = new THREE.MeshPhongMaterial({
+        color: 0x88ccee,
+        opacity: 0.8,
+        transparent: true,
+        side: THREE.DoubleSide,
+      });
+
+      {
+        xPlaneGeometry.setAttribute(
+          "position",
+          new THREE.BufferAttribute(
+            new Float32Array([0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1]),
+            3
+          )
+        );
+        xPlaneGeometry.setIndex(indices);
+        xPlaneGeometry.computeVertexNormals();
+
+        yPlaneGeometry.setAttribute(
+          "position",
+          new THREE.BufferAttribute(
+            new Float32Array([0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0]),
+            3
+          )
+        );
+        yPlaneGeometry.setIndex(indices);
+        yPlaneGeometry.computeVertexNormals();
+
+        zPlaneGeometry.setAttribute(
+          "position",
+          new THREE.BufferAttribute(
+            new Float32Array([0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1]),
+            3
+          )
+        );
+        zPlaneGeometry.setIndex(indices);
+        zPlaneGeometry.computeVertexNormals();
+      }
+
+      const update3DModel = () => {
+        // Remove all boxes
+        objects.forEach((box) => scene.remove(box));
+        objects.length = 0;
+
+        const maxZ = Math.max(...grid.flat());
+        for (let x = 0; x < width + 1; x++) {
+          for (let y = 0; y < height + 1; y++) {
+            for (let z = 0; z < maxZ + 2; z++) {
+              const faces = [
+                [x, y, z, "x"],
+                [x, y, z, "y"],
+                [x, y, z, "z"],
+              ];
+              faces.forEach(([x, y, z, d]) => {
+                if (!isFaceVisible(x, y, z, d)) return;
+                let geometry;
+                switch (d) {
+                  case "x":
+                    {
+                      geometry = xPlaneGeometry;
+                    }
+                    break;
+                  case "y":
+                    {
+                      geometry = yPlaneGeometry;
+                    }
+                    break;
+                  case "z":
+                    {
+                      geometry = zPlaneGeometry;
+                    }
+                    break;
+                  default:
+                    throw new Error(`Invalid direction: ${d}`);
+                }
+                const face = new THREE.Mesh(geometry, material);
+                face.position.set(x - width / 2, z, y - height / 2);
+                objects.push(face);
+                scene.add(face);
+              });
+            }
+          }
+        }
+      };
+
+      const getCurrentAddedGrid = () => {
+        const added = new Array(width)
+          .fill(0)
+          .map(() => new Array(height).fill(0));
+        for (let x = 0; x < width; x++) {
+          for (let y = 0; y < height; y++) {
+            added[x][y] = grid[x][y] + currentGrid[x][y];
+          }
+        }
+        return added;
+      };
+
+      const drawLine3D = (x0, y0, z0, x1, y1, z1, r) => {
+        const lineGeometry = new LineGeometry();
+        lineGeometry.setPositions([
+          x0 + 0.5,
+          y0 + 0.5,
+          z0 + 0.5,
+          x1 + 0.5,
+          y1 + 0.5,
+          z1 + 0.5,
+        ]);
+        const material = new LineMaterial({
+          color: 0xff0000,
+          linewidth: 2,
+        });
+        material.resolution.set(cnv3d.width, cnv3d.height);
+        const line = new THREE.Line(lineGeometry, material);
+
+        const sphereGeometry1 = new THREE.SphereGeometry(r, 32, 32);
+        const sphereGeometry2 = new THREE.SphereGeometry(r, 32, 32);
+
+        const sphereMaterial = new THREE.MeshPhongMaterial({
+          color: 0x00ff00,
+          opacity: 0.8,
+          transparent: true,
+        });
+        const sphere1 = new THREE.Mesh(sphereGeometry1, sphereMaterial);
+        const sphere2 = new THREE.Mesh(sphereGeometry2, sphereMaterial);
+
+        sphere1.position.set(x0 + 0.5, y0 + 0.5, z0 + 0.5);
+        sphere2.position.set(x1 + 0.5, y1 + 0.5, z1 + 0.5);
+
+        scene.add(sphere1);
+        scene.add(sphere2);
+        scene.add(line);
+        objects.push(sphere1);
+        objects.push(sphere2);
+        objects.push(line);
+      };
+
+      const updateTensor = () => {
+        try {
+          const result = getInertiaTensor(getCurrentAddedGrid());
+          if (!result) return;
+          const { centerOfMass, mass, inertiaTensor } = result;
+          const eigenvectors = getEigenvector(inertiaTensor);
+          const distances = getParticleModel(eigenvectors, mass);
+
+          let logText = "";
+
+          // Mass
+          logText += "<b>Mass</b>: " + mass;
+          logText += "<br>";
+
+          // Inertia tensor
+          logText += "<b>Inertia tensor</b>: <br>";
+          inertiaTensor.forEach((r) => {
+            logText += r.map((v) => v.toFixed(2)).join(", ") + "<br>";
+          });
+          logText += "<br>";
+
+          // Eigenvectors
+          logText += "<b>Eigenvectors</b>: <br>";
+          eigenvectors.forEach(({ eigenvalue, eigenvector }) => {
+            logText +=
+              `λ: ${eigenvalue.toFixed(2)}, Eigenvector: ${eigenvector
+                .map((value) => value.toFixed(2))
+                .join("")}` + "<br>";
+          });
+          logText += "<br>";
+
+          // Particle model
+          logText += "<b>Particle model</b>: <br>";
+          logText += distances.map((d) => d.toFixed(2)).join(", ");
+          logText += "<br>";
+
+          log.innerHTML = logText;
+
+          const [cx, cy, cz] = centerOfMass;
+          eigenvectors.map(({ eigenvector }, i) => {
+            const [ex, ey, ez] = eigenvector;
+            const dist = distances[i];
+            drawLine3D(
+              cx - dist * ex - width / 2,
+              cz - dist * ez,
+              cy - dist * ey - height / 2,
+              cx + dist * ex - width / 2,
+              cz + dist * ez,
+              cy + dist * ey - height / 2,
+              Math.pow((2 * mass) / 9 / Math.PI, 1 / 3)
+            );
+          });
+        } catch (e) {
+          console.error(e);
+        }
+      };
+
+      const render = () => {
+        ctx.clearRect(0, 0, cnv.width, cnv.height);
+        const maxValue = Math.max(...grid.flat()) + 1;
+
+        ctx.beginPath();
+        for (let x = 0; x < width; x++) {
+          ctx.moveTo(x * scale, 0);
+          ctx.lineTo(x * scale, height * scale);
+        }
+        for (let y = 0; y < height; y++) {
+          ctx.moveTo(0, y * scale);
+          ctx.lineTo(width * scale, y * scale);
+        }
+        ctx.stroke();
+
+        for (let x = 0; x < width; x++) {
+          for (let y = 0; y < height; y++) {
+            const value = grid[x][y] + currentGrid[x][y];
+            ctx.fillStyle = `rgba(0, 0, 0, ${value / maxValue})`;
+            ctx.fillRect(x * scale, y * scale, scale, scale);
+          }
+        }
+
+        update3DModel();
+        updateTensor();
+      };
+
+      let previousPosition = null;
+
+      const handleStartDrawing = (event) => {
+        if (event.button !== 0) return;
+        isDrawing = true;
+      };
+
+      const handleStopDrawing = () => {
+        // Add the current grid to the main grid
+        for (let x = 0; x < width; x++) {
+          for (let y = 0; y < height; y++) {
+            grid[x][y] += currentGrid[x][y];
+            currentGrid[x][y] = 0;
+          }
+        }
+        isDrawing = false;
+        previousPosition = null;
+        render();
+      };
+
+      const drawLine = (x0, y0, x1, y1) => {
+        const dx = Math.abs(x1 - x0);
+        const dy = Math.abs(y1 - y0);
+        const sx = x0 < x1 ? 1 : -1;
+        const sy = y0 < y1 ? 1 : -1;
+        let err = dx - dy;
+
+        while (true) {
+          currentGrid[x0][y0] = 1;
+          if (x0 === x1 && y0 === y1) break;
+          const e2 = 2 * err;
+          if (e2 > -dy) {
+            err -= dy;
+            x0 += sx;
+          }
+          if (e2 < dx) {
+            err += dx;
+            y0 += sy;
+          }
+        }
+      };
+
+      const handleDrawing = (x, y) => {
+        if (!isDrawing) return;
+        const gridX = Math.floor(x / scale);
+        const gridY = Math.floor(y / scale);
+        if (previousPosition) {
+          drawLine(previousPosition[0], previousPosition[1], gridX, gridY);
+        } else {
+          currentGrid[gridX][gridY] = 1;
+        }
+        previousPosition = [gridX, gridY];
+        render();
+      };
+
+      const handleFill = (event) => {
+        if (event.button !== 2) return;
+        const x = Math.floor(event.offsetX / scale);
+        const y = Math.floor(event.offsetY / scale);
+        const fillValue = grid[x][y];
+        const stack = [[x, y]];
+        while (stack.length > 0) {
+          const [x, y] = stack.pop();
+          if (
+            x < 0 ||
+            x >= width ||
+            y < 0 ||
+            y >= height ||
+            grid[x][y] !== fillValue
+          ) {
+            continue;
+          }
+          grid[x][y] = fillValue + 1;
+          stack.push([x + 1, y]);
+          stack.push([x - 1, y]);
+          stack.push([x, y + 1]);
+          stack.push([x, y - 1]);
+        }
+        render();
+      };
+
+      const handleClear = () => {
+        grid.forEach((row) => row.fill(0));
+        currentGrid.forEach((row) => row.fill(0));
+        render();
+      };
+
+      const handleWindowResize = () => {
+        const dpr = window.devicePixelRatio || 1;
+        cnv.style.width = "100%";
+        const elementWidth = cnv.offsetWidth;
+        cnv.width = cnv.height = elementWidth * dpr;
+        cnv.style.width = cnv.style.height = `${elementWidth}px`;
+        scale = elementWidth / width;
+        ctx.scale(dpr, dpr);
+        render();
+      };
+      window.addEventListener("resize", handleWindowResize);
+      handleWindowResize();
+
+      cnv.addEventListener("mousedown", handleStartDrawing);
+      cnv.addEventListener("mousedown", (e) =>
+        handleDrawing(e.offsetX, e.offsetY)
+      );
+      cnv.addEventListener("mousemove", (e) =>
+        handleDrawing(e.offsetX, e.offsetY)
+      );
+      cnv.addEventListener("mousedown", handleFill);
+      cnv.addEventListener("contextmenu", (event) => event.preventDefault());
+      cnv.addEventListener("mouseup", handleStopDrawing);
+      cnv.addEventListener("mouseleave", handleStopDrawing);
+      clearButton.addEventListener("click", handleClear);
+
+      render();
+    </script>
+  </body>
+</html>
