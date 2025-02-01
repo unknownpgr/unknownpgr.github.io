@@ -1,7 +1,8 @@
 ---
-title: "Photodiode circuit"
-category: electronics
-date:
+title: Photodiode circuit
+tags:
+  - electronics
+date: 2025-02-01T17:59:36.659Z
 ---
 
 최근에 어떤 프로젝트를 진행하면서 여러 개의 포토다이오드를 고속으로 사용해야 하는 일이 있었다. 이를 진행하면서 포토다이오드 회로 구성에 대해 공부해서 이를 정리한다.
