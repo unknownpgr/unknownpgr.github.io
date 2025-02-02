@@ -1,5 +1,5 @@
 ---
-title: Photodiode circuit
+title: Photodiode Circuit
 tags:
   - electronics
 date: 2025-02-01T17:59:36.659Z
