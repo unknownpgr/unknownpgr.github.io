@@ -674,6 +674,7 @@
               text: `${stringifyNumber(value / unit.scale)}`,
               unit,
             }))
+            .filter(({ text }) => text !== "0")
             .sort((a, b) => a.text.length - b.text.length)
             .map(
               ({ text, unit }) => `  ${text} ${unit.name} (${unit.description})`
