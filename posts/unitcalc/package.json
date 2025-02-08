@@ -1,0 +1,8 @@
+{
+    "scripts": {
+        "parse": "peggy grammar.pegjs --format es"
+    },
+    "devDependencies": {
+        "peggy": "^4.2.0"
+    }
+}

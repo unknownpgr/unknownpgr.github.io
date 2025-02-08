@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Unit Calculator</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: sans-serif;
+      }
+
+      a {
+        color: blue;
+        text-decoration: none;
+      }
+
+      hr {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        border: 0;
+        border-top: 1px solid #ccc;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+
+      #input {
+        width: 100%;
+        height: 2rem;
+        font-size: 1rem;
+        resize: none;
+        padding: 0.5rem;
+      }
+
+      #output {
+        font-family: monospace;
+        white-space: pre;
+        margin-top: 1rem;
+      }
+
+      footer {
+        margin-top: 1rem;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Unit Calculator</h1>
+      <textarea id="input">6um/(2uF*3ohm) + 1m^2*2Hz/100cm</textarea>
+      <div id="output"></div>
+      <hr />
+      <p>
+        This is a simple unit calculator that can handle basic arithmetic
+        operations with units. Brackets and exponentiation of units are also
+        supported. It supports the following units:
+      </p>
+      <ul id="unitList"></ul>
+      <hr />
+      <footer>
+        <div>Created by <a href="unknownpgr.com">Unknownpgr</a></div>
+        <div>
+          Contact me on
+          <a href="mailto:unknownpgr@gmail.com"> unknownpgr@gmail.com </a>
+        </div>
+      </footer>
+    </div>
+    <script type="module">
+      import { parse } from "./grammar.js";
+
+      // Basic utility functions
+      const inputTag = document.getElementById("input");
+      const outputTag = document.getElementById("output");
+      const unitListTag = document.getElementById("unitList");
+
+      const print = (text) => {
+        outputTag.innerHTML += `${text || ""}\n`;
+      };
+
+      const unitList = [
+        // Length
+        { name: "pm", description: "picometer", L: 1, scale: 1e-12 },
+        { name: "nm", description: "nanometer", L: 1, scale: 1e-9 },
+        { name: "um", description: "micrometer", L: 1, scale: 1e-6 },
+        { name: "mm", description: "millimeter", L: 1, scale: 1e-3 },
+        { name: "cm", description: "centimeter", L: 1, scale: 1e-2 },
+        { name: "dm", description: "decimeter", L: 1, scale: 1e-1 },
+        { name: "m", description: "meter", L: 1, scale: 1 },
+        { name: "km", description: "kilometer", L: 1, scale: 1e3 },
+
+        // Mass
+        { name: "pg", description: "picogram", M: 1, scale: 1e-15 },
+        { name: "ng", description: "nanogram", M: 1, scale: 1e-12 },
+        { name: "ug", description: "microgram", M: 1, scale: 1e-9 },
+        { name: "mg", description: "milligram", M: 1, scale: 1e-6 },
+        { name: "g", description: "gram", M: 1, scale: 1e-3 },
+        { name: "kg", description: "kilogram", M: 1, scale: 1 },
+
+        // Time
+        { name: "ps", description: "picosecond", T: 1, scale: 1e-12 },
+        { name: "ns", description: "nanosecond", T: 1, scale: 1e-9 },
+        { name: "us", description: "microsecond", T: 1, scale: 1e-6 },
+        { name: "ms", description: "millisecond", T: 1, scale: 1e-3 },
+        { name: "s", description: "second", T: 1, scale: 1 },
+        { name: "min", description: "minute", T: 1, scale: 60 },
+        { name: "h", description: "hour", T: 1, scale: 3600 },
+        { name: "d", description: "day", T: 1, scale: 86400 },
+        { name: "yr", description: "year", T: 1, scale: 31556952 },
+
+        // Velocity
+        { name: "m/s", description: "meter per second", L: 1, T: -1 },
+        {
+          name: "km/h",
+          description: "kilometer per hour",
+          L: 1,
+          T: -1,
+          scale: 1 / 3.6,
+        },
+
+        // Volume
+        { name: "uL", description: "microliter", L: 3, scale: 1e-9 },
+        { name: "mL", description: "milliliter", L: 3, scale: 1e-6 },
+        { name: "cL", description: "centiliter", L: 3, scale: 1e-5 },
+        { name: "dL", description: "deciliter", L: 3, scale: 1e-4 },
+        { name: "L", description: "liter", L: 3, scale: 1e-3 },
+
+        // Current
+        { name: "pA", description: "picoampere", I: 1, scale: 1e-12 },
+        { name: "uA", description: "microampere", I: 1, scale: 1e-6 },
+        { name: "mA", description: "milliampere", I: 1, scale: 1e-3 },
+        { name: "A", description: "ampere", I: 1, scale: 1 },
+
+        // Voltage
+        {
+          name: "nV",
+          description: "nanovolt",
+          L: 2,
+          T: -3,
+          I: -1,
+          scale: 1e-9,
+        },
+        {
+          name: "uV",
+          description: "microvolt",
+          L: 2,
+          T: -3,
+          I: -1,
+          scale: 1e-6,
+        },
+        {
+          name: "mV",
+          description: "millivolt",
+          L: 2,
+          T: -3,
+          I: -1,
+          scale: 1e-3,
+        },
+        { name: "V", description: "volt", L: 2, T: -3, I: -1, scale: 1 },
+        { name: "kV", description: "kilovolt", L: 2, T: -3, I: -1, scale: 1e3 },
+
+        // Resistance
+        {
+          name: "mOhm",
+          description: "milliohm",
+          M: 1,
+          L: 2,
+          T: -3,
+          I: -2,
+          scale: 1e-3,
+        },
+        {
+          name: "Ohm",
+          description: "ohm",
+          M: 1,
+          L: 2,
+          T: -3,
+          I: -2,
+          scale: 1,
+        },
+        {
+          name: "kOhm",
+          description: "kiloohm",
+          M: 1,
+          L: 2,
+          T: -3,
+          I: -2,
+          scale: 1e3,
+        },
+        {
+          name: "MOhm",
+          description: "megaohm",
+          M: 1,
+          L: 2,
+          T: -3,
+          I: -2,
+          scale: 1e6,
+        },
+        {
+          name: "GOhm",
+          description: "gigaohm",
+          M: 1,
+          L: 2,
+          T: -3,
+          I: -2,
+          scale: 1e9,
+        },
+
+        // Capacitance
+        {
+          name: "fF",
+          description: "femtofarad",
+          M: -1,
+          L: -2,
+          T: 4,
+          I: 2,
+          scale: 1e-15,
+        },
+        {
+          name: "pF",
+          description: "picofarad",
+          M: -1,
+          L: -2,
+          T: 4,
+          I: 2,
+          scale: 1e-12,
+        },
+        {
+          name: "nF",
+          description: "nanofarad",
+          M: -1,
+          L: -2,
+          T: 4,
+          I: 2,
+          scale: 1e-9,
+        },
+        {
+          name: "uF",
+          description: "microfarad",
+          M: -1,
+          L: -2,
+          T: 4,
+          I: 2,
+          scale: 1e-6,
+        },
+        {
+          name: "mF",
+          description: "millifarad",
+          M: -1,
+          L: -2,
+          T: 4,
+          I: 2,
+          scale: 1e-3,
+        },
+        {
+          name: "F",
+          description: "farad",
+          M: -1,
+          L: -2,
+          T: 4,
+          I: 2,
+          scale: 1,
+        },
+
+        // Inductance
+        {
+          name: "nH",
+          description: "nanohenry",
+          M: 1,
+          L: 2,
+          T: -2,
+          I: -2,
+          scale: 1e-9,
+        },
+        {
+          name: "uH",
+          description: "microhenry",
+          M: 1,
+          L: 2,
+          T: -2,
+          I: -2,
+          scale: 1e-6,
+        },
+        {
+          name: "mH",
+          description: "millihenry",
+          M: 1,
+          L: 2,
+          T: -2,
+          I: -2,
+          scale: 1e-3,
+        },
+        {
+          name: "H",
+          description: "henry",
+          M: 1,
+          L: 2,
+          T: -2,
+          I: -2,
+          scale: 1,
+        },
+        {
+          name: "kH",
+          description: "kilohenry",
+          M: 1,
+          L: 2,
+          T: -2,
+          I: -2,
+          scale: 1e3,
+        },
+        {
+          name: "MH",
+          description: "megahenry",
+          M: 1,
+          L: 2,
+          T: -2,
+          I: -2,
+          scale: 1e6,
+        },
+        {
+          name: "GH",
+          description: "gigahenry",
+          M: 1,
+          L: 2,
+          T: -2,
+          I: -2,
+          scale: 1e9,
+        },
+
+        // Frequency
+        { name: "Hz", description: "hertz", T: -1, scale: 1 },
+        { name: "kHz", description: "kilohertz", T: -1, scale: 1e3 },
+        { name: "MHz", description: "megahertz", T: -1, scale: 1e6 },
+        { name: "GHz", description: "gigahertz", T: -1, scale: 1e9 },
+
+        // Energy
+        {
+          name: "eV",
+          description: "electronvolt",
+          M: 1,
+          L: 2,
+          T: -2,
+          scale: 1.602176634e-19,
+        },
+        { name: "J", description: "joule", M: 1, L: 2, T: -2, scale: 1 },
+        { name: "kJ", description: "kilojoule", M: 1, L: 2, T: -2, scale: 1e3 },
+        { name: "MJ", description: "megajoule", M: 1, L: 2, T: -2, scale: 1e6 },
+        { name: "GJ", description: "gigajoule", M: 1, L: 2, T: -2, scale: 1e9 },
+
+        // Power
+        { name: "W", description: "watt", M: 1, L: 2, T: -3, scale: 1 },
+        { name: "kW", description: "kilowatt", M: 1, L: 2, T: -3, scale: 1e3 },
+        { name: "MW", description: "megawatt", M: 1, L: 2, T: -3, scale: 1e6 },
+        { name: "GW", description: "gigawatt", M: 1, L: 2, T: -3, scale: 1e9 },
+
+        // Pressure
+        { name: "Pa", description: "pascal", M: 1, L: -1, T: -2, scale: 1 },
+        {
+          name: "kPa",
+          description: "kilopascal",
+          M: 1,
+          L: -1,
+          T: -2,
+          scale: 1e3,
+        },
+        {
+          name: "MPa",
+          description: "megapascal",
+          M: 1,
+          L: -1,
+          T: -2,
+          scale: 1e6,
+        },
+        {
+          name: "GPa",
+          description: "gigapascal",
+          M: 1,
+          L: -1,
+          T: -2,
+          scale: 1e9,
+        },
+        {
+          name: "atm",
+          description: "atmosphere",
+          M: 1,
+          L: -1,
+          T: -2,
+          scale: 101325,
+        },
+        { name: "bar", description: "bar", M: 1, L: -1, T: -2, scale: 1e5 },
+        {
+          name: "mmHg",
+          description: "millimeter of mercury",
+          M: 1,
+          L: -1,
+          T: -2,
+          scale: 133.322,
+        },
+        {
+          name: "psi",
+          description: "pounds per square inch",
+          M: 1,
+          L: -1,
+          T: -2,
+          scale: 6894.76,
+        },
+        {
+          name: "torr",
+          description: "torr",
+          M: 1,
+          L: -1,
+          T: -2,
+          scale: 133.322,
+        },
+
+        // Force
+        { name: "N", description: "newton", M: 1, L: 1, T: -2 },
+        {
+          name: "kN",
+          description: "kilonewton",
+          M: 1,
+          L: 1,
+          T: -2,
+          scale: 1e3,
+        },
+        {
+          name: "MN",
+          description: "meganewton",
+          M: 1,
+          L: 1,
+          T: -2,
+          scale: 1e6,
+        },
+        {
+          name: "GN",
+          description: "giganewton",
+          M: 1,
+          L: 1,
+          T: -2,
+          scale: 1e9,
+        },
+      ];
+
+      const unitless = {
+        M: 0,
+        L: 0,
+        T: 0,
+        I: 0,
+        scale: 1,
+      };
+
+      const unitDict = {};
+
+      for (let i = 0; i < unitList.length; i++) {
+        unitList[i] = { ...unitless, ...unitList[i] };
+        if (unitList[i].name in unitDict) {
+          throw new Error(`Duplicate unit: ${unitList[i].name}`);
+        }
+        unitDict[unitList[i].name] = unitList[i];
+        unitListTag.innerHTML += `<li>${unitList[i].name} (${unitList[i].description})</li>`;
+      }
+
+      function getUnitMLT(_unit) {
+        if (!_unit) return unitless;
+
+        const { unit, exponent: exp } = _unit;
+
+        let unitData;
+
+        const unitLower = unit.toLowerCase();
+        const capitalCompetibleUnits = unitList.filter(
+          (u) => u.name.toLowerCase() === unitLower
+        );
+
+        if (capitalCompetibleUnits.length === 0) {
+          throw new Error(`Unknown unit: ${unit}`);
+        }
+
+        if (unit in unitDict) unitData = unitDict[unit];
+        else unitData = capitalCompetibleUnits[0];
+
+        if (capitalCompetibleUnits.length > 1) {
+          print(
+            `Caution: Ambiguous unit ${unit} was treated as ${unitData.name} (${unitData.description})`
+          );
+          print(`Candidates:`);
+          for (const u of capitalCompetibleUnits) {
+            print(` - ${u.name} (${u.description})`);
+          }
+        }
+
+        const mlt = {
+          M: unitData.M * exp,
+          L: unitData.L * exp,
+          T: unitData.T * exp,
+          I: unitData.I * exp,
+          scale: unitData.scale ** exp,
+        };
+
+        return mlt;
+      }
+
+      function multiplyMLT(mlt1, mlt2) {
+        return {
+          M: mlt1.M + mlt2.M,
+          L: mlt1.L + mlt2.L,
+          T: mlt1.T + mlt2.T,
+          I: mlt1.I + mlt2.I,
+          scale: mlt1.scale * mlt2.scale,
+        };
+      }
+
+      function divideMLT(mlt1, mlt2) {
+        return {
+          M: mlt1.M - mlt2.M,
+          L: mlt1.L - mlt2.L,
+          T: mlt1.T - mlt2.T,
+          I: mlt1.I - mlt2.I,
+          scale: mlt1.scale / mlt2.scale,
+        };
+      }
+
+      function compareMLT(mlt1, mlt2) {
+        return (
+          mlt1.M === mlt2.M &&
+          mlt1.L === mlt2.L &&
+          mlt1.T === mlt2.T &&
+          mlt1.I === mlt2.I
+        );
+      }
+
+      function assertCompatibleMLT(mlt1, mlt2) {
+        if (
+          mlt1.M === mlt2.M &&
+          mlt1.L === mlt2.L &&
+          mlt1.T === mlt2.T &&
+          mlt1.I === mlt2.I
+        )
+          return;
+
+        let errorString = "Error: incompatible units: \n";
+        errorString += "  Left: " + stringifyMLT(mlt1) + "\n";
+        errorString += "  Right: " + stringifyMLT(mlt2) + "\n";
+        throw new Error(errorString);
+      }
+
+      function calculateValue(_value) {
+        const { value: val, unit: _unit } = _value;
+        const mlt = getUnitMLT(_unit);
+        const value = val * mlt.scale;
+        mlt.scale = 1;
+        return { value, mlt };
+      }
+
+      function calculateOp(op) {
+        const { value: leftValue, mlt: mltLeft } = calculate(op.left);
+        const { value: rightValue, mlt: mltRight } = calculate(op.right);
+
+        switch (op.operator) {
+          case "+":
+            assertCompatibleMLT(mltLeft, mltRight);
+            return {
+              value: leftValue + rightValue,
+              mlt: mltLeft,
+            };
+          case "-":
+            assertCompatibleMLT(mltLeft, mltRight);
+            return {
+              value: leftValue - rightValue,
+              mlt: mltLeft,
+            };
+          case "*":
+            return {
+              value: leftValue * rightValue,
+              mlt: multiplyMLT(mltLeft, mltRight),
+            };
+          case "/":
+            return {
+              value: leftValue / rightValue,
+              mlt: divideMLT(mltLeft, mltRight),
+            };
+          default:
+            throw new Error(`Unknown operator: ${op.operator}`);
+        }
+      }
+
+      function calculate(ast) {
+        switch (ast.type) {
+          case "op":
+            return calculateOp(ast);
+          case "value":
+            return calculateValue(ast);
+          default:
+            throw new Error(`Unknown type: ${ast.type}`);
+        }
+      }
+
+      function stringifyOp(op) {
+        return (
+          "(" +
+          stringify(op.left) +
+          " " +
+          op.operator +
+          " " +
+          stringify(op.right) +
+          ")"
+        );
+      }
+
+      function stringifyUnit(_unit) {
+        if (!_unit) return "";
+        const { unit, exponent: exp } = _unit;
+        return unit + (exp === 1 ? "" : "^" + exp);
+      }
+
+      function stringifyValue(value) {
+        return value.value + stringifyUnit(value.unit);
+      }
+
+      function stringify(ast) {
+        switch (ast.type) {
+          case "op":
+            return stringifyOp(ast);
+          case "value":
+            return stringifyValue(ast);
+          default:
+            throw new Error(`Unknown type: ${ast.type}`);
+        }
+      }
+
+      function stringifyMLT(mlt) {
+        const units = [];
+        if (mlt.M !== 0) units.push("kg" + (mlt.M === 1 ? "" : "^" + mlt.M));
+        if (mlt.L !== 0) units.push("m" + (mlt.L === 1 ? "" : "^" + mlt.L));
+        if (mlt.T !== 0) units.push("s" + (mlt.T === 1 ? "" : "^" + mlt.T));
+        if (mlt.I !== 0) units.push("A" + (mlt.I === 1 ? "" : "^" + mlt.I));
+        if (units.length === 0) return "unitless";
+        return units.join("·");
+      }
+
+      function stringifyNumber(num) {
+        // Display number without scientific notation
+        return num.toFixed(10).replace(/\.?0+$/, "");
+      }
+
+      function parseInput() {
+        let ast;
+        outputTag.innerHTML = "";
+        try {
+          const input = inputTag.value.replace(/\s|\n/g, "");
+          ast = parse(input);
+        } catch (e) {
+          print("Cannot parse input :(");
+          print(e.message);
+          return;
+        }
+
+        print("Expression was parsed as:");
+        print("  " + stringify(ast));
+        print();
+
+        try {
+          const { value, mlt } = calculate(ast);
+          print(`Result:`);
+          print("  " + value + stringifyMLT(mlt));
+          const equivalentExpressions = unitList
+            .filter((u) => compareMLT(mlt, u))
+            .map((unit) => ({
+              text: `${stringifyNumber(value / unit.scale)}`,
+              unit,
+            }))
+            .sort((a, b) => a.text.length - b.text.length)
+            .map(
+              ({ text, unit }) => `  ${text} ${unit.name} (${unit.description})`
+            );
+          if (equivalentExpressions.length > 0) {
+            print(`\nEquivalent expressions:`);
+            print(equivalentExpressions.join("\n"));
+          }
+        } catch (e) {
+          print(e.message);
+        }
+      }
+
+      inputTag.addEventListener("input", parseInput);
+      parseInput();
+    </script>
+  </body>
+</html>
