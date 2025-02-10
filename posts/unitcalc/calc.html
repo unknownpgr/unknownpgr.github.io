@@ -600,6 +600,25 @@
               value: leftValue / rightValue,
               mlt: divideMLT(mltLeft, mltRight),
             };
+          case "^":
+            if (
+              mltRight.M !== 0 ||
+              mltRight.L !== 0 ||
+              mltRight.T !== 0 ||
+              mltRight.I !== 0
+            ) {
+              throw new Error("Error: Exponent must be unitless");
+            }
+            return {
+              value: leftValue ** rightValue,
+              mlt: {
+                M: mltLeft.M * rightValue,
+                L: mltLeft.L * rightValue,
+                T: mltLeft.T * rightValue,
+                I: mltLeft.I * rightValue,
+                scale: 1,
+              },
+            };
           default:
             throw new Error(`Unknown operator: ${op.operator}`);
         }
@@ -683,7 +702,7 @@
         try {
           const { value, mlt } = calculate(ast);
           print(`Result:`);
-          print("  " + value + stringifyMLT(mlt));
+          print("  " + value + " " + stringifyMLT(mlt));
           const equivalentExpressions = unitList
             .filter((u) => compareMLT(mlt, u))
             .map((unit) => ({
