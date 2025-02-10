@@ -68,9 +68,7 @@
         autofocus
         placeholder="e.g. 6um/(2uF*3ohm) + 1m^2*2Hz/100cm"
       ></textarea>
-      <div id="output">
-        Calculated result will be displayed here. Type an expression to start.
-      </div>
+      <div id="output"></div>
       <hr />
       <p>
         This is a simple unit calculator that can handle basic arithmetic
@@ -684,10 +682,16 @@
       }
 
       function parseInput() {
-        let ast;
+        const input = inputTag.value.replace(/\s|\n/g, "");
         outputTag.innerHTML = "";
+
+        if (input === "") {
+          print("Type an expression to start.");
+          return;
+        }
+
+        let ast;
         try {
-          const input = inputTag.value.replace(/\s|\n/g, "");
           ast = parse(input);
         } catch (e) {
           print("Cannot parse input :(");
@@ -724,6 +728,9 @@
       }
 
       inputTag.addEventListener("input", parseInput);
+      print(
+        "Calculated result will be displayed here. Type an expression to start."
+      );
     </script>
   </body>
 </html>
