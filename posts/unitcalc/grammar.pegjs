@@ -21,10 +21,11 @@ exp_mul
 
 exp_mul_op
     = operator:multiplicative right:exp_mul { return { type: "op", operator, right }; }
-    / right:exp_mul { return { type: "op", operator: "*", right }; }
 
 exp_value
-    = value:value { return value; }
+    = value:number unit:unit { return { type: "value", value, unit }; }
+    / value:number { return { type: "value", value, unit: null}; }
+    / unit:unit { return { type: "value", value: 1, unit }; }
     / "(" expression:exp_add ")" { return expression; }
 
 multiplicative
@@ -32,10 +33,6 @@ multiplicative
 
 additive
     = "+" / "-" 
-
-value
-    = value:number { return { type: "value", value, unit: null }; }
-    / unit:unit { return { type: "value", value: 1, unit }; }
 
 number
     = [+-]?digit+ ("." [0-9]+)? { return parseFloat(text()); }
