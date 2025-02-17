@@ -1,7 +1,8 @@
 ---
-title: "링크 단축기 설계"
-category: system design
-date:
+title: 링크 단축기 설계
+tags:
+  - system design
+date: 2025-02-17T02:52:31.843Z
 ---
 
 최근 더폼의 링크 단축기를 설계하고 구현했다. 이 과정에서 사용한 알고리즘 및 의사 결정을 정리한다.
