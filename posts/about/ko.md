@@ -1,5 +1,5 @@
 ---
-title: About Unknownpgr
+title: About Joonho Gwon
 tags:
   - about
 date: 2023-09-02T03:36:44.956Z
@@ -27,7 +27,7 @@ date: 2023-09-02T03:36:44.956Z
 
 **University of Seoul**
 
-- 공학 학사, 컴퓨터 과학, 2026.09 졸업 예정
+- 공학 학사, 컴퓨터 과학
 - Relevant Coursework: 임베디드 시스템, 리눅스 프로그래밍, 선형대수, 수치해석, 컴퓨터 그래픽스
 
 ## Experiences
