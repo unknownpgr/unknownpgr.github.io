@@ -73,6 +73,13 @@
       nav a {
         color: black;
       }
+
+      /* Nav and home should not be printed */
+      @media print {
+        .noprint {
+          display: none;
+        }
+      }
     </style>
   </head>
   <body>
@@ -87,16 +94,16 @@
     ></noscript>
     <!-- End Google Tag Manager (noscript) -->
     <div class="container">
-      <a href="{{home}}">Unknownpgr</a>
+      <a class="noprint" href="{{home}}">Unknownpgr</a>
       <h1 class="title">{{title}}</h1>
-      <p>{{date}} | {{languages}}</p>
+      <p class="noprint">{{date}} | {{languages}}</p>
       <div class="content">{{content}}</div>
       <br />
-      <div class="separator">
+      <div class="separator noprint">
         - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       </div>
       <br />
-      <nav>{{prev}}{{next}}</nav>
+      <nav class="noprint">{{prev}}{{next}}</nav>
     </div>
     {{footer}}
   </body>
