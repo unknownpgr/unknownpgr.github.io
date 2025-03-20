@@ -122,17 +122,13 @@ date: 2023-09-02T03:36:44.956Z
 
 #### [Git-Key](https://www.npmjs.com/package/@unknownpgr/git-key)
 
-- An open source library for safely managing secrets with git.
-- ko) Git으로 시크릿 정보를 안전하게 관리할 수 있는 오픈소스 라이브러리입니다.
-- My first open source library project.
-- ko) 제가 처음으로 오픈소스 라이브러리를 만들어본 프로젝트입니다.
+- Git으로 시크릿 정보를 안전하게 관리할 수 있는 오픈소스 라이브러리입니다.
+- 제가 처음으로 오픈소스 라이브러리를 만들어본 프로젝트입니다.
 
 #### [PAB-NFT](https://pabnft.com/)
 
-- Pixel Art Board (PAB) is a web3 project that allows users to create and trade NFTs.
-- ko) Pixel Art Board (PAB)는 사용자가 NFT를 만들고 거래할 수 있는 웹3 프로젝트입니다.
-- Based on ERC-721, Solidity, Web3 and React.
-- ko) ERC-721, Solidity, Web3, React를 기반으로 만들었습니다.
+- Pixel Art Board (PAB)는 사용자가 NFT를 만들고 거래할 수 있는 웹3 프로젝트입니다.
+- ERC-721, Solidity, Web3, React를 기반으로 만들었습니다.
 
 #### [깃허브 블로그](https://github.com/unknownpgr/github-blog)
 
