@@ -11,6 +11,7 @@ date: 2023-09-02T03:36:44.956Z
 - Email : [unknownpgr@gmail.com](mailto:unknownpgr@gmail.com)
 - GitHub : [github.com/unknownpgr](https://github.com/unknownpgr)
 - LinkedIn : [linkedin.com/in/joonho-gwon](https://www.linkedin.com/in/joonho-gwon)
+- Blog : [unknownpgr.com](https://unknownpgr.com)
 
 ## Objective
 
