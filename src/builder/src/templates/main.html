@@ -5,11 +5,17 @@
     <style>
       .intro {
         width: fit-content;
-        height: 100dvh;
+        height: 80dvh;
         margin: 0 auto;
         display: flex;
         flex-direction: column;
         justify-content: center;
+      }
+
+      @media print {
+        .intro {
+          height: 100dvh;
+        }
       }
 
       .title {
@@ -22,7 +28,7 @@
       }
 
       .list a {
-        color: black;
+        text-decoration: none;
       }
 
       .container {
