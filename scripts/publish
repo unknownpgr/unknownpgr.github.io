@@ -3,7 +3,3 @@ ROOT=$(cd `dirname $0`/..; pwd)
 
 cd $ROOT/src/builder
 yarn update
-
-cd $ROOT/src/experimental
-yarn build
-cp -r dist $ROOT/static/experimental
