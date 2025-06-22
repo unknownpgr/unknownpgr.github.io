@@ -18,7 +18,7 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   storageClassName: local-storage
   local:
-    path: /home/unknownpgr/dev/blog/static
+    path: /home/unknownpgr/projects/blog/static
   nodeAffinity:
     required:
       nodeSelectorTerms:
