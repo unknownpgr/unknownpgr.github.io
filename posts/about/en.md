@@ -1,5 +1,5 @@
 ---
-title: About Unknownpgr
+title: About Joonho Gwon
 tags:
   - about
 date: 2023-09-02T03:36:44.956Z
@@ -11,66 +11,63 @@ date: 2023-09-02T03:36:44.956Z
 - Email : [unknownpgr@gmail.com](mailto:unknownpgr@gmail.com)
 - GitHub : [github.com/unknownpgr](https://github.com/unknownpgr)
 - LinkedIn : [linkedin.com/in/joonho-gwon](https://www.linkedin.com/in/joonho-gwon)
+- Blog : [unknownpgr.com](https://unknownpgr.com)
 
 ## Objective
 
-I always challenge new fields. My goal is to apply computers to different fields and create new value. I have been broadly studying various fields including web, embedded, graphics, machine learning, and numerical analysis. Among these, I mainly study web and embedded.
-
-I believe that a programmer is someone who solves problems using a computer. Therefore, I think it is important to accurately recognize problems, design logical solutions to these problems, and implement them. Hence, while I pursue a deep understanding of technology, I do not limit myself to specific languages or frameworks, and I strive to develop the ability to choose them appropriately as tools according to the given situation.
-
-When writing code, I separate concerns for a clean architecture and manage dependencies strictly. I strive to write code that is as readable and reusable as possible. To this end, I use various methodologies including object-oriented, functional, and data-oriented programming as needed.
+- I believe that fast development and good code are not a trade-off.
+- I take ownership of the code I write and focus on solving problems rather than finding fault in problem situations.
+- When solving problems, I avoid temporary fixes and band-aid solutions, accurately understand the problem, and use the right solution.
+- I pursue clean architecture, separate concerns, and manage dependencies thoroughly.
+- I strive to write code with maximum maintainability and scalability, and to this end, I use various methodologies including object-oriented, functional, and data-oriented programming as needed.
 
 ## Education
 
 **University of Seoul**
 
-- Bachelor of Engineering, Computer Science, expected graduation September 2026
+- Bachelor of Engineering in progress, Computer Science
 - Relevant Coursework: Embedded Systems, Linux Programming, Linear Algebra, Numerical Analysis, Computer Graphics
 
 ## Experiences
 
+- **NC AI**
+  - Backend Engineer, 2025.07 - Present
+  - As a backend engineer in NC AI VARCO 3D team, I design, implement, and maintain core architecture including MLOps pipelines.
+- **당근마켓**
+  - Software Engineer, 2025.05 - 2025.07
+  - As a backend engineer in 당근마켓 Local Jobs (당근알바) team, I maintained systems and developed various features.
+- **NCSOFT**
+  - Software Engineer, 2024.05 - 2024.08
+  - Developed 3D brush and diffusion model MLOps pipeline in internal Generative AI tool development.
 - **NAVER LABS**
-
-  - Software Engineer Internship, October 2023 - April 2024
-  - Developed the software build and deployment pipeline for NAVER LABS' autonomous vehicle ALT-B and the Road View vehicle.
-
+  - Software Engineer Internship, 2023.10 - April 2024.04
+  - Developed automated software build and deployment pipeline for NAVER LABS' autonomous vehicle ALT-B and Road View vehicle.
 - **Republic of Korea Army**
-
-  - Tactical C4I Operation/Maintenance, April 2022 - October 2023
-  - Managed and maintained military networking systems to maintain operational readiness and security.
-
+  - Tactical C4I Operation/Maintenance, 2022.04 - 2023.10
+  - Managed and maintained ATCIS military networking systems to maintain operational readiness and security.
 - **The-Form**
-
-  - Tech Lead, February 2021 - Present
-  - As a tech lead, managed the technical aspects of projects and implemented scalable structures based on clean architecture. The-Form has over 10,000 MAU.
-
+  - Tech Lead, 2021.02 - Present
+  - The-Form is a form SaaS survey platform that considers various user requirements.
+  - As a tech lead, I manage the technical aspects of the project including the overall structure, and implemented scalable structures based on clean architecture. The-Form has over 10,000 MAU.
 - **Software Maestro 12th**
-
-  - Participant (Excellent Graduate), February 2021 - December 2021
-  - Established The-Form, a survey platform considering user requirements, in the national education program Software Maestro for nurturing software entrepreneurs.
-
+  - Software Maestro 12th Participant (Excellent Graduate), 2021.02 - 2021.12
+  - Software Maestro is a national education program for nurturing software entrepreneurs.
+  - Established the aforementioned The-Form.
 - **ZETIN Robotics Club, University of Seoul**
-
-  - President, December 2020 - December 2021
+  - President, 2020.12 - 2021.12
   - [zetin.uos.ac.kr](https://zetin.uos.ac.kr)
-  - Led the robotics club, overseeing its operations, and designed and conducted educational programs covering basics from hardware design to algorithms.
-
+  - Led the robotics club, overseeing its operations, and planned and conducted educational programs covering the full spectrum of robotics from circuit design and CAD to driving algorithms.
 - **Human-Centered Artificial Intelligence Lab (HCAIL)**
-
-  - Undergraduate Research Intern, University of Seoul, October 2019 - February 2021
+  - Undergraduate Research Intern, University of Seoul, 2019.10 - 2021.02
   - Advisor: Prof. Hyunggu Jung
   - Contributed to various projects on human-computer interaction and published a paper as an undergraduate researcher at Asian CHI 2020.
-
 - **International School of Urban Sciences**
-
-  - Undergraduate Research Intern, University of Seoul, March 2020 - March 2022
+  - Undergraduate Research Intern, University of Seoul, 2020.03 - 2022.03
   - Advisor: Prof. Chun Ho Yeom
   - Developed and managed a system for measuring compaction of highway earthworks and collecting and analyzing road information to prevent traffic accidents.
-
 - **C Programming and Practice, 2019 Winter Semester**
-
-  - Teaching Assistant, University of Seoul, December 2019 - January 2020
-  - Provided programming education for undergraduate students, enhancing their programming skills and understanding of C language fundamentals.
+  - University of Seoul C Programming and Practice, 2019 Winter Semester
+  - Conducted programming education and practice, helping students understand C language fundamentals and improve their programming skills.
 
 ## Skills
 
@@ -98,106 +95,75 @@ When writing code, I separate concerns for a clean architecture and manage depen
 
 ### Services
 
-#### [The Form](https://the-form.io)
-
-- The Form is a service that allows you to easily create surveys on the web and collect responses.
-- It has an average of 10,000 and a maximum of 100,000 MAU.
-- Currently managing the entire service as the tech leader.
-
-#### [Real Estate Manager](https://real-estate.unknownpgr.com)
-
-- A web service that allows real estate agents to manage their property listings.
-- Currently operating in beta version without promotion, but registration and service use are possible.
-- This is a one-person-development project, and I am in charge of the overall development from service architecture and infrastructure design to development and deployment.
+- [The Form](https://the-form.io)
+  - The Form is a form builder SaaS that allows you to easily create surveys on the web and collect responses.
+  - It has an average of 10,000 and a maximum of 100,000 MAU.
+  - I am managing the entire service as the tech lead.
+- [Real Estate Manager](https://real-estate.unknownpgr.com)
+  - A web service that allows real estate agents to manage their property listings.
+  - Currently operating in beta version without promotion, but registration and service use are possible.
+  - This is a one-person-development project, and I am in charge of the overall development from service architecture and infrastructure design to development and deployment.
 
 ### Web
 
-#### [Git-Key](https://www.npmjs.com/package/@unknownpgr/git-key)
-
-- An open source library for safely managing secrets with git.
-- This is the first open source library project I have created.
-
-#### [PAB-NFT](https://pabnft.com/)
-
-- Pixel Art Board (PAB) is a web3 project that allows users to create and trade NFTs.
-- Based on ERC-721, Solidity, Web3, and React.
-
-#### [GitHub Blog](https://github.com/unknownpgr/github-blog)
-
-- Created this from scratch without using existing frameworks like Jekyll or Hexo.
-- Used many basic technologies for web development, including React / SCSS for UI framework, and simple CI/CD with GitHub Actions.
-
-#### [Automated Compaction Measurement System for Earthworks](https://github.com/unknownpgr/uos-urban-road)
-
-- A project conducted as a student researcher at the International School of Urban Sciences, Seoul City University.
-- Implemented data transfer from on-site equipment to server, data storage in DB from server, and visualization through web pages.
+- [PAB-NFT](https://pabnft.com/)
+  - Pixel Art Board (PAB) is a web3 project that allows users to create and trade NFTs.
+  - Based on ERC-721, Solidity, Web3, and React.
+- [GitHub Blog](https://github.com/unknownpgr/unknownpgr.github.io)
+  - A blog in the form of a template engine with minimal external dependencies.
+  - Through development, I was able to experience various technologies for web development including React / SCSS UI frameworks and CI/CD using GitHub Actions.
+- [Automated Compaction Measurement System for Earthworks](https://github.com/unknownpgr/uos-urban-road)
+  - A project conducted as a student researcher at the International School of Urban Sciences, University of Seoul.
+  - Received data from measurement equipment used at highway construction sites, stored it on the server, and visualized it in a web UI format.
 
 ### Embedded
 
-#### [Embedded Software Contest](https://github.com/shythm/eswcontest-car)
-
-- Participated in a competition to autonomously drive a vehicle based on embedded Linux equipped with cameras and various sensors.
-- It was an opportunity to perform image processing on embedded systems and optimization for real-time control.
-  - [video](https://youtu.be/6rkNeMgAsw8)
-
-#### [Autonomous Trash Can](https://github.com/unknownpgr/trashcan)
-
-- Created a trash can that follows a path drawn on the floor and automatically performs shortest path search using Raspberry Pi.
-- This project utilized various Linux kernel features including Memory mapped IO, CPU affinity.
-  - [video list](https://www.youtube.com/watch?v=60Z-cCqDNXo&list=PLwAlwbWmqPHFY4DxehJgRvK1k2sIkV5EB)
-
-#### [Line Tracer](https://github.com/unknownpgr/zetin-linetracer-custom)
-
-- Developed a line tracer robot using STM32F407 MCU in ZETIN robotics club.
-- The project facilitated a fundamental understanding of embedded systems, including Interrupts, Registers.
+- [Embedded Software Contest](https://github.com/shythm/eswcontest-car)
+  - Participated in a competition to autonomously drive a vehicle based on embedded Linux equipped with cameras and various sensors.
+  - It was an opportunity to perform image processing on embedded systems and optimization for real-time control.
+    - [video](https://youtu.be/6rkNeMgAsw8)
+- [Autonomous Trash Can](https://github.com/unknownpgr/trashcan)
+  - Created a trash can using Raspberry Pi that follows a path drawn on the floor and automatically performs shortest path search.
+  - This project utilized various Linux kernel features including Memory mapped IO, CPU affinity.
+    - [video list](https://www.youtube.com/watch?v=60Z-cCqDNXo&list=PLwAlwbWmqPHFY4DxehJgRvK1k2sIkV5EB)
+- [Line Tracer](https://github.com/unknownpgr/zetin-linetracer-custom)
+  - Developed a line tracer robot using STM32F407 MCU in ZETIN robotics club.
+  - The project facilitated a fundamental understanding of embedded systems, including Interrupts, Registers.
 
 ### Graphics
 
-#### [Reverse Projection-1](https://github.com/unknownpgr/auto-projection-matching)
+- [Reverse Projection-1](https://github.com/unknownpgr/auto-projection-matching)
+  - A program that performs reverse projection to view distorted images correctly according to perspective.
+  - Implemented using Python+OpenCV and won 5th place in the Semtle Challenge 2019.
+    - [video](https://youtu.be/77tAkzMEDdw)
+- [Reverse Projection-2](https://github.com/unknownpgr/auto-projection-matching-2)
+  - An extension of Reverse Projection-1 that can be used from the perspective of a moving observer and applied to 3D models.
+  - It was an opportunity to write and use WebGL Shaders.
+  - Won 2nd place in the Semtle Challenge 2020.
+    - [video](https://youtu.be/TkQpI9xZ_dk)
+- [Road Simulator](https://github.com/unknownpgr/road-simulator)
+  - Created a road simulator to generate a dataset for implementing lane detection through machine learning in an embedded software contest.
 
-- A program that projects distorted images correctly from slanted angles.
-- Implemented using Python+OpenCV and won 5th place in the Semtle Challenge 2019.
-  - [video](https://youtu.be/77tAkzMEDdw)
+### Numerical analysis
 
-#### [Reverse Projection-2](https://github.com/unknownpgr/auto-projection-matching-2)
-
-- An extension of Reverse Projection-1 that can be used from the perspective of a moving observer and applied to 3D models.
-- It was an opportunity to write and use WebGL Shaders.
-- Won 2nd place in the Semtle Challenge 2020.
-  - [video](https://youtu.be/TkQpI9xZ_dk)
-
-#### [Road Simulator](https://github.com/unknownpgr/road-simulator)
-
-- Created a road simulator to generate a dataset for lane detection model training.
-- Used in an embedded software contest.
-
-### Numerical Analysis
-
-#### [Lagrangian Mechanics Simulator](https://github.com/unknownpgr/lagrangian-mechanics)
-
-- A MATLAB script that calculates the Lagrangian from the kinetic and potential energy of a mechanical system and solves for each generalized coordinate.
-- Additionally, created a simulation using explicit Euler method in JS.
+- [Lagrangian Mechanics Simulator](https://github.com/unknownpgr/lagrangian-mechanics)
+  - A MATLAB script that calculates the Lagrangian from the kinetic and potential energy of a mechanical system and solves for each generalized coordinate.
+  - Additionally, created a simulation using explicit Euler method in JS.
 
 ### Artificial Intelligence
 
-#### [Face Tracking](https://github.com/unknownpgr/face_recognize)
+- [Face Tracking](https://github.com/unknownpgr/face_recognize)
+  - Implemented face recognition and tracking using the OpenFace library and SVM.
 
-- Implemented face recognition and tracking program using the OpenFace library and SVM.
+### Fun projects
 
-### Fun Projects
-
-#### [t-png](https://github.com/unknownpgr/t-png)
-
-- A Python/JS script that automatically generates PNG images that appear differently depending on the background color.
-- Used linear algebra operations including PseudoInverse.
-
-#### [Mandelbrot Set](https://github.com/unknownpgr/fractal-js)
-
-- Implemented the Mandelbrot Set generator, a type of fractal, using pure JS and WebGL.
-
-#### [Dragon Curve](https://github.com/unknownpgr/dragon-curve)
-
-- Implemented the dragon curve generator, a type of fractal.
+- [t-png](https://github.com/unknownpgr/t-png)
+  - A Python/JS script that automatically generates PNG images that appear differently depending on the background color.
+  - Used linear algebra operations including PseudoInverse.
+- [Mandelbrot Set](https://github.com/unknownpgr/fractal-js)
+  - A project that visualizes the Mandelbrot Set, a type of fractal, using pure JS and WebGL.
+- [Dragon Curve](https://github.com/unknownpgr/dragon-curve)
+  - A project that visualizes the dragon curve, a type of fractal.
 
 ## Awards and Honors
 
