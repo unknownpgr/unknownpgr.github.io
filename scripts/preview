@@ -1,0 +1,6 @@
+#!/bin/bash
+# Build the blog image and serve it locally at http://localhost:8080
+set -e
+cd "$(dirname "$0")/.."
+docker build -t blog:local .
+docker run --rm -p 8080:80 blog:local

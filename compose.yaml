@@ -1,0 +1,16 @@
+services:
+  blog:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    logging:
+      options:
+        max-size: "1m"
+
+# Join the shared reverse proxy network. The proxy (nginx-proxy-manager)
+# routes incoming traffic to this service as `blog:80`.
+networks:
+  default:
+    name: reverse-proxy
+    external: true

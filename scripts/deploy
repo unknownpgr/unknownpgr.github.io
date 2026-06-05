@@ -1,11 +1,6 @@
-cd `dirname $0`
-KUBECONFIG=`pwd`/kubeconfig
-cd ../src
-
+#!/bin/bash
+# Rebuild the static site and (re)deploy the blog behind the reverse proxy.
 set -e
-shopt -s expand_aliases
-alias build='curl -sSL l.ist.sh/b | node - build'
-
-# Deploy
-cat kubernetes/resources.yaml | kubectl apply --kubeconfig $KUBECONFIG -f -
+cd "$(dirname "$0")/.."
+docker compose up -d --build
 echo "Done!"
