@@ -1,6 +1,17 @@
 #!/bin/bash
 # Rebuild the static site and (re)deploy the blog behind the reverse proxy.
-set -e
+set -euo pipefail
 cd "$(dirname "$0")/.."
-docker compose up -d --build
+
+builder_image="unknownpgr-blog-builder:local"
+
+docker build --target builder -t "$builder_image" .
+mkdir -p public
+docker run --rm \
+  --user "$(id -u):$(id -g)" \
+  --volume "$PWD/posts:/app/posts" \
+  --volume "$PWD/public:/app/static" \
+  "$builder_image"
+
+docker compose up -d
 echo "Done!"

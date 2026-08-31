@@ -1,9 +1,9 @@
 services:
   blog:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: nginx:alpine
     restart: unless-stopped
+    volumes:
+      - ./public:/usr/share/nginx/html:ro
     logging:
       options:
         max-size: "1m"

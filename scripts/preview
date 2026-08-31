@@ -1,6 +1,19 @@
 #!/bin/bash
-# Build the blog image and serve it locally at http://localhost:8080
-set -e
+# Build the blog and serve it locally at http://localhost:8080
+set -euo pipefail
 cd "$(dirname "$0")/.."
-docker build -t blog:local .
-docker run --rm -p 8080:80 blog:local
+
+builder_image="unknownpgr-blog-builder:local"
+
+docker build --target builder -t "$builder_image" .
+mkdir -p public
+docker run --rm \
+  --user "$(id -u):$(id -g)" \
+  --volume "$PWD/posts:/app/posts" \
+  --volume "$PWD/public:/app/static" \
+  "$builder_image"
+
+docker run --rm \
+  --publish 8080:80 \
+  --volume "$PWD/public:/usr/share/nginx/html:ro" \
+  nginx:alpine
