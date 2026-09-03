@@ -5,46 +5,46 @@ tags:
 date: 2024-01-17T07:47:28.974Z
 ---
 
-> Translated with the help of ChatGPT and Google Translator
+> This post was translated from Korean into English by AI.
 
-This time, while developing various things, I learned more about TTY, so I am organizing the contents.
+While working on various development projects recently, I learned more about TTYs, so I am writing down what I learned here.
 
-##TTY
+## TTY
 
-tty is an abbreviation for teletypewriter, and is an interface that abstracts devices such as terminals and consoles in Unix-based operating systems. More specifically, it refers to device drivers that provide such interfaces.
+TTY stands for teletypewriter. In Unix-like operating systems, it is an interface that abstracts devices such as terminals and consoles. More specifically, it refers to the device driver that provides such an interface.
 
-Linux's terminal subsystem consists of three layers:
+Linux's terminal subsystem consists of the following three layers.
 
-- Character device interface: Provides an interface to the user in the form of a character device.
-- Line discipline: Provides various preprocessing required when users interact with programs through the terminal.
-- TTY driver: A driver that communicates with a real terminal device or a virtual device called a pseudo terminal.
+- Character device interface: Provides users with an interface in the form of a character device.
+- Line discipline: Provides various kinds of preprocessing required when users interact with programs through a terminal.
+- TTY driver: A driver that communicates with either a physical terminal device or a virtual device called a pseudo-terminal.
 
-Since the dual character device interface is beyond the scope of this article, we will omit it and look at the remaining two layers.
+The character device interface is beyond the scope of this post, so I will omit it and look at the other two layers.
 
 ## Line Discipline
 
-Line discipline layer (hereinafter referred to as LD) provides various functions that are taken for granted when using the terminal.
+The line discipline layer (hereafter LD) provides many of the features we take for granted when using a terminal.
 
-- When a user enters text in the terminal, the text is displayed as is without any special processing in the program. This is because LD provides the echo function. If the program receives user input directly without the help of LD, the entered text will not be displayed on the screen, just like when entering a password, unless an echo function is provided separately.
+- When a user enters text in a terminal, the text appears as typed even if the program does not do anything special. This is because the LD provides echo functionality. If a program received user input directly without the LD's help, the entered text would not appear on the screen—just like when entering a password—unless the program implemented echo functionality separately.
 
-  - In fact, programs that require direct handling of the terminal, such as the readline utility, vim, and the function to receive passwords, are implemented with various functions of LD turned off.
+  - In fact, programs that need to control the terminal directly, such as the readline utility, Vim, and password input features, are implemented with several LD features disabled.
 
-- If you look at python's `input` or C language's `scanf` function, you can see that the entered text is not transmitted to the program in real time, but is transmitted all at once the moment you press Enter. This is also because LD has an internal buffer. If this buffer did not exist, complex functions such as pressing backspace would have to be implemented manually in every program.
+- With Python's `input` or C's `scanf` function, you can see that entered text is not sent to the program in real time; instead, it is sent all at once when Enter is pressed. This is also because the LD maintains an internal buffer. Without such a buffer, every program would have to implement complex features such as handling the Backspace key itself.
 
-- The function of sending signals by receiving control characters such as Ctrl+C (SIGINT), Ctrl+Z (SIGTSTP), Ctrl+S (SIGSTOP), and Ctrl+Q (SIGCONT) is also provided by LD. If LD did not provide this function, there would be no way to terminate a program that does not accept string input.
+- The LD also handles control characters such as Ctrl+C (SIGINT), Ctrl+Z (SIGTSTP), Ctrl+S (SIGSTOP), and Ctrl+Q (SIGCONT), and sends signals in response. If the LD did not provide these features, there would be no way to terminate a program that does not accept string input.
 
-- When outputting a string in a program, even if only `\n` characters are output, they are converted to `\r\n` and output because LD processes them. If you turn off this function in LD and print text, the carriage return text is not printed, resulting in a staircase effect where the text is printed like stairs.
+- When a program outputs a string, even if it outputs only a `\n` character, it is converted to `\r\n` because the LD handles the conversion. If you disable this feature in the LD and output text, the carriage return character is not emitted, causing the text to appear like a staircase—a phenomenon known as the staircase effect.
 
 ## Signal
 
-Among these functions, those related to signal processing are particularly interesting. The tty driver classifies various process groups in Linux into one foreground process group and the remaining background process groups. Only processes belonging to the terminal's foreground process group can output strings to the terminal and receive input from the terminal. And when a control character is input from the user (e.g. Ctrl+C) and the tty driver generates a signal, this signal is delivered only to processes belonging to the foreground process group.
+Of these features, the part related to signal handling is especially interesting. The TTY driver classifies Linux's various process groups into one foreground process group and the remaining background process groups. Only processes in that terminal's foreground process group can output text to and receive input from the terminal. When the user enters a control character (e.g., Ctrl+C) and the TTY driver generates a signal, that signal is delivered only to processes in the foreground process group.
 
-These foreground process groups can be handled using the following system calls.
+The foreground process group can be managed using the following system calls.
 
-- `tcgetpgrp`: Get the foreground process group of a given terminal.
-- `tcsetpgrp`: Sets the foreground process group for the given terminal.
+- `tcgetpgrp`: Gets the foreground process group of the given terminal.
+- `tcsetpgrp`: Sets the foreground process group of the given terminal.
 
-For example, if you run the following script, pressing Ctrl+C will terminate the process without error.
+For example, when you run the following script, pressing Ctrl+C terminates the process without an error.
 
 ```python
 import subprocess
@@ -60,17 +60,17 @@ p = subprocess.Popen(cmd, shell=True)
 print("Pgrp after command: ", os.tcgetpgrp(sys.stdout.fileno()), os.getpid())
 
 try:
-     time.sleep(99999)
+    time.sleep(99999)
 except:
-     pass
+    pass
 print(f"Exiting...")
 ```
 
-The execution result is as follows.
+The output is as follows.
 
 ```
-Pgrp before command: 287745 287745
-Pgrp after command: 287745 287745
+Pgrp before command:  287745 287745
+Pgrp after command:  287745 287745
 PING 1.1.1.1 (1.1.1.1) 56(84) bytes of data.
 64 bytes from 1.1.1.1: icmp_seq=1 ttl=52 time=3.81 ms
 64 bytes from 1.1.1.1: icmp_seq=2 ttl=52 time=3.77 ms
@@ -81,25 +81,25 @@ rtt min/avg/max/mdev = 3.765/3.786/3.808/0.021 ms
 Exiting...
 ```
 
-This is because all three processes, Python interpreter, bash, and ping, are included in the foreground process group. The moment you press Ctrl+C, a signal is sent to all processes at the same time, and since the Python interpreter ignores exceptions, the process terminates without displaying any errors.
+This is because all three processes—the Python interpreter, Bash, and ping—belong to the foreground process group. The moment Ctrl+C is pressed, the signal is delivered to all the processes simultaneously. Because the Python interpreter ignores the exception, the process terminates without displaying any particular error.
 
-However, if you give the i option when running bash as follows, the result will be different.
+However, the result changes if Bash is run with the `-i` option, as shown below.
 
 ```python
-# Layout
+# omitted above
 cmd = 'bash -ci "ping 1.1.1.1 -c 100"'
 p = subprocess.Popen(cmd, shell=True)
 time.sleep(0.1) # Wait for subprocess to start
-# Halyak
+# omitted below
 ```
 
-The results are as follows:
+The output is as follows.
 
 ```
-Pgrp before command: 288343 288343
+Pgrp before command:  288343 288343
 PING 1.1.1.1 (1.1.1.1) 56(84) bytes of data.
 64 bytes from 1.1.1.1: icmp_seq=1 ttl=52 time=5.56 ms
-Pgrp after command: 288345 288343
+Pgrp after command:  288345 288343
 64 bytes from 1.1.1.1: icmp_seq=2 ttl=52 time=5.26 ms
 64 bytes from 1.1.1.1: icmp_seq=3 ttl=52 time=5.70 ms
 ^C
@@ -109,14 +109,14 @@ rtt min/avg/max/mdev = 5.259/5.505/5.702/0.184 ms
 ^C^C^C^C^C^C^C^C
 ```
 
-When you press Ctrl+C, you can see that the ping process is terminated but the Python interpreter is not terminated. The `-i` option of bash allows you to run an interactive shell, and when you use this option, bash sets itself to the foreground process group. If you actually look at the log, you can see that the foreground process group has changed.
+You can see that pressing Ctrl+C terminates the ping process, but not the Python interpreter. Bash's `-i` option runs an interactive shell, and when this option is used, Bash sets itself as the foreground process group. The log indeed shows that the foreground process group has changed.
 
-In this case, if done incorrectly, this process may live forever. Normally, when you run a process, turning off the terminal will terminate the process as well. This is because when the terminal terminates, the `SIGHUP` signal is sent to its child processes. However, if you run such a script with `sudo` privileges, the script's execution privileges will be higher than those of the terminal. In such cases, the kernel does not pass the signal. At this time, problems may arise if these processes use a lot of CPU or occupy ports.
+In this situation, the process can end up running forever if things go wrong. Normally, when a terminal in which a process is running is closed, the process terminates along with it. This is because a `SIGHUP` signal is delivered to the terminal's child processes when the terminal exits. However, if a script like this is run with `sudo`, the script runs with higher privileges than the terminal. In that case, the kernel does not deliver the signal. Problems can arise if such a process uses a lot of CPU or occupies a port.
 
-To prevent this, after the child process terminates, use the `tcsetpgrp` system call to set the foreground process group again.
+To prevent this, after the child process exits, you can set the foreground process group again using the `tcsetpgrp` system call.
 
 ```python
-# Layout
+# omitted above
 
 cmd = "bash -ci \"ping 1.1.1.1 -c 100\""
 p = subprocess.Popen(cmd, shell=True)
@@ -125,87 +125,87 @@ p.wait() # Wait for subprocess to finish
 # Set the terminal's foreground process group to this process's group
 os.tcsetpgrp(sys.stdout.fileno(), os.getpid())
 
-# Halyak
+# omitted below
 ```
 
-> At this time, if you use the `p.wait()` function in the first script, an error will occur when you press Ctrl+C. This is because the signal was also delivered to the Python interpreter. However, in this case, you can use p.wait() because the signal is not delivered to the Python interpreter until you run `os.tcsetpgrp()`.
+> In the very first script, using the `p.wait()` function causes an error when Ctrl+C is pressed. This is because the signal is also delivered to the Python interpreter. In this case, however, the signal is not delivered to the Python interpreter until `os.tcsetpgrp()` is executed, so `p.wait()` can be used.
 
-However, if you actually do this, the process will be stopped the moment the `tcsetpgrp` system call is executed.
+However, if you actually try this, the process enters the Stopped state the moment the `tcsetpgrp` system call is executed.
 
 ```
-Pgrp before command: 279325 279325
+Pgrp before command:  279325 279325
 PING 1.1.1.1 (1.1.1.1) 56(84) bytes of data.
 64 bytes from 1.1.1.1: icmp_seq=1 ttl=52 time=4.37 ms
-64 bytes from 1.1.1.1: icmp_seq=2 ttl=52 time=6.41ms
+64 bytes from 1.1.1.1: icmp_seq=2 ttl=52 time=6.41 ms
 ^C
 --- 1.1.1.1 ping statistics ---
 2 packets transmitted, 2 received, 0% packet loss, time 1002ms
 rtt min/avg/max/mdev = 4.374/5.390/6.406/1.016 ms
 
-[1]+ Stopped python3 asdf.py
+[1]+  Stopped                 python3 asdf.py
 ```
 
-This is normal behavior, and the man page for `tcsetgprp` explains it as follows:
+This is expected behavior. The `tcsetgprp` man page explains it as follows.
 
 > If tcsetpgrp() is called by a member of a background process group in its session, and the calling process is not blocking or ignoring SIGTTOU, a SIGTTOU signal is sent to all members of this background process group.
 
-As the `bash` process took the foreground, the Python interpreter became the background process group, so the `SIGTTOU` signal was sent and the process was stopped.
+When the `bash` process took control of the foreground, the Python interpreter became a background process group. As a result, the process was stopped when the `SIGTTOU` signal was delivered.
 
-You can bring the process back to the foreground with the `fg` command, or you can modify your code to ignore this signal as follows: To clearly see the change in the foreground process group, let's print the foreground process group inside bash using the python command instead of ping.
+You can bring the process back into the foreground with the `fg` command, or modify the code to ignore this signal as shown below. To make the changes to the foreground process group clear, I will use a Python command instead of ping and print the foreground process group from within Bash.
 
 ```python
-# Layout
+# omitted above
 
 cmd = "bash -ci \"python3 -c 'import os; print(os.getpgrp(), os.getpid())'\""
 p = subprocess.Popen(cmd, shell=True)
 p.wait() # Wait for subprocess to finish
 
-#IgnoreSIGTTOU
+# Ignore SIGTTOU
 signal.signal(signal.SIGTTOU, signal.SIG_IGN)
 # Set the terminal's foreground process group to this process's group
 os.tcsetpgrp(sys.stdout.fileno(), os.getpid())
 
 print("Pgrp after command: ", os.tcgetpgrp(sys.stdout.fileno()), os.getpid())
 
-# Halyak
+# omitted below
 ```
 
-The results at this time are as follows:
+The output in this case is as follows.
 
 ```
-Pgrp before command: 59158 59158
+Pgrp before command:  59158 59158
 59160 59160
-Pgrp after command: 59158 59158
+Pgrp after command:  59158 59158
 ^CExiting...
 ```
 
-##PTY
+## PTY
 
-Next, let's look at another interesting feature of the tty driver: pty. Pty stands for pseudo terminal and provides the ability to simulate an actual terminal device. pty is used to implement a terminal without actual hardware, that is, a terminal program on a GUI, telnet, ssh, etc.
+Next, let us look at another interesting feature of the TTY driver: PTYs. PTY stands for pseudo-terminal and provides a way to emulate a physical terminal device. PTYs are used to implement terminals without physical hardware, such as GUI terminal programs, Telnet, and SSH.
 
-When an actual terminal device is connected, its structure is as follows.
-
-```
-Physical hardware - hardware device driver - tty device driver - program
-```
-
-Similarly, the structure of pty is as follows.
+When a physical terminal device is connected, its structure is as follows.
 
 ```
-Program - pty device driver - tty device driver - program
+physical hardware - hardware device driver - TTY device driver - program
 ```
 
-Therefore, a pty connects two different programs, so each program has a file descriptor corresponding to a physical device and a terminal character device file.
+Similarly, the structure of a PTY is as follows.
 
-At this time, the side corresponding to the physical device, that is, the side used by general users, is called the master, and the side corresponding to the pty, that is, the side used by the process reading the terminal, is called the slave. This master-slave pair is called a pty pair.
+```
+program - PTY device driver - TTY device driver - program
+```
 
-The operation of a pty pair can be thought of as similar to a bidirectional pipe with LD applied internally. So, the content written to the master is transmitted to the slave, and the content written by the slave is transmitted to the master. However, unlike a bidirectional pipe, there is a difference in that it is delivered after various processing is performed in LD using an internal buffer, etc.
+Thus, a PTY connects two different programs, and each program has one file descriptor corresponding respectively to the physical device and the terminal character device file.
 
-In Linux, these ptys are served through a virtual filesystem called `devpts`. `devpts` connects the master to `/dev/ptmx` and the slave to `/dev/pts/<n>`. In this case, `<n>` is a number that increases by 1 each time a pty is created. Slave device files are created one per pty pair, and for the master, only one special file called `/dev/ptmx` is used. Each time the `/dev/ptmx` file is opened, it creates a new pty pair and returns the file descriptor of its master.
+The side corresponding to the physical device—the side used by an ordinary user—is called the master. The side corresponding to the PTY—the side used by the process reading the terminal—is called the slave. This master-slave pair is called a PTY pair.
 
-Originally, a cumbersome process of obtaining a PTS descriptor through this PTM descriptor and setting permissions was required. However, in Python, you can conveniently obtain the file descriptor of a pty pair using the function called `os.openpty`.
+Internally, a PTY pair can be thought of as something similar to a bidirectional pipe with the LD applied. Data written to the master is therefore delivered to the slave, and data written to the slave is delivered to the master. Unlike a bidirectional pipe, however, the LD performs various processing operations using mechanisms such as its internal buffer before delivering the data.
 
-Below is the script we looked at earlier modified to use pty.
+On Linux, these PTYs are provided through a virtual filesystem called `devpts`. `devpts` connects the master to `/dev/ptmx` and the slave to `/dev/pts/<n>`. Here, `<n>` is a number that increments by one each time a PTY is created. One slave device file is created for each PTY pair, whereas masters all use a single special file, `/dev/ptmx`. Each time the `/dev/ptmx` file is opened, it creates a new PTY pair and returns the file descriptor for its master.
+
+Normally, obtaining the PTS descriptor through this PTM descriptor and then setting its permissions requires a cumbersome series of steps. In Python, however, the `os.openpty` function provides a convenient way to obtain the file descriptors for a PTY pair.
+
+The script below is a modified version of the script examined earlier that uses a PTY.
 
 ```python
 import subprocess
@@ -219,12 +219,12 @@ master, slave = os.openpty()
 
 cmd = 'bash -ci "ping 1.1.1.1 -c 100"'
 p = subprocess.Popen(
-     cmd,
-     shell=True,
-     stdin=slave,
-     stdout=slave,
-     stderr=slave,
-     close_fds=True;
+    cmd,
+    shell=True,
+    stdin=slave,
+    stdout=slave,
+    stderr=slave,
+    close_fds=True,
 )
 
 time.sleep(1)
@@ -232,23 +232,23 @@ time.sleep(1)
 print("Pgrp after command: ", os.tcgetpgrp(sys.stdout.fileno()), os.getpid())
 
 try:
-     time.sleep(99999)
+    time.sleep(99999)
 except:
-     pass
+    pass
 print(f"Exiting...")
 ```
 
-The execution result is as follows.
+The output is as follows.
 
 ```
-Pgrp before command: 292251 292251
-Pgrp after command: 292251 292251
+Pgrp before command:  292251 292251
+Pgrp after command:  292251 292251
 ^CExiting...
 ```
 
-Unlike before, the foreground process has not changed. Because you have set stdin, stdout to pts, so it uses a different terminal than the parent process. In the same way, the output of the ping command is not displayed, and even when Ctrl+C is pressed, a signal is normally sent to the parent process and the process is terminated.
+Unlike before, the foreground process has not changed. This is because setting stdin and stdout to the PTS makes the subprocess use a different terminal from the parent process. For the same reason, the output of the ping command is not displayed, and pressing Ctrl+C delivers the signal normally to the parent process, causing it to terminate.
 
-To check the output, you can modify the waiting code as follows:
+To see the output, modify the waiting code as follows.
 
 ```python
 import subprocess
@@ -262,12 +262,12 @@ master, slave = os.openpty()
 
 cmd = 'bash -ci "ping 1.1.1.1 -c 100"'
 p = subprocess.Popen(
-     cmd,
-     shell=True,
-     stdin=slave,
-     stdout=slave,
-     stderr=slave,
-     close_fds=True;
+    cmd,
+    shell=True,
+    stdin=slave,
+    stdout=slave,
+    stderr=slave,
+    close_fds=True,
 )
 
 time.sleep(1)
@@ -275,21 +275,21 @@ time.sleep(1)
 print("Pgrp after command: ", os.tcgetpgrp(sys.stdout.fileno()), os.getpid())
 
 try:
-     whileTrue:
-         data = os.read(master, 1024)
-         if not data:
-             break
-         os.write(sys.stdout.fileno(), data)
+    while True:
+        data = os.read(master, 1024)
+        if not data:
+            break
+        os.write(sys.stdout.fileno(), data)
 except:
-     pass
+    pass
 print(f"Exiting...")
 ```
 
-The execution result is as follows.
+The output is as follows.
 
 ```
-Pgrp before command: 292942 292942
-Pgrp after command: 292942 292942
+Pgrp before command:  292942 292942
+Pgrp after command:  292942 292942
 bash: cannot set terminal process group (292942): Inappropriate ioctl for device
 bash: no job control in this shell
 PING 1.1.1.1 (1.1.1.1) 56(84) bytes of data.
@@ -300,9 +300,9 @@ PING 1.1.1.1 (1.1.1.1) 56(84) bytes of data.
 ^CExiting...
 ```
 
-Unlike the previous examples, when you press Ctrl+C, the statistics displayed by the ping command are not visible. In the previous examples, the child process output data directly to the terminal, so the data was displayed even if it was output after the parent process terminated. However, in this case, because the parent process reads data from ptm and output it, the data is output as soon as the parent process terminates. This is because it breaks.
+Unlike in the previous examples, when Ctrl+C is pressed, the statistics section produced by the ping command is not shown. In the previous examples, the child process wrote data directly to the terminal, so the data was displayed even if it was output after the parent process terminated. In this case, however, the parent process reads data from the PTM and outputs it, so the output stops as soon as the parent process terminates.
 
-> bash: cannot set terminal process group ... The error appears to be because, inside the Popen command, a pipe is used instead of a tty device to connect stdin and stdout. If you use fork directly as shown below, you can get the same result without error.
+> The `bash: cannot set terminal process group ...` error appears to occur because the `Popen` command connects stdin and stdout using pipes rather than a TTY device internally. Using `fork` directly, as shown below, produces the same result without the error.
 
 ```python
 import sys
@@ -311,33 +311,33 @@ import os
 master, slave = os.openpty()
 
 if os.fork() == 0:
-     os.close(master)
-     os. setsid()
-     os.dup2(slave, 0)
-     os.dup2(slave, 1)
-     os.dup2(slave, 2)
-     os.execvp("bash", ["bash", "-c", "-i", "ping 1.1.1.1 -c 100"])
+    os.close(master)
+    os.setsid()
+    os.dup2(slave, 0)
+    os.dup2(slave, 1)
+    os.dup2(slave, 2)
+    os.execvp("bash", ["bash", "-c", "-i", "ping 1.1.1.1 -c 100"])
 
 os.close(slave)
 
 try:
-     whileTrue:
-         data = os.read(master, 1024)
-         if not data:
-             break
-         os.write(sys.stdout.fileno(), data)
+    while True:
+        data = os.read(master, 1024)
+        if not data:
+            break
+        os.write(sys.stdout.fileno(), data)
 except:
-     pass
+    pass
 print(f"Exiting...")
 ```
 
 ## Conclusion
 
-In this article, we learned about the structure of tty, LD, and pty.
+In this post, we examined the structure of TTYs, LDs, and PTYs.
 
-- tty is an interface that abstracts the terminal.
-- LD provides various functions required when using the terminal.
-- pty provides the ability to simulate a real terminal device.
+- A TTY is an interface that abstracts a terminal.
+- The LD provides various features needed when using a terminal.
+- A PTY provides a way to emulate a physical terminal device.
 
 ## References
 

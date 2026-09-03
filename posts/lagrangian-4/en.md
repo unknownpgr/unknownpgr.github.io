@@ -1,55 +1,55 @@
 ---
-title: Lagrange mechanics [4] - special system
+title: Lagrangian Mechanics [4] - Special Systems
 tags:
   - math
   - science
 date: 2020-11-02T04:44:48.256Z
 ---
 
-> Translated with the help of ChatGPT and Google Translator
+> This post was translated from Korean into English by AI.
 
-# Special system
+# Special Systems
 
-Originally, I was going to finish the article in part 3, but when I thought about it, there was something I didn't cover. This is the case when the system cannot be easily treated by Lagrangian mechanics. The systems we've covered so far were all differentiable systems. However, in reality, there are many cases where the system is not differentiable. What should I do in this case?
+I had originally planned to wrap up this series with part 3, but then I realized there was something I had not covered: cases where a system cannot be handled easily with Lagrangian mechanics. All the systems we discussed up to the previous post were differentiable systems. In reality, however, systems that are not differentiable are far more common. What should we do in such cases?
 
-## Discontinuous system
+## Discontinuous Systems
 
-The most typical example is a discontinuous system. For example, in the simplest case, if you think of a collision where a ball hits a wall and bounces off, the path becomes an indifferentiable path because there is a peak at the time of the collision.
+The most representative example is a discontinuous system. As the simplest case, consider a collision in which a ball strikes a wall and bounces away. The path develops a cusp at the moment of impact, making it non-differentiable.
 
-## System given scope
+## Systems with a Restricted Range
 
-In other cases, the scope of the system may be given. For example, the pendulum discussed in the previous post has a free angle. So the pendulum can go up to higher coordinates than the fixed point. However, you may want to place limits on the angles at which the pendulum can move, for example, so that the pendulum only oscillates within a certain angle. For example, if a string is attached to the ceiling, the pendulum can only oscillate from -90 degrees to 90 degrees unless it pierces the ceiling.
+Another case is a system whose range is restricted. For example, the pendulum discussed in the previous post was free to move through any angle. It could therefore rise to a position higher than the point from which it was suspended. But we might instead want to limit the range of angles through which the pendulum can move, so that it oscillates only within a certain range. A typical example is a string attached to a ceiling: unless the pendulum passes through the ceiling, it can oscillate only between -90 and 90 degrees.
 
-## System with one-way binding force
+## Systems with a One-Directional Constraint Force
 
-Finally, there are cases where the constraints are unidirectional. Roll and slide the small sphere from the top of the large hemisphere. In that case, the small sphere initially rolls along the surface of the large sphere, but when the slope becomes steeper to a certain extent, it leaves the spherical surface.
+Finally, there are cases in which a constraint acts in only one direction. Imagine letting a small sphere roll and slide from the top of a large hemisphere. At first, the small sphere follows the surface of the large sphere, but once the slope becomes sufficiently steep, it leaves the spherical surface.
 
-# Resolution
+# Solution
 
-The above paragraph contains several examples to help you understand, but in reality, they can all be explained in one way. This is the case where the system has a discontinuous potential. For example, let's consider a ball bouncing off the floor. In this case, the ball has a gravitational potential (expressed as $mgh$) in the air. However, if the ball is below the floor, it theoretically has infinite potential, so the potential is discontinuous and diverges at $h=0$.
+I gave several examples in the sections above to make the idea easier to understand, but in fact they can all be explained in one way: the system has a discontinuous potential. Consider, for example, a ball bouncing off the ground. While the ball is in the air, it has gravitational potential (expressed as $mgh$). If the ball were below the ground, however, it would theoretically have infinite potential. Thus, at $h=0$, the potential is not only discontinuous but also divergent.
 
-There are two main ways to solve this case.
+There are two main ways to deal with cases like this.
 
-## Pretending to be continuous
+## Pretending It Is Continuous
 
-The first is to just pretend that the system is continuous. For example, if a ball bounces on the floor, the system is discontinuous at $h=0$ if the ball is a sizeless particle and the floor is a rigid body. However, if we slightly reflect reality and assume that the floor is not a rigid body but an elastic body with a very high elastic modulus, then at $h=0$ the system grows rapidly but is not discontinuous. Therefore, we can give the potential as follows:
+The first is simply to pretend that the system is continuous. When a ball bounces off the ground, for example, the system is discontinuous at $h=0$ if the ball is a point particle with no size and the ground is rigid. But if we make the model slightly more realistic and assume that the ground is not rigid, but instead an elastic body with a very large elastic modulus, the potential increases rapidly at $h=0$ without being discontinuous. We can therefore define the potential as follows.
 
 $$
 U=mgh+e^{-\beta h}
 $$
 
-At this time, $\beta$ is given an appropriately large value. In my experience, 4 to 6 isn't bad. This allows us to create the potential we want because it becomes almost $mgh$ at $h>0$ and diverges quickly at $h<0$.
+Here, we choose a suitably large value for $\beta$. In my experience, a value of around 4 to 6 worked reasonably well. This makes the potential nearly equal to $mgh$ when $h>0$, while causing it to diverge rapidly when $h<0$, giving us the potential we want.
 
-And since there are several functions that increase rapidly from 0, such as $\beta/h^2$, there is no problem in using an appropriate function. The reason I chose the function $e^{\beta h}$ is because I saw it on the Internet [reference](https://www.slideserve.com/donar/nano-mechanics-and-materials-theory-multiscale-methods- This is because this function was used in (and-applications-powerpoint-ppt-presentation). The reason for using this function in the reference is probably
+There are many functions that increase rapidly near zero, such as $\beta/h^2$, so there is nothing wrong with choosing another appropriate function. I chose the function $e^{\beta h}$ because it was used in a [reference](https://www.slideserve.com/donar/nano-mechanics-and-materials-theory-multiscale-methods-and-applications-powerpoint-ppt-presentation) I found online. I suspect the reference used this function because
 
-1. The function is easy to differentiate
-2. Less affected by floating point errors, etc.
-3. Less sensitive to errors
+1. it is easy to differentiate,
+2. it is relatively unaffected by floating-point errors, and
+3. it is somewhat less sensitive to error.
 
-I think it is. For example, if you used the function $1/h^2$, it would break through the floor and fall downward as soon as $h<0$ due to an error during simulation through numerical analysis. Below is an example of a two-dimensional potential well implemented using this method.
+For example, if we used the function $1/h^2$, then while running a numerical simulation, the ball would pass through the ground and fall downward the moment an error caused $h<0$. Below is an example of a two-dimensional potential well implemented using this method.
 
 <iframe src="https://unknownpgr.github.io/lagrangian-mechanics/sim-bounce.html"></iframe>
 
-## Analyze using generalization power
+## Analysis Using Generalized Forces
 
-Another way is to use generalization powers. However, the analysis method using generalization power is long enough to write a post on its own. Coincidentally, ~~Namu Wiki~~(...) has detailed information on it. So, Namu Wiki’s [Solving the Euler-Lagrange equation in the case of binding](https://namu.wiki/w/%EB%9D%BC%EA%B7%B8%EB%9E%91%EC%A3% It would be a good idea to refer to paragraph BC%20%EC%97%AD%ED%95%99#s-5.2).
+The other method is to use generalized forces. However, an explanation of how to perform the analysis using generalized forces would be long enough to fill an entire post by itself. As it happens, the topic is explained thoroughly on ~~NamuWiki~~(...). I therefore recommend referring to NamuWiki's section on [solving the Euler–Lagrange equation in the presence of constraint forces](https://namu.wiki/w/%EB%9D%BC%EA%B7%B8%EB%9E%91%EC%A3%BC%20%EC%97%AD%ED%95%99#s-5.2).

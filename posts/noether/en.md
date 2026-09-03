@@ -1,95 +1,95 @@
 ---
-title: A clear explanation of Noether's Theorem
+title: A Clear Explanation of Noether's Theorem
 tags:
   - math
 date: 2021-10-16T16:33:15.940Z
 ---
 
-> Translated with the help of ChatGPT and Google Translator
+> This post was translated from Korean into English by AI.
 
-Ever since I was in high school, I have been really curious about how Noether's Theorem works. However, I recently found a video that clearly explains Noether's theorem. So, I would like to summarize the contents.
+Ever since I was young—that is, since I was in high school—I had always wondered how on earth Noether's Theorem works. Then, not long ago, I found a video that explains Noether's Theorem clearly, so I would like to summarize its contents here.
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/78wz4KSzUvo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard- write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/78wz4KSzUvo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
-# What is Noether’s theorem?
+# What Is Noether's Theorem?
 
 ![EOWWvo7VAAAqxFE](imgs/EOWWvo7VAAAqxFE.jpeg)
 
-First, let’s look at Noether’s theorem. Noether's theorem is the theorem that **if there is continuous symmetry in a system, a corresponding conserved physical quantity exists**. For example, spatial translational symmetry corresponds to the law of conservation of momentum, and rotational symmetry corresponds to the law of conservation of angular momentum.
+First, let us take a look at Noether's Theorem. Noether's Theorem states that **if a system has a continuous symmetry, there exists a corresponding conserved physical quantity**. For example, spatial translation symmetry corresponds to the conservation of momentum, while rotational symmetry corresponds to the conservation of angular momentum.
 
-But I couldn't understand this sentence at all. First of all, I didn't understand what continuous symmetry meant. I think this is probably because the abstract explanation was too abstract to understand, and the detailed explanation using formulas was too mathematical, so it was difficult to understand its meaning.
+But I simply could not understand this statement. To begin with, I could not grasp what continuous symmetry meant. I think this was probably because abstract explanations were too abstract to understand, while concrete explanations written out as formulas were too mathematical for their meaning to be clear.
 
-# Proof of Noether's theorem
+# A Proof of Noether's Theorem
 
-Disclaimer: Please take this part as a mathematical demonstration of why the above proposition holds, rather than a mathematically rigorous proof. I'm not a math or physics major... haha
+Disclaimer: Please take this section not as a mathematically rigorous proof, but rather as a mathematical illustration of why the statement above holds. I am not a math or physics major, after all... haha.
 
-## Continuous symmetry
+## Continuous Symmetry
 
-To understand Noether's theorem, we must first understand what continuous symmetry is. Of course, to do that you first need to understand what symmetry is. In physics or mathematics, symmetry refers to a situation where no matter what changes are made to a system, it remains the same as the original.
+To understand Noether's Theorem, we must first understand what continuous symmetry is. Of course, to do that, we must begin by understanding what symmetry itself is. In physics and mathematics, symmetry means that a system remains indistinguishable from its original state even after a particular transformation is applied to it.
 
-For example, consider mirror symmetry. If you think about the shape of a butterfly, it is reversed left and right, that is, even if you look at the shape reflected in a mirror, it is completely indistinguishable from the original shape. Therefore, the butterfly shape has mirror symmetry.
+For example, consider reflection symmetry. Think of the shape of a butterfly: even if we reverse it from left to right—that is, look at its mirror image—we cannot distinguish it at all from its original shape. Therefore, the shape of a butterfly has reflection symmetry.
 
-However, the same appearance can only be achieved when a butterfly is flipped left and right, and cannot be obtained when flipped at a 45° angle or upside down. Therefore, the mirror symmetry of the butterfly shape is not continuous.
+However, a butterfly looks the same only in the specific case of being flipped from left to right. Flipping it by an angle of 45° or from top to bottom does not produce the same shape. Therefore, the reflection symmetry of a butterfly's shape is not continuous.
 
-Similarly, when rotating a butterfly shape, the rotational symmetry of the butterfly shape is not continuous because the same shape as the original shape can be obtained only in special cases such as rotating it by 0° or rotating it by 360°.
+Likewise, when rotating the shape of a butterfly, we obtain its original shape only in the special cases of rotating it by 0° or 360°, so the rotational symmetry of a butterfly's shape is not continuous.
 
-On the other hand, when you rotate a circle, the circle gets the same shape no matter what angle you rotate it. Therefore, the rotational symmetry of a circle is continuous.
+By contrast, a circle retains the same shape no matter what angle it is rotated through. Therefore, a circle's rotational symmetry is continuous.
 
-## Mathematical expression of continuous symmetry
+## The Mathematical Expression of Continuous Symmetry
 
-This symmetry is expressed mathematically in the concept of _cyclic coordinate_. (At least that's true in physics.)
+Mathematically, this kind of symmetry is represented by the concept of a *cyclic coordinate*. (At least, this is the case in physics.)
 
-> Cyclic coordinates are literally translated as ‘circular coordinates.’ It is not clear why this concept has this name. After a little searching, I found that this is because these variables usually correspond to rotational degrees of freedom. (Some answers said there were other reasons.)
+> Taken literally, the term *cyclic coordinate* means exactly that: a “cyclic coordinate.” It is not clear why this concept was given this name. From a quick search, it seems to be because such variables usually correspond to rotational degrees of freedom. (There were also answers that gave other reasons.)
 >
 > Source: https://physics.stackexchange.com/questions/66640/why-are-they-called-cyclic-coordinates
 
-In this case, coordinate refers to the generalized coordinate in the Hamiltonian. Since the Hamiltonian and the Lagrangian are similar concepts, it seems safe to think of them as the Lagrangian. (Generalized coordinates and Lagrangian mechanics were previously covered in [Lagrangian mechanics series](/posts/lagrangian-1).)
+Here, *coordinate* refers to a generalized coordinate in the Hamiltonian. Since the Hamiltonian and Lagrangian are similar concepts, it seems fine to think in terms of the Lagrangian as well. (I previously discussed generalized coordinates and Lagrangian mechanics in the [Lagrangian Mechanics series](/posts/lagrangian-1).)
 
-For example, consider a particle moving in an infinitely large space without gravity or air resistance. This particle has kinetic energy $\frac{mv^2}{2}$ and no potential energy. The Lagrangian is given by $L=T-V$, so in this case $L=T=\frac{mv^2}{2}$. At this time, the position of the particle does not appear in the Lagrangian of this particle. Therefore, the particle's position $x, y$ becomes the cyclic coordinate for this system.
+For example, consider a particle moving through an infinitely large space with neither gravity nor air resistance. This particle has kinetic energy $\frac{mv^2}{2}$ and no potential energy. Since the Lagrangian is given by $L=T-V$, in this case $L=T=\frac{mv^2}{2}$. The particle's position does not appear in its Lagrangian. Therefore, the particle's position coordinates $x, y$ are cyclic coordinates for this system.
 
-## Cyclic coordinates and symmetry
+## Cyclic Coordinates and Symmetry
 
-According to Lagrangian mechanics, a system (specifically its evolution over time) depends only on its Lagrangian. Therefore, cyclic coordinates that do not appear in the Lagrangian cannot have any effect on the system. In other words, changing the cyclic coordinate has no effect on the system, and therefore cyclic coordinate means symmetry. To be more specific, it means, “Even if the cyclic coordinates are changed, the system does not distinguish between before and after.”
+According to Lagrangian mechanics, a system—or more specifically, the way the system changes over time—depends only on the Lagrangian. Therefore, a cyclic coordinate that does not appear in the Lagrangian cannot have any effect on the system. In other words, changing a cyclic coordinate has no effect whatsoever on the system, and thus a cyclic coordinate signifies a symmetry. To put it more concretely: “The system is indistinguishable before and after a cyclic coordinate is changed.”
 
 In the example above, the coordinates were cyclic coordinates, which corresponds to spatial symmetry (translational symmetry).
 
-## Symmetry and conservation laws
+## Symmetry and Conservation Laws
 
-Now let's connect symmetry and conservation laws. First, the Euler-Lagrange equation is as follows.
+Now let us connect symmetry to conservation laws. First, the Euler–Lagrange equation is as follows.
 
 $$
 \frac{\partial L}{\partial q}-\frac{d}{dt}\left(\frac{\partial L}{\partial \dot q}\right)=0
 $$
 
-At this time, saying that this generalized coordinate $q$ is a cyclic coordinate means that $L$ is independent of $q$. Therefore, the previous term becomes 0, so we get the following result.
+For the generalized coordinate $q$ to be a cyclic coordinate means that $L$ is independent of $q$. Therefore, the first term becomes zero, and we obtain the following result.
 
 $$
 \frac{d}{dt}\left(\frac{\partial L}{\partial \dot q}\right)=0
 $$
 
-This means that the time-dependent change $\left(\frac{d}{dt}\right)$ of a certain physical quantity $\left(\frac{\partial L}{\partial \dot q}\right)$ is 0, i.e. It means that physical quantities are constant, which means the law of conservation.
+This means that the change over time $\left(\frac{d}{dt}\right)$ of a physical quantity $\left(\frac{\partial L}{\partial \dot q}\right)$ is zero—in other words, that the physical quantity remains constant. This is precisely a conservation law.
 
-> At this time, you should be careful that even if $\frac{\partial L}{\partial q}=0$, $\frac{\partial L}{\partial \dot q}\neq 0$.
+> Note that even if $\frac{\partial L}{\partial q}=0$, it is still possible for $\frac{\partial L}{\partial \dot q}\neq 0$.
 
-## example
+## Example
 
-Let us derive a conservation law through a simple system.
+Let us derive a conservation law using a simple system.
 
-A particle lies on a circle with radius $r>0$ centered on the origin in the horizontal plane. To use Lagrange mechanics, let the generalized coordinate $q$ be the angle between this particle's position vector and the $x$ axis. In that case, the speed of this particle is $r\dot q$ and therefore the kinetic energy is $\frac{mr^2\dot q^2}{2}$, and since it is assumed to be a horizontal plane, the potential energy becomes a constant. Let's simply call this $E_p$. (The potential energy letters do not have much meaning. In fact, it is okay to leave it as 0 rather than calling it an arbitrary constant.)
+On a horizontal plane, there is a particle constrained to a circle of radius $r>0$ centered at the origin. To use Lagrangian mechanics, let us define the generalized coordinate $q$ as the angle between the particle's position vector and the $x$-axis. The particle's speed is then $r\dot q$, so its kinetic energy is $\frac{mr^2\dot q^2}{2}$. Since we have assumed a horizontal plane, its potential energy is constant. Let us simply denote it by $E_p$. (The symbol used for potential energy has no particular significance. In fact, we could just as well set it to 0 instead of using an arbitrary constant.)
 
-Therefore, the generalized coordinate $q$ does not appear in kinetic energy nor does it appear in potential energy.
+Therefore, the generalized coordinate $q$ appears in neither the kinetic energy nor the potential energy.
 
-> It is important to note that $q$ and $\dot q$ are considered unrelated in Lagrangian mechanics.
+> Note that in Lagrangian mechanics, $q$ and $\dot q$ are treated as independent of one another.
 
-Therefore, this generalized coordinate, or angle, is a cyclic coordinate and therefore the system has continuous rotational symmetry. And if we develop the Euler-Lagrange equation accordingly, it becomes as follows.
+Therefore, this generalized coordinate—the angle—is a cyclic coordinate, and the system consequently has continuous rotational symmetry. Expanding the Euler–Lagrange equation accordingly gives the following.
 
 $$
 \frac{d}{dt}\frac{\partial \frac{mr^2\dot q^2}{2}-E_p}{\partial \dot q}
-            -\frac{\partial \frac{mr^2\dot q^2}{2}-E_p}{\partial q}=0\\
+           -\frac{\partial \frac{mr^2\dot q^2}{2}-E_p}{\partial q}=0\\
 \leftrightarrow \frac{d}{dt}\frac{\partial \frac{mr^2\dot q^2}{2}-E_p}{\partial \dot q}=0\\
 \leftrightarrow \frac{d}{dt}\frac{\partial \frac{mr^2\dot q^2}{2}}{\partial \dot q}=0\\
 \leftrightarrow \frac{d}{dt}mr^2\dot q=0\\
 \leftrightarrow \frac{d}{dt}mrv=0
 $$
 
-However, $mrv$ is angular momentum. Therefore, the above equation means that the angular momentum in this system is invariant with respect to time, which soon becomes the law of angular momentum conservation.
+But $mrv$ is precisely the angular momentum. Therefore, the equation above means that angular momentum remains constant over time in this system, which is the law of conservation of angular momentum.

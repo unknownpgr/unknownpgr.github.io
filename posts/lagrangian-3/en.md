@@ -1,37 +1,37 @@
 ---
-title: Lagrangian mechanics[3] - Lagrangian and action
+title: Lagrangian Mechanics [3] - The Lagrangian and Action
 tags:
   - math
   - science
 date: 2020-10-27T17:35:09.173Z
 ---
 
-> Translated with the help of ChatGPT and Google Translator
+> This post was translated from Korean into English by AI.
 
-# Lagrangian and action
+# The Lagrangian and Action
 
-I think we're almost there now. In the conclusion of the Lagrange mechanics series, let's learn about Lagrangian and action. (Now we finally have a term that seems directly related to Lagrange mechanics.)
+It feels like we are almost there. In this final installment of the Lagrangian mechanics series, we will explore the Lagrangian and action. (At last, terms have appeared that actually seem directly related to Lagrangian mechanics.)
 
-## Lagrangian
+## The Lagrangian
 
-The Lagrangian $L$ is defined as the potential energy $T$ of a system minus the kinetic energy $U$. in other words
+The Lagrangian $L$ is defined as a system's potential energy $T$ minus its kinetic energy $U$. In other words,
 
 $$
 L=T-U
 $$
 
-It goes. For example, consider a two-dimensional system with two particles. The Lagrangian of this system is as follows:
+For example, consider a two-dimensional system containing two particles. The Lagrangian of this system is as follows.
 
 $$
 T=mgy_1+mgy_2=mg(y_1+y_2)\\
-U=\frac{1}{2}m(\dot{x_1}^2+\dot{y_1}^2)+\frac{1}{2}m(\dot{x_2}^2+\dot{ y_2}^2)
+U=\frac{1}{2}m(\dot{x_1}^2+\dot{y_1}^2)+\frac{1}{2}m(\dot{x_2}^2+\dot{y_2}^2)
 =\frac{1}{2}m(\dot{x_1}^2+\dot{y_1}^2+\dot{x_2}^2+\dot{y_2}^2)\\
-\therefore L=mg(y_1+y_2)-\frac{1}{2}m(\dot{x_1}^2+\dot{y_1}^2+\dot{x_2}^2+\dot{y_2} ^2)
+\therefore L=mg(y_1+y_2)-\frac{1}{2}m(\dot{x_1}^2+\dot{y_1}^2+\dot{x_2}^2+\dot{y_2}^2)
 $$
 
-However, this is expressed using a Cartesian coordinate system rather than a generalized coordinate system, and the Lagrangian must be expressed using a generalized coordinate system. Of course, if there are no constraints, the generalized coordinate system = Cartesian coordinate system.
+However, this is written using Cartesian coordinates rather than generalized coordinates, whereas the Lagrangian should be expressed using generalized coordinates. Of course, when there are no constraints, generalized coordinates = Cartesian coordinates.
 
-As a simple example with constraints, the Lagrangian of a pendulum with the angle $\theta$ with the vertical line as the generalized coordinate is calculated as follows. $L$ is the length of the pendulum.
+As a simple example involving a constraint, let us calculate the Lagrangian of a pendulum using the angle $\theta$ from the vertical as its generalized coordinate. $L$ is the length of the pendulum.
 
 $$
 T=mgy=mg\cos\theta\\
@@ -39,59 +39,59 @@ U=\frac{1}{2}mv^2=\frac{1}{2}m(L\dot\theta)^2\\
 \therefore L=mg\cos\theta-\frac{1}{2}m(L\dot\theta)^2
 $$
 
-## action
+## Action
 
-Therefore, the Lagrangian in general becomes a function of the generalized coordinate $q(t)$, its derivative $\dot{q(t)}$, and time $t$.
+Thus, in general, the Lagrangian is a function of the generalized coordinate $q(t)$, its derivative $\dot{q(t)}$, and time $t$.
 
 $$
 L(q(t),\dot{q}(t),t)
 $$
 
-At this time, its time integral is called an action, and the action becomes a functional function for the generalized coordinate function $q(t)$.
+Its integral over time is called the action, and the action is a functional of the generalized coordinate function $q(t)$.
 
 $$
 S[q]=\int_{t_0}^{t_1}L(q(t),\dot{q}(t),t)dt
 $$
 
-## Principle of least action
+## The Principle of Least Action
 
-At this time, the principle of least action means that when a system $q(t_1)$ becomes $q(t_2)$, the change minimizes the action $S$.
+The principle of least action means that when a system goes from $q(t_1)$ to $q(t_2)$, its evolution minimizes the action $S$.
 
-What this means is, let's assume that the state of a system changes. For example, suppose a particle moves from $(x_1,y_1)$ to $(x_2,y_2)$. At this time, there are infinitely many paths connecting these two points, which means that the path that the particle actually takes must minimize the Lagrangian time integral $S$ when passing through that path. Therefore, this path function becomes the rectification value of the functional function $S[q]$, and by applying the Euler-Lagrange equation discussed in the last posting, there are certain $n$ generalized coordinates $q_1,q_2,...,q_n$ It can be seen that the change in the system consisting of satisfies the following simultaneous partial differential equations.
+What does that mean? Suppose the state of a system changes. For example, suppose a particle moves from $(x_1,y_1)$ to $(x_2,y_2)$. Infinitely many paths connect these two points, but the path the particle actually follows must minimize the time integral $S$ of the Lagrangian along that path. Therefore, this path function is a stationary point of the functional $S[q]$. Applying the Euler–Lagrange equation covered in the previous post, we find that the evolution of a system consisting of $n$ generalized coordinates $q_1,q_2,...,q_n$ satisfies the following system of partial differential equations.
 
 $$
 \frac{\partial L}{\partial q_i}-\frac{d}{dt}\frac{\partial L}{\partial\dot{q_i}}=0
 $$
 
-Voila!
+Ta-da!
 
-Now, if you insert any system into that system of partial differential equations, the path will automatically pop out.
+Now we can plug any system into that system of partial differential equations, and its path automatically pops out.
 
-# apply
+# Applications
 
-In fact, Lagrangian mechanics has some non-intuitive aspects, unlike Newtonian mechanics. This is because in Lagrangian mechanics, the principle of least action mentioned above is considered to be a fundamental principle of nature, and other physical laws such as $F=ma$ are derived from it. I think I could have explained it better if I knew why the principle of least action exists, but my studies are limited, so I don't know that much yet...ㅠㅠ
+Unlike Newtonian mechanics, Lagrangian mechanics is actually somewhat unintuitive. This is because Lagrangian mechanics regards the principle of least action described above as a fundamental principle of nature, with other physical laws such as $F=ma$ derived from it. I might have been able to explain it better if I knew why the principle of least action holds, but my knowledge is still too shallow to go that far... *sob*
 
-However, although Lagrangian mechanics may seem counterintuitive and complex in its solution, it provides a very powerful method for the analysis of complex systems, especially constrained systems. Because, as you can see above, having constraints means that each component of the position affects the other components. Therefore, to analyze a constrained system using Newtonian mechanics, the relationships between each component must also be considered. Especially in systems with multiple particles, the positions between particles may also affect each other.
+Although Lagrangian mechanics is unintuitive and its calculations may look complicated, it provides an extremely powerful way to analyze complex systems, especially constrained ones. As we saw above, having constraints means that each component of position affects the others. Therefore, to analyze a constrained system using Newtonian mechanics, we must also account for the relationships among the components. In a system with multiple particles in particular, the positions of the particles may affect one another as well.
 
-However, since Lagrangian mechanics uses only generalized coordinates and generalized momentum with all influencing factors removed, all equations can be interpreted <u>independent</u>. Therefore, interpretation becomes very convenient. Some articles say that it is convenient because Newtonian mechanics uses vectors, while Lagrangian mechanics uses scalars, and this is also consistent with the story. If there are constraints, each component of the vector is not independent, so the vector cannot be arbitrarily decomposed into components.
+In Lagrangian mechanics, however, every equation can be analyzed <u>independently</u> because we use only generalized coordinates and generalized momenta, from which all the interacting factors have been eliminated. This makes the analysis much more convenient. Some articles say that Lagrangian mechanics is convenient because Newtonian mechanics uses vectors whereas Lagrangian mechanics uses scalars; this is another way of expressing the same idea. When constraints exist, the components of a vector are not independent, so the vector cannot simply be broken down into its components.
 
-Another advantage is that mechanical analysis is possible. Since Lagrangian mechanics really follows a set methodology, there is no need for humans to analyze the system themselves. As long as the relationship between generalized coordinates and Cartesian coordinates and the potential energy are given, the program can do the analysis. In fact, below we will use a Matlab script to automatically perform system analysis.
+Another advantage is that the analysis can be mechanized. Lagrangian mechanics follows such a fixed methodology that a person does not need to analyze the system by hand. Given only the relationships between the generalized and Cartesian coordinates and the potential energy, a program can perform the analysis on its own. In fact, below we will use a MATLAB script to analyze a system automatically.
 
-## example
+## Examples
 
-Even if Lagrange mechanics is not intuitively clear, you can get a feel for it by looking at examples.
+Even if Lagrangian mechanics is difficult to grasp intuitively, looking at examples can give you some feel for it.
 
-### Free fall
+### Free Fall
 
-We just have a particle with no constraints. Let us analyze the motion of this particle. Of course, we know from Newtonian mechanics that these particles just fall in free fall.
+Suppose we have a particle with no constraints whatsoever. Let us analyze its motion. Of course, from Newtonian mechanics we already know that such a particle simply falls freely.
 
-First, we can assume that this particle is the same as a generalized coordinate system or just a Cartesian coordinate system. At this time, if we find the Lagrangian,
+First, for this particle we can treat the generalized coordinate system and the ordinary Cartesian coordinate system as identical. Its Lagrangian is
 
 $$
 L=T-U=mgy-m(\dot{x}^2+\dot{y}^2)/2
 $$
 
-, and here, if we apply the above Euler-Lagrange equation to the generalized coordinate $x$,
+Applying the Euler–Lagrange equation above to the generalized coordinate $x$ gives
 
 $$
 \frac{\partial L}{\partial x}-\frac{d}{dt}\frac{\partial L}{\partial\dot{x}}
@@ -99,7 +99,7 @@ $$
 \therefore\ddot{x}=0
 $$
 
-If we apply the Euler-Lagrange equation to $y$, we get
+Applying the Euler–Lagrange equation to $y$ gives
 
 $$
 \frac{\partial L}{\partial y}-\frac{d}{dt}\frac{\partial L}{\partial\dot{y}}
@@ -107,59 +107,59 @@ $$
 \therefore \ddot{y}=-g
 $$
 
-You get This is exactly the result we get using $F=ma$ in Newtonian mechanics. There is no acceleration in the x direction, and it accelerates in the y direction at $-g$ speed.
+These results agree exactly with what we obtain using $F=ma$ in Newtonian mechanics. There is no acceleration in the x-direction, and the particle accelerates in the y-direction at $-g$.
 
-### Elastic simple pendulum
+### Elastic Simple Pendulum
 
 ![a27d24_9c20db9a1d634fbaa592eea14c8997fe~mv2](a27d24_9c20db9a1d634fbaa592eea14c8997fe~mv2.png)
 
-Let’s analyze the pendulum system above. However, since it is boring to just call it a pendulum, let's think that the string connecting the wall and the pendulum is not a rigid body but a spring with a spring coefficient of $k$. (Of course, you could consider the size and weight of the spring, but that would be too complicated, so let's assume that the mass of the spring is 0 and is infinitely thin.) Therefore, this pendulum swings left and right and undergoes extremely complex movements in which the length of the string changes.
+Let us analyze the pendulum system shown above. But an ordinary pendulum would be boring, so let us imagine that the string connecting the pendulum to the wall is not rigid but is instead a spring with spring constant $k$. (We could, of course, also account for the spring's dimensions and weight, but that would make things far too complicated, so we will assume the spring has zero mass and is infinitely thin.) This pendulum will therefore undergo extraordinarily complex motion, swinging from side to side while the length of its string changes as well.
 
-First, let's find the generalized coordinates for this pendulum. Because the string of this pendulum is a spring, there is nothing limiting its position. It is therefore an unconstrained system, and therefore two generalized coordinates can be chosen. Intuitively, I will choose the length of the spring $l$ and the angle $\theta$ that this spring makes with the vertical line. (Because the mass of the spring is 0, the spring is straight rather than bent.) Of course, you can choose the $x,y$ coordinates of the pendulum, but it will be much easier to interpret if you choose them this way.
+First, let us find the generalized coordinates for this pendulum. Because its string is a spring, nothing restricts its position. This is therefore an unconstrained system, so we can choose two generalized coordinates. Intuitively, I will choose the spring's length $l$ and the angle $\theta$ that it makes with the vertical. (Because the spring has zero mass, it does not bend and remains a straight line.) We could, of course, choose the pendulum's $x,y$ coordinates instead, but this choice will make the analysis much easier.
 
-Next, calculate the Lagrangian and solve the equation. The Lagrangian is given as follows.
+Next, we calculate the Lagrangian and solve the equations. The Lagrangian is given as follows.
 
 $$
 T = -mgl\cos\theta+\frac{1}{2}kl^2\\
 U = \frac{1}{2}m(\dot{l}^2+(l\dot\theta)^2)\\
-\therefore L = -mgl\cos\theta +\frac{1}{2}kl^2 - \frac{1}{2}m(\dot{l}^2+(l\dot\theta)^2 )
+\therefore L = -mgl\cos\theta +\frac{1}{2}kl^2 - \frac{1}{2}m(\dot{l}^2+(l\dot\theta)^2)
 $$
 
-Ah...but anyone can see that differentiating it seems cumbersome. So this time, instead of doing differentiation by hand, let's perform the calculation using a Matlab script. Below is the script I wrote.
+Ah... But anyone can see that differentiating this is going to be tedious. So this time, instead of differentiating it by hand, let us use a MATLAB script to do the calculation. Here is the script I wrote.
 
-``matlab
+```matlab
 clear;
 
-% Define the variable you want to interpret
+% Define the variables to analyze
 syms l(t) theta(t) m g k
 
-% system definition
+% Define the system
 x = l*sin(theta)
 y = -l*cos(theta)
-U = m*g*y + k\*l.^2/2
+U = m*g*y + k*l.^2/2
 
-%================================================================================ ==========
-% From this point on, you can use it without having to change it depending on your system.
-%================================================================================ ==========
+%===========================================================
+% Everything below this point can be used unchanged regardless of the system.
+%===========================================================
 
-Find % kinetic energy T and calculate Lagrangian
-T = m\*(diff(x,t).^2+diff(y,t).^2)/2
+% Find the kinetic energy T and calculate the Lagrangian
+T = m*(diff(x,t).^2+diff(y,t).^2)/2
 L = T - U
 
-%================================================================================ ==========
-% Expand Euler-Lagrange equations for generalized coordinate l
-%================================================================================ ==========
+%===========================================================
+% Expand the Euler-Lagrange equation for the generalized coordinate l
+%===========================================================
 
-% You cannot differentiate a function as a function in MATLAB. Therefore, briefly replace the function with a variable.
+% MATLAB cannot differentiate a function with respect to a function. Therefore, temporarily substitute the function with a variable.
 syms lt l_t
 LT = subs(L,diff(l,t),l_t);
 LT = subs(LT,l,lt);
 
-% Partial calculation of the Euler-Lagrange equation
+% Partially calculate the Euler-Lagrange equation
 E1 = diff(LT,lt);
 E2 = diff(LT,l_t);
 
-%In order to calculate the differentiating part with t in the second term, the function used as a variable is converted back into a function.
+% To differentiate the second term with respect to t, turn the function used as a variable back into a function
 E1 = subs(E1,lt,l);
 E1 = subs(E1,l_t,diff(l,t));
 E2 = subs(E2,lt,l);
@@ -168,23 +168,23 @@ E2 = subs(E2,l_t,diff(l,t));
 % Calculate the Euler-Lagrange equation
 Eq = E1-diff(E2,t) == 0;
 
-% Summary
+% Simplify
 EqL = simplify(Eq,'Steps',100);
 
-%================================================================================ ==========
-% Expand Euler-Lagrange equations for generalized coordinates theta
-%================================================================================ ==========
+%===========================================================
+% Expand the Euler-Lagrange equation for the generalized coordinate theta
+%===========================================================
 
-% You cannot differentiate a function as a function in MATLAB. Therefore, briefly replace the function with a variable.
+% MATLAB cannot differentiate a function with respect to a function. Therefore, temporarily substitute the function with a variable.
 syms thetat theta_t
 LT = subs(L,diff(theta,t),theta_t);
 LT = subs(LT,theta,thetat);
 
-% Partial calculation of the Euler-Lagrange equation
+% Partially calculate the Euler-Lagrange equation
 E1 = diff(LT,thetat)
 E2 = diff(LT,theta_t)
 
-%In order to calculate the differentiating part with t in the second term, the function used as a variable is converted back into a function.
+% To differentiate the second term with respect to t, turn the function used as a variable back into a function
 E1 = subs(E1,thetat,theta);
 E1 = subs(E1,theta_t,diff(theta,t));
 E2 = subs(E2,thetat,theta);
@@ -193,37 +193,36 @@ E2 = subs(E2,theta_t,diff(theta,t));
 % Calculate the Euler-Lagrange equation
 Eq = E1-diff(E2,t) == 0;
 
-% Summary
+% Simplify
 EqT = simplify(Eq,'Steps',100);
 
-%================================================================================ ==========
-% Display the final result
-%================================================================================ ==========
+%===========================================================
+% Display the final results
+%===========================================================
 
 latex(EqL)
 latex(EqT)
-
 ```
 
-Unfortunately, MATLAB does not support differentiating expressions as symbolic functions. So I had no choice but to construct the expression using a special trick of replacing expressions with variables. As a result, our MATLAB code interpreted the above complex system very nicely and returned it in LaTeX form as shown below. That's cool. I can't believe this thing runs on a personal computer. We salute the advancement of computers.
+Unfortunately, MATLAB did not support differentiating an expression with respect to a symbolic function. I therefore had no choice but to construct the equation using a special trick that replaces the expression with a variable. As a result, our MATLAB code analyzed the complex system above beautifully and returned the following in LaTeX form. Very cool. To think that something like this can run on a personal computer. My respects to the advancement of computing.
 
 $$
-m\,\frac{\partial ^2}{\partial t^2} l\left(t\right)+k\,l\left(t\right)=m\,l\left(t\right) \,{\left(\frac{\partial }{\partial t} \theta \left(t\right)\right)}^2+g\,m\,\cos\left(\theta \left(t \right)\right)\\
-l\left(t\right)\,\frac{\partial ^2}{\partial t^2} \theta \left(t\right)+2\,\frac{\partial }{\partial t} \ theta \left(t\right)\,\frac{\partial }{\partial t} l\left(t\right)+g\,\sin\left(\theta \left(t\right)\right) =0\vee l\left(t\right)=0\vee m=0
+m\,\frac{\partial ^2}{\partial t^2} l\left(t\right)+k\,l\left(t\right)=m\,l\left(t\right)\,{\left(\frac{\partial }{\partial t} \theta \left(t\right)\right)}^2+g\,m\,\cos\left(\theta \left(t\right)\right)\\
+l\left(t\right)\,\frac{\partial ^2}{\partial t^2} \theta \left(t\right)+2\,\frac{\partial }{\partial t} \theta \left(t\right)\,\frac{\partial }{\partial t} l\left(t\right)+g\,\sin\left(\theta \left(t\right)\right)=0\vee l\left(t\right)=0\vee m=0
 $$
 
-In particular, MATLAB was smarter than me and even suggested two self-evident solutions in the second equation that I had not considered. Of course, we don't deal with cases like this, so it's not particularly useful, but...
+MATLAB is smarter than I am: in the second equation, it even presented two trivial solutions that I had failed to consider. Of course, they are not particularly useful because we do not deal with such cases...
 
-Although this result is well-organized, it is quite complex. However, in reality, it is bound to be complicated. Originally, pendulum motion is a non-linear differential equation, but since a spring is added to it, there is absolutely no way that the answer will come out in a pretty form. I expect that chaotic behavior like a double pendulum will occur. In any case, it seems impossible to solve this equation well analytically to obtain $l(t)$ or $\theta(t)$.
+Although these results are well organized, they are quite complex. But they really could not be anything else: ordinary pendulum motion already involves a nonlinear differential equation, and adding a spring on top of that could never produce an answer in a pretty form. I suspect it may exhibit chaotic behavior like a double pendulum. In any case, it seems impossible to solve these equations neatly in closed form to obtain $l(t)$ or $\theta(t)$.
 
-Therefore, let us solve this equation using numerical analysis. If you look closely at this equation, you can see that it is in very good form, with only one second-order derivative. Therefore, it is a form that is very easy to solve through numerical analysis because the second-order differentiation can be easily organized.
+So let us solve these equations using numerical analysis. Examining them closely, we see that they have the very convenient form of containing only one second-order derivative each. We can therefore rearrange them easily in terms of the second-order derivatives, making them very convenient to solve numerically.
 
-Of course, I really hate calculations, and I don't want to solve even simple theorems myself, so I'll solve it with a Matlab script.
+Of course, I hate calculations so much that I do not even want to do this simple rearrangement myself, so I will take care of it with a MATLAB script.
 
-``matlab
-%================================================================================ ==========
-% Use substitution again to transform into form for second derivatives and clean it up
-%================================================================================ ==========
+```matlab
+%===========================================================
+% Use substitution again to transform the equations into a form in terms of second-order derivatives, then simplify
+%===========================================================
 
 syms l__t theta__t
 
@@ -237,21 +236,21 @@ latex(SL)
 latex(ST)
 ```
 
-If you add this to the bottom of the above script, you can get the following result. (The value actually output is the formula to the right of the equal sign, and the part to the left of the equal sign is the part I wrote myself.)
+Adding this to the very bottom of the script above gives the following results. (The actual output consists of the expressions on the right-hand sides of the equals signs; I wrote the left-hand sides myself.)
 
 $$
 \ddot{l} = g\,\cos\left(\theta \left(t\right)\right)+l\left(t\right)\,{\left(\frac{\partial }{\partial t} \theta \left(t\right)\right)}^2-\frac{k\,l\left(t\right)}{m}\\
-\ddot\theta=-\frac{2\,\frac{\partial }{\partial t} \theta \left(t\right)\,\frac{\partial }{\partial t} l\left(t \right)+g\,\sin\left(\theta \left(t\right)\right)}{l\left(t\right)}
+\ddot\theta=-\frac{2\,\frac{\partial }{\partial t} \theta \left(t\right)\,\frac{\partial }{\partial t} l\left(t\right)+g\,\sin\left(\theta \left(t\right)\right)}{l\left(t\right)}
 $$
 
-Then, finally, let's write an HTML+ES6 script that renders this using numerical analysis and check whether the movement is truly plausible. [Below](https://unknownpgr.github.io/lagrange-mechanics/sim.html) is a simple simulation I made.
+Finally, let us write an HTML + ES6 script that renders this using numerical analysis and see whether the resulting motion actually looks plausible. [Here](https://unknownpgr.github.io/lagrange-mechanics/sim.html) is a simple simulation I made.
 
 <iframe src="https://unknownpgr.github.io/lagrangian-mechanics/sim.html" height="800px" width="100%" style="border:none;"></iframe>
 
-> I updated the simulation code after writing this post. The post covered the case where the entire pendulum string is a spring, but the simulation shown above deals with the case where part of the string is rigid and part is a spring.
+> I updated the simulation code after writing this post. The post considers a case in which the pendulum's entire string is a spring, but the simulation shown above considers a case in which part of the string is rigid and part is a spring.
 
-As a result of the execution, I was a bit surprised to see a very regular and clean result rather than a chaotic result, which was a bit different from what I expected. Of course, it seems like it would actually work like that if you attached a ball to a rubber band. I looked for other references to see if I had made a mistake calculating the Lagrangian, but it seems I did it correctly. Nature is amazing. How can such a complex and unpredictable formula produce such a clean result?
+I was a little surprised that the result was so regular and tidy rather than chaotic, contrary to what I had expected. Then again, if you attached a ball to a rubber band in real life, it probably would move like that. I wondered whether I had made a mistake calculating the Lagrangian, so I checked some other references, but it appears that my calculation was correct. Nature is fascinating. To think that such clean behavior can emerge from equations that look so complex and unpredictable.
 
-# conclusion
+# Conclusion
 
-I have written three posts introducing Lagrange mechanics and using it to analyze complex systems. Since it's definitely exam period, everything besides studying for the exam is fun.
+Over the course of three posts, I have introduced Lagrangian mechanics and walked through the process of using it to analyze a complex system. Once exam season arrives, everything other than studying for exams really does become fun.

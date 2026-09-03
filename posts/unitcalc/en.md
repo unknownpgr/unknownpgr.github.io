@@ -5,19 +5,19 @@ tags:
 date: 2025-02-08T22:47:23.313Z
 ---
 
-> Translated with the help of ChatGPT and Google Translator
+> This post was translated from Korean into English by AI.
 
-Recently, I had to convert units very frequently, so I created a simple unit converter. After making it, I found it quite convenient in many ways, so I decided to share it in this post.
+I recently found myself needing to convert units quite often, so I made a simple unit converter. It turned out to be useful in several ways, so I am sharing it in this post.
 
 <iframe src="./calc.html" width="100%" height="300px"></iframe>
 
-You can use it in full-screen mode via the link below.
+The full-screen version is available at the link below.
 
 - [Unit Calculator](./calc.html)
 
 ## Design
 
-Since it was necessary to parse expressions with units, I created a simple parser. I used `Peggy.js`, and the syntax is as follows.
+Since expressions containing units need to be parsed, I wrote a simple parser. I used `Peggy.js`, and the grammar is as follows.
 
 ```pegjs
 start
@@ -71,7 +71,7 @@ digit
     / "0"
 ```
 
-Additionally, to perform unit conversions, I configured the system to convert all units into MLT dimensions based on SI units. Below is the JavaScript list for the conversion.
+To perform unit conversions, I also set it up to convert every unit into MLT dimensions based on SI units. Below is the JavaScript list used for the conversions.
 
 ```javascript
 const unitList = [
@@ -438,4 +438,4 @@ const unitList = [
 ];
 ```
 
-And I simply used DFS to traverse the AST in order and set it up to either return errors or appropriately display the results.
+Aside from that, it simply evaluates the AST in order using DFS, returning an error or outputting the result as appropriate.

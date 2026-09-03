@@ -1,79 +1,79 @@
 ---
-title: Implementing HTTP webcam live streaming
+title: Implementing Live Webcam Streaming over HTTP
 tags:
   - live streaming
 date: 2020-08-11T04:03:18.931Z
 ---
 
-> Translated with the help of ChatGPT and Google Translator
+> This post was translated from Korean into English by AI.
 
-While working on a project this time, I had to implement live streaming. You need to receive video from a camera and view it in a web browser. After Googling, I couldn't find a solution that would cleanly implement this. So I decided to implement this myself.
+While participating in a project recently, I needed to implement live streaming. The goal was to receive video from a camera and make it viewable in a web browser. After searching around on Google, I found that there was no suitable solution that implemented this cleanly. So I decided to build it myself.
 
-- [GitHub Repo](https://github.com/unknownpgr/node-webcam-streaming)
+- [GitHub repository](https://github.com/unknownpgr/node-webcam-streaming)
 
-The biggest problem with video, especially live streaming, is how to receive the video and how to stream it. Fortunately, I had had similar experiences several times before and knew of two solutions.
+The biggest problem with video, especially live streaming, is figuring out how to receive the video in the first place and how to stream it. Fortunately, I had done something similar a few times before, so I knew of two solutions.
 
-1. Using OpenCV, etc., convert camera <u>video to image and send to client</u>. The client continuously updates and displays images. Therefore, in reality, it is not a video but just a rapidly changing image.
+1. Use OpenCV or a similar tool to <u>convert the camera feed into images and send them to the client</u>. The client displays the images by continuously updating them. In reality, then, it is not a video but merely a series of rapidly changing images.
 2. Use <u>[FFmpeg](https://ffmpeg.org/)</u>.
 
-At first glance, solution number 1 seems quite simple and ignorant. However, in practice, the video quality and FPS are quite good, it is easy to implement (there is no need to go through the trouble of encoding), and it is especially useful when you need to do some processing on the video before sending it. However, it has the disadvantage of not being able to transmit sound. So this time I decided to implement solution number 2.
+At first glance, solution 1 may seem rather crude. In practice, however, it provides quite decent video quality and FPS, is easy to implement (there is no need to struggle with encoding), and is particularly useful when the video needs to be processed before it is sent. Its drawback is that it cannot transmit audio. So this time, I decided to implement solution 2.
 
-# What we did before
+# What I Did Before
 
-When I used FFmpeg in the past, I didn't know much about the protocol that enabled real-time video transmission. So I had to take a fairly low-level approach, and used the following method.
+When I used FFmpeg in the past, I did not know much about protocols capable of transmitting video in real time. As a result, I had to take a fairly low-level approach, using the following method.
 
-1. Convert the webcam video to webm format using FFmpeg and pipe the output stream to `stdout` to receive it from the Node.js server.
+1. Use FFmpeg to convert the webcam feed to WebM, pipe the output stream to `stdout`, and receive it in the Node.js server.
 2. The Node.js server stores the received stream in a buffer.
-3. When the buffer is full, put the buffer into the queue.
-4. If the client requests video, the server takes the buffer out of the queue and transmits it to the client.
-5. The client adds a buffer to the video tag using HTML5’s [Media Source API](https://developer.mozilla.org/en-US/docs/Web/API/MediaSource).
+3. Once the buffer is full, it is placed in a queue.
+4. If a client requests the video, the server takes a buffer from the queue and sends it to the client.
+5. The client uses the HTML5 [Media Source API](https://developer.mozilla.org/en-US/docs/Web/API/MediaSource) to append the buffer to a video tag.
 
-Looking at the commit record, this was implemented in February 2019, so it's roughly right before I graduated from high school. Now that I look at it, it is a very inefficient implementation. In the first place, two people cannot receive streaming at the same time.
+According to the commit history, I implemented this in February 2019, so it was just before I graduated from high school. Looking back now, it is a rather inefficient implementation. The architecture cannot even serve a stream to two people at the same time.
 
-# What I did this time
+# What I Did This Time
 
-This time, instead of doing that, I decided to take full advantage of FFmpeg's features. The code is really simple, so you might understand it better if you look at the [source code](https://github.com/unknownpgr/node-webcam-streaming/blob/master/index.js) directly.
+This time, instead of doing it that way, I decided to make full use of FFmpeg's features. The code is so simple that you may understand it more easily by looking directly at the [source code](https://github.com/unknownpgr/node-webcam-streaming/blob/master/index.js).
 
-- FFmpeg can output using HTTP Live Streaming (HLS), which creates a `.m3u8` file and several `.ts` files as output. The `.ts` file is a segment file that divides the video into pieces, and the `.m3u8` file is a meta file that contains information about `.ts` files.
-- The Node.js server just serves those files statically.
-- The client uses the [hls.js](https://github.com/video-dev/hls.js#getting-started) library to view videos using the `video` tag. Of course, some browsers play the file well even if you pass the `.m3u8` file to the `src` of the `video` tag without an external library. However, this did not work in Chrome Desktop, the most major browser, so I decided to just use the library.
+- FFmpeg can output HTTP Live Streaming (HLS). Doing so produces a `.m3u8` file and several `.ts` files. The `.ts` files are segment files containing pieces of the video, while the `.m3u8` file is a metadata file containing information about the `.ts` files.
+- The Node.js server simply serves those files statically.
+- The client uses the [hls.js](https://github.com/video-dev/hls.js#getting-started) library to play the video in a `video` tag. Some browsers can, of course, play the stream correctly without an external library when the `.m3u8` file is passed to the `src` of the `video` tag. However, this does not work in Chrome on desktop, the most widely used browser, so I decided simply to use the library.
 
-Below is a copy of the FFmpeg command executed in Node.js. If you have FFmpeg installed, you can just type it straight into the terminal and it will work.
+Below is the exact FFmpeg command run by Node.js. If FFmpeg is installed, you can enter it directly in a terminal and it will work.
 
 ```bash
 ffmpeg -f v4l2 -i /dev/video0 -c:v libx264 -crf 23 -pix_fmt yuv420p -hls_time 2 -hls_list_size 5 -hls_delete_threshold 1 -hls_flags delete_segments -f hls public/video.m3u8
 ```
 
-Let’s look at the factors one by one. There is also an explanation in the source code.
+Let us go through the arguments one by one. They are also explained in the source code.
 
-- `-f v4l2`: Sets the input format to v4l2 (webcam).
-- `-i /dev/video0`: Read video from `/dev/video0` (webcam).
-- `-c:v libx264`: Sets the output video format to `libx264`.
-- `-crf 23`: Sets the Constant Rate Factor (CRF) to 23. CRF is a factor related to image quality. The lower it is, the better the image quality is. 23 is the default value.
-- `-pix_fmt yuv420p`: Set the pixel format to Y:U:V = 4:2:0. This is because some players only support this format, so in practice, if you don't do this, the video will be broken in Chrome. [See explanation](https://trac.ffmpeg.org/wiki/Encode/H.264).
-- `-hls_time 2`: Sets the length of the ts file to 2 seconds. (I don't know why, but this option didn't work properly on my computer, and the files were about 8 seconds long.)
-- `-hls_list_size 5`: Set the length of the `.ts` file list to be included in the `.m3u8` file to a maximum of 5. This is a necessary option because it is real-time streaming. It is inefficient to include all segments, even those created a long time ago, in the `.m3u8` file, so only the most recent 5 segments are included.
-- `-hls_delete_threshold 1`: Allows up to 1 segment not included in `.m3u8`. Explanation later.
+- `-f v4l2`: Set the input format to v4l2 (webcam).
+- `-i /dev/video0`: Read the video from `/dev/video0` (webcam).
+- `-c:v libx264`: Set the output video format to `libx264`.
+- `-crf 23`: Set the Constant Rate Factor (CRF) to 23. CRF is a parameter related to video quality: lower values produce better quality, and the default is 23.
+- `-pix_fmt yuv420p`: Set the pixel format to Y:U:V = 4:2:0. This is necessary because some players support only this format; in fact, without this setting, the video is corrupted in Chrome. [See the explanation](https://trac.ffmpeg.org/wiki/Encode/H.264).
+- `-hls_time 2`: Set the length of each ts file to 2 seconds. (For reasons I do not know, this option did not work correctly on my computer, and the files were about 8 seconds long.)
+- `-hls_list_size 5`: Set the maximum length of the `.ts` file list included in the `.m3u8` file to 5. This option is necessary for live streaming. Including every segment in the `.m3u8` file, even those created long ago, would be inefficient, so only the five most recent segments are included.
+- `-hls_delete_threshold 1`: Allow up to one segment that is not included in the `.m3u8` file. Explained later.
 - `-hls_flags delete_segments`: Delete old segments.
-- `-f hls public/video.m3u8`: Output file name. This will create `.ts` files like `video.ts`.
+- `-f hls public/video.m3u8`: The output file name. With this setting, the `.ts` files are created with names such as `video.ts`.
 
-Among the above options, `-hls_list_size`, `-hls_delete_threshold`, and `-hls_flags delete_segments` are a set of three options. The explanation is a bit complicated, but the `-hls_flags delete_segments` option is an option to delete old segments as mentioned above, and the `-hls_delete_threshold` option determines how many segments not included in `.m3u8` will be considered old. This is an option to specify.
+Of the options above, `-hls_list_size`, `-hls_delete_threshold`, and `-hls_flags delete_segments` form a set. The explanation is a little complicated: as mentioned above, `-hls_flags delete_segments` deletes old segments, while `-hls_delete_threshold` specifies how many segments not included in the `.m3u8` file should still be considered not old.
 
-For example, assume `hls_list_size` is 7 and `hls_delete_threshold` is 3. Then, `.m3u8` will have information about a total of 7 segments: n, n+1, n+2...n+6. At this time, because `hls_delete_threshold` is 3, segments up to n-1, n-2, and n-3 are not considered old, but from n-4 onwards are considered old. Therefore, there will always be 10 `.ts` files.
+For example, suppose that `hls_list_size` is 7 and `hls_delete_threshold` is 3. The `.m3u8` file would then contain information about seven segments in total, from n through n+6: n, n+1, n+2...n+6. Because `hls_delete_threshold` is 3, segments n-1, n-2, and n-3 are not considered old; segments starting with n-4 are. Consequently, there will always be ten `.ts` files.
 
-The reason why the `hls_delete_threshold` option is necessary is because although a specific segment has been deleted from the segment list of `.m3u8`, there may be clients that continue to download the segment due to problems such as Internet speed.
+The `hls_delete_threshold` option is necessary because, even though a particular segment has been removed from the segment list in the `.m3u8` file, a client may still be downloading that segment because of its internet speed or some other issue.
 
-If you give this option, the files will be updated in real time, and the client can play real-time video as if playing a regular HLS file. Below is a screenshot.
+With these options, the files are updated in real time, and the client can play the live video just as it would play a regular HLS file. Below is a screenshot.
 
 ![screenshot](screenshot.png)
 
-You can view the video taken from the webcam by streaming it as HTML. (I deleted the URL because I am using a private server.)
+You can stream and watch video captured by a webcam in HTML. (I removed the URL because it was using my personal server.)
 
-# references
+# References
 
-- [FFmpeg RTMP HLS conversion method](https://superuser.com/questions/714974/convert-rtmp-streaming-to-hls-streaming-using-ffmpeg)
+- [How to Convert RTMP Streaming to HLS with FFmpeg](https://superuser.com/questions/714974/convert-rtmp-streaming-to-hls-streaming-using-ffmpeg)
 
-  - The first answer was very helpful. However, among the options below, `-hls_wrap` has been deprecated. Instead, you can use `-hls_delete_threshold 1 -hls_flags delete_segments` like I did.
+  - The first answer was very helpful. However, the `-hls_wrap` option below has been deprecated. Instead, use `-hls_delete_threshold 1 -hls_flags delete_segments`, as I did.
 
     ```bash
     ffmpeg -v verbose -i rtmp://host:port/stream -c:v libx264 -c:a aac -ac 1 -strict -2 -crf
@@ -81,8 +81,8 @@ You can view the video taken from the webcam by streaming it as HTML. (I deleted
     10 -hls_list_size 6 -hls_wrap 10 -start_number 1 pathToFolderYouWantTo/streamName.m3u8
     ```
 
-- [CRF Description](https://superuser.com/questions/677576/what-is-crf-used-for-in-ffmpeg)
+- [Explanation of CRF](https://superuser.com/questions/677576/what-is-crf-used-for-in-ffmpeg)
 
-- [How to receive webcam input from FFmpeg](https://trac.ffmpeg.org/wiki/Capture/Webcam)
+- [How to Capture Webcam Input with FFmpeg](https://trac.ffmpeg.org/wiki/Capture/Webcam)
 
-- [How to install FFmpeg on CentOS](https://linuxize.com/post/how-to-install-ffmpeg-on-centos-8/)
+- [How to Install FFmpeg on CentOS](https://linuxize.com/post/how-to-install-ffmpeg-on-centos-8/)

@@ -1,164 +1,164 @@
 ---
-title: 2 years and 10 months of one-person service operation
+title: Running a Service Solo for Two Years and Ten Months
 tags:
   - development
 date: 2023-10-04T13:28:03.688Z
 ---
 
-> Translated with the help of ChatGPT and Google Translator
+> This post was translated from Korean into English by AI.
 
-I run a small service that manages real estate listings. This service was created to help my mother, and although it is open to the public, it is not currently operated as a business, so only my mother is still using it.
+I run a small service for managing real estate listings. I built it to help my mother. Although it is publicly accessible, I do not currently operate it as a business, so my mother remains its only user.
 
 > https://real-estate.unknownpgr.com
 
-Checking the Git log, development began on July 12, 2020, and the service has been in operation for approximately 2 years and 10 months. It's a small service, but I've learned a lot while running this service, so I'd like to summarize it.
+According to the Git log, I started developing it on July 12, 2020, which means I have been operating the service for about two years and ten months. It is a small service, but I learned a great deal from running it, and I wanted to write those lessons down.
 
-The actual service development process was quite messy (😅) and did not proceed as neatly as the article below. However, for readability, I have organized it neatly according to the general development process.
+The actual development process was quite a mess (😅) and did not proceed as neatly as the account below suggests. For readability, however, I have organized it into a clean narrative that follows a typical development process.
 
-# start
+# Getting Started
 
-My mother started working in real estate several years ago. At that time, she had just started working and she didn't have many properties for sale, so she simply recorded the properties on a paper table.
+My mother began working in real estate several years ago. At the time, she had only just started and did not have many listings, so she simply recorded them in a table on paper.
 
-As the number of properties for sale increased, it soon became difficult to manage them on paper. Although her father was not a computer major, he knew how to use Excel using Visual Basic, and he created a program with CRUD functionality for her.
+As the number of listings continued to grow, it soon became difficult to manage them on paper. My father did not major in computer science, but he knew how to work with Excel using Visual Basic, so he built her a program with CRUD functionality.
 
 This program
 
-- It had the ability to create, search, edit, and delete properties and customers.
-- There was also a feature that retrieved photos containing the names of buildings from a photo directory and displayed them in a carousel.
-- Used hidden sheet as database.
-- So, when needed, the data could be printed directly into a table and used.
+- could create, search, edit, and delete listings and customers.
+- could also retrieve photos whose filenames included a building's name from a directory of photos and display them as a carousel.
+- used a hidden sheet as its database.
+- therefore allowed the data to be printed directly as a table whenever needed.
 
-Of course, there were some problems as my father did not study programming in depth.
+Of course, since my father had not studied programming in depth, it had a few issues.
 
 - The database was not normalized.
-- Buildings and customers actually have an n:n relationship, but they are managed on the same sheet, so only 1:1 matching is possible. So, to register a new customer, I had to delete the old customer information.
-- All the code was gathered in one file and there was a lot of code duplication, so the code length exceeded 10,000 lines.
+- Buildings and customers actually have an n:n relationship, but because they were managed in the same sheet, only 1:1 matching was possible. As a result, registering a new customer required deleting the previous customer's information.
+- All the code was contained in a single file, and there was so much duplication that it grew to more than 10,000 lines.
 
-Nevertheless, the program worked perfectly and my mother found it very easy to work with.
+Even so, the program worked perfectly and made my mother's work considerably easier.
 
-But as she continued to work, her needs continued to increase. Programs became increasingly complex, making it no longer possible to add new features. So I decided to recreate this program.
+However, as she continued working, the number of required features kept growing. The program became increasingly complex until adding new functionality was no longer feasible. So I decided to rebuild it.
 
-# domain
+# Domain
 
-First, we had to obtain domain knowledge prior to development. Of course, at that time, I had no idea about clean architecture, domain-driven development, entities, or use cases. However, from my own experience, I knew that if a programmer creates a program as he had imagined without domain knowledge and detailed user requirements, everything will have to be modified in the end. So, I took her mother, got some paper and pencil, and asked her what UI and what features she needed.
+Before beginning development, I first needed to acquire domain knowledge. At the time, of course, I knew nothing about concepts such as Clean Architecture, domain-driven development, entities, or use cases. From experience, however, I did know that if a programmer built a program exactly as they imagined it without detailed user requirements and domain knowledge, they would eventually have to redo everything. So I sat down with my mother, paper and pencil in hand, and asked what kind of UI and features she needed.
 
-In this process, I was able to learn the difference between users and developers, and how to communicate with users.
+This process taught me about the differences between users and developers, and how to communicate with users.
 
-First, I learned that when talking to users, you should deal with the results, not the process. Users cannot, and do not need to, understand how a feature works internally. What matters to users is the results.
+First, I learned that conversations with users should focus on outcomes, not processes. Users neither can nor need to understand how a feature works internally. What matters to them is the result.
 
-My mother had no idea whether a program ran locally or server-client made any difference in usability, and she didn't know the difference between a web page shortcut and a native app on a smartphone. But instead of explaining web applications or native apps, she explained, 'This way you have to have an internet connection to use it, but it will automatically synchronize between your computer and your laptop.' In reality, the server-client architecture has nothing to do with synchronization. However, the specifics of how it worked didn't really matter since the user completely understood how it worked.
+My mother had no idea whether the program ran locally or used a server-client architecture, what difference that would make when using it, or even how a shortcut to a web page on a smartphone differed from a native app. Instead of explaining web applications or native apps, however, I told her, “If we do it this way, you can only use it while connected to the internet, but your data will automatically stay in sync between your desktop and laptop.” In reality, a server-client architecture has nothing to do with synchronization. But because the user fully understood how it would behave, the specific mechanism was not particularly important.
 
-And I learned that users don't really know what they need, so when receiving requests from users, you need to look into the purpose you're trying to achieve and don't just think about functionality.
+I also learned that users do not always know exactly what they need. When gathering requirements, therefore, you need to investigate the goal they are trying to achieve rather than thinking only about the requested feature.
 
-Among the requests was to include a calculator that could convert 'pyeong' and 'square meter' and a conversion page that could convert road name addresses and street number addresses. Implementing such a calculator or converter is simple by adding a tab. However, if you think about it a little more, ultimately what the user wants is not a converter or a page, but to get one of the two pieces of information from the other. So, create both a road name address and a street address entry field in the building information field, but if you enter any address in either page (for example, entering a street number address in the road name address field), it will automatically be converted appropriately when the focus is out. We implemented it so that both values are entered. For the square footage, we created both a square meter input box and a square meter input box and implemented it so that when a value is entered in one, the other is automatically filled. From this experience, we learned that users are often unable to accurately describe their requirements.
+One requirement was to include a calculator that could convert between *pyeong* and square meters, as well as a page that could convert between road-name addresses and lot-number addresses. It would have been easy to add a tab and implement such calculators or converters. Thinking a little further, however, the user did not really want a converter or a page; she wanted to derive one piece of information from the other. So I created fields for both road-name and lot-number addresses in the building information form. Entering either type of address into either field—for example, entering a lot-number address in the road-name address field—would automatically populate both fields with the appropriately converted values once the field lost focus. Likewise, I added fields for both *pyeong* and square meters, and entering a value in one automatically filled in the other. From this experience, I learned that users are often unable to articulate their requirements precisely.
 
-Next, we learned that users may not be able to describe exactly what they want.
+Next, I learned that users may not be able to explain exactly what they want.
 
-We would like the buildings to be listed in address order, but there was a request to list them in the order they were most recently modified. However, because both address and modification time are unique values, this sorting criterion was generally unsatisfactory (although there are exceptions for multi-family homes). So, we conducted more user interviews(?). As a result, we learned that the reason we wanted them listed in address order was to manage buildings by region. In other words, all you had to do was sort by region (from street address to dong) rather than address, and then sort by information modification time. (However, later, multiple sorting criteria became necessary, and the sorting criteria were eventually updated to allow users to select their own.)
+There was a requirement for buildings to be listed in address order while also being listed in order of most recent modification. But addresses and modification times are both unique values—apart from exceptions such as multi-family housing—so these sorting criteria generally could not both be satisfied. I therefore conducted a little more of a user interview(?). I discovered that she wanted the buildings listed by address so that she could manage them by area. In other words, they needed to be sorted not by address, but by area (the *dong* in a lot-number address), and then by the time their information was last modified. (Later, however, multiple sorting criteria became necessary, so I eventually updated the service to let the user choose the sorting criteria herself.)
 
-Lastly, I learned that the difference in perspectives between programmers and non-programmers can be bigger than I thought.
+Finally, I learned that the difference in perspective between programmers and non-programmers can be greater than one might expect.
 
-When I checked the data to transfer it from the existing Excel program, there was a lot of duplicate data and many values were in a novel(?) format. For example, there was a way to represent uncertain dates with \* (like 2023-01-1\*). This means that any date is estimated to be between January 10 and 20, 2023. However, this notation had business implications, so it could not be changed without permission. And sometimes we needed to sort the data based on this value.
+When I examined the data in the existing Excel program in preparation for migrating it, I found a great deal of duplicated data and many values in novel(?) formats. One example was a notation that used an asterisk to mark an uncertain date (such as 2023-01-1\*). It meant that the date was estimated to fall somewhere between January 10 and 20, 2023. But because this notation carried business meaning, I could not simply change it. Sometimes the data also needed to be sorted according to these values.
 
-To resolve this issue later, I decided to store the date data in this part in String format instead of Datetime. Instead, we restricted the use of new formats other than this asterisk notation. And when sorting based on this data, we solved the problem by replacing the asterisk with 5.
+I later solved this problem by storing the date data in this field as a String rather than a Datetime. I restricted it so that no new formats other than the asterisk notation could be used. When sorting by this data, I used a version of the value in which the asterisk was replaced with 5, which resolved the issue.
 
 # Development
 
-After acquiring the domain, we started developing the service.
+After learning the domain, I began developing the service.
 
-- Created a frontend using React and Chakra UI.
-- Built the backend using Koa.
-- We used Mongo Atlas as the database and managed the schema and database client using Prisma.
-- All components except DB were deployed on the Kubernetes cluster on my personal server.
+- I built the frontend using React and Chakra UI.
+- I built the backend using Koa.
+- I used Mongo Atlas for the database and Prisma to manage the schema and database client.
+- I deployed every component except the database to a Kubernetes cluster on my personal server.
 
-During development, various problems and concerns arose.
+Various problems and questions arose during development as well.
 
-- One building had about 90 properties.
-- Properties change very often.
-- And the UI changes were frequent accordingly.
+- A single building had around 90 properties.
+- Those properties changed very frequently.
+- The corresponding UI also changed frequently.
 
-This problem was solved by implementing a flexible architecture.
+I resolved this problem by implementing a flexible architecture.
 
-- Because the database was composed of MongoDB, it was easy to change the schema.
-- Because Prisma was used, database schema and client type checking could also be performed automatically.
-- The API between back-front automatically generated OpenAPI specifications using tsoa.
-- Front-end API calls were also automatically generated using `openapi-generator-cli`.
+- Because the database used MongoDB, changing the schema was easy.
+- Because I used Prisma, the database schema and client types could also be checked automatically.
+- For the API between the backend and frontend, I used tsoa to generate the OpenAPI specification automatically.
+- I also generated the frontend API calls automatically using `openapi-generator-cli`.
 
-Because the properties of the building are so numerous and complex, I thought, 'Should I just use the type automatically generated by Prisma as the entity?' I really thought about this a lot. But then your business logic depends on the database schema, which violates the dependency inversion principle. Maybe a better ORM than Prisma will come out later. If you depend on Prisma's type, it will be difficult to introduce a new ORM. So in the end, I created a separate entity and used it. Fortunately, Prisma enforces the type of the returned object, and Typescript considers it to be the same type if it has the same properties, so we were able to create a repository structure that was not very complicated.
+The properties of a building were so numerous and complex that I spent a great deal of time wondering, “Should I just use the type Prisma automatically generates as the entity?” But doing so would make the business logic depend on the database schema, violating the dependency inversion principle. Perhaps a better ORM than Prisma might emerge later. If I depended on Prisma's types, adopting a new ORM would be difficult. In the end, I therefore created and used a separate entity. Fortunately, Prisma enforces the types of the objects it returns, and TypeScript considers objects with the same properties to be of the same type, so I was able to keep the repository structure relatively simple.
 
-I was also concerned about whether I should share the entity between the front and back, or create and use a separate entity. But fundamentally, the front and back are not issues to worry about in the architecture in the first place. After configuring components according to function, the boundary between front and back should be drawn according to whether the component is suitable for the front or back, and the front and back should not be considered first. So, we decided that there was no architectural problem in sharing entities between the front and back, and we actually implemented it this way.
+I also wondered whether the frontend and backend should share an entity or use separate entities. Fundamentally, however, the frontend and backend are not what the architecture should begin by considering. Components should first be organized by functionality, and the boundary between the frontend and backend should then be drawn according to which side each component is better suited for. The frontend and backend should not be considered first. I therefore concluded that sharing entities between the frontend and backend posed no architectural problem, and that is how I implemented it.
 
-The frontend contains quite a bit of business logic. So we couldn't think of it as just an expression layer. I also thought about whether DTOs should only be created as needed to allow data to travel between the front and back service boundaries. However, we decided that this could be resolved by modifying the back-front boundary as needed. So, as it is a one-person development and the service domain has not yet been stabilized, I decided to use the entity as is for convenience now and create a DTO for optimization later when the service is stabilized.
+The frontend contains a fair amount of business logic, so I could not regard it as a simple presentation layer. I also considered whether DTOs should be created only as needed to move data across the service boundary between the frontend and backend. I concluded, however, that such concerns could be addressed by adjusting the backend-frontend boundary whenever necessary. Since I was developing the service alone and its domain had not yet stabilized, I decided to use entities directly for convenience for the time being, and to create DTOs later for optimization once the service had stabilized.
 
-Building a development environment and server is also a fun process. This service requires four components: front server, back server, MongoDB, and Redis to operate properly. However, when running a development server locally, there were frequent conflicts with the ports of other services' development servers. It is not difficult to change the port, but each time, I had to update the externally registered development server information for Kakao login, etc. This problem was solved neatly by configuring the development server to access the domain using the [http-tunneling](https://github.com/unknownpgr/http-tunnelling) tool developed later.
+Setting up the development environment and server was also an enjoyable process. This service requires four components to function properly: a frontend server, a backend server, MongoDB, and Redis. When I ran development servers locally, however, their ports frequently conflicted with those of development servers for other services. Changing a port was not difficult, but each time I did so, I had to update externally registered development-server information for services such as Kakao Login. I later solved this cleanly by using the [http-tunneling](https://github.com/unknownpgr/http-tunnelling) tool I developed to configure the development server so it could be accessed through a domain.
 
 # Refactoring
 
-In the section above, it was written as if a clean architecture was designed and developed for the domain from the beginning. However, as I mentioned at the beginning, we actually went through a lot of trial and error and a lot of refactoring.
+The preceding section makes it sound as if I designed and developed a clean architecture tailored to the domain from the very beginning. As I mentioned at the start, however, the reality involved a variety of trials and errors, followed by an enormous amount of refactoring.
 
 #### TypeScript
 
-First of all, at first we didn't use TypeScript, but JavaScript. Therefore, there were many errors that occurred due to lack of type checking. This problem was solved by simply refactoring the entire source code into TypeScript. I remember it took a month or more.
+First of all, I initially used JavaScript rather than TypeScript. This caused many errors due to the lack of type checking. I resolved the problem simply by refactoring the entire source code to TypeScript. As I recall, it took a month or perhaps even longer.
 
-#### Backend architecture
+#### Backend Architecture
 
-Afterwards, architectural issues arose. When I first started this project, I didn't know much about architecture design, so I wrote the business logic in the koa router. Of course, the database layer was also not separated, so I called primsa directly. This architecture is useful when the business logic is small and simple, such as a notepad or diary service, but maintenance becomes difficult if the logic becomes even a little complex. Only after reading the Clean Architecture book did I know how to solve this problem, and I solved it by modifying the backend to be based on Clean Architecture. The code base, including the API, had changed significantly, making continuous deployment impossible, but fortunately, since this service only had one user, we were able to stop and redeploy the service at an appropriate time.
+Next came architectural issues. When I first started this project, I did not know much about architecture design, so I put the business logic inside the Koa router. The database layer was not separated either, so it called Prisma directly. This kind of architecture can be useful when the business logic is small and simple, as in a notepad or diary service, but it becomes difficult to maintain as soon as the logic grows even slightly more complex. Only after reading *Clean Architecture* did I understand how to solve this problem. I resolved it by restructuring the backend around Clean Architecture. The API and much of the codebase changed so extensively that continuous deployment was impossible. Fortunately, since this service had only one user, I could stop it at a suitable time and redeploy it.
 
-#### Front-end architecture
+#### Frontend Architecture
 
-There were also problems arising from poor design of the front-end architecture. The main UI of the service is the Input Component (e.g. Text area, toggle button, etc.) that inputs/displays building or customer information. Initially, to make the change easy, we implemented it so that fields of the entity object in the context within the Input Component could be modified by supplying the attribute name of the appropriate entity to the Input Component as a prop. This implementation made UI changes easy, but also tightly coupled the front-end logic, Input Component, and React Framework. So, as time went by, adding features became very difficult. Ultimately, this too was completely rewritten to cleanly separate business logic, framework, and UI.
+There were also problems caused by poorly designed frontend architecture. The service's primary UI consists of Input Components (such as text areas and toggle buttons) that enter and display information about buildings or customers. Initially, to make these easy to change, I implemented each Input Component so that supplying the name of an appropriate entity attribute as a prop allowed it to modify that field on the entity object in the context. This implementation made UI changes easy, but it coupled the frontend logic, Input Components, and React Framework extremely tightly. Over time, adding features became exceedingly difficult. In the end, I rewrote this completely as well, cleanly separating the business logic, framework, and UI.
 
-However, unlike the backend, where data flows along the call stack, in the frontend, data does not flow along the call stack. This means that if the state (or model) is updated in a function (usually an event handler), other UI components that are completely unrelated to that function may be updated. Therefore, in the front end, business logic should not be written as a simple class, but a way to observe it should be provided in React, etc. To implement this, I tried various methods - Proxy, Frameworks (e.g. Redux / Context API), PubSub - but there was nothing like a simple listener. So I created an addEventListener function in the class and added a hook that uses this function to maintain a clean architecture. I implemented it so that it can be used in React.
+Unlike on the backend, where data flows along the call stack, data on the frontend does not flow along the call stack. In other words, when a function—usually an event handler—updates state (or a model), completely unrelated UI components may be updated. For that reason, frontend business logic cannot simply be written as ordinary classes; it must provide a way for React and similar tools to observe it. I tried various approaches to implement this—Proxy, frameworks (e.g. Redux / Context API), and PubSub—but nothing worked as well as a simple listener. I therefore added an addEventListener function to the class and a hook that uses it, allowing the class to work with React while preserving Clean Architecture.
 
 #### GraphQL
 
-There have been times when I recklessly adopted technology that seemed good and ended up in failure. I've applied GraphQL before to try out a new technology. When implementing list UI, etc., bringing in the entire entity would result in too much unnecessary data being transmitted, so the intention was to reduce this. When I introduced it, I thought it was a neat and sophisticated technology. However, we encountered various problems while working.
+I also got burned after introducing a technology indiscriminately simply because it looked promising. At one point, wanting to try something new, I adopted GraphQL without much thought. My intention was to reduce unnecessary data transfer: when implementing list UIs and similar features, retrieving entire entities sent far too much unneeded data. At first, I thought it was a clean and sophisticated technology. As I worked with it, however, I encountered a variety of problems.
 
-- It's great for getting the data right, but it's quite difficult to apply complex filters or manipulate the data.
-- The N+1 problem is bigger than you think.
-- The data type is so complex that it is difficult to get a clean structure on the front page.
+- It is well suited to fetching data in precisely the desired shape, but applying complex filters or manipulating the data is quite difficult.
+- The N+1 problem has a greater impact than I expected.
+- The data types become so complex that it is difficult to keep the frontend structure clean.
 
-So I ended up going back to the REST API. While performing this refactoring, we also realized that we had coupled GraphQL and business logic too strongly, and later, as mentioned earlier, we separated implementation and abstraction on the front end as well.
+In the end, I returned to a REST API. While carrying out this refactoring, I also realized that I had coupled GraphQL and the business logic too tightly. Afterward, as mentioned above, I separated abstractions from implementations on the frontend as well.
 
 #### CQRS
 
-Because complex aggregation was needed, we implemented CQRS without realizing it. The task was to expose customers who had not made payments to the top of the customer list, but in order to implement this,
+I also ended up implementing CQRS almost by accident because I needed a complex aggregation. The task was to display customers with outstanding payments at the top of the customer list. Implementing this required
 
-1. Among the transactions each customer has
-2. After finding out whether there is a transaction for which payment has not been made
-3. Sorting must be done in this order:
+1. examining each customer's transactions,
+2. determining whether any of those transactions had not been paid, and then
+3. sorting the customers accordingly.
 
-Aggregation in MongoDB does not perform as well as Join in RDB. However, when sorting was performed, it became a very inefficient operation. So, I created a separate model for Read. This model is a model that adds the IDs of transactions for which payment has not been made to the customer model, and is implemented so that when a customer or transaction is modified, this model is also modified. In this case, time complexity does not increase because only one customer is modified at a time and no sorting is performed, but performance is greatly improved because an index can be used when searching. I later found out that this is a type of CQRS with a separate Read model.
+Unlike joins in an RDB, aggregation in MongoDB does not have particularly good performance. Adding sorting made the operation extremely inefficient. So I created a separate model specifically for reads. This model was a version of the customer model with the IDs of unpaid transactions added to it, and I implemented the system so that modifying a customer or a transaction would update this model as well. In this case, only one customer is modified at a time and no sorting is performed, so the time complexity does not increase. During queries, however, an index can be used, resulting in a major performance improvement. I only later learned that separating out a read model in this way is a form of CQRS.
 
-# distribution
+# Deployment
 
-Deployment was also no easy task. The good news is that since it was cumbersome to separate the repositories, we developed the front and back into one repository. I later found out that it was a method called monorepo.
+Deployment was not easy either. One fortunate accident was that I had been too lazy to split the repositories, so I developed the frontend and backend together in a single repository. I only later learned that this was an established approach called a monorepo.
 
-Nonetheless, writing the deployment process was more difficult than expected. At first, I used various CI/CD tools such as ArgoCD and GitHub Actions. However, using ArgoCD separated image build and deployment, making the deployment process complicated. Handling everything in GitHub Actions was a nice solution, but it was slow and difficult to manage secrets.
+Even so, creating a deployment process was more difficult than I expected. At first, I tried various CI/CD tools such as ArgoCD and GitHub Actions. With ArgoCD, however, image builds and deployment were separated, which complicated the deployment process. Handling everything in GitHub Actions was a reasonably good approach, but it was too slow and made secrets difficult to manage.
 
-The biggest problem was the management point. All of the previous methods I tried worked perfectly, but the problem was that I was the only one developing this project. This is because the more management points there are, the more difficult it becomes to manage them. For example, assuming you use ECR, GitHub Actions, and ArgoCD, there are four parts you need to touch, including the source code, to add a service or change an image name.
+The biggest problem of all was the number of things that needed to be managed. Every approach I tried worked perfectly, but the problem was that I was the only person developing this project. The more management points there were, the harder it became to manage. For example, if I were using ECR, GitHub Actions, and ArgoCD, adding a service or changing an image name would require changes in four different places, including the source code.
 
-At the same time, I realized that all of the wonderful CI/CD stacks mentioned above were designed for cases where many people gathered together to develop, and that introducing such stacks in small projects was just a facade. So, we solved both the build and deployment by introducing a simple shell script. The build is performed locally using docker buildx, and once the image build is successful, kustomize is used to generate a single manifest file specific to the deployment environment (production/staging). In this file, all image names are in environment variable format and are replaced using envsubst. The manifest file created this way is tracked in git. Initially, we did not track the secret for security reasons because we did not know how to manage it, but later we introduced Sealed Secret to make it trackable. You then perform the deployment locally using kubectl.
+I came to realize that all the impressive CI/CD stacks mentioned above were designed with teams of many developers in mind, and that adopting stacks like those for a small project was little more than showing off. So I handled both builds and deployment with simple shell scripts. Builds are performed locally using docker buildx. If the image builds successfully, kustomize generates a single manifest file appropriate for the deployment environment (production/staging). All image names in this file are expressed as environment variables and replaced using envsubst. The resulting manifest file is tracked in Git. Initially, I did not know how to manage secrets and did not track the file for security reasons, but after introducing Sealed Secret, I made it possible to track it. Deployment is then performed locally using kubectl.
 
-This method is extremely efficient. Previously, when we used GitHub Actions, deployment times would take 3 to 5 minutes, but we were able to shorten this to less than 1 minute. Basically, previously, the process of starting a VM for a post-push build, performing a Git clone, and loading the Docker cache from the registry took quite a bit of time. However, by introducing this method, build environment configuration or Git Clone became unnecessary. Docker cache uses a local cache, so cache load time is virtually negligible. So, if no changes were made, the traditional deployment process, which took at least 30 seconds, was reduced to 0.9 seconds.
+This approach is extremely efficient. When I previously used GitHub Actions, deployment took three to five minutes, but I was able to reduce it to less than one minute. Previously, a considerable amount of time was spent starting a VM for the build after a push, performing a Git Clone, and loading the Docker cache from the registry. With this approach, however, there is no need to configure a build environment or perform a Git Clone. Since the Docker cache uses the local cache, the cache loading time is effectively negligible. As a result, when there are no changes, a process that took at least 30 seconds under the previous deployment workflow now takes 0.9 seconds.
 
-# Configuration management
+# Version Control
 
-Configuration management also introduced a new, simplified method instead of GitFlow.
+For version control, I also adopted a new, simplified approach instead of GitFlow.
 
-- The branch is divided into main and features.
-- When feature development is necessary, the feature is created in main.
-- After feature development is completed, tests are performed and features are merged into main.
+- Branches are divided into main and feature branches.
+- When a feature needs to be developed, a feature branch is created from main.
+- After feature development is complete, it is tested and merged into main.
 
-From this, the deployment process goes like this:
+From there, the deployment process proceeds as follows.
 
-- Perform distribution.
-- Then, a `manifest.yaml` file containing all information about the currently deployed service is created.
-- Commit this to Git.
+- Perform the deployment.
+- This generates a `manifest.yaml` file containing all information about the currently deployed service.
+- Commit it to Git.
 - If this version is stable, tag it as stable.
 
-The great advantage of this configuration management method is that rollback is simple when an error occurs because the kubernetes resource itself is managed in a single file tracked by Git. Because if something goes wrong, all you have to do is go back to that commit and deploy the manifest.yaml file.
+A major advantage of this version-control approach is that rollback is simple when an error occurs, because the Kubernetes resources themselves are managed in a single file tracked by Git. If a problem occurs, I only need to return to that commit and deploy its manifest.yaml file.
 
-# conclusion
+# Conclusion
 
-While working on this project, I encountered various problems and learned a lot while solving them. I believe that this experience is a valuable asset that can only be gained by running a product on your own. And through this project I think what I learned will be of great help to my next project.
+Throughout this project, I encountered a variety of problems and learned a great deal by solving them. I believe this kind of experience is a valuable asset that can only be gained by operating a product oneself. I also believe the lessons I learned from this project will be of great help in future projects.

@@ -1,85 +1,90 @@
 ---
-title: 950 Hours in the Army
+title: 950 Hours in the Military
 tags:
   - army
 date: 2023-10-12T07:43:46.135Z
 ---
 
-> Translated with the help of ChatGPT and Google Translator
+> This post was translated from Korean into English by AI.
 
-I felt the 18 months spent in military service were too precious to waste. It felt like my growth had halted during a period when I should have been continuously studying and growing, due to military service. Perhaps because I joined the army relatively late, many of my friends who had already been discharged were actively pursuing their growth, which made me feel this way even more strongly. Therefore, I decided not to waste the 18 months in the army. I had prepared a lot before enlistment and continued various endeavors as planned after enlistment.
+The year and a half I had to spend on military service felt like such a waste. I felt that my growth had come to a halt because of military service at a time when I needed to be constantly learning and improving.
+Perhaps I felt this even more strongly because I enlisted fairly late, and many of my friends had already finished their service and were working hard to grow.
+So I resolved not to waste my year and a half in the military under any circumstances. I did a great deal of preparation before enlisting, and after I enlisted, I tried a variety of things as planned.
 
-> For foreign readers, the military service in South Korea is mandatory for all male citizens. The duration of the service is 18 months.
+This post is a summary of my experience studying over those eighteen months. I want to use it both to record what I studied and, hopefully, to offer at least a little help to friends who will enter the military after me.
 
-This article summarizes my study experiences over 18 months. Through this article, I aim to record what I studied and hope it can be of some help to those who will join the army later than I did.
+# Setting Up a Server
 
-# Server Setup
+I believe that studying any field requires actually doing the work. Just as someone learning the piano will not improve by reading only sheet music and textbooks without ever playing the instrument, programmers will not improve unless they build things for themselves, whether applications or infrastructure. I therefore made it a major goal to establish an environment in which I could actually develop and deploy services while in the military.
 
-I believe that to study any field, you must actually do it. Just as a person learning piano won't improve by only reading sheet music or textbooks without actually playing the piano, a programmer won't improve without actually working on applications or infrastructure. Therefore, setting up an environment where I could develop and deploy services in the army was a very important goal for me.
+With that in mind, I set up a server at home before enlisting. There is a major difference between having a server available around the clock and not having one—for example, having to use something like goorm IDE instead.
+As mentioned above, setting up a development environment on a server allows you to connect and develop from anywhere. I also did most of my development by connecting to the server through VSCode's SSH extension. Beyond that, a server can provide developers with a reliable place to store files and a test bed where they can deploy the services they have built without worrying about cost.
 
-As a preparatory step before enlistment, I set up a server at home. Having a server available 24/7 makes a big difference compared to using something like cloud IDEs. As mentioned earlier, if you have a development environment set up on a server, you can access and develop from anywhere. I mainly used VSCode with the SSH extension to connect to the server for development. Moreover, for developers, a server is not only a place where files can be stored securely but also a test bed where implemented services can be uploaded without cost concerns.
+- The hardware can be found in [this post](https://unknownpgr.com/posts/unboxing-pc).
+- A domain is connected through AWS Route 53.
+- [A DDNS system I implemented myself](https://github.com/unknownpgr/route53-ddns) is installed for this domain so that it can handle IP address changes.
+- K3S is installed so that I can deploy a variety of services.
+- I deployed Guacamole on this server so that I could connect to other machines.
+- As a precaution, I deployed [Code Server](https://code.visualstudio.com/docs/remote/vscode-server) on Kubernetes.
 
-- Hardware details can be found [in this article](https://unknownpgr.com/posts/unboxing-pc).
-- It is connected through a domain via AWS Route53.
-- This domain is equipped with [a custom-built DDNS](https://github.com/unknownpgr/route53-ddns) to respond to IP changes.
-- K3S is installed to allow various services to be deployed.
-- Guacamole has been uploaded to this server to connect to other machines.
-- In case of emergency, [Code Server](https://code.visualstudio.com/docs/remote/vscode-server) is uploaded on Kubernetes.
+In particular, the computers in the military's Cyber Knowledge Information Room do not let you install programs at will, and most ports other than 80 and 443 are blocked as well. It is therefore important to prepare a solid development environment in advance that remains accessible even under those conditions.
 
-Especially in the army's cyber information room, you cannot install programs at will, and ports other than 80 or 443 are mostly blocked. Therefore, it is important to set up a development environment that can be accessed even in such situations in advance.
+# Setting Up a Development Environment
 
-> For foreign readers, the 'cyber information room' is the only place where soldiers can use computers connected to the internet. It is a place where soldiers can use the internet, but it is heavily restricted.
+After enlisting, I chose an EC2 Windows Server instance as my primary development environment. Before enlisting, I had planned either to use the server described above or to leave my MacBook at home and connect to it through VNC. However, I added a new environment for the following reasons.
 
-# Development Environment Setup
-
-After enlisting, I chose an EC2 Windows Server Instance as my primary development environment. Before enlistment, I planned to use the server I had set up or leave a MacBook at home to connect via VNC. However, for the following reasons, I decided to set up a new environment:
-
-- I needed a GUI for versatility. There were many cases, such as MATLAB or image processing, where a GUI was necessary.
-- Comparing VNC and RDP available in Windows, RDP is much faster.
-- I specifically chose Windows Server because it was the only Windows image providing a desktop environment.
-- I created an [EC2 Controller](https://github.com/unknownpgr/ec2-webui) to turn on this server only when needed.
+- I needed a GUI for general-purpose use. There were many situations that required one, including GUI-based programs (e.g. MATLAB) and video processing.
+- Comparing VNC with RDP, which is available on Windows, RDP is much faster.
+- I specifically chose Windows Server because it was the only Windows image that provided a desktop environment.
+- I built an [EC2 Controller](https://github.com/unknownpgr/ec2-webui) so that I could turn this server on only when I needed it.
 
 # What I Actually Did
 
-In the army, I mainly worked on tasks that could take a long time. For example, I carried out a comprehensive refactoring of the products I had made. It could be difficult to do such refactoring in civilian life because it takes a long time. However, military life never seems to end, so I could refactor comfortably.
+In the military, I mainly worked on tasks that could take a long time. For example, I comprehensively refactored the products I had built.
+In civilian life, it can be difficult to undertake this kind of refactoring because it takes so much time.
+But since military life feels as though it will never end, I could take my time refactoring without worry.
 
-I realized that there was a lot of idle time in the army when I wasn't doing anything. So, I chose a study method that could efficiently use this time. Especially, I read books whenever I had a chance.
+Once I arrived in the military, I also realized that there was a tremendous amount of time spent sitting around doing nothing.
+So I chose ways of studying that would let me use those periods efficiently.
+In particular, I read whenever I had a spare moment.
 
-- Below are some computer-related books that had a significant impact on me while in the army:
+- Below are the computer-related books I read in the military that had a major influence on me.
   - Understanding the Linux Kernel (3rd)
   - TCP/IP Illustrated Volume 1
   - Clean Architecture
-  - The Data Science Design Manual
-  - Basic Electromagnetism (a textbook for my major)
-- I also read various non-computer-related general knowledge books:
-  - The 100-Year-Old Man Who Climbed Out the Window and Disappeared
-  - Literacy for Citizens (kr: 시민의 교양)
-  - The New Poverty (kr: 새로운 가난이 온다)
+  - How Data Scientists Think
+  - Fundamentals of Electromagnetics (textbook)
+- I also read a variety of general-interest books unrelated to computers.
+  - The Hundred-Year-Old Man Who Climbed Out the Window and Disappeared
+  - A Citizen's Education
+  - The New Poverty Is Coming
   - To Kill a Mockingbird
   - Sapiens
   - Mankiw's Principles of Economics
-  - The Concert of Management (kr: 경영학 콘서트)
+  - Management Concert
 
-Whenever I felt bored, I revisited various mathematical and engineering concepts.
+Whenever I was bored, I also revisited various concepts in mathematics and engineering.
 
-- I revisited circuit analysis based on impedance in electronic circuits.
-- I went through proofs of various concepts in linear algebra again.
-- Through contemplation of statistics and probability, I gained various insights into statistics.
-  - The sensor algorithm based on Bayes' theorem that I developed previously was also an extension of such studies.
+- I restudied impedance-based circuit analysis in electronic circuits.
+- I worked through proofs for various concepts in linear algebra again.
+- By reflecting on statistics and probability, I was able to gain a variety of insights into statistics.
+  - Developing the sensor algorithm based on Bayes' theorem that I wrote about previously was also an extension of this study.
 
-I also worked on various projects.
+I also worked on a variety of projects.
 
-- I created a tunneling server that could access an HTTP server within a private network.
-- Participating in the Army Startup Competition, I developed a service that automatically analyzes real estate registration to prevent lease fraud.
+- I built a tunneling server that could access an HTTP server inside a private network.
+- While participating in the Army Startup Competition, I also developed a service that automatically analyzes real estate registrations to help prevent jeonse deposit fraud.
 
 # Conclusion
 
-Checking the computer usage logs in the cyber information room, I found that I had spent over 950 hours. The title of this article, 950 hours, reflects that. Initially, I used someone else's account but created my own later, so the actual time spent is likely over 1000 hours.
+When I retrieved and checked the computer usage logs from the Cyber Knowledge Information Room, they totaled more than 950 hours. That is what the 950 hours in this post's title refers to.
+At first, I borrowed someone else's account and only created my own partway through, so the time I actually spent using the computers must have exceeded 1,000 hours.
 
 ![](./p1.png)
 
-From this, I believe I was able to continue developing without wasting 18 months. I hope others can also use their time in the army efficiently and not waste it.
+Thanks to this, I believe I was able to keep improving without wasting those eighteen months.
+I hope others can also make efficient use of their time in the military rather than letting it go to waste.
 
-# Postscript
+# TMI
 
-I wanted to get the computer usage logs from the cyber information room. However, the management program did not allow copying text or have an export function. After struggling for a while, I ended up using Wireshark to capture the TCP stream. Fortunately or unfortunately, the data was transmitted in plaintext, so I was able to save the data and write a parsing script to find out the total usage time.
+I wanted to retrieve my computer usage logs from the Cyber Knowledge Information Room. However, the management program would not let me copy the text and had no separate export feature. After struggling with it for quite a while, I eventually used Wireshark to capture the TCP stream. Fortunately or unfortunately, the data was transmitted as plain text, so after saving it and writing a suitable parsing script, I was able to calculate my total usage time.

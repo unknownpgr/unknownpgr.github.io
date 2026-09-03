@@ -5,254 +5,246 @@ tags:
 date: 2023-08-16T14:17:01.499Z
 ---
 
-> Translated with the help of ChatGPT and Google Translator
+> This post was translated from Korean into English by AI.
 
-I am running a service called [The-Form](https://the-form.io). The Form is a survey platform created while training for the 2021 Software Maestro Training Course.
+I run a service called The-Form ([The-Form](https://the-form.io)). The-Form is a survey platform that we built in 2021 while participating in the Software Maestro training program.
 
-I decided to develop The Form and made my first commit on July 8, 2021. Two years have passed since then, and many changes have occurred in The Form. Meanwhile, TheForm’s code became increasingly complex and difficult to maintain. So I decided to refactor TheForm’s code.
+We decided to develop The-Form and made our first commit on July 8, 2021. Two years have passed since then, and The-Form has gone through many changes. Along the way, its code grew increasingly complex and difficult to maintain. So I decided to refactor The-Form's code.
 
-In this article, I will introduce The Form’s refactoring process and share what I felt while refactoring.
+In this post, I will walk through The-Form's refactoring process and share what I learned from it.
 
-## Why did you refactor?
+## Why did I decide to refactor?
 
-The Form is (surprisingly) a platform used by many users, and we always receive requests for various features. We sometimes receive dozens of requests for new features a day. However, as we tried to develop these features, the code became so complex and unstable that it became very difficult to add new features. Of course, there's nothing you can't do if you try to develop it somehow, but if something goes wrong, it seems like you won't be able to fix it.
+The-Form is a platform that is (surprisingly) used by many people, so we are always receiving requests for all kinds of features. Some days, we get several requests for new features in a single day. But when I tried to develop these features, the code had become so complex and unstable that adding anything new was extremely difficult. Of course, I could probably have forced my way through it somehow, but I felt that if something went wrong, the codebase would become completely unmanageable.
 
-## Problems with The Form
+## The problems with The-Form
 
-The biggest problem with The Form is that it was developed in JavaScript, not TypeScript. At the time, there was a desire to develop products quickly, and the team members, including myself, were not familiar with TypeScript. So I decided to use JavaScript. When the product structure was simple and I was always looking at the code, there was no problem, but when the product became complicated and I stopped looking at the code for a while and then looked at the code again, it was very difficult to interpret.
+The biggest problem with The-Form was that it had been developed in JavaScript rather than TypeScript. At the time, we were eager to develop the product quickly, and the team members, myself included, were not familiar with TypeScript. So we decided to use JavaScript. This was not much of a problem while the product's structure was simple and we were constantly looking at the code. But once the product grew more complex and I returned to the code after not looking at it for a while, it was extremely difficult to understand.
 
-And the components existed as separate repositories and each had an independent deployment process. The Form is divided into various components such as backend, frontend, authentication server, and image server. However, since they exist in separate repositories, changing distribution-related tasks has become too much of a task. In particular, important values, including various secrets, were set in GitHub Action for each repository, so even if you wanted to change one setting, you had to touch all settings. Also, in GitHub Action, it is possible to set a secret for security reasons, but it is impossible to recheck the secret, so the secret must be kept separately. In particular, secrets cannot be tracked using Git, so there were times when they were accidentally lost. (Of course, the value can be checked on Kubernetes, so you can get it back.)
+The components also lived in separate repositories, each with its own independent deployment process. The-Form is divided into a variety of components, including the backend, frontend, authentication server, and image server. Because they lived in separate repositories, however, making any change related to deployment became a major undertaking. In particular, important values—including various secrets for GitHub Actions—were configured separately in every repository, so changing even a single setting meant touching all of them. GitHub Actions allows you to set secrets for security reasons, but does not let you view them again, so we had to maintain a separate copy of the secrets. Secrets cannot be tracked with Git either, and we occasionally lost them by mistake. (Of course, we could retrieve them again because their values can be checked in Kubernetes.)
 
-Above all, the architecture was not clean. In particular, The Form contains a lot of important logic in the front end. However, not only did I lack experience writing large-scale front-end code, but I also lacked understanding of architecture, so the business logic and UI code in the front-end ended up being mixed up a lot.
+Most importantly, the architecture was not clean. In particular, much of The-Form's important logic lived in the frontend. I not only lacked experience writing large-scale frontend code, but also had an insufficient understanding of architecture, so the business logic and UI code in the frontend ended up heavily intertwined.
 
 ## Refactoring strategy
 
-Before refactoring, we decided to thoroughly plan the refactoring strategy and begin refactoring with the goal of gradual deployment. This is because I have tried refactoring before and failed several times. At that time, so much refactoring was done at once that the product changed so much from before that it became virtually impossible to port data stored in existing services. In addition, because the structures of the front-end and back-end were changed so much at once, even if data portability was possible, a new product had to be created and distributed. Deploying a completely new codebase is too risky a decision. So in the end, we were unable to deploy the refactored version and returned to the original version.
+Before beginning the refactoring, I decided to plan the strategy thoroughly and aim for incremental deployment. This was because I had tried and failed to refactor the product several times before. On those occasions, I refactored too much at once, and the product diverged so far from the previous version that migrating the data stored in the existing service became virtually impossible. On top of that, I changed the frontend and backend structures so extensively at the same time that, even if the data could have been migrated, I would effectively have been building and deploying an entirely new product. Deploying a completely new codebase would have been far too risky. In the end, I could not deploy the refactored version and had to go back to the original.
 
-To achieve this, the first thing we did was put all of The Form’s repositories into one monorepo. And we rebuilt our CI/CD pipeline. There are several advantages to combining repositories into a monorepo.
-
-- In the existing structure, it is difficult to launch the development server locally, but if you manage the project with a monorepo, you can launch the entire service locally as a single docker-compose file.
-  - The Form is not a very heavy service and the team size is small, so it is much more efficient to develop the entire service locally rather than mocking other services.
+To prevent this, the first thing I did was consolidate all of The-Form's repositories into a single monorepo. Then I rebuilt the CI/CD pipeline. Consolidating repositories into a monorepo has several advantages.
+- With the existing structure, it was difficult to run the development servers locally, but managing the project as a monorepo lets us run the entire service locally with a single docker-compose file.
+    - The-Form is not a particularly heavy service, and our team is small, so running the entire service locally while developing is far more efficient than mocking the other services.
 - Testing is convenient.
-- Deployment-related tasks only need to be done once, rather than for each repository.
-- You can easily manage ambiguous data such as common service settings or Kubernetes resources.
+- Deployment-related work only has to be done once instead of separately for every repository.
+- Ambiguous resources such as service-wide configuration values and kubernetes resources are easier to manage.
 
-And when we started this work, we archived all existing repositories. This is to force the existing code base not to be touched. If I hadn't done so before, I kept touching the existing code base for minor error corrections or design improvements, and then the differences between the existing code base and the new monorepo grew so much that it eventually became impossible to migrate to the monorepo.
+When I started this work, I also archived every existing repository. This was meant to prevent us from touching the old codebase. When I had not done so in the past, we kept changing the old codebase to fix minor bugs or improve the design. Eventually, the old codebase and the new monorepo diverged so much that migrating to the monorepo became impossible.
 
-Lastly, we made ‘production deployment anyway’ our top priority. This is to minimize the differences between the code base and the product.
+Finally, I made “deploying to production, no matter what” the highest-priority goal. This was to minimize the gap between the codebase and the product.
 
-After integrating and distributing the monorepo, we stopped refactoring for a while to reflect the suppressed desires of other developers, designers, and PMs to improve the product, and proceeded to improve the design, add various data analysis tools, and improve functions. At the same time, the backend architecture was made more robust, the design of the main page was improved, and various minor errors were resolved. This gives us at least some preparation to start refactoring.
+After consolidating and deploying the monorepo, I briefly paused the refactoring to address the pent-up desire among the other developers, designers, and PMs to improve the product. We improved the design, added various data analysis tools, and worked on feature enhancements. In the process, the backend architecture became more robust, the main page design was improved, and various minor bugs were resolved. With that, the minimum preparations needed to begin refactoring were complete.
 
-Before starting refactoring again, we had to decide which component to work on first: backend or frontend. It's not impossible to refactor both components simultaneously. However, in that case, deployment is possible only after a very large amount of code has been modified. This means that gradual deployment is not possible. So, after much thought, I decided to refactor the front-end first and then the rest of the components, including the back-end. This is because most of The Form’s business logic in the domain of surveys is located on the front end.
+Before resuming the refactoring, I had to decide whether to work on the backend or the frontend first. Refactoring both components at the same time would not have been impossible. But in that case, we would only have been able to deploy after changing a very large amount of code. In other words, incremental deployment would have been impossible. After careful consideration, I decided to refactor the frontend first, followed by the backend and the remaining components. This was because, given the nature of the survey domain, most of The-Form's business logic was in the frontend.
 
-## Front-end refactoring [1] - Ts-fy
+## Frontend Refactoring [1] - Ts-fy
 
-Before any structural refactoring, we refactored the frontend from JS to TS. First, I converted all files to TypeScript, even if I had to put `any` in all the uncertain parts. At the same time, we were able to convert all the details, including UI components, into stable TypeScript.
+Before any structural refactoring, I converted the frontend from JS to TS. I converted every file to TypeScript first, even if that meant putting `any` everywhere the types were uncertain. Along the way, I was able to convert the details, including the UI components, into robust TypeScript.
 
-## Front-end refactoring [2] - Architecture design
+## Frontend Refactoring [2] - Architecture Design
 
-Afterwards, we implemented a survey structure based on clean architecture. The most difficult part of this process was deciding on a programming methodology to implement the business logic. There are various paradigms in programming, including procedure-oriented, functional, and object-oriented. Among them, two methodologies are suitable for implementing the business logic of The Form: Object Oriented Programming (OOP) and Data Oriented Programming (DOP). However, both methodologies have pros and cons, so it was not easy to decide which method to choose.
+Next, I implemented a survey structure based on clean architecture. The hardest part of this process was deciding on a programming methodology for implementing the business logic. Programming has many paradigms, including procedural, functional, and object-oriented programming. Of these, two methodologies were suitable for implementing The-Form's business logic: Object Oriented Programming (OOP) and Data Oriented Programming (DOP). But because both had advantages and disadvantages, deciding which one to choose was not easy.
 
-**If you choose OOP:**
-
-- You can make your entities stable by hiding the values and exposing only the methods.
+**If I chose OOP:**
+- Entities could be made robust by hiding their values and exposing only methods.
 - However, it has the disadvantage of mixing values and methods.
-- So it is difficult to share entities between frontend and backend.
+- This makes it difficult to share entities between the frontend and backend.
 
-**If you choose DOP:**
+**If I chose DOP:**
+- The functions that operate on the data are cleanly separated.
+- As long as the schema is well defined, entity data can easily be shared between services—that is, between the frontend and backend. This is because DOP is designed to be language-agnostic.
+- However, it is difficult to enforce data hiding or prevent data from being modified directly.
+- If implemented poorly, the business logic may become scattered.
 
-- The functions that handle the data are well separated.
-- If the schema is well defined, it has the advantage of being easy to share entity data between services, that is, between the front end and the back end. This is because DOP is a methodology designed to be language independent.
-- However, there is also a disadvantage that it is difficult to hide the data or force it not to be modified directly.
-- If implemented incorrectly, business logic may become distributed.
+This decision was difficult because The-Form's business logic spanned both the frontend and the backend.
+If either the frontend or the backend had contained most of The-Form's business logic, while the other had merely served as its infrastructure or presentation layer, I would not have needed to wrestle with this question.
 
-The reason this decision is difficult is because The Form’s business logic spans both the front-end and back-end.
-If The Form's front-end or back-end took up most of the business logic and the other was only the other's infrastructure or expression layer, there would be no need to worry about this.
+> In fact, the distinction between frontend and backend should not be considered at the architecture design stage in the first place. Only after designing the architecture, when implementing the concrete details, can you draw a frontend-backend boundary between components.
 
-> In fact, the front-end and back-end perspectives should not be considered at the architecture design stage in the first place. After designing the architecture first, when implementing specific parts, the boundary between front and back can only be drawn between components.
+Of course, OOP and DOP are not conflicting methodologies; they simply take different perspectives. They can be used together harmoniously as needed. However, the advantages of each methodology should not be diluted in the process. So I took the following approach.
 
-Of course, OOP and DOP are not conflicting methodologies, just different perspectives. Depending on your needs, both methodologies can be used in harmony. However, the advantages of each methodology should not be diluted in the process. So I approached it in the following way.
+**From the perspective of DOP:**
+- Define a schema that is separate from the data values.
+- Treat data as generic objects rather than instances of classes.
+- Keep data immutable.
 
-**From DOP's perspective:**
+**From the perspective of OOP:**
+- When manipulating data, do not manipulate the object directly. Instead, use an instance of a class that manipulates the object.
+- Within this instance, the data is not immutable.
+- As needed, these instances may hold a little more state than the data itself.
 
-- Define a schema that is separated from the data values.
-- Treat data as general-purpose objects rather than instances of classes.
-- Data remains immutable.
-
-**From an OOP perspective:**
-
-- When manipulating data, we do not manipulate objects directly, but instead use instances of classes that manipulate objects.
-- Data is not immutable within this instance.
-- These instances can have a little more state than the data itself, depending on your needs.
-
-Below is the pseudocode implementing this.
+Below is pseudocode implementing this approach.
 
 ```typescript
-// The code below is pseduo code.
-import { Survey, SurveySchema } from "entity";
+// The code below is pseudocode.
+import { Survey, SurveySchema } from 'entity';
 
-class SurveyService {
-  private surveyObject: Survey;
+class SurveyService{
+    private surveyObject: Survey;
 
-  constructor(surveyObject: Survey) {
-    const newSurveyObject = deepCopyObject(surveyObject); // Therefore, outside of SurveyService the data is immutable.
-    this.surveyObject = SurveySchema.validateOrThrow(newSurveyObject);
-  }
+    constructor(surveyObject: Survey){
+        const newSurveyObject = deepCopyObject(surveyObject); // This keeps the data immutable outside SurveyService.
+        this.surveyObject = SurveySchema.validateOrThrow(newSurveyObject);
+    }
 
-  public getSurveyObject(): Survey {
-    return deepCopyObject(this.surveyObject);
-  }
+    public getSurveyObject(): Survey{
+        return deepCopyObject(this.surveyObject);
+    }
 
-  public setSurveyTitle(title: string) {
-    this.surveyObject.title = title;
-  }
+    public setSurveyTitle(title:string){
+        this.surveyObject.title = title;
+    }
 
-  // ... lower
+    // ... omitted below
 }
 ```
 
-The advantages you can gain from these methods are:
+This approach offers the following advantages.
+- The business logic is concentrated in a single class.
+- Validation is performed when an instance is created, and after that, data is manipulated only through the class's methods. Therefore, data integrity is guaranteed (as long as there are no mistakes in the methods).
+- The advantages of OOP can be fully preserved. For example, interfaces can be used to implement dependency inversion more easily.
 
-- Business logic is concentrated in one class.
-- Validation is performed when an instance is created, and thereafter, data is manipulated using only class methods. Therefore, data integrity is guaranteed (as long as no mistakes are made in the method).
-- You can utilize the advantages of OOP as is. For example, dependency inversion can be easily implemented using interfaces, etc.
-
-Also, when I wrote the entity schema, I wanted it to be a single source of truth for the backend and frontend. This requires minimizing dependency on languages and frameworks. So I chose the method below.
-
-- The schema is written in JSON-Schema.
+I also wanted the entity schema to serve as the single source of truth for both the backend and frontend. To do that, dependencies on specific languages and frameworks had to be minimized. So I chose the following approach.
+- Write schemas in JSON Schema.
 - Use `zod` to perform validation and extract TypeScript types.
-- JSON-Schema is compatible with most languages, so even if the backend or frontend language changes, you can use the schema as is by selecting an appropriate conversion library.
+- Because JSON Schema is compatible with most languages, the same schemas can be used with an appropriate conversion library even if the backend or frontend language changes.
 
-## Front-end refactoring [3] - Logic migration
 
-We then migrated the existing frontend to use the newly created, clean business logic. The most difficult part of this process was making the newly written code compatible with React without breaking it.
+## Frontend Refactoring [3] - Logic Migration
 
-In React, state is managed with `state`. The value of `state` is set by `setState` and then rendering is automatically performed again by React. However, in the newly created architecture, the state is just an object or an instance of a class containing it. So even if you change the value internally using a method, no rendering will occur.
+Next, I migrated the existing frontend to use the newly written, clean business logic. The hardest part of this process was making it compatible with React without compromising the new code.
 
-To solve this problem, I thought about and tried many different things.
+In React, state is managed as `state`. A value is assigned to `state` through `setState`, after which React automatically renders the UI again. In the new architecture, however, state was just an object or an instance of a class containing that object. So even when a method changed a value internally, it did not trigger a render.
 
-- I considered using React’s `state` to manage state.
-  - However, in that case, abstract parts such as entities or use cases depend on the concrete part of the React framework. Therefore, this violates abstraction.
-  - Also, `state` cannot refer to new values anywhere immediately, but only after the UI is rendered once. Therefore, it is not suitable for implementing asynchronous or UI-unrelated logic.
-  - `state`, including `setState` and `useState`, can only be used inside the UI, making business logic dependent on the UI.
-- You can also manage state using `Context API` or `Redux`.
-  - However, this is also just a `useState` that is easier to use and spans multiple components.
-  - As a result, it violates abstraction.
-- Using Javascript's `Proxy` API, you can detect changes in objects.
-  - This method seemed so good that I actually tried implementing it.
-  - However, in practice, this implementation is too dependent on the environment. Some browsers may not support this API.
-  - This can cause unintentional mistakes because actions usually occur in value assignments where it is difficult to predict which action will be executed.
-  - In some cases, the value has changed but you don't want it to be rendered. This is the case when reassigning the same value. However, rendering still occurs in this case.
-- The service does not include any logic to observe changes in values. Instead, we create an Adapter that allows the service to be used in React, and implement it to detect changes by wrapping all the functions of the service there. - I thought it was the cleanest method from an architectural perspective. - However, this method requires wrapping all functions of the Service in the Adapter, resulting in excessive code duplication. - This makes maintenance difficult, especially since the Adapter must be modified every time a new feature is added.
+I considered and tried various approaches to solve this problem.
+- I considered managing state using React's `state`.
+    - In that case, however, abstract parts such as entities and use cases would depend on the concrete details of the React framework. This would violate the abstraction.
+    - Also, a new value in `state` cannot be referenced immediately from anywhere; it can only be referenced after the UI has rendered once. This makes it unsuitable for implementing asynchronous logic or logic unrelated to the UI.
+    - Because `state`, including `setState` and `useState`, can only be used inside the UI, the business logic would become dependent on the UI.
+- State could also be managed using the `Context API` or `Redux`.
+    - But these are still just more convenient versions of `useState` that span multiple components.
+    - Ultimately, they violate the abstraction as well.
+- JavaScript's `Proxy` API can detect changes to an object.
+    - This approach looked so promising that I actually implemented it.
+    - But in practice, the implementation was too dependent on the environment. Some browsers did not support this API.
+    - It could cause unintended mistakes because behavior was triggered by value assignment, an operation where it is generally difficult to anticipate that something else will run.
+    - In some cases, a value may have changed without requiring a render. Reassigning the same value is one example. Yet even in this case, a render would occur.
+- The Service could contain no logic at all for observing changes in values. Instead, I could create an Adaptor that made the Service usable in React and have it detect changes by wrapping every function in the service.
+     - Architecturally, I thought this was the cleanest approach.
+     - However, it created excessive code duplication because every Service function had to be wrapped in the Adaptor.
+     - In particular, the Adaptor had to be modified every time a new feature was added, making maintenance difficult.
 
-After these attempts, we ultimately decided to choose the most certain and stable method. A listener can be registered in the Service object that manages data, and when a function that changes the value of the data is called, the explicitly registered listener is called after changing the value. This method was thought to be the most stable and reliable method as it does not require any special environment. This method instead accidentally implements a new feature and doesn't call the listener function, which means no rendering will occur.
+After these attempts, I ultimately decided to choose the clearest and most reliable approach. Listeners can be registered on the Service object that manages the data. When a function that changes a data value is called, it changes the value and then explicitly calls the registered listeners. I considered this the most stable and reliable approach because it does not require any particular environment. The downside is that if I implement a new feature and forget to call the listener function, no render will occur.
 
 ```typescript
-// The code below is pseduo code.
-class SurveyService {
-  // ... schematic
-  private listeners: (() => void)[] = [];
-  public addListener(listener: () => void) {
-    this.listeners.push(listener);
-  }
+// The code below is pseudocode.
+class SurveyService{
+    // ... omitted above
+    private listeners: (()=>void)[] = [];
+    public addListener(listener:()=>void){
+        this.listeners.push(listener);
+    }
 
-  private notifyListeners() {
-    this.listeners.forEach((listener) => listener());
-  }
+    private notifyListeners(){
+        this.listeners.forEach(listener=>listener());
+    }
 
-  public setTitle(title: string) {
-    this.surveyObject.title = title;
-    this.notifyListeners();
-  }
-  // ... lower
+    public setTitle(title:string){
+        this.surveyObject.title = title;
+        this.notifyListeners();
+    }
+    // ... omitted below
 }
 ```
 
-## Front-end refactoring [4] - Data migration
+## Frontend Refactoring [4] - Data Migration
 
-Afterwards, the data was migrated. First, I defined the tasks that need to call the backend in an interface called `Repository` and wrote a class that implements this interface. At this time, the backend had not been touched at all, so the functions that had previously called the backend were used as is. I also added code to migrate the data retrieved from the backend to the new entity structure.
+Next, I migrated the data. First, I defined the operations that needed to call the backend in an interface called `Repository`, then wrote a class implementing that interface. Because the backend had not been touched at all yet, I reused the existing functions that called it. I then added code to migrate data retrieved from the backend into the new entity structure.
 
-This time, shockingly, no migration was needed to push values into the backend. This is because there is very little value checking done on the backend. (So in fact, it was possible to insert arbitrary JSON objects into the existing The Form database.)
+Shockingly, no migration was needed when sending values to the backend. This was because the backend performed almost no validation. (In fact, it had been possible to insert arbitrary JSON objects into The-Form's existing database.)
 
-There wasn't much to worry about when creating the migration function. This is because value validation and parsing were easily solved through the `zod` library. However, because the existing survey data structure was only roughly written down and the schema was not created as structural data such as Typescript interface or JSON-Schema, I had to check the database directly to understand the existing survey structure. In particular, there were so many optimal fields that processing default values was quite a difficult task.
+There was not much to deliberate over when writing the migration functions, because validation and parsing could be handled easily with the `zod` library. However, we had only roughly documented the structure of the existing survey data and had not expressed its schema in a structured format such as a TypeScript interface or JSON Schema. As a result, I had to inspect the database directly to understand the old survey structure. In particular, the old structure had far too many optional fields, so handling default values was also quite a challenging task.
 
-## Front-end refactoring [5] - Glossary of terms
+## Frontend Refactoring [5] - Terminology
 
-After organizing the structure, I made sure to organize the terminology. This is because there was confusion due to the use of multiple terms before. For example, to represent responses to a survey, terms such as `response`, `answer`, and `result` in Korean and `answer`, `response`, and `result` in English were used interchangeably. In particular, `response`, or `response`, was very confusing because it could refer to either a general API response or a survey answer. So, we have organized the terms as follows.
+After organizing the structure, I standardized the terminology. Until then, the use of multiple terms had caused confusion. For example, to refer to a survey response, the Korean equivalents of `response`, `answer`, and `result` were used interchangeably, as were the English terms `answer`, `response`, and `result`. In particular, `response`—in either English or Korean—could refer both to an ordinary API response and to a survey response, which was extremely confusing. So I standardized the terminology as follows.
 
-- `Survey`: Survey
-- `Question`: Question in the survey. `Survey` can have multiple `Questions`.
+- `Survey`: A survey.
+- `Question`: A question in a `Survey`. A `Survey` can contain multiple `Question`s.
 - `Answer`: An answer corresponding to one `Question`.
-- `Submission`: The result of the respondent answering one `Survey`. Therefore, `Submission` consists of several `Answer`.
-- `Result`: The set of all `Submission`s for one `Survey`. Therefore, `Result` consists of multiple `Submission`.
+- `Submission`: The result of a respondent answering one `Survey`. A `Submission` therefore consists of multiple `Answer`s.
+- `Result`: The set of all `Submission`s for one `Survey`. A `Result` therefore consists of multiple `Submission`s.
 
-## Backend refactoring [1] - Architecture
+## Backend Refactoring [1] - Architecture
 
-Afterwards, we proceeded with backend refactoring. The business logic previously contained in Express Router has been gathered into a single class. And we separated the dependencies of various functions.
+Next, I refactored the backend. I consolidated the business logic that had previously lived in Express routers into a single class. I also separated the dependencies of the various features.
 
-For example, we refactored the ability to send emails. Previously, the process of sending mail was directly included in the business logic. We ran the EJS template engine in our business logic and called the AWS SDK directly. Therefore, one route to send an email performed all processes from routing, parameter parsing, template rendering, and sending. However, during refactoring, we separated this function into two interfaces: `EmailSender` and `TemplatedEmailSender`.
+For example, I refactored the email-sending feature. Previously, the process of sending email was embedded directly in the business logic. The business logic invoked the EJS template engine and called the AWS SDK directly. As a result, a single route for sending email performed every step: routing, parameter parsing, template rendering, and sending. During the refactoring, however, I split this feature into two interfaces: `EmailSender` and `TemplatedEmailSender`.
 
 - `EmailSender` has a method called `sendEmail(src, dst, title, content)`.
-- `TemplatedEmailSender` has methods such as `sendGreetingEmail(...)` and `sendSurveyInfoEmail`. Each method receives the values required when sending an email as parameters and internally creates the email subject and content.
-- `TemplatedEmailSender` is injected with `EmailSender` when created and used to send mail.
+- `TemplatedEmailSender` has methods such as `sendGreetingEmail(...)` and `sendSurveyInfoEmail`. Each method receives the values needed to send an email as parameters and internally generates the email's subject and content.
+- When created, a `TemplatedEmailSender` is injected with an `EmailSender`, which it uses to send email.
 
-Afterwards, we actually implemented the `SesEmailSender` and `TemplatedEmailSenderImpl` classes that inherit this. From this came a separation of concerns.
+I then implemented the `SesEmailSender` and `TemplatedEmailSenderImpl` classes based on these interfaces. This separated the concerns.
+- Templates can be added or updated without touching the business logic at all.
+- Migrating away from AWS SES to another method of sending email is very easy.
+- Everything except `SesEmailSender` can be tested locally using mocks.
 
-- Templates can be added or updated without touching any business logic.
-- If you want to send it another way instead of SES, you can also port it very easily.
-- Except for `SesEmailSender`, all tests can be tested locally based on mocking.
+Of course, I also created a `Repository` interface for database access in the backend and implemented a `RepositoryImpl` class that performed the actual access. In the process, I moved the code that migrated old survey versions from the frontend into the backend's `RepositoryImpl`. Aside from a few minor errors (which occurred because, unlike in the frontend, `Date` values were objects rather than strings in the backend), it worked without any problems. This also gave the backend type safety.
 
-Of course, we created a `Repository` interface for database access on the backend and implemented a `RepositoryImpl` class that actually accesses it. At the same time, we moved the code to migrate the old version of the survey on the front to the backend `RepositoryImpl`. Apart from a few minor errors (due to the fact that the `Date` type value was an object rather than a string in the backend, unlike in the frontend), it worked without any problems. This ensures type safety in the backend as well.
+## Backend Refactoring [2] - API
 
-## Backend refactoring [2] - API
+After refactoring the business logic, I turned my attention to the API implementation. APIs are not only difficult to test but also make it hard to catch errors at compile time. So rather than implementing the API code directly, I used the `tsoa` library to generate the API routes and OpenAPI Schema automatically. I then used the `openapi-typescript-codegen` library in the frontend to generate the API client automatically.
 
-After refactoring the business logic, we focused on implementing the API. This is because APIs are not only difficult to test, but also difficult to catch errors at compile time. So, instead of implementing the API code directly, we used the `tsoa` library to automatically generate the API route and OpenAPI Schema. Afterwards, we implemented the frontend to automatically generate an API client using the `openapi-typescript-codegen` library.
+Because the frontend and backend shared entities written in JSON Schema, a subset of OpenAPI, their types matched naturally. The frontend Repository went from a thick layer that called the API and performed migrations to a thin layer that only handled Request and Response objects.
 
-Because the front and back share an entity written in JSON Schema, a subset of OpenAPI, the types naturally matched. The front Repository has changed from a thick layer that calls APIs and performs migration to a thin layer that only handles Request and Response objects.
+As an additional benefit, input schema validation became automatic. Previously, the data values were not properly validated, so virtually any arbitrary JSON could be sent and stored. Now, however, tsoa validates the types automatically, so this problem no longer occurs.
 
-Additionally, as an additional benefit, schema verification of input data is now performed automatically. In the past, because data values were not properly validated, it was actually possible to save even if arbitrary JSON was sent. However, this problem does not occur now because tsoa automatically performs type verification.
+## Backend Refactoring [3] - Testing
 
-## Backend refactoring [3] - Testing
+Next, I finally decided to introduce test scripts. Previously, there had not been many features, so we performed QA manually. But we planned to add more features and deploy more frequently, so I concluded that manual QA was no longer reasonable.
 
-Afterwards, we finally decided to introduce a test script. Previously, we conducted QA manually because there were not many features, but we decided that manual QA was not reasonable as we plan to add more features in the future and distribution will become more frequent.
+I considered Puppeteer and Playwright as testing frameworks. There are various testing tools such as Postman and JMeter, but while they are suitable for testing APIs or measuring backend latency and throughput, they have the disadvantage of being unable to test the UI. Because The-Form is a survey platform, UI testing is essential.
 
-Puppeteer and Playwright were considered as testing frameworks. There are various test tools such as Postman and Jmeter, but although they are suitable for measuring API or backend latency / throughput, they have the disadvantage of not being able to test the UI. Because The Form is a survey platform, UI testing is essential.
-
-Of these two, I chose Playwright.
-
-- Convenient installation and configuration.
-- Officially supports docker.
-- Testing for tasks that cause asynchronous / delay is automated.
-- Provides the option to test in multiple browsers at once.
+Of the two, I chose Playwright.
+- Installation and configuration are convenient.
+- It officially supports docker.
+- Testing of asynchronous or delayed operations is automated.
+- It provides an option to test across multiple browsers at once.
 
 ## Secret Management
 
-And we updated it to manage secrets based on sealed-secret. Previously, when running a GitHub Action, a secret was injected through an environment variable. This method had the problem of not only making it difficult to manage secrets, but also making it impossible to track the Kubernetes resource containing the secret in git.
+I also updated the system to manage secrets using sealed-secret. Previously, secrets were injected through environment variables when GitHub Actions ran. This approach not only made secrets difficult to manage, but also made it impossible to track Kubernetes resources containing secrets in git.
 
-Sealed-secret is a tool to solve this problem. Sealed-secret consists of a controller and CLI floating on Kubernetes. CLI encrypts the secret with Kubernetes' public key and outputs it as a YAML file. When you deploy this YAML file to Kubernetes, the controller detects it, decrypts the secret, and stores it in Kubernetes.
+Sealed-secret is a tool designed to solve these problems. It consists of a controller running in Kubernetes and a CLI. The CLI encrypts secrets with Kubernetes's public key and outputs them as a YAML file. When this YAML file is deployed to Kubernetes, the controller detects it, decrypts the secrets, and stores them in Kubernetes.
 
-Therefore, even if the sealed-secret resource is exposed, its value cannot be known without the private key held by the controller. On the other hand, even if you only have a sealed-secret without the original secret, you can distribute the secret without any problem. This makes it possible to track secrets and other Kubernetes resources to git.
+Therefore, even if a sealed-secret resource is exposed, its values cannot be determined without the private key held by the controller. At the same time, secrets can be deployed without any problems using only the sealed-secret, even without the original secrets. This made it possible to track secrets and other Kubernetes resources in git.
 
-## CI/CD Refactoring
+## CI / CD Refactoring
 
-At the same time, CI/CD implemented as GitHub Action was updated to a Node.js script that runs locally.
+Along with this, I replaced the CI / CD implemented with GitHub Actions with a Node.js script that runs locally.
+- Because The-Form has a small team, there is no need to use a heavy, centralized deployment environment.
+- Performing builds and deployments locally maximizes cache usage, significantly reducing build times.
+- It would not be difficult to move the process back to GitHub Actions or something similar if needed.
 
-- Because The Form has a small team, there is no need to use a heavy, centralized distribution environment.
-- Performing builds and deployments locally significantly reduces build times by maximizing cache usage.
-- It is not difficult to move it back to GitHub Action, etc., if necessary.
+This Node.js script performs the following operations for each service.
+1. Get a list of every file in the repository except `node-modules` and similar directories.
+2. Sort the list.
+3. Read every file in order and calculate its hash.
+4. Compare the result with the hash stored in the filesystem, and perform a build if they differ.
+5. Push the docker image to the registry. (The-Form uses a private repository.)
+6. Run kustomize to generate a single `manifest.yaml` file that launches all of The-Form's services.
+7. Deploy it with kubectl.
 
-This Node.js script executes the following actions for each service.
+As a result, the entire The-Form service can be deployed using only the `manifest.yaml` file. Because this file is tracked in git, if an error is discovered and the service needs to be rolled back, the file can be taken from the most recently deployed commit and deployed again.
 
-1. Get a list of all files in the repository excluding `node-modules` etc.
-2. Sort them.
-3. Read all files in order and calculate their hashes.
-4. Compare with the hash stored in the file system, and if different, perform a build.
-5. Push the Docker image to the registry. (The Form uses a private repository.)
-6. Run kustomize to create a single `manifest.yaml` file that launches all TheForm services.
-7. Deploy this with kubectl.
+## Closing Thoughts
 
-From this, you can now deploy the entire The Form service by simply having the corresponding `manifest.yaml` file. This file is tracked in git, so if an error is found and the service needs to be rolled back, you can retrieve the file from the most recently deployed commit and deploy it.
-
-## In conclusion
-
-I refactored The Form like this. There were many difficult parts, but there were also many things to learn. Although The Form is still a very lacking service, we believe that we will be able to create a better service through this refactoring.
+That is how I refactored The-Form. There were many difficult parts, but I learned just as much from the process. The-Form is still lacking in many ways, but I believe this refactoring will help us build a better service.
